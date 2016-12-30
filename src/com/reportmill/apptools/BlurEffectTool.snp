@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SpringView width="275" height="220" PrefWidth="275" PrefHeight="220">
+  <Label x="57" y="56" width="71" height="22" text="Blur Radius:" />
+  <Spinner Name="BlurRadiusSpinner" x="128" y="56" width="64" height="22" Min="0" Value="0" />
+  <Slider Name="BlurRadiusSlider" x="35" y="92" width="189" height="29" GrowWidth="true" Min="1" Max="20" Value="4" />
+</SpringView>

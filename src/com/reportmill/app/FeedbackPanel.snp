@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SpringView width="450" height="435" PrefWidth="450" PrefHeight="435">
+  <Label x="10" y="10" width="380" height="25" text="Use this form to send feedback to ReportMill Software.">
+    <font name="Arial Bold" size="12" />
+  </Label>
+  <Label x="10" y="40" width="40" height="25" text="Name:" />
+  <TextField Name="UserText" x="52" y="40" width="138" height="25" />
+  <Label x="200" y="40" width="35" height="25" text="Email:" />
+  <TextField Name="EmailText" x="235" y="40" width="195" height="25" />
+  <Label x="10" y="70" width="90" height="25" text="Feedback Type:" />
+  <ComboBox Name="TypeComboBox" x="90" y="70" width="200" height="20">
+    <item text="Bug Report" />
+    <item text="Enhancement Request" />
+    <item text="General Comment" />
+  </ComboBox>
+  <Label x="10" y="95" width="90" height="20" text="Severity:" />
+  <ComboBox Name="SeverityComboBox" x="90" y="95" width="200" height="20">
+    <item text="Low" />
+    <item text="Medium" />
+    <item text="High" />
+  </ComboBox>
+  <Label x="10" y="120" width="90" height="20" text="Module:" />
+  <ComboBox Name="ModuleComboBox" x="90" y="120" width="200" height="20">
+    <item text="General" />
+    <item text="Text" />
+    <item text="Images" />
+    <item text="Drawing" />
+    <item text="Tables" />
+    <item text="Graphs" />
+    <item text="Labels" />
+    <item text="Animation" />
+    <item text="Runtime" />
+    <item text="API" />
+    <item text="Other" />
+  </ComboBox>
+  <Label x="10" y="150" width="40" height="25" text="Title:" />
+  <TextField Name="TitleText" x="55" y="150" width="375" height="25" />
+  <Label x="10" y="180" width="430" height="25" text="Detailed Description of Problem/Enhancement:" />
+  <ScrollView x="10" y="200" width="425" height="230">
+    <TextView Name="DescriptionText" />
+  </ScrollView>
+</SpringView>

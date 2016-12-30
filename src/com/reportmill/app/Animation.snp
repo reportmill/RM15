@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SpringView width="275" height="325" PrefWidth="275" PrefHeight="325">
+  <TitleView x="4" width="271" height="42" Title="Current Time">
+    <SpringView width="271" height="42" PrefWidth="271" PrefHeight="42">
+      <Slider Name="TimeSlider" x="8" width="196" height="24" />
+      <TextField Name="TimeText" x="212" width="51" height="21" Align="CENTER" />
+    </SpringView>
+  </TitleView>
+  <Button Name="PlayButton" x="4" y="47" width="36" height="19" text="Play">
+    <font name="Arial" size="10" />
+  </Button>
+  <Button Name="StopButton" x="40" y="47" width="36" height="19" text="Stop">
+    <font name="Arial" size="10" />
+  </Button>
+  <Button Name="StepButton" x="76" y="47" width="36" height="19" text="Step">
+    <font name="Arial" size="10" />
+  </Button>
+  <Button Name="BackButton" x="112" y="47" width="36" height="19" text="Back">
+    <font name="Arial" size="10" />
+  </Button>
+  <CheckBox Name="LoopCheckBox" x="162" y="47" width="60" height="19" text="Loop">
+    <font name="Arial" size="10" />
+  </CheckBox>
+  <Label x="4" y="73" width="71" height="20" text="Key Frame">
+    <EtchBorder />
+  </Label>
+  <Label x="77" y="73" width="122" height="20" text="Changes for Shape">
+    <EtchBorder />
+  </Label>
+  <MenuButton x="201" y="73" width="20" height="19">
+    <font name="Arial" size="10" />
+    <MenuItem Name="ShiftFramesMenuItem" text="Shift Frames" />
+    <MenuItem Name="ScaleFramesMenuItem" text="Scale Frames" />
+  </MenuButton>
+  <Button Name="DeleteButton" x="223" y="73" width="48" height="19" text="Delete">
+    <font name="Arial" size="10" />
+  </Button>
+  <ScrollView x="4" y="94" width="71" height="205">
+    <font name="Arial" size="10" />
+    <ListView Name="KeyFrameList" />
+  </ScrollView>
+  <Button Name="FreezeFrameButton" x="4" y="301" width="71" height="19" text="Freeze">
+    <font name="Arial" size="10" />
+    <binding aspect="Enabled" key="FreezableFrame" />
+  </Button>
+  <ScrollView x="77" y="94" width="198" height="84">
+    <font name="Arial" size="10" />
+    <ListView Name="ChangesList" />
+  </ScrollView>
+  <ComboBox Name="InterpolationComboBox" x="77" y="180" width="198" height="22" />
+  <TextView Name="HelpText" x="80" y="204" width="195" height="55">
+    <font name="Arial" size="10" />
+  </TextView>
+  <Label x="78" y="284" width="62" height="17" text="Frame Rate" />
+  <TextField Name="FrameRateText" x="77" y="300" width="60" height="21" Align="CENTER" />
+  <Label x="140" y="284" width="60" height="17" text="Max Time" />
+  <TextField Name="MaxTimeText" x="139" y="300" width="60" height="21" Align="CENTER" />
+</SpringView>

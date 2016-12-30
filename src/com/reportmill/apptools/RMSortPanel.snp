@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SpringView Name="SortingPanel" x="4" y="170" width="267" height="100" PrefWidth="267" PrefHeight="100" GrowWidth="true" GrowHeight="true">
+  <Label width="100" height="18" text="Sorting:" />
+  <MenuButton Name="SortKeysMenuButton" x="200" width="66" height="18" LeanX="RIGHT" text="Keys...">
+    <MenuItem Name="AddSortMenuItem" text="Add..." />
+    <MenuItem Name="RemoveSortMenuItem" text="Remove" />
+    <MenuItem Name="MoveSortUpMenuItem" text="Move Sort Up" />
+    <MenuItem Name="MoveSortDownMenuItem" text="Move Sort Down" />
+  </MenuButton>
+  <SpringView y="19" width="267" height="80" PrefWidth="267" PrefHeight="80" GrowWidth="true" GrowHeight="true">
+    <ToggleButton Name="SortButton" x="2" width="70" height="20" text="Sort" Selected="true" ToggleGroup="bgsort" />
+    <ToggleButton Name="TopNButton" x="73" width="70" height="20" text="TopN" ToggleGroup="bgsort" />
+    <ToggleButton Name="ValuesButton" x="144" width="70" height="20" text="Values" ToggleGroup="bgsort" />
+    <SwitchView Name="SortPanel" y="21" width="264" height="55" GrowWidth="true" GrowHeight="true">
+      <SpringView Name="Sort" width="264" height="55" PrefWidth="264" PrefHeight="55" GrowWidth="true" GrowHeight="true">
+        <ScrollView x="1" width="264" height="55" GrowWidth="true" GrowHeight="true">
+          <TableView Name="SortsTable" ShowHeader="false" RowHeight="20">
+            <TableCol GrowWidth="true" ItemKey="Key" />
+            <TableCol PrefWidth="28" />
+          </TableView>
+        </ScrollView>
+      </SpringView>
+      <SpringView Name="TopN" width="264" height="55" PrefWidth="264" PrefHeight="55">
+        <Label x="5" y="5" width="50" height="18" text="Key Path:" />
+        <TextField Name="TopNKeyText" x="55" y="5" width="205" height="22" GrowWidth="true" />
+        <Label x="5" y="29" width="40" height="18" text="Count:" />
+        <TextField Name="TopNCountText" x="55" y="29" width="40" height="22" Align="CENTER" />
+        <Label Name="TopNSortButton" x="96" y="29" width="22" height="22" />
+        <CheckBox Name="TopNInclCheckBox" x="118" y="28" width="95" height="22" text="Incl Othrs">
+          <font name="Arial" size="10" />
+        </CheckBox>
+        <CheckBox Name="TopNPadCheckBox" x="213" y="28" width="52" height="22" LeanX="RIGHT" text="Pad">
+          <font name="Arial" size="10" />
+        </CheckBox>
+      </SpringView>
+      <SpringView Name="Values" width="264" height="55" PrefWidth="264" PrefHeight="55">
+        <ScrollView x="2" y="2" width="180" height="53" GrowWidth="true" GrowHeight="true">
+          <TextView Name="ValuesText" />
+        </ScrollView>
+        <CheckBox Name="SortOnValuesCheckBox" x="184" y="5" width="80" height="22" LeanX="RIGHT" text="Sort" />
+        <CheckBox Name="IncludeValuesCheckBox" x="184" y="27" width="80" height="22" LeanX="RIGHT" text="Include" />
+      </SpringView>
+    </SwitchView>
+  </SpringView>
+</SpringView>

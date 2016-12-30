@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SwitchView>
+  <SpringView Name="BasicPanel" width="275" height="325" PrefWidth="275" PrefHeight="325">
+    <TitleView x="2" width="170" height="150" Title="Paper Size">
+      <SpringView width="170" height="150" PrefWidth="170" PrefHeight="150">
+        <View Name="PageSizeView" x="4" y="2" width="162" height="108" Class="com.reportmill.apptools.RMDocumentTool$PageSizeView" />
+        <Label x="2" y="110" width="36" height="18" Align="CENTER_RIGHT" text="Width:" />
+        <TextField Name="PageWidthText" x="38" y="110" width="44" height="18" Align="CENTER" />
+        <Label x="84" y="110" width="36" height="18" Align="CENTER_RIGHT" text="Height:" />
+        <TextField Name="PageHeightText" x="120" y="110" width="44" height="18" Align="CENTER" />
+      </SpringView>
+    </TitleView>
+    <TitleView x="174" width="99" height="42" Title="Paper Size">
+      <SpringView width="99" height="42" PrefWidth="99" PrefHeight="42">
+        <ComboBox Name="PaperSizeComboBox" x="3" width="87" height="20" />
+      </SpringView>
+    </TitleView>
+    <TitleView x="174" y="44" width="99" height="42" Title="Units">
+      <SpringView width="99" height="42" PrefWidth="99" PrefHeight="42">
+        <ComboBox Name="UnitComboBox" x="3" width="87" height="20" />
+      </SpringView>
+    </TitleView>
+    <TitleView x="174" y="88" width="99" height="62" Title="Orientation">
+      <SpringView width="99" height="62" PrefWidth="99" PrefHeight="62">
+        <RadioButton Name="PortraitRadioButton" x="1" width="91" height="20" text="Portrait" ToggleGroup="orbg" />
+        <RadioButton Name="LandscapeRadioButton" x="1" y="20" width="91" height="20" text="Landscape" ToggleGroup="orbg" />
+      </SpringView>
+    </TitleView>
+    <TitleView x="2" y="152" width="170" height="80" Title="Margins">
+      <SpringView width="170" height="80" PrefWidth="170" PrefHeight="80">
+        <Label width="36" height="18" Align="CENTER_RIGHT" text="Left:" />
+        <TextField Name="LeftMarginText" x="36" width="44" height="18" Align="CENTER" />
+        <Label y="20" width="36" height="18" Align="CENTER_RIGHT" text="Right:" />
+        <TextField Name="RightMarginText" x="36" y="20" width="44" height="18" Align="CENTER" />
+        <Label x="82" width="36" height="18" Align="CENTER_RIGHT" text="Top:" />
+        <TextField Name="TopMarginText" x="118" width="44" height="18" Align="CENTER" />
+        <Label x="82" y="20" width="36" height="18" Align="CENTER_RIGHT" text="Botm:" />
+        <TextField Name="BottomMarginText" x="118" y="20" width="44" height="18" Align="CENTER" />
+        <CheckBox Name="DrawMarginCheckBox" x="18" y="42" width="70" height="18" text="Show" />
+        <CheckBox Name="SnapMarginCheckBox" x="98" y="42" width="60" height="18" text="Snap" />
+      </SpringView>
+    </TitleView>
+    <TitleView x="174" y="152" width="99" height="80" Title="Grid">
+      <SpringView width="99" height="80" PrefWidth="99" PrefHeight="80">
+        <CheckBox Name="ShowGridCheckBox" x="2" width="91" height="20" text="Show" />
+        <CheckBox Name="SnapGridCheckBox" x="2" y="20" width="91" height="20" text="Snap" />
+        <TextField Name="GridSpacingText" x="6" y="40" width="85" height="18" Align="CENTER" />
+      </SpringView>
+    </TitleView>
+    <TitleView x="2" y="234" width="271" height="60" Title="Page Layout">
+      <SpringView width="271" height="60" PrefWidth="271" PrefHeight="60">
+        <RadioButton Name="SingleRadio" x="2" width="120" height="20" text="Single Page" />
+        <RadioButton Name="DoubleRadio" x="2" y="20" width="120" height="20" text="Double Page" />
+        <RadioButton Name="FacingRadio" x="128" width="100" height="20" text="Facing" />
+        <RadioButton Name="ContinuousRadio" x="128" y="20" width="100" height="20" text="Continuous" />
+      </SpringView>
+    </TitleView>
+    <Label x="4" y="299" width="75" height="18" Align="CENTER_RIGHT" text="String for Null:" />
+    <TextField Name="NullStringText" x="80" y="299" width="80" height="18" Align="CENTER" />
+    <Button Name="AdvancedButton" x="170" y="299" width="100" height="20" text="Advanced..." />
+  </SpringView>
+  <SpringView Name="AdvancedPanel" x="2" y="434" width="275" height="325" PrefWidth="275" PrefHeight="325">
+    <Label x="6" width="200" height="24" text="Advanced Settings">
+      <font name="Arial Bold" size="16" />
+    </Label>
+    <CheckBox Name="PaginateCheckBox" x="6" y="30" width="120" height="20" text="Paginate" />
+    <CheckBox Name="CompressCheckBox" x="6" y="50" width="100" height="20" text="Compress" />
+    <CheckBox Name="ProximityGuideCheckBox" x="6" y="70" width="119" height="20" text="Proximity Guide" />
+    <Button Name="BasicButton" x="170" y="299" width="100" height="20" text="Basic Settings..." />
+  </SpringView>
+</SwitchView>

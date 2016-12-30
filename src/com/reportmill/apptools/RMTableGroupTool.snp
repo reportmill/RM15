@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SpringView width="275" height="325" PrefWidth="275" PrefHeight="325">
+  <MenuButton x="5" y="5" width="140" height="20" text="Table Group Options">
+    <MenuItem Name="AddPeerMenuItem" text="Add Peer Table" />
+    <MenuItem Name="AddChildMenuItem" text="Add Child Table" />
+    <MenuItem Name="RemoveTableMenuItem" text="Remove Table" />
+    <MenuItem Name="PasteTableMenuItem" text="Paste Table" />
+    <MenuItem text="separator" />
+    <MenuItem Name="MoveUpMenuItem" text="Move Up" />
+    <MenuItem Name="MoveDownMenuItem" text="Move Down" />
+    <MenuItem Name="MoveInMenuItem" text="Move In" />
+    <MenuItem Name="MoveOutMenuItem" text="Move Out" />
+  </MenuButton>
+  <Button Name="KeysButton" x="210" y="5" width="60" height="20" text="Keys..." />
+  <ScrollView x="5" y="30" width="265" height="215">
+    <TreeView Name="TablesTree" RootVisible="false" ShowRootHandles="false" />
+  </ScrollView>
+  <Label x="5" y="275" width="40" height="20" text="Key:" />
+  <TextField Name="DatasetKeyText" x="45" y="275" width="225" height="20">
+    <binding aspect="Text" key="MainTable.DatasetKey" />
+  </TextField>
+  <CheckBox Name="StartOnNewPageCheckBox" x="57" y="300" width="200" height="20" text="Start on new page">
+    <binding aspect="Selected" key="MainTable.StartingPageBreak" />
+  </CheckBox>
+  <Label x="5" y="250" width="40" height="20" text="Name:" />
+  <TextField Name="MainTableNameText" x="45" y="250" width="225" height="20">
+    <binding aspect="Text" key="MainTable.Name" />
+  </TextField>
+</SpringView>

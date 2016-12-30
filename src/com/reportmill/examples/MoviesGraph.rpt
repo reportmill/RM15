@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document unit="inch" show-margin="true" snap-margin="true" margin="36 36 36 36" null-string="&lt;NA&gt;">
+  <datasource name="HollywoodDB.xml" source="Jar:/com/reportmill/examples/HollywoodDB.xml" />
+  <page width="612" height="468">
+    <graph x="36.5" y="36.5" width="539.5" height="395.5" name="Movie" type="bar" list-key="Movies" keys="getRevenue" topn="getRevenue" topn-order="descend" topn-count="10" topn-include="true" bar-space="0">
+      <fill color="#96aabe" />
+      <stroke />
+      <graph-content x="72.5" y="70" width="303.348" height="295.5" asize="~~~,-~-">
+        <fill color="#dde1fe" />
+        <stroke />
+      </graph-content>
+      <graph-legend x="383.431" y="70" width="146.069" height="192.5" asize="~~-,-~-">
+        <fill color="#f0f0ff" />
+        <stroke />
+        <text x="30" width="116.069" height="192.5" asize="-~-,-~-">
+          <font name="Arial" size="10" />
+          <string>@getTitle@</string>
+        </text>
+        <rect x="5" y="4" width="20" height="10">
+          <fill color="#aaaaaa" />
+          <stroke />
+        </rect>
+      </graph-legend>
+      <text x="5" y="5" width="363.5" height="50" asize="-~-,--~">
+        <font name="Arial Bold" size="24" />
+        <color value="#7a7a7a" />
+        <string>Hollywood Graphics</string>
+      </text>
+      <text x="3.5" y="3.5" width="363.5" height="50" asize="-~-,--~">
+        <font name="Arial Bold" size="24" />
+        <string>Hollywood Graphics&#10;</string>
+        <font name="Arial" size="12" />
+        <string>Revenue of top Grossing Movies (in Millions of $$$)</string>
+      </text>
+      <graph-barlabel x="82.5" y="341.5" width="100" height="14" opacity="0.43" roll="35" asize="--~,~--">
+        <fill color="#fcffff" />
+        <stroke />
+        <text x="10" width="90" height="14" asize="-~-,-~-">
+          <font name="Arial" size="9" />
+          <format type="number" pattern="$ #,##0.0;-$ #,##0.0" />
+          <string>@getRevenue/1000000@</string>
+          <font name="Arial" size="10" />
+          <format />
+          <string> M</string>
+        </text>
+      </graph-barlabel>
+      <format type="number" pattern="$ #,##0;-$ #,##0" />
+    </graph>
+  </page>
+</document>

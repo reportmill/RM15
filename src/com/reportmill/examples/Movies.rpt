@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document show-margin="true" snap-margin="true" margin="36 36 36 36" null-string="&lt;NA&gt;">
+  <datasource name="HollywoodDB.xml" source="Jar:/com/reportmill/examples/HollywoodDB.xml" />
+  <page width="612" height="792">
+    <image-shape x="190.5" y="706.5" width="221" height="49" url="http://www.reportmill.com/" asize="~~~,~~~" cache="true">
+      <fill type="image" color="#00000000" resource="741476" />
+    </image-shape>
+    <table x="37" y="37" width="539" height="666" name="Movie" list-key="Movies">
+      <grouping key="getStudio" header="true" details="true">
+        <sort key="total.getRevenue" order="descend" />
+        <sort key="getStudio.getName" />
+      </grouping>
+      <grouping key="Movies" header="true" details="true" summary="true">
+        <sort key="getRevenue" order="descend" />
+        <sort key="getTitle" />
+      </grouping>
+      <tablerow width="539" height="91" asize="---,--~" asize-height="true" structured="false" title="getStudio Header">
+        <rect width="539" height="85" asize-height="true" radius="9">
+          <stroke linewidth="2" />
+        </rect>
+        <text x="73.5" y="58" width="180.5" height="18" asize-height="true">
+          <font name="Arial" size="12" />
+          <format type="date" pattern="EEEE, MMMM d, yyyy" />
+          <string>@Date@</string>
+        </text>
+        <image-shape x="2" y="8.5" width="64" height="64" url="http://www.reportmill.com/" asize-height="true" cache="true">
+          <fill type="image" color="#00000000" resource="9370159" />
+        </image-shape>
+        <text x="74" y="7" width="394" height="68" asize-height="true">
+          <font name="Times Bold" size="49" />
+          <underline />
+          <string>Hollywood Report</string>
+        </text>
+        <image-shape x="470" y="9.5" width="64" height="64" url="http://www.reportmill.com/" asize-height="true" cache="true">
+          <fill type="image" color="#00000000" resource="9370159" />
+        </image-shape>
+        <text x="266" y="58" width="173" height="18" asize-height="true">
+          <font name="Arial" size="12" />
+          <pgraph align="right" />
+          <string>@Page@ of @PageMax@</string>
+        </text>
+        <alternates>
+          <tablerow width="539" height="28" asize="---,--~" asize-height="true" structured="false" alt-key="Reprint">
+            <text width="539.5" height="23.5" asize-height="true">
+              <fill color="#ffdec5" />
+              <stroke />
+              <font name="Times Roman" size="18" />
+              <string>Hollywood Report (Page @Page@ of @PageMax@)</string>
+            </text>
+          </tablerow>
+        </alternates>
+      </tablerow>
+      <tablerow y="107" width="539" height="21" asize="---,--~" asize-height="true" title="getStudio Details">
+        <fill color="#5d809e" />
+        <stroke />
+        <text x="293" width="246" height="21" asize="~~~,~~~" asize-height="true">
+          <font name="Arial Bold" size="14" />
+          <pgraph align="right" />
+          <string>@count@ Movies</string>
+        </text>
+        <text width="293" height="21" asize="~~~,~~~" asize-height="true">
+          <font name="Arial Bold" size="14" />
+          <string>@getStudio.getName@</string>
+        </text>
+        <alternates>
+          <tablerow y="44" width="539" height="21" asize="---,--~" asize-height="true" structured="false" alt-key="Reprint">
+            <fill color="#5d809e" />
+            <stroke />
+            <text width="539" height="21" asize="~~~,~~~" asize-height="true">
+              <font name="Arial Bold" size="14" />
+              <string>@getStudio.getName@ (Continued)</string>
+            </text>
+          </tablerow>
+        </alternates>
+      </tablerow>
+      <tablerow y="144" width="539" height="12" asize="---,--~" asize-height="true" title="Movies Header">
+        <text x="355" y="0.0" width="76.676" height="12.0" asize="~~~,~~~" asize-height="true">
+          <font name="Arial Bold" size="10" />
+          <pgraph align="center" />
+          <string>% Total</string>
+        </text>
+        <text x="267.0" y="0.0" width="87.999" height="12.0" asize="~~~,~~~" asize-height="true">
+          <font name="Arial Bold" size="10" />
+          <pgraph align="right" />
+          <string>Revenue</string>
+        </text>
+        <text x="0.0010" y="0.0" width="174.999" height="12.0" asize="~~~,~~~" asize-height="true">
+          <font name="Arial Bold" size="10" />
+          <string>Title</string>
+        </text>
+        <text x="175.0" y="0.0" width="92.0" height="12.0" asize="~~~,~~~" asize-height="true">
+          <font name="Arial Bold" size="10" />
+          <string>Date Released</string>
+        </text>
+        <text x="431.675" y="0.0" width="107.323" height="12.0" asize="~~~,~~~" asize-height="true">
+          <font name="Arial Bold" size="10" />
+          <pgraph align="right" />
+          <string>Running Total</string>
+        </text>
+      </tablerow>
+      <tablerow y="172" width="539" height="18" asize="---,--~" asize-height="true" sync-pars="true" title="Movies Details">
+        <text x="355" width="76.676" height="18" asize="~~~,~~~" asize-height="true">
+          <font name="Arial" size="12" />
+          <format type="number" pattern="#0.00%;-#0.00%" />
+          <pgraph align="center" />
+          <string>@getRevenue/Up.total.getRevenue*100@</string>
+        </text>
+        <text x="267.0" width="87.999" height="18" asize="~~~,~~~" asize-height="true">
+          <font name="Arial" size="12" />
+          <format type="number" pattern="$ #,##0;-$ #,##0" />
+          <pgraph align="right" />
+          <string>@getRevenue@</string>
+        </text>
+        <text x="0.0010" width="174.999" height="18" asize="~~~,~~~" asize-height="true">
+          <font name="Arial" size="12" />
+          <string>@Row@. @getTitle@</string>
+        </text>
+        <text x="175.0" width="92.0" height="18" asize="~~~,~~~" asize-height="true">
+          <font name="Arial" size="12" />
+          <string>@getShowDate@</string>
+        </text>
+        <text x="431.675" width="107.323" height="18" asize="~~~,~~~" asize-height="true">
+          <font name="Arial" size="12" />
+          <format type="number" pattern="$ #,##0;-$ #,##0" />
+          <pgraph align="right" />
+          <string>@Running.total.getRevenue@</string>
+        </text>
+      </tablerow>
+      <tablerow y="206" width="539" height="25" asize="---,--~" asize-height="true" structured="false" title="Movies Summary">
+        <text x="418" y="2.998" width="118.946" height="18" asize-height="true">
+          <fill color="#fde8ed" />
+          <stroke />
+          <font name="Arial Bold" size="12" />
+          <format type="number" pattern="$ #,##0.00;-$ #,##0.00" />
+          <pgraph align="right" />
+          <string>@total.getRevenue@ </string>
+        </text>
+        <text x="368" y="2.998" width="47.25" height="18" asize-height="true">
+          <font name="Arial Bold" size="12" />
+          <pgraph align="right" />
+          <string>Total:</string>
+        </text>
+      </tablerow>
+    </table>
+  </page>
+  <resource name="741476">
+    <![CDATA[
+7nH003FU_D0`^tJ!<<*!#RC\I&.fZq(a1%G.4H]#0ek[K3C6&!8kM]R;Gp\%>%;&PCMR^,F)u\TH\@'*N/W^[Pa%].S>E'YXf\_5[C*]]]uJ(3cHa_df%/^7hWO(bn*f`>p\4.>kP+H6s7c9=cHb:tf&toH]sY8MV5:T%XiA&fP`1QtS=GOkK_OZms6oDtCMSTMHf!&nkLS5QhVN$XA(JZ>cFpo$>$=fr9)%3!n(-&^6:0PK`okXmcF(([hVL7I1%3E5kJkNu]tN")[4s*ZcE45Kf%.j;V=2FD]ptVU]tN:1[FVI^s3Apa`l?#gS@t/OkI%_SXf^0NV>%[:cCCEn[C+#=Pio0NhPI'^N/Y/tK[uZ`n#`_;Pa&:sHfq6%`f,lV[C+k]S@sT/es)EfV5:SHHiL4MkFA(:V5:;8F2ildhNX8UN/YGsHiKq=c@gl-N/[M$SAoo&X_V_@Pa'aPKY;GJkDYAoPa($XK^XkY`cH5$Pa'aGH`^dfkCeN6F*$f'KXG<"s,;oVCMW*[HhW2H]jkQS>$B3eCYj,Rs+H'oH[DSe;Wi+BpNq84@q4tKF8pT6S4ZE:CMUpn>.%7+s)W7X8kQcp;YOsBk@8"l6:07,>5rARmpfk88kRrD>,=PPpL@^H8kS8M>1QSLX[5@o8kRr<;Ofa-[6d4*8kS8E;PcB6ek/QS6:-nk1!W*PS1ub+3B=c53MeGbN%$3q3B=2r0sr_jS1,n`.4L3!+g!1BPT_3?+X*[*+cI6TPSb7-(`82C&<m_;pCIo9&.k'3#b2/+V$I@H#RJue#i5gmmg'3n#RLG9#RCD1&-)\I!!"/B!%@mJ0`V26!!#=c!(m4k;?-]#!!$L/!,DQ7ErZ2e!!%ZP!/pmXPQ1]R!!&hq!3H5$[/^3?!!("=!6tQEec5^,!!)0^!:Kmfrr<%h8j`:@kO7Tjn*fGrhU^Q7hWNbYpZM"r]uK6\f&!gJ]k_]?@qu&E!%\*M!!(gT0`XHErr<'**([<,_1N",.U:'!Tu2Ws,>+Is;.0M+(bUITa-#DlEQ^V1/%;T"1R$siSSQe-g,X'&\r@sO1*ntol("_o[Z77ABC)3M'ADkW!"p5Age16@BiClD#5js`i*QKi%4Gbk&4+0k#nC9@J07.s":,aB+uo*8!X/oB<(([JJV"$1'(W&qd%S@6Z7?tqYTP)Xfa/8oLP>5Y^t083')^4@@YKF?rsWk.Y[W<E'PCJ]#+]3*L(>(SXGARh/_L@=(;-m@5f-X,XB3%TSO*Ja)'D2O#gm++ET4u(r(BlF++O_83\D()NqtMO1e3ucf?@ASGL<(Ws8/,LR^Hn[W)^0Y9j>)FiPq9Rf5.?\TL7B9fJ%pW#(-;cY`r)ad831@#UVOLJi2&^!t7nPn,Wb,<[_A]+0^8=$h`Q_63k>\.&([s($@l>/Wc?/$R`6I@L+*l.,9\9ed)<b3Uj8*&jkpr6k22TLa*Esn/+P)4NP;>N@GPgUP^cA#D*3"<G<G2b;K$!F<"#abW!^%o1UpcTX.<_j.)<.1\@e;++<CL;[tb;r'QH$f3je:2r8fN%6<UuVpeH.34%KJ,MZdiUAbJ/_$4Mm;@G;!Yk#aL>Hgs30U*4Aa:U94E="A@9M3O.`>fOb%oR4AN2`^!s)X,QI7t6--)L*OlE8&*PD'W>lu<H8]-7ms-;8Y=M(HRJ6YWO)&i2q9F%E=Q/]/?F`>*BC+q-31E*CI=@>)J9W2ZB2MBS2oH`@lTjFAI+WLE\)'LAt-jG_$&OJR$FFlX-*j'XfD8^!L-bY$/7o?9$&/&McRf3GYA2gg'!:7+'/j=sFni?uDH)B_X-J;O97!=t=J1+=ub5QO:dEP+nY0P*A/`"PX[1@-Z)n/M]]Y5A>,':b.V$lN%b_8HgDI,MrD`Ini@%RNR($DkL2&Ha#9(?5]7;u#p`0L7,'";=Gtd)[i(ehP,X6NeP7&<sP".2,54s"R3FX:3J[-tZ7Y728a3!=IFe9Yj+B^e?6P(mCI&N$`7t_DU5'E+7!Dn0U`d^KV%-h+%VbHsJ`XQ",h7ba9W81W_Ud%QQGPKFWFq1p^f_4*<Z!:[8:Z6-1AoO/N6_rhnsXp,ooP%$)%b'F>a9eJ&6DAH+si'%19`Kc78d5mQPIhn_DrZ7r#/.8oD>NE04CAX+qr=(R<`YF%Op</M9EOHVp*8SL.1,)u['-(06Bn:;.0TEHW5_$XB8Jf)_)"ujW>%XRVs+KQ\TU9fu5IDfNp,K]8=EK6<kOA0]bSI@`kPE6Ld5L1`M%L%q.VJ,FRgO"e`s"H^V,)uYM*t[?).YOK+OMGBPp](TPpV%4'%t5sZT,!"=`"Bp16Ql.h%#u`)(-HR>?t9nbBZ.n&3KXG"!"g1)kbL6La,V;c%d=$ASW01ZFX;lMm(+F$U4f:Ng&T/P]($h]E$onJ,LfNCiJaKJlA:EsMGebF4m4kE"<t?@<=5s\Ifr"<#0;a6%"JBn@%[QRBM8S9?qLV+i#aBbAQ8fi8eI^=PmTLd5CRR'!\?j/#+0oC'4=K;.+8/)0]`@R3<LIoTK3$c!!+Dk)$J/K!=_#>#Xf4+$2d-j[ep@5YQ=h+r$)9BKE)11Bn7B(@g,aj!!4.-rrU)o;i:RT+*(8d7kSY;3ZeZb_.\uEG<>sGcu?u4GK6S%Lr11e-kCXP;iPS&#9;_G#;^BEa[>a!5LGDG'<Rpb@3OZ1`umiFlSXVh>i?)qd)$>:6in2BBF#%[64JSj";o(-"T-!g:j^\:*^i_015GrAGbg!53)rO$^]=stYTk;2#t[_*J\H0CeKB+e8!/[CWDYS]2NXVP4@"QM?M`*;'&sE_O9#i%YZ7k2+U2KEd>qh"`?FWiW_/^WQ'B0+J/S!$"<.XTQf4KK]YbcYLrM9I!=baLV]=MPc^j^H%?3Mk;"qLD4%=rergX[K!f@\lAo"E:s5F_"4b1o=-H1mI&Ao/KXT8i<OL.S2!`togKd^1\.F<dB$:9h?+ac!q9jAhQZ5=?0-;fXu$tE2,W'\/P=,>oM_@'G$QZ1:oWCJLJCSbbL.OIRi8!j`'jEb\T1'+Md<WNf&,"<Tc!&&W&J-r&rkqB'`\0-T-X$B3,A$s7q/g41>fO8&W'F)0jN$B4^R)[(K+d6qsUa.J\=>P9o1#i.b[ECpDU)):XlLg5f9Z`ldO[u/lqRDA"P#+>'<0&NGO%NC:QZ,%e,6]FiNWX]M#a4!(iNt"orL1$Wmta4\1\j"*MNO4rQt63@YFm2K0M&.+*JC\Xs23tY#7FPKVE1pFG;H<2:A.r1i`5'cJ.ArZ#<e3$AgB7\3OGLoc"KL,qU!TGoV3A=kXf!id[6o=VBsLO:4)idTFSB.7nr8HRsNQjR-/NE+HA9cpc@%nfF$[*4(k32*8V6^$WRhW)Yuk0q8o=-md\6]=cW\$!'gcG?iakH`\8`Y,mIOE`$&S4"!Yg:#qfTd&n&KX'8Z?ABi&Y7_4]TUn;n;P5]./RE<GRIJ@e;OK*lG1!^eMi#p=bL$"-$U&E#GQ@XnLeW8Ie,QoDWk5Y`b_nVJqbe@[<)!=Fc!"XQD7%5L1d$q,IG*LA\k&pTq0lYee`s%X"n_D*(sW:"%AM&jL*iJqnSC`=l0#<3K"CL>gmOua#eU,'j4U6FL:WVjd<`_mNQ81"<H0W#9r6\#FZ"p,8/LC<HX8d*q4!Kn=N0EWF9$!8=83_1Ot-t(7@#a582r5T1;GlS*I@fUZ_^]A=ER2!:61]L:e2@Zn5"p@0krL?+[k'6s&#C`-G:r!0>YY><U-3+@^,m4FEoG'VV1aj3O@dA4XiLh/uX>V*a@,8DIV8PIaJ4;T.;6`5p,9,@pL,X9n%QHn_:mA'B:_)S/l36Bt51JF$JI':;:WSAU?69j(G<Ya)B72#I@YmpgI2clbMqTO=s,#[3Y8b#*bi*JkqlE$]'RaAY$`M2J`]4)<!#.on,Q3Nq^M8>qZ!aifH8bj6m/RY/Kb!8g3uFekG+p&EYmp0<EojM<,ZQ6Y&HL,j4XjlN>GVI"+9c>l#'A2sF:\[cE!/]#"Br$]8PfOPKb*f@%r`4Op?,ou@QlaW!Zj*@ln]/K!e+>VIOgS1+bBej!!H&)"_lm!Cs[h_k[5rlKN9c2GAme/^]mkZ"QQmC>4d4E'RhH>E\YF\.bAEs`=1!f%cG,3g<bS2KF[AL%D=PpG?.T%ct_G<%c4E!et=):ODFF'-A5hBLm!>hd2u$O-tZ:8`/k@Bs0)YYBFE02?s<U79Fq@ui.5AL"srI;>ei9u:^1&6"]6rXDIA&k;ZonC1gU=iGn:7%+9apF%noe'@t4_^TEJBD#&\AbAZu;(YQRHm"^D$3<aZ)=0Eu5F#&S;aDK#_G+9b,?#DMbI`UF/pEWp_"$89jWF^Qh&hulfJ"CP%1@Gh?"cim8H#&OnU?>p#WQ30XEKO`pDcdarA@m;,%L8icN#t5NQ!)`.A%cAK>iSb1[jX+b0%\^j=V"G2W^^Rm9@Qb;;L=07]_B4Wu.'b]Z_lsKKi!R&).^SUI_M(.@cm`VC#a\?mI1QgtOB3lf?Z/16Ip`X=s$[9bTI[eM>W[H<Y!=GLE!0Tg#g=JNp?2^ccs1Hr#scB0INU9+jTW93$LWNNWc3rF5W-AS"J"CS^G#tV1F_F+"?_bP<9%<c7O_7r?6EVY>;Il?L+h,u,l<sDW98X_LI*E?%*[W<dU81*!"[PO%+<K2hI%Dkd>"LZ83Q\\/nTZ(+_*83>Dj+C,e4+d?jbJ@%/g/0>AsdMn,tni#rZi/r_P%$O9Sia"@o\#^T]6'TEn6L"C^m0684?g+9\+:$^8F7<F?&%R1$N4NK51b9Q1/A^]\gZ#eik=J.Mod0En2g?H#/:7&^R?E[mO9"bSLp97qplrr<DQncmP,#a#4[dQ%JS?jB#[3F$V/m^NC^&-YG:2F)51r7DT4G@;=8CGG!\+Z9eVE(D7_&`Bl*'<#Q\dqAGqOYLH'pFlZrK:.p$$u;[G-=[B!=t5tK#,<:n`@q_+E!tP9%!A3IUTb-ZdL0,!"&Y:++ArBXn1)#R$,,g9.&nqgcjIcX22[KfEc@_h:^']5$GLYVGYikUeL@Kg$S9'u>S@3Q8LY\V$[]+Pcf,=@J>B"3.^EFiY;-KAJ-s/$1V=h<B,V1h:k%?3T7+(m$fu!*o/b&K-HSL_g#*=p!BV`mB>)ceOT_AuUHHbq!>F`?.('c-s!BnLL-:We4YR.op;[4+J.FP_K,miZ*TD_>Z\.][57$<oUj==5(FB);KVBArrZ`B_1d<X671,hT19s+p!iQ$Q-J:Zu.HGdq(+?h-B6[I4O<cq@(''&WX<`EHMc,?KW$n*VA&]9P0F4Wk@]A7KW>]e@oq3JE_*/m6K0H5&rA'&$GH+M\5UNd$kGf`+qBB8pAaZR#1NF[Jen"]6!==hf$G`kEqQKi)YQ?nj!NQ2Z^omuYYQVSA!P>NFqlgVNYnB.''O.gXHa+EWYo:6Z*)!OcQYDepBcoLC,$V>rHa4od!@k^e/DIH_qm%mpZSFVK1g@:Es*M((qm#+a&Ne`^4SuHK)mhaiZom)X7SC*T$a^jm9-Mfl:A_Cp)mpc@Q_fmXVk[)?;%b;9V^p^fja]EJe8']rCC_>2P[kKVPIAR<7)!aE-LeGjDupka15MYfaX86-KQ/EU;qb.n10B0H<.ea-+b4>O112"<-N[*)9-o)h?fZ&@7ftIa7SMl45%]9H7moks4Z1k[gd<7OB4N3,QTDa!?BR>M\7%-?OTC:Kh=-15W3r^"6h_1?^c-Wj1Hgc`6Q2&1'eiG`?ipq$!mt$M-X^m-E!"%[]P]e3&TAI5TE>*l!YtdF)2A:DHVGo=7S\U;-Vsgjs3S:)QG!Q*![WpE<cJ0j+9A_ZG_P)V/+=&S0EUEQ(s/7eh]'%GRis%"!p4:4b%h#,YY?WU]I%"e#5knFJ8oP/![Srj!%#3"6Fs,YC63!\=rVOrf*q$8%cpM.gotBA#:OoL@Lifn6uaXK5Q]>CFP;?bgOr3/&-6+h(r?Z1&'u0lPQI]B5RLm"$K+Y\Du_L%!Q&r&2R((2Duo[^(m>a:0mj^Uk5\LZGE"<Xq\0$.OT6ga(Q9L;;F(9kJ4^;>!%uV9?*$_ZQV%Y4:(BYp%Y2HViD'UX!>'3C;LqIQ+<!*[HGOSF;t@s8PckuK0H[PS(u.0Us.^4N+:SH&%Mc;Z$2P*V(m0##W&Jh,5_6A#Qr6J[[O?Z#rru9ae,cPu!64("b#A?jYSS`rG;`h0d=_K9OECh:9F['aWUp73$bRn7!=H%2k4B/uTE,O5!=i'0dA-kD2p8KHGSFNeXC2h\0M_gZ9ERN[[hJkVg`-L5!VXG3$Ga$HA5"U`:'El`n`2qIJB[<N!\<1J^`bso>gF)-O05p;0;h,CZP&Sc%dK.Cf!$OX^^[k&JMVu$P;F!@YTJV0_U8c+%Wk/X&B%UX![Afg[o=),O;(2b!Oq+i+5d2u0`WlR^D9NH-SU/p+9E":!%>V`-(k@`rrg/]Vf_ss!%/o(/2.0ESC9#sIlj4Gnr"nPi(eN`X\q!!2t.@#.hr*3!$<=W-a;&)!!:$uDfk>2<Sb/1:mW@-aFR#2KUcZ)!Gf=tCFN[%ru;Km!#*q&*cZT;fhbipPq[>M[[UMn7PT#2_b%m\DB^c>KH5&BUck6;W>-%8kT`N-F<afXIC5M/gW(S*:!^59,#BQfS1S10QW9U$fj`K[mcOWVDu_[*UL8aDoaJnnK$Sj5'*+EN.8^T%E*;/I%-6me)0HB-jac_1Jau*XOL`_Oqca"c4k.qJ@oNP#E!9(2"Z#ZP4@@peZVsAZ6m$rY2E25,ruGY3"5-krIJ-:Zj0qGYe0=:hI9JK2;fF]jZNN"EO$Sbqn;TCo0],0`IJXI"p5C2,h%=9o%fc?:b5_tS)%For-8$Q*"g(YdiIKU#0mDH]4(49KiRa"!gh%*)U[[4b)<)ca$B?eE8"^#i&2Z6U"8Dkk1%=0V%c_O#4`HVf!uK[l^"K)bI_cWGHPP7:'dB=Lj.b?5Tl:@:0FAru$$\]>Cu>KG+pOR!j<C0$@3>_^of[YU"(Kg6>J<NnY#j3;g87BJWF=?bKcT-FF*[NikHGH`T\s\X-G#rbikS+>J.3IJ;;0q;#^m@LESMJH'`ERs=3q=.s3k5Z^^<h?%%7`r:f%;lnDZN+"B@_C7o0>kkqlGK"%.#1?I1NEZSqV"<BP5m$aKnNZNNM`4[Do&8)QB$8a8#Q"$$nqZT\O_^]fb9"CuJK::`:D;?]pZ$,4b801?;W^]nuR!BdRhmsP>E(^/4"lVF9$.3\ktrn^S(O!.u9/J-hA:(GMK;9^d)h4P4!c)3e"&hXkcCkD'kK84bDH\j"G13=TJ%3WuLLb$-T?'&?U1(.aa"^5jJNpnVR<=)i*"DQfQ+>2ZKn,uFhNN4`?Y9;hq!!^!E/V=$1Tb%UC+:GI4#Yo@(<PSnWrsGZsnTs]i?Ea[2rrD$j&!D%-"D3o'b^p4'RL9N>#*Y.EAofH`&dY28$:ql<T3qr$E:GNp$>XSa9Y^`]:^EVBj@V$2DZF)7bT^'jgE*V?ZkJhR&0;B/'F[`L'ZDEVTFDl0f,#)1,Oq\1'f,0l=t&DQ!+HJg6NWVm;mXgUK"qYgE!jJq;erU94lnHZU'ZZq$)Bg9B<VIq_"b[;$$F%WP<oJ8i*E8O#Z%Z,Msr440K3'p#fBIg\UXp#i$oSD#[m]?[=G!1?oGdh#]&@fFeCBn5RX/=?`0V(<PSm<J7"o[3QI4g<A4R03A-om#$u6TYOW(-YQdpq"2]Tm@sRr^rrA,ULdg;e%P2fjI2\1YQ/H26OEH;.D'._pfaU$0@R$R<KlST_e#\<1XT8qaFTi>tL_V.(Ct9LV7<XV4OU2mk8Yp7.3^SSOO;OXJ&Nlh"OtM?j66.TMX,`Jq4(KJf8.8:]5I(Q0\e8W'We/0h>Tq&fKV)NhlWis8Kp>Fg1*9r0eP]3m@Dk9&!`nelQnVcsA?s?)9GKr]M[b*?,_o/CUP^5l<@,j$*^2loO<M*P^B>8M!P!Y'S2e=EQAHPNDAbIPk0Pi((/<LEaO6qSKB<R_3,R3G=hBu:>;pNEc8AP`XE<]LcCD.<*FQbj%3n?ThI(9?s1NdQ8=5MgE7U@K`s*a:P[qt*/Pg].!(Dk65cHi@$Q0"<?nl!!U'CM&8!`aR9WhW/_Li@QJul*XP$'=Q0OFp3c!j%ha'#&G!>-=R"R1,)Qj?(sK!6IHQS9DYMP)ZEW'Ucm8p]MJ7*mH=OR\(`6&$A`=J[=QNX.rU)0c]ZLq$Ug!AD+d^u0gZ`#3BZEG@>SY]?$Y8$QYCPNKo"VGX4YD6Di6)fE.d9f19h1X2?;<+F1@!+aP$[X2Vma0mNX84+/U%/OE@1);-+$RiI96Am'F.L;_?4D=n^:!T\hPEn8@ieSUGpcpE_Qk3_a,I29P(e',Qs"_8<9\H?].>0[TMCLGFO!$m2RmIAu5X7[`:TEoYPElJ`j+p7+.L<)aRNlL_.jEZC+@X/WU5_`<;5B1O*[8U^Y6HGPQFAjHl)q\ml79lj";Bt<)p?@N*,<a_0ps/Z=lu0u]E.2bDo,Y3a4$V2%8&'T]2H(a1jI9:/C!)u'EXtlUkTe$&EKNoNq()\)PfV$:Qjr"@hMVPb9`'t$`$-N*b(5iK6c5pWL,]qL]isBITZaX2)8l7+C(/h!K0Hrkop?ROO,3c?T-Vk#F]^!,85AFHA.+s>S/BO0L4UX'^#ab"Ucgb^5`[LoDg2O@P2Zs'OcS*s!3a<Kq!]-:i?**(*7M3!<`s;#_Bt.?ApTm)%f507ifc]`gjTa=U(=/U`o:ID8:-l`b(Z5a-jce7@1D3YD`q!GI&8tMdIZpr0KoEfRO);.Z$8(b"3^co#\FpiIfHtiLKHL;ZEBl(-Z+LL,Us2,oB\6&4/gkK/$[+@"]pi%,M^J>D_$ks+TgsMs%ci6?:JLKbfnS?3oJIcfGbuGrNG32*au+qd5<.!V`lc3'19WquSE')JqSfmW%KgHQ6^j;.eR"_Qg]mEln\N*@I,LE)0)#C(e!8/'2B+n7(<=2XiuT71aMRU`]h$5QVF+O978rJEf7as13Mu!/1/M*=Foi&*1t;H-!lDoZ3o((9UJgja/-Y=\-7F`mBGoUgXaKpd5jDTSDWFOkSBq^@iQO7lk+6gup)FAgda"j7pVRbV>R61]r71'VN"`AO+nL.tM!;9`ls`!shN'Jsa/X)uZ!e%Xt('+'`+:6tjG`jC98,kPtlf-po&A/VYhg+sE'r6m;9.LEQX`+`Wi>6L)pQN5Qkc)u7Pj13/1a9AeG/djuEND2EG"?Se5"N5_:h*N0C:(7eF7!.#69@S@n\AA^ZWd0>2h]A+;Z35GuO!.u90LE,RR5nf^6Ffao(*ru\dZ5""7NC7(Y*Z<3@dQ3P[Qh5eO%=-(d"Ytk]jJF&DLo_f;k_M+mUtbYL2u1^X)<[A7(=BBZ=/nWGK]=ErT0su0`b'2l[H.L-6^nqRAs^5B@mf?KJr+VhNlS5217.gW5Q7mBOTai*Db)d,DH)gUKOIEhGu>E$Z^`jo@1G<NQ[cqQVDG&_9l52TSE<eK46:0PIJQm8#$%ThV()6n5QM3k!3&UkC/U2Je>>E0W_TB?<2XK]W]F.Z>LdIi\b]=0L)$e"'l-soH<.AL's27OCKoKgO+7313r~>]]>
+  </resource>
+  <resource name="9370159">
+    <![CDATA[
+7nH003FP/Q5QLQY!<<*!CMR^,F)u\TH\@'*N/W^[Pa%].S>E'YXf\_5[C*]]]uJ(3cHa_df%/^7hWO(bn*f`>p\3Oqf"JK!pZL^T@q58ihOKO`hT!QgF*#$kV>oE/F(8_KcH_r5K_Nd;P^@bZN/[5=^##lnpV"8cS=K&U[C([@c@gl-N/XTCA$'6NhKsU68kRZMCW9O]hIC''8kRrD>0^#DV)^QU6:0O$8t7Uj[5g7u6:.e/0sr_jc57D<&.lhe#gN\]`W-"azzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz!%\*M!!#7a5QF%Trr<'**([<,_1N",.U:'!Tg0)RKEQ;AJAHjD&fbZA=:h4FO$R"^35>M\7ZJl3HAooX,g2N@@_N9!6NtJn*$n"o5U0`3R37-j$j)XV:SJU+#T-Cr^]=R6&KjW;J3egG3&O<i!9$4r"UY`mfF_)]`2!JD-u`QLV-ATtN;aBm<%Zk+Dt=SE!<GMUM\u*o4pY".hSFhG8i0oU6%cV%h^T[NPbu^-OV_=@C=]=rT.WFUXEg#ged,P%0M!=P/EbUt@@dpi<l*h6R1&;=i,o'XTg-oXKq')n>Ta^l0O@Db\DF?tSP,U#&Rl=$&->d+\MAsBWjfHUs-t'^^rV\d`HQ_.dROY.l,?GA)8!UVbGD2aVd/+-:nj]CLD`Gsk[<:DSTRud;6_D^J5UIu5_&k?,d>'ag)[!<"0*dm64O=-f3a&A'p&Ct%Qr+iMC[i@OA;d+eJ`6jq%SL$[UhGSDS:`]<bK8qd"%/AknX:+6Tpg&O@0k0:g??bJ:VtM0H$LH"(_JN"KN]M<g-W4"CkeHL2#e<BH@jTRN09h"EXaOM,4Tm6/Y"cA[4m?9FN=g@<6GrZtDd'+b3ml":Z8J!<j;IW1KLc5_,V23iT';5HqB-7>P:HdAI%H.\3Iq!Ynq<QGQZPW1T1fVfSYclY7o"T:Y>JW#N_0P,tS48h3cJ/lY.D,7lrRZ,du5K;uT<kh/hZhFA4cGllp?%+>+n@^FKTKYrF8%3QepN&KfGT"&Xf<<F2mTImLN3m5s\P#f*n"8Lm1^qM70QQD)+,4L/!gVt`q]orL%kJF_1TWV@s[2's!V]nf4G/_;Mj,>kHBQ6TUD"mF#5.\`T_M18$n6eAAI)$(UI>fnL4IRr<aqh*Qh$G4S5hC9;,77un1(YR:auXH"Jj_:45d$k*,<F3"0/0'SM(2.m:^J^=d&1_HCMd0gGDWHVDQfM2[[@-s!':~>]]>
+  </resource>
+</document>

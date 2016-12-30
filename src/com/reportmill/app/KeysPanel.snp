@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SpringView Name="KeysPanel" width="275" height="260" PrefWidth="275" PrefHeight="260">
+  <Label x="5" y="5" width="265" height="20" text="Drag and Drop keys:" />
+  <ToggleButton Name="BuiltInKeysButton" x="220" y="4" width="50" height="18" LeanX="RIGHT" text="Built-ins" />
+  <ScrollView x="5" y="25" width="265" height="230" GrowWidth="true" GrowHeight="true">
+    <BrowserView Name="KeysBrowser" />
+  </ScrollView>
+</SpringView>

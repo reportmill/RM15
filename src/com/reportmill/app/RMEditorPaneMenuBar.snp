@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MenuBar Padding="0,10,0,10">
+  <Menu Name="FileMenu" text="File">
+    <MenuItem Name="NewMenuItem" text="New" key="meta N" />
+    <MenuItem Name="OpenMenuItem" text="Open..." key="meta O" />
+    <MenuItem Name="OpenRecentMenuItem" text="Open Recent..." />
+    <MenuItem />
+    <MenuItem Name="CloseMenuItem" text="Close" key="meta W" />
+    <MenuItem Name="SaveMenuItem" text="Save" key="meta S" />
+    <MenuItem Name="SaveAsMenuItem" text="Save As..." key="meta shift S" />
+    <MenuItem Name="SaveAsPDFMenuItem" text="Save as PDF..." key="meta shift D" />
+    <MenuItem Name="RevertMenuItem" text="Revert to Saved" key="meta U" />
+    <MenuItem />
+    <MenuItem Name="PreviewMenuItem" text="Preview Report" />
+    <Menu Name="PreviewMenu" text="Preview Reports">
+      <MenuItem Name="PreviewPDFMenuItem" text="PDF" key="meta shift P" />
+      <MenuItem Name="PreviewHTMLMenuItem" text="HTML" />
+      <MenuItem Name="PreviewCSVMenuItem" text="CSV" />
+      <MenuItem Name="PreviewExcelMenuItem" text="Excel" />
+      <MenuItem Name="PreviewRTFMenuItem" text="RTF" />
+      <MenuItem Name="PreviewJPEGMenuItem" text="JPEG" />
+      <MenuItem Name="PreviewPNGMenuItem" text="PNG" />
+    </Menu>
+    <Menu Name="SamplesMenu" text="Samples">
+      <MenuItem Name="MoviesMenuItem" text="Movies" />
+      <MenuItem Name="MoviesGraphMenuItem" text="Movies Graph" />
+      <MenuItem Name="MoviesLabelsMenuItem" text="Movies Labels" />
+      <MenuItem Name="HollywoodMenuItem" text="HollywoodDB.xml" />
+      <MenuItem Name="SalesMenuItem" text="Sales.xml" />
+    </Menu>
+    <MenuItem />
+    <MenuItem Name="PrintMenuItem" text="Print..." key="meta P" />
+    <MenuItem />
+    <MenuItem Name="QuitMenuItem" text="Quit" key="meta Q" />
+  </Menu>
+  <Menu Name="EditMenu" text="Edit">
+    <MenuItem Name="UndoMenuItem" text="Undo" key="meta Z" />
+    <MenuItem Name="RedoMenuItem" text="Redo" key="meta shift Z" />
+    <MenuItem />
+    <MenuItem Name="CutMenuItem" text="Cut" key="meta X" />
+    <MenuItem Name="CopyMenuItem" text="Copy" key="meta C" />
+    <MenuItem Name="PasteMenuItem" text="Paste" key="meta V" />
+    <MenuItem Name="SelectAllMenuItem" text="Select All" key="meta A" />
+    <MenuItem />
+    <MenuItem Name="CheckSpellingMenuItem" text="Check Spelling..." key="meta shift ;" />
+    <CheckBoxMenuItem Name="CheckSpellingAsYouTypeMenuItem" text="Check Spelling as You Type" />
+    <MenuItem />
+    <CheckBoxMenuItem Name="HyphenateTextMenuItem" text="Hyphenate Text" />
+  </Menu>
+  <Menu Name="FormatMenu" text="Format">
+    <MenuItem Name="FontPanelMenuItem" text="Font Panel..." key="meta T" />
+    <MenuItem Name="BoldMenuItem" text="Bold" key="meta B" />
+    <MenuItem Name="ItalicMenuItem" text="Italic" key="meta I" />
+    <MenuItem Name="UnderlineMenuItem" text="Underline" />
+    <MenuItem Name="OutlineMenuItem" text="Outline" />
+    <MenuItem Name="AlignLeftMenuItem" text="Align Left" key="meta [" />
+    <MenuItem Name="AlignCenterMenuItem" text="Align Center" key="meta \" />
+    <MenuItem Name="AlignRightMenuItem" text="Align Right" key="meta ]" />
+    <MenuItem Name="AlignFullMenuItem" text="Align Full" />
+    <MenuItem Name="SuperscriptMenuItem" text="Superscript" />
+    <MenuItem Name="SubscriptMenuItem" text="Subscript" />
+  </Menu>
+  <Menu Name="PagesMenu" text="Pages">
+    <MenuItem Name="AddPageMenuItem" text="Add Page" />
+    <MenuItem Name="AddPagePreviousMenuItem" text="Add Page Previous" />
+    <MenuItem Name="RemovePageMenuItem" text="Remove Page" />
+    <MenuItem Name="ZoomInMenuItem" text="Zoom In" key="meta Up" />
+    <MenuItem Name="ZoomOutMenuItem" text="Zoom Out" key="meta Down" />
+    <MenuItem Name="Zoom100MenuItem" text="Zoom 100%" key="meta 1" />
+    <MenuItem Name="Zoom200MenuItem" text="Zoom 200%" key="meta 2" />
+    <MenuItem Name="ZoomToggleLastMenuItem" text="Zoom Toggle Last" key="meta Left" />
+    <MenuItem Name="ZoomToMenuItem" text="Zoom..." key="meta Right" />
+  </Menu>
+  <Menu Name="ShapesMenu" text="Shapes">
+    <MenuItem Name="GroupMenuItem" text="Group" key="meta G" />
+    <MenuItem Name="UngroupMenuItem" text="Ungroup" key="meta shift G" />
+    <MenuItem Name="BringToFrontMenuItem" text="Bring to Front" key="meta shift F" />
+    <MenuItem Name="SendToBackMenuItem" text="Send to Back" key="meta shift B" />
+    <Menu Name="GroupSpecialMenu" text="Group Special">
+      <MenuItem Name="GroupInSwitchShapeMenuItem" text="Group in Switch Shape" />
+      <MenuItem Name="GroupInScene3DMenuItem" text="Group in 3D Shape" />
+      <MenuItem Name="GroupInScrollPaneMenuItem" text="Group in ScrollView" />
+    </Menu>
+    <Menu Name="MakeRowColumnMenu" text="Make Row/Column">
+      <MenuItem Name="MakeRowTopMenuItem" text="Make Row Top" />
+      <MenuItem Name="MakeRowCenterMenuItem" text="Make Row Center" />
+      <MenuItem Name="MakeRowBottomMenuItem" text="Make Row Bottom" />
+      <MenuItem Name="MakeColumnLeftMenuItem" text="Make Column Left" />
+      <MenuItem Name="MakeColumnCenterMenuItem" text="Make Column Center" />
+      <MenuItem Name="MakeColumnRightMenuItem" text="Make Column Right" />
+      <MenuItem Name="EquallySpaceRowMenuItem" text="Equally Space Row" />
+      <MenuItem Name="EquallySpaceColumnMenuItem" text="Equally Space Column" />
+    </Menu>
+    <Menu Name="MakeSameSizeMenu" text="Make Same Size">
+      <MenuItem Name="MakeSameWidthMenuItem" text="Make Same Width" />
+      <MenuItem Name="MakeSameHeightMenuItem" text="Make Same Height" />
+      <MenuItem Name="MakeSameSizeMenuItem" text="Make Same Size" />
+    </Menu>
+    <MenuItem Name="SizeToFitMenuItem" text="Size to Fit" />
+    <MenuItem Name="MoveToNewLayerMenuItem" text="Move to New Layer" />
+    <MenuItem Name="CombinePathsMenuItem" text="Combine Paths" />
+    <MenuItem Name="SubtractPathsMenuItem" text="Subtract Paths" />
+    <MenuItem Name="ConvertToImageMenuItem" text="Convert to Image" />
+  </Menu>
+  <Menu Name="ToolsMenu" text="Tools">
+    <MenuItem Name="InspectorMenuItem" text="Inspector..." />
+    <MenuItem Name="ColorPanelMenuItem" text="Color Panel..." key="meta shift C" />
+    <MenuItem Name="FontPanelMenuItem" text="Font Panel..." />
+    <MenuItem Name="FormatPanelMenuItem" text="Format Panel..." key="meta F" />
+    <MenuItem Name="KeysPanelMenuItem" text="Keys Panel..." key="meta K" />
+    <MenuItem />
+    <CheckBoxMenuItem Name="ShowRulersMenuItem" text="Show Rulers" key="meta R" />
+    <MenuItem />
+    <MenuItem Name="FeedbackMenuItem" text="Send Feedback..." />
+    <MenuItem />
+    <MenuItem Name="PrefsMenuItem" text="Preferences..." />
+  </Menu>
+  <Menu Name="HelpMenu" text="Help">
+    <MenuItem Name="SupportPageMenuItem" text="Support Page" />
+    <MenuItem Name="TutorialMenuItem" text="Tutorial" />
+    <MenuItem Name="BasicAPIMenuItem" text="Basic API" />
+    <MenuItem Name="TablesMenuItem" text="Tables" />
+  </Menu>
+</MenuBar>

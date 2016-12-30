@@ -1,0 +1,163 @@
+<?xml version="1.0" ?>
+<root>
+	<sales location="Boston" quarter="Q1" category="Clothing" payment="Cash" amount="43073" />
+	<sales location="Boston" quarter="Q1" category="Clothing" payment="Credit" amount="18989" />
+	<sales location="Boston" quarter="Q1" category="Electronics" payment="Cash" amount="22595" />
+	<sales location="Boston" quarter="Q1" category="Electronics" payment="Credit" amount="25976" />
+	<sales location="Boston" quarter="Q1" category="Jewelry" payment="Cash" amount="19643" />
+	<sales location="Boston" quarter="Q1" category="Jewelry" payment="Credit" amount="23614" />
+	<sales location="Boston" quarter="Q1" category="Appliances" payment="Cash" amount="35350" />
+	<sales location="Boston" quarter="Q1" category="Appliances" payment="Credit" amount="25889" />
+	<sales location="Boston" quarter="Q2" category="Clothing" payment="Cash" amount="45226" />
+	<sales location="Boston" quarter="Q2" category="Clothing" payment="Credit" amount="35356" />
+	<sales location="Boston" quarter="Q2" category="Electronics" payment="Cash" amount="28753" />
+	<sales location="Boston" quarter="Q2" category="Electronics" payment="Credit" amount="34899" />
+	<sales location="Boston" quarter="Q2" category="Jewelry" payment="Cash" amount="46524" />
+	<sales location="Boston" quarter="Q2" category="Jewelry" payment="Credit" amount="39249" />
+	<sales location="Boston" quarter="Q2" category="Appliances" payment="Cash" amount="47486" />
+	<sales location="Boston" quarter="Q2" category="Appliances" payment="Credit" amount="21151" />
+	<sales location="Boston" quarter="Q3" category="Clothing" payment="Cash" amount="28718" />
+	<sales location="Boston" quarter="Q3" category="Clothing" payment="Credit" amount="30033" />
+	<sales location="Boston" quarter="Q3" category="Electronics" payment="Cash" amount="24568" />
+	<sales location="Boston" quarter="Q3" category="Electronics" payment="Credit" amount="44194" />
+	<sales location="Boston" quarter="Q3" category="Jewelry" payment="Cash" amount="40987" />
+	<sales location="Boston" quarter="Q3" category="Jewelry" payment="Credit" amount="26594" />
+	<sales location="Boston" quarter="Q3" category="Appliances" payment="Cash" amount="45453" />
+	<sales location="Boston" quarter="Q3" category="Appliances" payment="Credit" amount="32367" />
+	<sales location="Boston" quarter="Q4" category="Clothing" payment="Cash" amount="28082" />
+	<sales location="Boston" quarter="Q4" category="Clothing" payment="Credit" amount="32593" />
+	<sales location="Boston" quarter="Q4" category="Electronics" payment="Cash" amount="48426" />
+	<sales location="Boston" quarter="Q4" category="Electronics" payment="Credit" amount="37714" />
+	<sales location="Boston" quarter="Q4" category="Jewelry" payment="Cash" amount="45220" />
+	<sales location="Boston" quarter="Q4" category="Jewelry" payment="Credit" amount="23306" />
+	<sales location="Boston" quarter="Q4" category="Appliances" payment="Cash" amount="33195" />
+	<sales location="Boston" quarter="Q4" category="Appliances" payment="Credit" amount="35921" />
+	<sales location="Chicago" quarter="Q1" category="Clothing" payment="Cash" amount="42138" />
+	<sales location="Chicago" quarter="Q1" category="Clothing" payment="Credit" amount="43910" />
+	<sales location="Chicago" quarter="Q1" category="Electronics" payment="Cash" amount="36150" />
+	<sales location="Chicago" quarter="Q1" category="Electronics" payment="Credit" amount="28925" />
+	<sales location="Chicago" quarter="Q1" category="Jewelry" payment="Cash" amount="30523" />
+	<sales location="Chicago" quarter="Q1" category="Jewelry" payment="Credit" amount="38299" />
+	<sales location="Chicago" quarter="Q1" category="Appliances" payment="Cash" amount="39717" />
+	<sales location="Chicago" quarter="Q1" category="Appliances" payment="Credit" amount="29067" />
+	<sales location="Chicago" quarter="Q2" category="Clothing" payment="Cash" amount="22269" />
+	<sales location="Chicago" quarter="Q2" category="Clothing" payment="Credit" amount="49899" />
+	<sales location="Chicago" quarter="Q2" category="Electronics" payment="Cash" amount="44509" />
+	<sales location="Chicago" quarter="Q2" category="Electronics" payment="Credit" amount="41049" />
+	<sales location="Chicago" quarter="Q2" category="Jewelry" payment="Cash" amount="19115" />
+	<sales location="Chicago" quarter="Q2" category="Jewelry" payment="Credit" amount="26992" />
+	<sales location="Chicago" quarter="Q2" category="Appliances" payment="Cash" amount="26607" />
+	<sales location="Chicago" quarter="Q2" category="Appliances" payment="Credit" amount="31327" />
+	<sales location="Chicago" quarter="Q3" category="Clothing" payment="Cash" amount="47114" />
+	<sales location="Chicago" quarter="Q3" category="Clothing" payment="Credit" amount="49638" />
+	<sales location="Chicago" quarter="Q3" category="Electronics" payment="Cash" amount="38286" />
+	<sales location="Chicago" quarter="Q3" category="Electronics" payment="Credit" amount="29144" />
+	<sales location="Chicago" quarter="Q3" category="Jewelry" payment="Cash" amount="22181" />
+	<sales location="Chicago" quarter="Q3" category="Jewelry" payment="Credit" amount="38502" />
+	<sales location="Chicago" quarter="Q3" category="Appliances" payment="Cash" amount="48790" />
+	<sales location="Chicago" quarter="Q3" category="Appliances" payment="Credit" amount="29010" />
+	<sales location="Chicago" quarter="Q4" category="Clothing" payment="Cash" amount="15541" />
+	<sales location="Chicago" quarter="Q4" category="Clothing" payment="Credit" amount="47677" />
+	<sales location="Chicago" quarter="Q4" category="Electronics" payment="Cash" amount="27454" />
+	<sales location="Chicago" quarter="Q4" category="Electronics" payment="Credit" amount="46147" />
+	<sales location="Chicago" quarter="Q4" category="Jewelry" payment="Cash" amount="40413" />
+	<sales location="Chicago" quarter="Q4" category="Jewelry" payment="Credit" amount="33974" />
+	<sales location="Chicago" quarter="Q4" category="Appliances" payment="Cash" amount="24441" />
+	<sales location="Chicago" quarter="Q4" category="Appliances" payment="Credit" amount="29226" />
+	<sales location="Dallas" quarter="Q1" category="Clothing" payment="Cash" amount="18492" />
+	<sales location="Dallas" quarter="Q1" category="Clothing" payment="Credit" amount="39135" />
+	<sales location="Dallas" quarter="Q1" category="Electronics" payment="Cash" amount="19740" />
+	<sales location="Dallas" quarter="Q1" category="Electronics" payment="Credit" amount="18640" />
+	<sales location="Dallas" quarter="Q1" category="Jewelry" payment="Cash" amount="32007" />
+	<sales location="Dallas" quarter="Q1" category="Jewelry" payment="Credit" amount="39010" />
+	<sales location="Dallas" quarter="Q1" category="Appliances" payment="Cash" amount="18725" />
+	<sales location="Dallas" quarter="Q1" category="Appliances" payment="Credit" amount="48525" />
+	<sales location="Dallas" quarter="Q2" category="Clothing" payment="Cash" amount="39065" />
+	<sales location="Dallas" quarter="Q2" category="Clothing" payment="Credit" amount="24879" />
+	<sales location="Dallas" quarter="Q2" category="Electronics" payment="Cash" amount="32645" />
+	<sales location="Dallas" quarter="Q2" category="Electronics" payment="Credit" amount="46849" />
+	<sales location="Dallas" quarter="Q2" category="Jewelry" payment="Cash" amount="41855" />
+	<sales location="Dallas" quarter="Q2" category="Jewelry" payment="Credit" amount="41885" />
+	<sales location="Dallas" quarter="Q2" category="Appliances" payment="Cash" amount="29777" />
+	<sales location="Dallas" quarter="Q2" category="Appliances" payment="Credit" amount="45069" />
+	<sales location="Dallas" quarter="Q3" category="Clothing" payment="Cash" amount="18942" />
+	<sales location="Dallas" quarter="Q3" category="Clothing" payment="Credit" amount="32888" />
+	<sales location="Dallas" quarter="Q3" category="Electronics" payment="Cash" amount="32681" />
+	<sales location="Dallas" quarter="Q3" category="Electronics" payment="Credit" amount="17132" />
+	<sales location="Dallas" quarter="Q3" category="Jewelry" payment="Cash" amount="29414" />
+	<sales location="Dallas" quarter="Q3" category="Jewelry" payment="Credit" amount="38001" />
+	<sales location="Dallas" quarter="Q3" category="Appliances" payment="Cash" amount="24098" />
+	<sales location="Dallas" quarter="Q3" category="Appliances" payment="Credit" amount="21951" />
+	<sales location="Dallas" quarter="Q4" category="Clothing" payment="Cash" amount="42999" />
+	<sales location="Dallas" quarter="Q4" category="Clothing" payment="Credit" amount="25603" />
+	<sales location="Dallas" quarter="Q4" category="Electronics" payment="Cash" amount="28397" />
+	<sales location="Dallas" quarter="Q4" category="Electronics" payment="Credit" amount="18984" />
+	<sales location="Dallas" quarter="Q4" category="Jewelry" payment="Cash" amount="26473" />
+	<sales location="Dallas" quarter="Q4" category="Jewelry" payment="Credit" amount="34782" />
+	<sales location="Dallas" quarter="Q4" category="Appliances" payment="Cash" amount="32275" />
+	<sales location="Dallas" quarter="Q4" category="Appliances" payment="Credit" amount="48062" />
+	<sales location="New York" quarter="Q1" category="Clothing" payment="Cash" amount="17733" />
+	<sales location="New York" quarter="Q1" category="Clothing" payment="Credit" amount="36854" />
+	<sales location="New York" quarter="Q1" category="Electronics" payment="Cash" amount="27467" />
+	<sales location="New York" quarter="Q1" category="Electronics" payment="Credit" amount="22300" />
+	<sales location="New York" quarter="Q1" category="Jewelry" payment="Cash" amount="39813" />
+	<sales location="New York" quarter="Q1" category="Jewelry" payment="Credit" amount="49963" />
+	<sales location="New York" quarter="Q1" category="Appliances" payment="Cash" amount="19703" />
+	<sales location="New York" quarter="Q1" category="Appliances" payment="Credit" amount="21638" />
+	<sales location="New York" quarter="Q2" category="Clothing" payment="Cash" amount="47833" />
+	<sales location="New York" quarter="Q2" category="Clothing" payment="Credit" amount="15673" />
+	<sales location="New York" quarter="Q2" category="Electronics" payment="Cash" amount="31897" />
+	<sales location="New York" quarter="Q2" category="Electronics" payment="Credit" amount="44425" />
+	<sales location="New York" quarter="Q2" category="Jewelry" payment="Cash" amount="32477" />
+	<sales location="New York" quarter="Q2" category="Jewelry" payment="Credit" amount="39952" />
+	<sales location="New York" quarter="Q2" category="Appliances" payment="Cash" amount="25719" />
+	<sales location="New York" quarter="Q2" category="Appliances" payment="Credit" amount="25374" />
+	<sales location="New York" quarter="Q3" category="Clothing" payment="Cash" amount="29017" />
+	<sales location="New York" quarter="Q3" category="Clothing" payment="Credit" amount="18087" />
+	<sales location="New York" quarter="Q3" category="Electronics" payment="Cash" amount="44131" />
+	<sales location="New York" quarter="Q3" category="Electronics" payment="Credit" amount="15243" />
+	<sales location="New York" quarter="Q3" category="Jewelry" payment="Cash" amount="46137" />
+	<sales location="New York" quarter="Q3" category="Jewelry" payment="Credit" amount="18746" />
+	<sales location="New York" quarter="Q3" category="Appliances" payment="Cash" amount="23321" />
+	<sales location="New York" quarter="Q3" category="Appliances" payment="Credit" amount="30739" />
+	<sales location="New York" quarter="Q4" category="Clothing" payment="Cash" amount="28990" />
+	<sales location="New York" quarter="Q4" category="Clothing" payment="Credit" amount="31694" />
+	<sales location="New York" quarter="Q4" category="Electronics" payment="Cash" amount="30607" />
+	<sales location="New York" quarter="Q4" category="Electronics" payment="Credit" amount="27316" />
+	<sales location="New York" quarter="Q4" category="Jewelry" payment="Cash" amount="45788" />
+	<sales location="New York" quarter="Q4" category="Jewelry" payment="Credit" amount="41571" />
+	<sales location="New York" quarter="Q4" category="Appliances" payment="Cash" amount="45386" />
+	<sales location="New York" quarter="Q4" category="Appliances" payment="Credit" amount="27887" />
+	<sales location="San Francisco" quarter="Q1" category="Clothing" payment="Cash" amount="27119" />
+	<sales location="San Francisco" quarter="Q1" category="Clothing" payment="Credit" amount="21607" />
+	<sales location="San Francisco" quarter="Q1" category="Electronics" payment="Cash" amount="43061" />
+	<sales location="San Francisco" quarter="Q1" category="Electronics" payment="Credit" amount="21846" />
+	<sales location="San Francisco" quarter="Q1" category="Jewelry" payment="Cash" amount="21747" />
+	<sales location="San Francisco" quarter="Q1" category="Jewelry" payment="Credit" amount="16214" />
+	<sales location="San Francisco" quarter="Q1" category="Appliances" payment="Cash" amount="47061" />
+	<sales location="San Francisco" quarter="Q1" category="Appliances" payment="Credit" amount="21292" />
+	<sales location="San Francisco" quarter="Q2" category="Clothing" payment="Cash" amount="42191" />
+	<sales location="San Francisco" quarter="Q2" category="Clothing" payment="Credit" amount="25095" />
+	<sales location="San Francisco" quarter="Q2" category="Electronics" payment="Cash" amount="41604" />
+	<sales location="San Francisco" quarter="Q2" category="Electronics" payment="Credit" amount="34957" />
+	<sales location="San Francisco" quarter="Q2" category="Jewelry" payment="Cash" amount="17694" />
+	<sales location="San Francisco" quarter="Q2" category="Jewelry" payment="Credit" amount="48731" />
+	<sales location="San Francisco" quarter="Q2" category="Appliances" payment="Cash" amount="32736" />
+	<sales location="San Francisco" quarter="Q2" category="Appliances" payment="Credit" amount="39993" />
+	<sales location="San Francisco" quarter="Q3" category="Clothing" payment="Cash" amount="41351" />
+	<sales location="San Francisco" quarter="Q3" category="Clothing" payment="Credit" amount="25984" />
+	<sales location="San Francisco" quarter="Q3" category="Electronics" payment="Cash" amount="22387" />
+	<sales location="San Francisco" quarter="Q3" category="Electronics" payment="Credit" amount="37570" />
+	<sales location="San Francisco" quarter="Q3" category="Jewelry" payment="Cash" amount="42224" />
+	<sales location="San Francisco" quarter="Q3" category="Jewelry" payment="Credit" amount="44003" />
+	<sales location="San Francisco" quarter="Q3" category="Appliances" payment="Cash" amount="39778" />
+	<sales location="San Francisco" quarter="Q3" category="Appliances" payment="Credit" amount="40100" />
+	<sales location="San Francisco" quarter="Q4" category="Clothing" payment="Cash" amount="47081" />
+	<sales location="San Francisco" quarter="Q4" category="Clothing" payment="Credit" amount="48649" />
+	<sales location="San Francisco" quarter="Q4" category="Electronics" payment="Cash" amount="46379" />
+	<sales location="San Francisco" quarter="Q4" category="Electronics" payment="Credit" amount="20872" />
+	<sales location="San Francisco" quarter="Q4" category="Jewelry" payment="Cash" amount="40155" />
+	<sales location="San Francisco" quarter="Q4" category="Jewelry" payment="Credit" amount="20307" />
+	<sales location="San Francisco" quarter="Q4" category="Appliances" payment="Cash" amount="34930" />
+	<sales location="San Francisco" quarter="Q4" category="Appliances" payment="Credit" amount="40926" />
+</root>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SpringView width="275" height="325" PrefWidth="275" PrefHeight="325">
+  <Label x="92" y="67" width="74" height="22" Align="CENTER" text="Arrow Head:" />
+  <MenuButton Name="ArrowsMenuButton" x="113" y="95" width="36" height="24" />
+  <TitleView x="58" y="181" width="152" height="85" Title="Scale">
+    <SpringView width="152" height="85" PrefWidth="152" PrefHeight="85">
+      <ThumbWheel Name="ScaleThumbWheel" x="24" y="35" width="100" height="16" type="linear" max="4" absmin="0" />
+      <TextField Name="ScaleText" x="24" y="8" width="100" height="22" Align="CENTER" text="1" />
+    </SpringView>
+  </TitleView>
+</SpringView>

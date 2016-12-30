@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VBox PrefWidth="275" PrefHeight="260" Padding="8,4,4,4" Spacing="5" FillWidth="true">
+  <HBox Align="CENTER" Spacing="10">
+    <ToggleButton Name="NoFormatButton" PrefWidth="40" PrefHeight="30" image="FormatNone.png" ToggleGroup="bg1" />
+    <ToggleButton Name="NumberFormatButton" PrefWidth="40" PrefHeight="30" image="FormatNumber.png" ToggleGroup="bg1" />
+    <ToggleButton Name="DateFormatButton" PrefWidth="40" PrefHeight="30" image="FormatDate.png" ToggleGroup="bg1" />
+  </HBox>
+  <SwitchView Name="PickerPanel" GrowHeight="true">
+    <VBox Align="CENTER">
+      <Label text="Selection has no format" />
+    </VBox>
+    <VBox Name="NumberFormatPane" Spacing="4" FillWidth="true">
+      <HBox Padding="4,2,0,2" Spacing="2">
+        <ToggleButton Name="MoneyButton" ToolTip="Money Format" image="Format_Money.png" />
+        <ToggleButton Name="PercentButton" ToolTip="Percent Format" image="Format_Percent.png" />
+        <ToggleButton Name="CommaButton" ToolTip="Comma Format" image="Format_Comma.png" />
+        <Button Name="DecimalAddButton" LeanX="RIGHT" ToolTip="Add Decimal" image="Format_DecimalAdd.png" />
+        <Button Name="DecimalRemoveButton" ToolTip="Remove Decimal" image="Format_DecimalRemove.png" />
+      </HBox>
+      <ScrollView GrowHeight="true">
+        <TableView Name="NumberFormatTable">
+          <TableCol PrefWidth="90" GrowWidth="true" Header="Positive" />
+          <TableCol PrefWidth="90" GrowWidth="true" Header="Negative" />
+          <TableCol PrefWidth="70" GrowWidth="true" Header="Format" />
+        </TableView>
+      </ScrollView>
+      <HBox>
+        <Label text=" Format: " />
+        <TextField Name="NumberFormatText" GrowWidth="true" />
+      </HBox>
+      <HBox Spacing="4">
+        <CheckBox Name="NegativeInRedCheckBox" text="Negative in Red" />
+        <Label LeanX="RIGHT" text="String for Null:" />
+        <TextField Name="NumberNullStringText" PrefWidth="75" />
+      </HBox>
+    </VBox>
+    <VBox Name="DateFormatPane" Spacing="4" FillWidth="true">
+      <ScrollView GrowHeight="true">
+        <TableView Name="DateFormatTable">
+          <TableCol PrefWidth="140" GrowWidth="true" Header="Date" />
+          <TableCol PrefWidth="110" GrowWidth="true" Header="Format" />
+        </TableView>
+      </ScrollView>
+      <HBox Spacing="4">
+        <Label PrefWidth="70" Align="CENTER_RIGHT" text="Custom:" />
+        <TextField Name="DateFormatText" GrowWidth="true" />
+      </HBox>
+      <HBox Spacing="4">
+        <Label PrefWidth="70" Align="CENTER_RIGHT" text="String for Null:" />
+        <TextField Name="DateNullStringText" GrowWidth="true" />
+      </HBox>
+    </VBox>
+  </SwitchView>
+</VBox>

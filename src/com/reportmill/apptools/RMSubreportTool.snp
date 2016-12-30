@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SpringView width="275" height="325" PrefWidth="275" PrefHeight="325">
+  <Label x="5" y="28" width="120" height="22" text="Subreport Name/Path:" />
+  <TextField x="5" y="50" width="265" height="22">
+    <binding aspect="Text" key="SelectedShapes.SubreportName" />
+  </TextField>
+  <Button Name="OpenInEditorButton" x="55" y="95" width="141" height="22" text="Open In Editor" />
+</SpringView>

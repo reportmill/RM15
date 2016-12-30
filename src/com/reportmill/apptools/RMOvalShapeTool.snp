@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SpringView width="275" height="325" PrefWidth="275" PrefHeight="325">
+  <TitleView x="15" y="40" width="250" height="48" Title="Start Angle">
+    <SpringView width="250" height="48" PrefWidth="250" PrefHeight="48">
+      <ThumbWheel Name="StartThumb" x="5" y="7" width="180" height="16" max="360" round="1" />
+      <TextField Name="StartText" x="190" y="5" width="50" height="20" Align="CENTER" />
+    </SpringView>
+  </TitleView>
+  <TitleView x="13" y="97" width="250" height="48" Title="Sweep Angle">
+    <SpringView width="250" height="48" PrefWidth="250" PrefHeight="48">
+      <ThumbWheel Name="SweepThumb" x="5" y="7" width="180" height="16" max="360" absmin="0" absmax="360" round="1" />
+      <TextField Name="SweepText" x="190" y="5" width="50" height="20" Align="CENTER" />
+    </SpringView>
+  </TitleView>
+</SpringView>

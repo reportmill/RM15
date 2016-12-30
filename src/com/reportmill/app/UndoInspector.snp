@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SpringView width="275" height="325" PrefWidth="275" PrefHeight="325">
+  <Label x="10" width="130" height="16" text="Undos/Redos:" />
+  <Label x="145" width="130" height="16" text="Changes:" />
+  <ScrollView x="5" y="16" width="130" height="110">
+    <ListView Name="UndosList" />
+  </ScrollView>
+  <ScrollView x="5" y="130" width="130" height="110">
+    <ListView Name="RedosList" />
+  </ScrollView>
+  <ScrollView x="145" y="16" width="123" height="224">
+    <ListView Name="ChangesList" />
+  </ScrollView>
+  <ScrollView x="5" y="259" width="263" height="64">
+    <TextView Name="ChangeText" />
+  </ScrollView>
+  <Label x="5" y="241" width="130" height="16" text="Change Details:" />
+</SpringView>

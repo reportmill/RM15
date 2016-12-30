@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SpringView width="275" height="325" PrefWidth="275" PrefHeight="325">
+  <Label x="5" y="5" width="68" height="18" text="Dataset Key:" />
+  <TextField Name="ListKeyText" x="73" y="4" width="196" height="20" />
+  <Label x="5" y="29" width="62" height="18" text="Filter Expr:" />
+  <TextField Name="FilterKeyText" x="63" y="28" width="206" height="20" />
+  <Label x="4" y="54" width="90" height="18" text="Grouping:" />
+  <MenuButton Name="GroupKeysMenuButton" x="203" y="53" width="66" height="18" text="Keys...">
+    <MenuItem Name="AddGroupMenuItem" text="Add..." />
+    <MenuItem Name="RemoveGroupMenuItem" text="Remove" />
+    <MenuItem Name="MoveGroupUpMenuItem" text="Move Group Up" />
+    <MenuItem Name="MoveGroupDownMenuItem" text="Move Group Down" />
+  </MenuButton>
+  <ScrollView x="4" y="72" width="267" height="75">
+    <TableView Name="GroupingTable" ShowHeader="false" RowHeight="20">
+      <TableCol GrowWidth="true" ItemKey="Key" />
+      <TableCol PrefWidth="28" />
+    </TableView>
+  </ScrollView>
+  <CheckBox Name="HeaderCheckBox" x="25" y="150" width="70" height="16" text="Header" />
+  <CheckBox Name="DetailsCheckBox" x="100" y="150" width="70" height="16" text="Details" />
+  <CheckBox Name="SummaryCheckBox" x="175" y="150" width="94" height="16" text="Summary" />
+  <Label x="4" y="278" width="127" height="18" text="Number of Columns:" />
+  <TextField Name="NumColumnsText" x="113" y="278" width="35" height="20" Align="CENTER" />
+  <Label x="4" y="302" width="120" height="18" text="Inter-column Spacing:" />
+  <TextField Name="ColumnSpacingText" x="113" y="302" width="35" height="20" Align="CENTER" />
+  <Button Name="TableGroupButton" x="153" y="302" width="117" height="20" text="Make TableGroup" />
+</SpringView>

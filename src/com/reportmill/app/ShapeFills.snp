@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SpringView width="275" height="325" PrefWidth="275" PrefHeight="325">
+  <TabView Name="TabView" width="275" height="275" SelectedIndex="1">
+    <SpringView x="11" y="30" width="254" height="232" PrefWidth="254" PrefHeight="232" title="Stroke">
+      <CheckBox Name="StrokeCheckBox" x="2" y="2" width="72" height="20" text="Stroke" />
+      <ComboBox Name="StrokeComboBox" x="61" y="27" width="135" height="23" />
+      <BorderView Name="StrokePane" y="50" width="275" height="253" GrowWidth="true" GrowHeight="true" />
+    </SpringView>
+    <SpringView x="11" y="30" width="254" height="232" PrefWidth="254" PrefHeight="232" title="   Fill   ">
+      <CheckBox Name="FillCheckBox" x="2" y="2" width="54" height="20" text="Fill" />
+      <ComboBox Name="FillComboBox" x="61" y="27" width="135" height="23" />
+      <BorderView Name="FillPane" y="50" width="275" height="253" GrowWidth="true" GrowHeight="true" />
+    </SpringView>
+    <SpringView x="11" y="30" width="254" height="232" PrefWidth="254" PrefHeight="232" title="Effect">
+      <CheckBox Name="EffectCheckBox" x="2" y="2" width="70" height="20" text="Effect" />
+      <ComboBox Name="EffectComboBox" x="61" y="27" width="135" height="23" />
+      <BorderView Name="EffectPane" y="50" width="254" height="182" GrowWidth="true" GrowHeight="true" />
+    </SpringView>
+  </TabView>
+  <Label x="10" y="275" width="112" height="22" text="Transparency" />
+  <Slider Name="TransparencySlider" x="10" y="296" width="180" height="25" />
+  <TextField Name="TransparencyText" x="195" y="298" width="50" height="20" Align="CENTER" />
+</SpringView>

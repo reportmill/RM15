@@ -1,0 +1,4075 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<Movies id="1" getTitle="Raiders of the Lost Ark" getRevenue="14400000" getRating="G" getShowDate="1981-12-26" getCategory="Action" getPosterUrl="http://reportmill.com/examples/movies/Raiders-of-the-Lost-Ark.jpg" getTrailerUrl="http://www.movie-list.net/classics121807/raiders-of-the-lost-ark.mov" >
+		<getMovieRoles id="2" />
+		<getMovieRoles id="21" />
+		<getPlotSummary id="57" />
+		<getStudio id="1" />
+	</Movies>
+	<Movies id="2" getTitle="M" getRevenue="200000" getRating="G" getShowDate="1931-12-28" getCategory="Film-noir" getPosterUrl="http://reportmill.com/examples/movies/M.jpg" >
+		<getMovieRoles id="10" />
+		<getPlotSummary id="54" />
+		<getStudio id="3" />
+	</Movies>
+	<Movies id="3" getTitle="Casablanca" getRevenue="11200000" getRating="G" getShowDate="1955-12-28" getCategory="Drama" getPosterUrl="http://reportmill.com/examples/movies/Casablanca.jpg" getTrailerUrl="http://www.movie-list.net/classics121807/casablanca.mov" >
+		<getMovieRoles id="7" />
+		<getMovieRoles id="8" />
+		<getMovieRoles id="9" />
+		<getMovieRoles id="13" />
+		<getPlotSummary id="1" />
+		<getStudio id="5" />
+	</Movies>
+	<Movies id="4" getTitle="Lolita" getRevenue="400000" getRating="PG" getShowDate="1962-12-28" getCategory="Drama" getPosterUrl="http://reportmill.com/examples/movies/Lolita.jpg" >
+		<getMovieRoles id="11" />
+		<getMovieRoles id="12" />
+		<getMovieRoles id="14" />
+		<getMovieRoles id="15" />
+		<getPlotSummary id="59" />
+		<getStudio id="1" />
+	</Movies>
+	<Movies id="5" getTitle="Hombre" getRevenue="300000" getRating="PG" getShowDate="1967-12-28" getCategory="Western" getPosterUrl="http://reportmill.com/examples/movies/Hombre.jpg" >
+		<getMovieRoles id="16" />
+		<getPlotSummary id="2" />
+		<getStudio id="6" />
+	</Movies>
+	<Movies id="6" getShowDate="1954-01-02" getCategory="Thriller" getTitle="Les Diaboliques" getRevenue="200000" getPosterUrl="http://reportmill.com/examples/movies/Les-Diaboliques.jpg" >
+		<getMovieRoles id="22" />
+		<getMovieRoles id="23" />
+		<getMovieRoles id="24" />
+		<getMovieRoles id="25" />
+		<getMovieRoles id="26" />
+		<getPlotSummary id="55" />
+		<getStudio id="4" />
+	</Movies>
+	<Movies id="7" getShowDate="1991-01-03" getCategory="Surreal" getTitle="Bis ans Ende der Welt [Until the End of the World]" getRevenue="500000" getPosterUrl="http://reportmill.com/examples/movies/Bis-ans-Ende-der-Welt.jpg" >
+		<getMovieRoles id="52" />
+		<getMovieRoles id="53" />
+		<getMovieRoles id="54" />
+		<getMovieRoles id="55" />
+		<getMovieRoles id="56" />
+		<getMovieRoles id="57" />
+		<getMovieRoles id="58" />
+		<getMovieRoles id="59" />
+		<getMovieRoles id="60" />
+		<getMovieRoles id="61" />
+		<getMovieRoles id="62" />
+		<getMovieRoles id="63" />
+		<getMovieRoles id="64" />
+		<getMovieRoles id="65" />
+		<getMovieRoles id="66" />
+		<getMovieRoles id="67" />
+		<getMovieRoles id="68" />
+		<getMovieRoles id="69" />
+		<getMovieRoles id="70" />
+		<getMovieRoles id="71" />
+		<getMovieRoles id="72" />
+		<getMovieRoles id="73" />
+		<getMovieRoles id="56" />
+		<getMovieRoles id="74" />
+		<getMovieRoles id="75" />
+		<getMovieRoles id="76" />
+		<getMovieRoles id="77" />
+		<getMovieRoles id="78" />
+		<getMovieRoles id="79" />
+		<getMovieRoles id="80" />
+		<getMovieRoles id="81" />
+		<getMovieRoles id="82" />
+		<getMovieRoles id="83" />
+		<getMovieRoles id="84" />
+		<getMovieRoles id="85" />
+		<getMovieRoles id="86" />
+		<getMovieRoles id="87" />
+		<getMovieRoles id="88" />
+		<getMovieRoles id="89" />
+		<getMovieRoles id="90" />
+		<getPlotSummary id="5" />
+		<getStudio id="1" />
+	</Movies>
+	<Movies id="8" getTitle="Hoosiers" getRevenue="1200000" getRating="PG" getShowDate="1986-01-03" getCategory="Drama" getPosterUrl="http://reportmill.com/examples/movies/Hoosiers.jpg" >
+		<getMovieRoles id="46" />
+		<getMovieRoles id="47" />
+		<getMovieRoles id="48" />
+		<getPlotSummary id="56" />
+		<getStudio id="7" />
+	</Movies>
+	<Movies id="9" getTitle="Hoop Dreams" getRevenue="600000" getRating="PG-13" getShowDate="1994-01-03" getCategory="Documentary" getPosterUrl="http://reportmill.com/examples/movies/Hoop-Dreams.jpg" >
+		<getMovieRoles id="49" />
+		<getMovieRoles id="50" />
+		<getMovieRoles id="51" />
+		<getPlotSummary id="58" />
+		<getStudio id="8" />
+	</Movies>
+	<Movies id="10" getTitle="Frantic" getRevenue="700000" getRating="R" getShowDate="1988-01-03" getCategory="Thriller" getPosterUrl="http://reportmill.com/examples/movies/Frantic.jpg" >
+		<getMovieRoles id="95" />
+		<getMovieRoles id="96" />
+		<getMovieRoles id="97" />
+		<getPlotSummary id="63" />
+		<getStudio id="36" />
+	</Movies>
+	<Movies id="11" getTitle="Manhunter" getRevenue="900000" getRating="R" getShowDate="1986-01-03" getCategory="Thriller" getPosterUrl="http://reportmill.com/examples/movies/Manhunter.jpg" >
+		<getMovieRoles id="104" />
+		<getMovieRoles id="105" />
+		<getMovieRoles id="106" />
+		<getMovieRoles id="107" />
+		<getPlotSummary id="62" />
+		<getStudio id="2" />
+	</Movies>
+	<Movies id="12" getTitle="Midnight Run" getRevenue="1000000" getRating="R" getShowDate="1988-01-03" getCategory="Action" getPosterUrl="http://reportmill.com/examples/movies/Midnight-Run.jpg" >
+		<getMovieRoles id="108" />
+		<getMovieRoles id="109" />
+		<getMovieRoles id="110" />
+		<getMovieRoles id="111" />
+		<getMovieRoles id="112" />
+		<getMovieRoles id="113" />
+		<getPlotSummary id="61" />
+		<getStudio id="9" />
+	</Movies>
+	<Movies id="13" getTitle="The Last Seduction" getRevenue="800000" getRating="R" getShowDate="1994-01-03" getCategory="Film-noir" getPosterUrl="http://reportmill.com/examples/movies/The-Last-Seduction.jpg" >
+		<getMovieRoles id="114" />
+		<getMovieRoles id="115" />
+		<getMovieRoles id="116" />
+		<getPlotSummary id="65" />
+		<getStudio id="14" />
+	</Movies>
+	<Movies id="14" getTitle="Red Rock West" getRevenue="700000" getRating="R" getShowDate="1992-01-03" getCategory="Film-noir" getPosterUrl="http://reportmill.com/examples/movies/Red-Rock-West.jpg" >
+		<getMovieRoles id="117" />
+		<getMovieRoles id="118" />
+		<getMovieRoles id="119" />
+		<getMovieRoles id="120" />
+		<getPlotSummary id="66" />
+		<getStudio id="10" />
+	</Movies>
+	<Movies id="15" getTitle="Apocalypse Now" getRevenue="1334000" getRating="R" getShowDate="1979-01-03" getCategory="Drama" getPosterUrl="http://reportmill.com/examples/movies/Apocalypse-Now.jpg" >
+		<getMovieRoles id="121" />
+		<getMovieRoles id="122" />
+		<getMovieRoles id="123" />
+		<getMovieRoles id="124" />
+		<getMovieRoles id="125" />
+		<getPlotSummary id="64" />
+		<getStudio id="13" />
+	</Movies>
+	<Movies id="16" getShowDate="1988-01-03" getCategory="Surreal" getTitle="Le grand bleu" getRevenue="800000" getPosterUrl="http://reportmill.com/examples/movies/Le-grand-bleu.jpg" >
+		<getMovieRoles id="126" />
+		<getMovieRoles id="127" />
+		<getMovieRoles id="128" />
+		<getMovieRoles id="129" />
+		<getPlotSummary id="8" />
+		<getStudio id="6" />
+	</Movies>
+	<Movies id="17" getTitle="Subway" getRevenue="300000" getRating="R" getShowDate="1985-01-03" getCategory="Cult" getPosterUrl="http://reportmill.com/examples/movies/Subway.jpg" >
+		<getMovieRoles id="130" />
+		<getMovieRoles id="131" />
+		<getMovieRoles id="132" />
+		<getMovieRoles id="133" />
+		<getMovieRoles id="134" />
+		<getMovieRoles id="135" />
+		<getMovieRoles id="136" />
+		<getMovieRoles id="137" />
+		<getMovieRoles id="138" />
+		<getPlotSummary id="9" />
+		<getStudio id="15" />
+	</Movies>
+	<Movies id="18" getTitle="Diva2" getRevenue="1000000" getRating="R" getShowDate="1980-01-03" getCategory="Drama" getPosterUrl="http://reportmill.com/examples/movies/Diva.jpg" >
+		<getMovieRoles id="139" />
+		<getPlotSummary id="10" />
+		<getStudio id="16" />
+	</Movies>
+	<Movies id="19" getTitle="Diner" getRevenue="200000" getRating="R" getShowDate="1982-01-03" getCategory="Drama" getPosterUrl="http://reportmill.com/examples/movies/Diner.jpg" >
+		<getMovieRoles id="140" />
+		<getMovieRoles id="141" />
+		<getMovieRoles id="142" />
+		<getMovieRoles id="143" />
+		<getMovieRoles id="144" />
+		<getMovieRoles id="145" />
+		<getMovieRoles id="146" />
+		<getMovieRoles id="147" />
+		<getMovieRoles id="148" />
+		<getPlotSummary id="67" />
+		<getStudio id="2" />
+	</Movies>
+	<Movies id="20" getTitle="Nikita [La femme nikita]" getRevenue="900000" getRating="R" getShowDate="1990-01-03" getCategory="Thriller" getPosterUrl="http://reportmill.com/examples/movies/Nikita.jpg" >
+		<getMovieRoles id="149" />
+		<getMovieRoles id="150" />
+		<getMovieRoles id="151" />
+		<getMovieRoles id="152" />
+		<getMovieRoles id="153" />
+		<getMovieRoles id="154" />
+		<getMovieRoles id="102" />
+		<getMovieRoles id="155" />
+		<getPlotSummary id="11" />
+		<getStudio id="15" />
+	</Movies>
+	<Movies id="21" getTitle="Uncle Buck" getRevenue="1000000" getRating="PG" getShowDate="1989-01-03" getCategory="Comedy" getPosterUrl="http://reportmill.com/examples/movies/Uncle-Buck.jpg" >
+		<getMovieRoles id="174" />
+		<getMovieRoles id="175" />
+		<getMovieRoles id="176" />
+		<getMovieRoles id="177" />
+		<getMovieRoles id="178" />
+		<getMovieRoles id="179" />
+		<getPlotSummary id="76" />
+		<getStudio id="9" />
+	</Movies>
+	<Movies id="22" getTitle="Cool Runnings" getRevenue="200000" getRating="PG" getShowDate="1993-01-03" getCategory="Comedy" getPosterUrl="http://reportmill.com/examples/movies/Cool-Runnings.jpg" >
+		<getMovieRoles id="180" />
+		<getMovieRoles id="181" />
+		<getMovieRoles id="182" />
+		<getMovieRoles id="183" />
+		<getMovieRoles id="184" />
+		<getPlotSummary id="75" />
+		<getStudio id="17" />
+	</Movies>
+	<Movies id="23" getTitle="Heathers" getRevenue="4400000" getRating="R" getShowDate="1989-01-03" getCategory="Film-noir" getPosterUrl="http://reportmill.com/examples/movies/Heathers.jpg" >
+		<getMovieRoles id="191" />
+		<getMovieRoles id="192" />
+		<getMovieRoles id="193" />
+		<getMovieRoles id="194" />
+		<getMovieRoles id="195" />
+		<getPlotSummary id="73" />
+		<getStudio id="18" />
+	</Movies>
+	<Movies id="24" getTitle="Roger &amp; Me" getRevenue="600000" getRating="R" getShowDate="1989-01-03" getCategory="Documentary" getPosterUrl="http://reportmill.com/examples/movies/Roger-and-Me.jpg" >
+		<getMovieRoles id="196" />
+		<getMovieRoles id="197" />
+		<getMovieRoles id="198" />
+		<getMovieRoles id="199" />
+		<getPlotSummary id="69" />
+		<getStudio id="5" />
+	</Movies>
+	<Movies id="25" getTitle="Fletch" getRevenue="300000" getRating="PG" getShowDate="1985-01-03" getCategory="Comedy" getPosterUrl="http://reportmill.com/examples/movies/Fletch.jpg" >
+		<getMovieRoles id="200" />
+		<getMovieRoles id="201" />
+		<getMovieRoles id="202" />
+		<getMovieRoles id="203" />
+		<getMovieRoles id="204" />
+		<getMovieRoles id="205" />
+		<getMovieRoles id="206" />
+		<getMovieRoles id="207" />
+		<getPlotSummary id="74" />
+		<getStudio id="9" />
+	</Movies>
+	<Movies id="26" getTitle="Chinatown" getRevenue="500000" getRating="R" getShowDate="1974-01-03" getCategory="Detective" getPosterUrl="http://reportmill.com/examples/movies/Chinatown.jpg" >
+		<getMovieRoles id="208" />
+		<getMovieRoles id="209" />
+		<getMovieRoles id="210" />
+		<getMovieRoles id="211" />
+		<getMovieRoles id="212" />
+		<getPlotSummary id="70" />
+		<getStudio id="1" />
+	</Movies>
+	<Movies id="27" getTitle="The Untouchables" getRevenue="1390000" getRating="R" getShowDate="1987-01-03" getCategory="Action" getPosterUrl="http://reportmill.com/examples/movies/The-Untouchables.jpg" >
+		<getMovieRoles id="213" />
+		<getMovieRoles id="214" />
+		<getMovieRoles id="215" />
+		<getMovieRoles id="216" />
+		<getMovieRoles id="217" />
+		<getPlotSummary id="79" />
+		<getStudio id="1" />
+	</Movies>
+	<Movies id="28" getTitle="When Harry Met Sally" getRevenue="26400000" getRating="R" getShowDate="1989-01-03" getCategory="Romantic Comedy" getPosterUrl="http://reportmill.com/examples/movies/When-Harry-Met-Sally.jpg" >
+		<getMovieRoles id="218" />
+		<getMovieRoles id="219" />
+		<getMovieRoles id="220" />
+		<getMovieRoles id="221" />
+		<getPlotSummary id="83" />
+		<getStudio id="3" />
+	</Movies>
+	<Movies id="29" getTitle="Priest" getRevenue="4310000" getRating="R" getShowDate="1995-04-13" getCategory="Drama" getPosterUrl="http://reportmill.com/examples/movies/Priest.gif" >
+		<getMovieRoles id="222" />
+		<getMovieRoles id="223" />
+		<getMovieRoles id="224" />
+		<getMovieRoles id="225" />
+		<getMovieRoles id="226" />
+		<getMovieRoles id="227" />
+		<getMovieRoles id="228" />
+		<getMovieRoles id="229" />
+		<getMovieRoles id="230" />
+		<getPlotSummary id="80" />
+		<getStudio id="19" />
+	</Movies>
+	<Movies id="30" getCategory="Drama" getRating="G" getTitle="Little Women" getRevenue="600000" getPosterUrl="http://reportmill.com/examples/movies/Little-Women.jpg" >
+		<getMovieRoles id="231" />
+		<getMovieRoles id="232" />
+		<getMovieRoles id="233" />
+		<getPlotSummary id="82" />
+		<getStudio id="3" />
+	</Movies>
+	<Movies id="31" getTitle="Empire of the Sun" getRevenue="800000" getRating="PG" getShowDate="1987-01-04" getCategory="Drama" getPosterUrl="http://reportmill.com/examples/movies/Empire-of-the-Sun.jpg" >
+		<getMovieRoles id="234" />
+		<getMovieRoles id="235" />
+		<getMovieRoles id="236" />
+		<getPlotSummary id="78" />
+		<getStudio id="5" />
+	</Movies>
+	<Movies id="32" getTitle="Toy Story" getRevenue="500000" getRating="G" getShowDate="1995-11-21" getCategory="Animated" getPosterUrl="http://reportmill.com/examples/movies/Toy-Story.jpg" getTrailerUrl="http://www.movie-list.net/classics121807/toy-story-trailer.mov" >
+		<getMovieRoles id="237" />
+		<getMovieRoles id="238" />
+		<getPlotSummary id="81" />
+		<getStudio id="17" />
+	</Movies>
+	<Movies id="33" getTitle="Alien" getRevenue="11200000" getRating="R" getShowDate="1979-10-24" getCategory="Horror" getPosterUrl="http://reportmill.com/examples/movies/Alien.jpg" >
+		<getMovieRoles id="258" />
+		<getMovieRoles id="259" />
+		<getMovieRoles id="260" />
+		<getMovieRoles id="261" />
+		<getMovieRoles id="262" />
+		<getMovieRoles id="263" />
+		<getMovieRoles id="264" />
+		<getPlotSummary id="13" />
+		<getStudio id="6" />
+	</Movies>
+	<Movies id="34" getTitle="The Terminator" getRevenue="300000" getRating="R" getShowDate="1985-04-24" getCategory="Action" getPosterUrl="http://reportmill.com/examples/movies/The-Terminator.jpg" >
+		<getMovieRoles id="265" />
+		<getMovieRoles id="266" />
+		<getMovieRoles id="267" />
+		<getPlotSummary id="14" />
+		<getStudio id="20" />
+	</Movies>
+	<Movies id="35" getTitle="Tootsie" getRevenue="600000" getRating="R" getShowDate="1982-11-10" getCategory="Comedy" getPosterUrl="http://reportmill.com/examples/movies/Tootsie.jpg" >
+		<getMovieRoles id="268" />
+		<getMovieRoles id="117" />
+		<getMovieRoles id="269" />
+		<getMovieRoles id="270" />
+		<getMovieRoles id="271" />
+		<getPlotSummary id="16" />
+		<getStudio id="3" />
+	</Movies>
+	<Movies id="36" getTitle="Pulp Fiction" getRevenue="47700000" getRating="R" getShowDate="1994-11-10" getCategory="Film-noir" getPosterUrl="http://reportmill.com/examples/movies/Pulp-Fiction.jpg" >
+		<getMovieRoles id="272" />
+		<getMovieRoles id="273" />
+		<getMovieRoles id="274" />
+		<getMovieRoles id="275" />
+		<getMovieRoles id="276" />
+		<getMovieRoles id="277" />
+		<getMovieRoles id="278" />
+		<getPlotSummary id="17" />
+		<getStudio id="19" />
+	</Movies>
+	<Movies id="37" getTitle="The Piano" getRevenue="700000" getRating="R" getShowDate="1993-11-10" getCategory="Drama" getPosterUrl="http://reportmill.com/examples/movies/The-Piano.jpg" >
+		<getMovieRoles id="279" />
+		<getMovieRoles id="280" />
+		<getMovieRoles id="281" />
+		<getMovieRoles id="282" />
+		<getPlotSummary id="18" />
+		<getStudio id="22" />
+	</Movies>
+	<Movies id="38" getTitle="Jurassic Park" getRevenue="400000" getRating="PG-13" getShowDate="1993-11-10" getCategory="Action" getPosterUrl="http://reportmill.com/examples/movies/Jurassic-Park.jpg" >
+		<getMovieRoles id="283" />
+		<getMovieRoles id="284" />
+		<getMovieRoles id="285" />
+		<getMovieRoles id="286" />
+		<getPlotSummary id="19" />
+		<getStudio id="9" />
+	</Movies>
+	<Movies id="39" getTitle="Schindler's List" getRevenue="900000" getRating="R" getShowDate="1993-11-10" getCategory="Drama" getPosterUrl="http://reportmill.com/examples/movies/Schindlers-List.jpg" >
+		<getMovieRoles id="287" />
+		<getMovieRoles id="288" />
+		<getMovieRoles id="289" />
+		<getMovieRoles id="290" />
+		<getPlotSummary id="20" />
+		<getStudio id="9" />
+	</Movies>
+	<Movies id="40" getTitle="National Lampoon's Animal House" getRevenue="800000" getRating="R" getShowDate="1978-11-10" getCategory="Comedy" getPosterUrl="http://reportmill.com/examples/movies/Animal-House.jpg" >
+		<getMovieRoles id="291" />
+		<getMovieRoles id="292" />
+		<getMovieRoles id="293" />
+		<getMovieRoles id="294" />
+		<getMovieRoles id="295" />
+		<getPlotSummary id="21" />
+		<getStudio id="9" />
+	</Movies>
+	<Movies id="41" getTitle="My Dinner With Andre" getRevenue="500000" getRating="PG" getShowDate="1981-11-10" getCategory="Drama">
+		<getMovieRoles id="296" />
+		<getMovieRoles id="297" />
+		<getPlotSummary id="22" />
+		<getStudio id="23" />
+	</Movies>
+	<Movies id="42" getTitle="My Beautiful Laundrette" getRevenue="500000" getRating="R" getShowDate="1986-11-10" getCategory="Drama">
+		<getMovieRoles id="298" />
+		<getMovieRoles id="299" />
+		<getPlotSummary id="23" />
+		<getStudio id="24" />
+	</Movies>
+	<Movies id="43" getTitle="Entre Nous" getRevenue="700000" getRating="PG" getShowDate="1983-11-10" getCategory="Drama">
+		<getMovieRoles id="300" />
+		<getMovieRoles id="301" />
+		<getPlotSummary id="24" />
+		<getStudio id="25" />
+	</Movies>
+	<Movies id="44" getTitle="Stand By Me" getRevenue="200000" getRating="R" getShowDate="1986-11-10" getCategory="Drama">
+		<getMovieRoles id="308" />
+		<getMovieRoles id="309" />
+		<getMovieRoles id="310" />
+		<getMovieRoles id="311" />
+		<getMovieRoles id="312" />
+		<getMovieRoles id="313" />
+		<getPlotSummary id="26" />
+		<getStudio id="36" />
+	</Movies>
+	<Movies id="45" getTitle="My Own Private Idaho" getRevenue="8800000" getRating="R" getShowDate="1991-11-10" getCategory="Drama">
+		<getMovieRoles id="314" />
+		<getMovieRoles id="315" />
+		<getPlotSummary id="27" />
+		<getStudio id="11" />
+	</Movies>
+	<Movies id="46" getTitle="Blue Velvet" getRevenue="300000" getRating="R" getShowDate="1986-11-10" getCategory="Drama">
+		<getMovieRoles id="316" />
+		<getMovieRoles id="317" />
+		<getMovieRoles id="318" />
+		<getMovieRoles id="319" />
+		<getPlotSummary id="28" />
+		<getStudio id="26" />
+	</Movies>
+	<Movies id="47" getTitle="Amarcord" getRevenue="3213000" getRating="R" getShowDate="1974-11-10" getCategory="Comedy">
+		<getMovieRoles id="320" />
+		<getMovieRoles id="248" />
+		<getMovieRoles id="321" />
+		<getPlotSummary id="51" />
+		<getStudio id="27" />
+	</Movies>
+	<Movies id="48" getTitle="Total Recall" getRevenue="300000" getRating="R" getShowDate="1990-11-10" getCategory="Action">
+		<getMovieRoles id="322" />
+		<getMovieRoles id="323" />
+		<getMovieRoles id="324" />
+		<getMovieRoles id="325" />
+		<getMovieRoles id="326" />
+		<getPlotSummary id="29" />
+		<getStudio id="28" />
+	</Movies>
+	<Movies id="49" getTitle="Cries and Whispers" getRevenue="100000" getRating="R" getShowDate="1973-11-10" getCategory="Drama">
+		<getMovieRoles id="333" />
+		<getMovieRoles id="334" />
+		<getMovieRoles id="335" />
+		<getMovieRoles id="336" />
+		<getPlotSummary id="32" />
+		<getStudio id="4" />
+	</Movies>
+	<Movies id="50" getTitle="Desert Hearts" getRevenue="200000" getRating="R" getShowDate="1985-11-10" getCategory="Drama">
+		<getMovieRoles id="337" />
+		<getMovieRoles id="338" />
+		<getMovieRoles id="339" />
+		<getPlotSummary id="33" />
+		<getStudio id="29" />
+	</Movies>
+	<Movies id="51" getTitle="She's Gotta Have It" getRevenue="600000" getRating="R" getShowDate="1986-11-10" getCategory="Comedy">
+		<getMovieRoles id="340" />
+		<getMovieRoles id="341" />
+		<getMovieRoles id="342" />
+		<getMovieRoles id="343" />
+		<getPlotSummary id="34" />
+		<getStudio id="30" />
+	</Movies>
+	<Movies id="52" getTitle="Do the Right Thing" getRevenue="700000" getRating="R" getShowDate="1989-11-10" getCategory="Comedy">
+		<getMovieRoles id="344" />
+		<getMovieRoles id="345" />
+		<getMovieRoles id="346" />
+		<getMovieRoles id="347" />
+		<getMovieRoles id="348" />
+		<getMovieRoles id="349" />
+		<getMovieRoles id="350" />
+		<getMovieRoles id="351" />
+		<getMovieRoles id="352" />
+		<getPlotSummary id="35" />
+		<getStudio id="30" />
+	</Movies>
+	<Movies id="53" getTitle="Thelma &amp; Louise" getRevenue="800000" getRating="R" getShowDate="1991-11-10" getCategory="Drama">
+		<getMovieRoles id="192" />
+		<getMovieRoles id="353" />
+		<getMovieRoles id="354" />
+		<getMovieRoles id="355" />
+		<getMovieRoles id="356" />
+		<getMovieRoles id="357" />
+		<getPlotSummary id="36" />
+		<getStudio id="2" />
+	</Movies>
+	<Movies id="54" getTitle="Klute" getRevenue="500000" getRating="R" getShowDate="1971-11-10" getCategory="Drama">
+		<getMovieRoles id="363" />
+		<getMovieRoles id="364" />
+		<getPlotSummary id="38" />
+		<getStudio id="5" />
+	</Movies>
+	<Movies id="55" getShowDate="1976-11-10" getCategory="Surreal" getTitle="Eraserhead" getRevenue="400000">
+		<getMovieRoles id="365" />
+		<getMovieRoles id="366" />
+		<getPlotSummary id="39" />
+		<getStudio id="36" />
+	</Movies>
+	<Movies id="56" getTitle="Prick Up Your Ears" getRevenue="700000" getRating="R" getShowDate="1987-11-10" getCategory="Drama">
+		<getMovieRoles id="367" />
+		<getMovieRoles id="368" />
+		<getMovieRoles id="369" />
+		<getMovieRoles id="370" />
+		<getPlotSummary id="40" />
+		<getStudio id="35" />
+	</Movies>
+	<Movies id="57" getTitle="Taxi Driver" getRevenue="100000" getRating="R" getShowDate="1976-11-10" getCategory="Drama">
+		<getMovieRoles id="373" />
+		<getMovieRoles id="374" />
+		<getMovieRoles id="375" />
+		<getMovieRoles id="376" />
+		<getMovieRoles id="377" />
+		<getMovieRoles id="378" />
+		<getPlotSummary id="42" />
+		<getStudio id="3" />
+	</Movies>
+	<Movies id="58" getTitle="Young Frankenstein" getRevenue="900000" getRating="PG" getShowDate="1974-11-10" getCategory="Comedy">
+		<getMovieRoles id="379" />
+		<getMovieRoles id="380" />
+		<getMovieRoles id="381" />
+		<getMovieRoles id="382" />
+		<getMovieRoles id="383" />
+		<getMovieRoles id="384" />
+		<getPlotSummary id="43" />
+		<getStudio id="6" />
+	</Movies>
+	<Movies id="59" getTitle="Third Man, The" getRevenue="1000000" getRating="PG" getShowDate="1949-11-10" getCategory="Thriller">
+		<getMovieRoles id="385" />
+		<getMovieRoles id="386" />
+		<getMovieRoles id="387" />
+		<getMovieRoles id="388" />
+		<getPlotSummary id="44" />
+		<getStudio id="34" />
+	</Movies>
+	<Movies id="60" getShowDate="1946-11-10" getCategory="Thriller" getTitle="Notorious" getRevenue="900000">
+		<getMovieRoles id="389" />
+		<getMovieRoles id="390" />
+		<getMovieRoles id="391" />
+		<getPlotSummary id="45" />
+		<getStudio id="33" />
+	</Movies>
+	<Movies id="61" getShowDate="1941-11-10" getCategory="Drama" getTitle="Citizen Kane" getRevenue="100000">
+		<getMovieRoles id="392" />
+		<getMovieRoles id="393" />
+		<getMovieRoles id="394" />
+		<getMovieRoles id="395" />
+		<getPlotSummary id="46" />
+		<getStudio id="33" />
+	</Movies>
+	<Movies id="62" getShowDate="1969-11-10" getCategory="Western" getTitle="Once Upon a Time in the West" getRevenue="800000">
+		<getMovieRoles id="399" />
+		<getMovieRoles id="400" />
+		<getMovieRoles id="401" />
+		<getMovieRoles id="402" />
+		<getPlotSummary id="48" />
+		<getStudio id="1" />
+	</Movies>
+	<Movies id="63" getTitle="Bad Timing" getRevenue="1000000" getRating="R" getShowDate="1980-01-05" getCategory="Drama">
+		<getPlotSummary id="49" />
+		<getStudio id="21" />
+	</Movies>
+	<Movies id="64" getShowDate="1958-11-10" getCategory="Sci-Fi" getTitle="Plan 9 from Outer Space" getRevenue="200000">
+		<getMovieRoles id="403" />
+		<getMovieRoles id="404" />
+		<getMovieRoles id="405" />
+		<getMovieRoles id="406" />
+		<getMovieRoles id="407" />
+		<getPlotSummary id="50" />
+		<getStudio id="37" />
+	</Movies>
+	<Movies id="65" getTitle="Star Wars" getRevenue="600000" getRating="PG" getShowDate="1977-12-29" getCategory="Action">
+		<getMovieRoles id="1" />
+		<getMovieRoles id="6" />
+		<getMovieRoles id="20" />
+		<getPlotSummary id="52" />
+		<getStudio id="6" />
+	</Movies>
+	<Movies id="66" getRevenue="400000" getRating="R" getCategory="Sci-Fi" getShowDate="1982-01-03" getTitle="Blade Runner">
+		<getMovieRoles id="185" />
+		<getMovieRoles id="186" />
+		<getMovieRoles id="187" />
+		<getMovieRoles id="188" />
+		<getMovieRoles id="189" />
+		<getMovieRoles id="190" />
+		<getPlotSummary id="71" />
+		<getStudio id="5" />
+	</Movies>
+	<Movies id="67" getTitle="Strange Brew" getRevenue="9900000" getRating="PG" getShowDate="1983-12-29" getCategory="Comedy">
+		<getMovieRoles id="17" />
+		<getMovieRoles id="18" />
+		<getMovieRoles id="19" />
+		<getPlotSummary id="3" />
+		<getStudio id="34" />
+	</Movies>
+	<Movies id="68" getTitle="The Godfather" getRevenue="300000" getRating="R" getShowDate="1972-12-28" getCategory="Action">
+		<getMovieRoles id="3" />
+		<getMovieRoles id="4" />
+		<getMovieRoles id="5" />
+		<getPlotSummary id="53" />
+		<getStudio id="1" />
+	</Movies>
+	<Movies id="69" getTitle="The Grifters" getRevenue="100000" getRating="R" getShowDate="1990-11-10" getCategory="Drama">
+		<getMovieRoles id="330" />
+		<getMovieRoles id="331" />
+		<getMovieRoles id="332" />
+		<getPlotSummary id="31" />
+		<getStudio id="32" />
+	</Movies>
+	<Movies id="70" getTitle="The Prime of Miss Jean Brodie" getRevenue="500000" getRating="PG" getShowDate="1969-11-10" getCategory="Drama">
+		<getMovieRoles id="371" />
+		<getMovieRoles id="372" />
+		<getMovieRoles id="270" />
+		<getPlotSummary id="41" />
+		<getStudio id="6" />
+	</Movies>
+	<Movies id="71" getShowDate="1940-11-10" getCategory="Comedy" getTitle="The Philadelphia Story" getRevenue="1000000">
+		<getMovieRoles id="396" />
+		<getMovieRoles id="397" />
+		<getMovieRoles id="398" />
+		<getPlotSummary id="47" />
+		<getStudio id="2" />
+	</Movies>
+	<Movies id="72" getTitle="The Princess Bride" getRevenue="300000" getRating="PG" getShowDate="1988-10-12" getCategory="Comedy">
+		<getMovieRoles id="239" />
+		<getMovieRoles id="240" />
+		<getMovieRoles id="241" />
+		<getMovieRoles id="242" />
+		<getMovieRoles id="243" />
+		<getMovieRoles id="244" />
+		<getMovieRoles id="245" />
+		<getMovieRoles id="246" />
+		<getMovieRoles id="247" />
+		<getMovieRoles id="248" />
+		<getMovieRoles id="249" />
+		<getMovieRoles id="250" />
+		<getMovieRoles id="251" />
+		<getMovieRoles id="252" />
+		<getMovieRoles id="253" />
+		<getMovieRoles id="254" />
+		<getMovieRoles id="255" />
+		<getMovieRoles id="256" />
+		<getMovieRoles id="257" />
+		<getPlotSummary id="12" />
+		<getStudio id="13" />
+	</Movies>
+	<Movies id="73" getTitle="The Blues Brothers" getRevenue="700000" getRating="R" getShowDate="1980-01-03" getCategory="Musical">
+		<getMovieRoles id="162" />
+		<getMovieRoles id="163" />
+		<getMovieRoles id="164" />
+		<getMovieRoles id="165" />
+		<getMovieRoles id="166" />
+		<getMovieRoles id="167" />
+		<getMovieRoles id="168" />
+		<getMovieRoles id="169" />
+		<getMovieRoles id="170" />
+		<getMovieRoles id="171" />
+		<getMovieRoles id="172" />
+		<getMovieRoles id="173" />
+		<getPlotSummary id="68" />
+		<getStudio id="9" />
+	</Movies>
+	<Movies id="74" getTitle="The Player" getRevenue="500000" getRating="R" getShowDate="1992-11-10" getCategory="Comedy">
+		<getMovieRoles id="358" />
+		<getMovieRoles id="359" />
+		<getMovieRoles id="360" />
+		<getMovieRoles id="361" />
+		<getMovieRoles id="362" />
+		<getPlotSummary id="37" />
+		<getStudio id="31" />
+	</Movies>
+	<Movies id="75" getTitle="The Year of Living Dangerously" getRevenue="800000" getRating="PG" getShowDate="1983-11-10" getCategory="Thriller">
+		<getMovieRoles id="327" />
+		<getMovieRoles id="328" />
+		<getMovieRoles id="329" />
+		<getPlotSummary id="30" />
+		<getStudio id="2" />
+	</Movies>
+	<Movies id="76" getTitle="The Last Picture Show" getRevenue="400000" getRating="R" getShowDate="1971-11-10" getCategory="Drama">
+		<getMovieRoles id="302" />
+		<getMovieRoles id="303" />
+		<getMovieRoles id="304" />
+		<getMovieRoles id="305" />
+		<getMovieRoles id="306" />
+		<getMovieRoles id="307" />
+		<getPlotSummary id="25" />
+		<getStudio id="3" />
+	</Movies>
+	<Movies id="77" getTitle="37.2 le Matin [Betty Blues]" getRevenue="200000" getRating="R" getShowDate="1986-01-02" getCategory="Drama">
+		<getMovieRoles id="98" />
+		<getMovieRoles id="99" />
+		<getMovieRoles id="100" />
+		<getMovieRoles id="101" />
+		<getMovieRoles id="102" />
+		<getMovieRoles id="103" />
+		<getPlotSummary id="7" />
+		<getStudio id="12" />
+	</Movies>
+	<Movies id="78" getTitle="GoodFellas" getRevenue="2021000" getRating="R" getShowDate="1990-01-03" getCategory="Action">
+		<getMovieRoles id="156" />
+		<getMovieRoles id="157" />
+		<getMovieRoles id="158" />
+		<getMovieRoles id="159" />
+		<getMovieRoles id="160" />
+		<getMovieRoles id="161" />
+		<getPlotSummary id="72" />
+		<getStudio id="5" />
+	</Movies>
+	<Studios id="1" getBudget="5000000" getName="Paramount Pictures">
+		<getMovies id="1" />
+		<getMovies id="4" />
+		<getMovies id="7" />
+		<getMovies id="26" />
+		<getMovies id="27" />
+		<getMovies id="62" />
+		<getMovies id="68" />
+	</Studios>
+	<Studios id="2" getBudget="17000000" getName="MGM">
+		<getMovies id="11" />
+		<getMovies id="19" />
+		<getMovies id="53" />
+		<getMovies id="71" />
+		<getMovies id="75" />
+	</Studios>
+	<Studios id="3" getBudget="22000000" getName="Columbia Pictures">
+		<getMovies id="2" />
+		<getMovies id="28" />
+		<getMovies id="30" />
+		<getMovies id="35" />
+		<getMovies id="57" />
+		<getMovies id="76" />
+	</Studios>
+	<Studios id="4" getBudget="200000" getName="Filmsonor">
+		<getMovies id="6" />
+		<getMovies id="49" />
+	</Studios>
+	<Studios id="5" getBudget="100000000" getName="Warner Brothers">
+		<getMovies id="3" />
+		<getMovies id="24" />
+		<getMovies id="31" />
+		<getMovies id="54" />
+		<getMovies id="66" />
+		<getMovies id="78" />
+	</Studios>
+	<Studios id="6" getBudget="100000000" getName="20th Century Fox">
+		<getMovies id="5" />
+		<getMovies id="16" />
+		<getMovies id="33" />
+		<getMovies id="58" />
+		<getMovies id="70" />
+		<getMovies id="65" />
+	</Studios>
+	<Studios id="7" getBudget="11000000" getName="Hemdale Film Corporation">
+		<getMovies id="8" />
+	</Studios>
+	<Studios id="8" getBudget="70000" getName="Kartemquin Films">
+		<getMovies id="9" />
+	</Studios>
+	<Studios id="9" getBudget="23000000" getName="Universal Pictures">
+		<getMovies id="12" />
+		<getMovies id="21" />
+		<getMovies id="25" />
+		<getMovies id="38" />
+		<getMovies id="39" />
+		<getMovies id="40" />
+		<getMovies id="73" />
+	</Studios>
+	<Studios id="10" getBudget="1000000" getName="Propaganda Films">
+		<getMovies id="14" />
+	</Studios>
+	<Studios id="11" getBudget="3000000" getName="New Line Cinema">
+		<getMovies id="45" />
+	</Studios>
+	<Studios id="12" getBudget="1000000" getName="Cargo Films">
+		<getMovies id="77" />
+	</Studios>
+	<Studios id="13" getBudget="21000000" getName="Zoetrope Studios">
+		<getMovies id="15" />
+		<getMovies id="72" />
+	</Studios>
+	<Studios id="14" getBudget="11000000" getName="ITC Films">
+		<getMovies id="13" />
+	</Studios>
+	<Studios id="15" getBudget="22000000" getName="Gaumont International">
+		<getMovies id="17" />
+		<getMovies id="20" />
+	</Studios>
+	<Studios id="16" getBudget="3000000" getName="Greenwich Film Production">
+		<getMovies id="18" />
+	</Studios>
+	<Studios id="17" getBudget="4000000" getName="Walt Disney Productions">
+		<getMovies id="22" />
+		<getMovies id="32" />
+	</Studios>
+	<Studios id="18" getBudget="52000000" getName="New World Entertainment">
+		<getMovies id="23" />
+	</Studios>
+	<Studios id="19" getBudget="56000000" getName="Miramax Films">
+		<getMovies id="29" />
+		<getMovies id="36" />
+	</Studios>
+	<Studios id="20" getBudget="7000000" getName="Pacific Western">
+		<getMovies id="34" />
+	</Studios>
+	<Studios id="21" getBudget="8000000" getName="Rank Film Productions">
+		<getMovies id="63" />
+	</Studios>
+	<Studios id="22" getBudget="9000000" getName="CiBy 2000">
+		<getMovies id="37" />
+	</Studios>
+	<Studios id="23" getBudget="10000000" getName="The Andre Company">
+		<getMovies id="41" />
+	</Studios>
+	<Studios id="24" getBudget="11000000" getName="Working Title Films">
+		<getMovies id="42" />
+	</Studios>
+	<Studios id="25" getBudget="26000000" getName="Alexandre Films">
+		<getMovies id="43" />
+	</Studios>
+	<Studios id="26" getBudget="4000000" getName="De Laurentis">
+		<getMovies id="46" />
+	</Studios>
+	<Studios id="27" getBudget="55000000" getName="F.C. Produzioni">
+		<getMovies id="47" />
+	</Studios>
+	<Studios id="28" getBudget="6000000" getName="Carolco Pictures">
+		<getMovies id="48" />
+	</Studios>
+	<Studios id="29" getBudget="7000000" getName="Samuel Goldwyn Company">
+		<getMovies id="50" />
+	</Studios>
+	<Studios id="30" getBudget="81000000" getName="40 Acres and a Mule Filmworks">
+		<getMovies id="51" />
+		<getMovies id="52" />
+	</Studios>
+	<Studios id="31" getBudget="9000000" getName="Avenue Pictures">
+		<getMovies id="74" />
+	</Studios>
+	<Studios id="32" getBudget="10000000" getName="Cineplex Odeon">
+		<getMovies id="69" />
+	</Studios>
+	<Studios id="33" getBudget="1000000" getName="RKO Radio Pictures">
+		<getMovies id="60" />
+		<getMovies id="61" />
+	</Studios>
+	<Studios id="34" getBudget="2000" getName="British Lion Film Corp.">
+		<getMovies id="59" />
+		<getMovies id="67" />
+	</Studios>
+	<Studios id="35" getBudget="3000000" getName="Civilhand Zenith">
+		<getMovies id="56" />
+	</Studios>
+	<Studios id="36" getBudget="4000000" getName="AFI">
+		<getMovies id="10" />
+		<getMovies id="44" />
+		<getMovies id="55" />
+	</Studios>
+	<Studios id="37" getBudget="1000000" getName="Independent Pictures">
+		<getMovies id="64" />
+	</Studios>
+	<MovieRoles id="1" getRoleName="Han Solo">
+		<getMovie id="65" />
+		<getTalent id="1" />
+	</MovieRoles>
+	<MovieRoles id="2" getRoleName="Indiana Jones">
+		<getMovie id="1" />
+		<getTalent id="1" />
+	</MovieRoles>
+	<MovieRoles id="3" getRoleName="Michel's Wife">
+		<getMovie id="68" />
+		<getTalent id="5" />
+	</MovieRoles>
+	<MovieRoles id="4" getRoleName="Michel">
+		<getMovie id="68" />
+		<getTalent id="7" />
+	</MovieRoles>
+	<MovieRoles id="5" getRoleName="The Godfather">
+		<getMovie id="68" />
+		<getTalent id="4" />
+	</MovieRoles>
+	<MovieRoles id="6" getRoleName="Luke Skywalker">
+		<getMovie id="65" />
+		<getTalent id="3" />
+	</MovieRoles>
+	<MovieRoles id="7" getRoleName="Ugarte">
+		<getMovie id="3" />
+		<getTalent id="12" />
+	</MovieRoles>
+	<MovieRoles id="8" getRoleName="Rick Blaine">
+		<getMovie id="3" />
+		<getTalent id="8" />
+	</MovieRoles>
+	<MovieRoles id="9" getRoleName="Ilsa Lund">
+		<getMovie id="3" />
+		<getTalent id="10" />
+	</MovieRoles>
+	<MovieRoles id="10" getRoleName="Franz Becker">
+		<getMovie id="2" />
+		<getTalent id="12" />
+	</MovieRoles>
+	<MovieRoles id="11" getRoleName="Charlotte Haze">
+		<getMovie id="4" />
+		<getTalent id="16" />
+	</MovieRoles>
+	<MovieRoles id="12" getRoleName="Humbert Humbert">
+		<getMovie id="4" />
+		<getTalent id="17" />
+	</MovieRoles>
+	<MovieRoles id="13" getRoleName="Senor Ferrari">
+		<getMovie id="3" />
+		<getTalent id="11" />
+	</MovieRoles>
+	<MovieRoles id="14" getRoleName="Rex">
+		<getMovie id="4" />
+		<getTalent id="15" />
+	</MovieRoles>
+	<MovieRoles id="15" getRoleName="Lolita Haze">
+		<getMovie id="4" />
+		<getTalent id="14" />
+	</MovieRoles>
+	<MovieRoles id="16" getRoleName="John Russell">
+		<getMovie id="5" />
+		<getTalent id="20" />
+	</MovieRoles>
+	<MovieRoles id="17" getRoleName="Bob McKenzie">
+		<getMovie id="67" />
+		<getTalent id="22" />
+	</MovieRoles>
+	<MovieRoles id="18" getRoleName="Brewmeister Smith">
+		<getMovie id="67" />
+		<getTalent id="24" />
+	</MovieRoles>
+	<MovieRoles id="19" getRoleName="Doug McKenzie">
+		<getMovie id="67" />
+		<getTalent id="23" />
+	</MovieRoles>
+	<MovieRoles id="20" getRoleName="Princess Leia">
+		<getMovie id="65" />
+		<getTalent id="25" />
+	</MovieRoles>
+	<MovieRoles id="21" getRoleName="Marion Ravenwood">
+		<getMovie id="1" />
+		<getTalent id="26" />
+	</MovieRoles>
+	<MovieRoles id="22" getRoleName="Christina Delasalle">
+		<getMovie id="6" />
+		<getTalent id="27" />
+	</MovieRoles>
+	<MovieRoles id="23" getRoleName="Nicole Horner">
+		<getMovie id="6" />
+		<getTalent id="21" />
+	</MovieRoles>
+	<MovieRoles id="24" getRoleName="Mr Raymond">
+		<getMovie id="6" />
+		<getTalent id="29" />
+	</MovieRoles>
+	<MovieRoles id="25" getRoleName="Inspecteur Ficher">
+		<getMovie id="6" />
+		<getTalent id="31" />
+	</MovieRoles>
+	<MovieRoles id="26" getRoleName="Michel Delasalle">
+		<getMovie id="6" />
+		<getTalent id="30" />
+	</MovieRoles>
+	<MovieRoles id="27" getRoleName="Mme Musquin">
+		<getMovie id="79" />
+		<getTalent id="34" />
+	</MovieRoles>
+	<MovieRoles id="28" getRoleName="ThÝrÜse">
+		<getMovie id="79" />
+		<getTalent id="33" />
+	</MovieRoles>
+	<MovieRoles id="29" getRoleName="Pierre Mortez">
+		<getMovie id="79" />
+		<getTalent id="42" />
+	</MovieRoles>
+	<MovieRoles id="30" getRoleName="Pharmacien">
+		<getMovie id="79" />
+		<getTalent id="40" />
+	</MovieRoles>
+	<MovieRoles id="31" getRoleName="Katia">
+		<getMovie id="79" />
+		<getTalent id="35" />
+	</MovieRoles>
+	<MovieRoles id="32" getRoleName="Mr LeblÝ">
+		<getMovie id="79" />
+		<getTalent id="39" />
+	</MovieRoles>
+	<MovieRoles id="33" getRoleName="Felix">
+		<getMovie id="79" />
+		<getTalent id="36" />
+	</MovieRoles>
+	<MovieRoles id="34" getRoleName="Mme LeblÝ">
+		<getMovie id="79" />
+		<getTalent id="38" />
+	</MovieRoles>
+	<MovieRoles id="35" getRoleName="Preskovitch">
+		<getMovie id="79" />
+		<getTalent id="41" />
+	</MovieRoles>
+	<MovieRoles id="36" getRoleName="Zezette">
+		<getMovie id="79" />
+		<getTalent id="37" />
+	</MovieRoles>
+	<MovieRoles id="37" getRoleName="Mme Tapioca">
+		<getMovie id="80" />
+		<getTalent id="52" />
+	</MovieRoles>
+	<MovieRoles id="38" getRoleName="Louison">
+		<getMovie id="80" />
+		<getTalent id="43" />
+	</MovieRoles>
+	<MovieRoles id="39" getRoleName="Mlle Plusse">
+		<getMovie id="80" />
+		<getTalent id="53" />
+	</MovieRoles>
+	<MovieRoles id="40" getRoleName="Clapet">
+		<getMovie id="80" />
+		<getTalent id="47" />
+	</MovieRoles>
+	<MovieRoles id="41" getRoleName="Aurore Interligator">
+		<getMovie id="80" />
+		<getTalent id="44" />
+	</MovieRoles>
+	<MovieRoles id="42" getRoleName="Robert Kube">
+		<getMovie id="80" />
+		<getTalent id="45" />
+	</MovieRoles>
+	<MovieRoles id="43" getRoleName="Marcel Tapioca">
+		<getMovie id="80" />
+		<getTalent id="51" />
+	</MovieRoles>
+	<MovieRoles id="44" getRoleName="Georges Interligator">
+		<getMovie id="80" />
+		<getTalent id="48" />
+	</MovieRoles>
+	<MovieRoles id="45" getRoleName="Julie Clapet">
+		<getMovie id="80" />
+		<getTalent id="49" />
+	</MovieRoles>
+	<MovieRoles id="46" getRoleName="Shooter">
+		<getMovie id="8" />
+		<getTalent id="54" />
+	</MovieRoles>
+	<MovieRoles id="47" getRoleName="Coach Norman Dale">
+		<getMovie id="8" />
+		<getTalent id="57" />
+	</MovieRoles>
+	<MovieRoles id="48" getRoleName="Myra Fleener">
+		<getMovie id="8" />
+		<getTalent id="56" />
+	</MovieRoles>
+	<MovieRoles id="49" getRoleName="William Gates">
+		<getMovie id="9" />
+		<getTalent id="100" />
+	</MovieRoles>
+	<MovieRoles id="50" getRoleName="Isiah Thomas">
+		<getMovie id="9" />
+		<getTalent id="98" />
+	</MovieRoles>
+	<MovieRoles id="51" getRoleName="Arthur Agee">
+		<getMovie id="9" />
+		<getTalent id="101" />
+	</MovieRoles>
+	<MovieRoles id="52" getRoleName="Ned">
+		<getMovie id="7" />
+		<getTalent id="67" />
+	</MovieRoles>
+	<MovieRoles id="53" getRoleName="Phillip Winter">
+		<getMovie id="7" />
+		<getTalent id="78" />
+	</MovieRoles>
+	<MovieRoles id="54" getRoleName="Raymond Monnet">
+		<getMovie id="7" />
+		<getTalent id="72" />
+	</MovieRoles>
+	<MovieRoles id="55" getRoleName="Mario">
+		<getMovie id="7" />
+		<getTalent id="61" />
+	</MovieRoles>
+	<MovieRoles id="56" getRoleName="Hotel guest">
+		<getMovie id="7" />
+		<getTalent id="70" />
+	</MovieRoles>
+	<MovieRoles id="57" getRoleName="Woman in street car">
+		<getMovie id="7" />
+		<getTalent id="85" />
+	</MovieRoles>
+	<MovieRoles id="58" getRoleName="Irina Farber">
+		<getMovie id="7" />
+		<getTalent id="75" />
+	</MovieRoles>
+	<MovieRoles id="59" getRoleName="Doctor">
+		<getMovie id="7" />
+		<getTalent id="60" />
+	</MovieRoles>
+	<MovieRoles id="60" getRoleName="Peter">
+		<getMovie id="7" />
+		<getTalent id="77" />
+	</MovieRoles>
+	<MovieRoles id="61" getRoleName="David">
+		<getMovie id="7" />
+		<getTalent id="83" />
+	</MovieRoles>
+	<MovieRoles id="62" getRoleName="Bernie">
+		<getMovie id="7" />
+		<getTalent id="95" />
+	</MovieRoles>
+	<MovieRoles id="63" getRoleName="Policeman">
+		<getMovie id="7" />
+		<getTalent id="89" />
+	</MovieRoles>
+	<MovieRoles id="64" getRoleName="Narcotics agent">
+		<getMovie id="7" />
+		<getTalent id="80" />
+	</MovieRoles>
+	<MovieRoles id="65" getRoleName="Truck driver">
+		<getMovie id="7" />
+		<getTalent id="71" />
+	</MovieRoles>
+	<MovieRoles id="66" getRoleName="Anton Farber">
+		<getMovie id="7" />
+		<getTalent id="62" />
+	</MovieRoles>
+	<MovieRoles id="67" getRoleName="Edith Farber">
+		<getMovie id="7" />
+		<getTalent id="66" />
+	</MovieRoles>
+	<MovieRoles id="68" getRoleName="Karl">
+		<getMovie id="7" />
+		<getTalent id="76" />
+	</MovieRoles>
+	<MovieRoles id="69" getRoleName="Elsa Farber">
+		<getMovie id="7" />
+		<getTalent id="93" />
+	</MovieRoles>
+	<MovieRoles id="70" getRoleName="Astronaut">
+		<getMovie id="7" />
+		<getTalent id="68" />
+	</MovieRoles>
+	<MovieRoles id="71" getRoleName="Burt">
+		<getMovie id="7" />
+		<getTalent id="88" />
+	</MovieRoles>
+	<MovieRoles id="72" getRoleName="Nora Oliveira">
+		<getMovie id="7" />
+		<getTalent id="73" />
+	</MovieRoles>
+	<MovieRoles id="73" getRoleName="Maid">
+		<getMovie id="7" />
+		<getTalent id="84" />
+	</MovieRoles>
+	<MovieRoles id="56" />
+	<MovieRoles id="74" getRoleName="Henry Farber">
+		<getMovie id="7" />
+		<getTalent id="24" />
+	</MovieRoles>
+	<MovieRoles id="75" getRoleName="Claire Tourneur">
+		<getMovie id="7" />
+		<getTalent id="58" />
+	</MovieRoles>
+	<MovieRoles id="76" getRoleName="Lydia">
+		<getMovie id="7" />
+		<getTalent id="86" />
+	</MovieRoles>
+	<MovieRoles id="77" getRoleName="Buzzer">
+		<getMovie id="7" />
+		<getTalent id="64" />
+	</MovieRoles>
+	<MovieRoles id="78" getRoleName="Krasikova">
+		<getMovie id="7" />
+		<getTalent id="69" />
+	</MovieRoles>
+	<MovieRoles id="79" getRoleName="Makiko">
+		<getMovie id="7" />
+		<getTalent id="90" />
+	</MovieRoles>
+	<MovieRoles id="80" getRoleName="Eugene Fitzpatrick">
+		<getMovie id="7" />
+		<getTalent id="96" />
+	</MovieRoles>
+	<MovieRoles id="81" getRoleName="Old man Alfred">
+		<getMovie id="7" />
+		<getTalent id="81" />
+	</MovieRoles>
+	<MovieRoles id="82" getRoleName="Heidi">
+		<getMovie id="7" />
+		<getTalent id="91" />
+	</MovieRoles>
+	<MovieRoles id="83" getRoleName="Custodian">
+		<getMovie id="7" />
+		<getTalent id="63" />
+	</MovieRoles>
+	<MovieRoles id="84" getRoleName="Receptionist">
+		<getMovie id="7" />
+		<getTalent id="79" />
+	</MovieRoles>
+	<MovieRoles id="85" getRoleName="Ronda">
+		<getMovie id="7" />
+		<getTalent id="94" />
+	</MovieRoles>
+	<MovieRoles id="86" getRoleName="Maisie">
+		<getMovie id="7" />
+		<getTalent id="45" />
+	</MovieRoles>
+	<MovieRoles id="87" getRoleName="Mrs Mori">
+		<getMovie id="7" />
+		<getTalent id="65" />
+	</MovieRoles>
+	<MovieRoles id="88" getRoleName="Mechanic">
+		<getMovie id="7" />
+		<getTalent id="87" />
+	</MovieRoles>
+	<MovieRoles id="89" getRoleName="Chico Remy">
+		<getMovie id="7" />
+		<getTalent id="74" />
+	</MovieRoles>
+	<MovieRoles id="90" getRoleName="Sam Farber">
+		<getMovie id="7" />
+		<getTalent id="59" />
+	</MovieRoles>
+	<MovieRoles id="91" getRoleName="Catherine">
+		<getMovie id="81" />
+		<getTalent id="103" />
+	</MovieRoles>
+	<MovieRoles id="92" getRoleName="Solange">
+		<getMovie id="81" />
+		<getTalent id="105" />
+	</MovieRoles>
+	<MovieRoles id="93" getRoleName="Antoine">
+		<getMovie id="81" />
+		<getTalent id="82" />
+	</MovieRoles>
+	<MovieRoles id="94" getRoleName="Jean">
+		<getMovie id="81" />
+		<getTalent id="104" />
+	</MovieRoles>
+	<MovieRoles id="95" getRoleName="Sondra Walker">
+		<getMovie id="10" />
+		<getTalent id="108" />
+	</MovieRoles>
+	<MovieRoles id="96" getRoleName="Michelle">
+		<getMovie id="10" />
+		<getTalent id="106" />
+	</MovieRoles>
+	<MovieRoles id="97" getRoleName="Richard Walker">
+		<getMovie id="10" />
+		<getTalent id="1" />
+	</MovieRoles>
+	<MovieRoles id="98" getRoleName="Annie">
+		<getMovie id="77" />
+		<getTalent id="114" />
+	</MovieRoles>
+	<MovieRoles id="99" getRoleName="Betty">
+		<getMovie id="77" />
+		<getTalent id="111" />
+	</MovieRoles>
+	<MovieRoles id="100" getRoleName="Eddy">
+		<getMovie id="77" />
+		<getTalent id="112" />
+	</MovieRoles>
+	<MovieRoles id="101" getRoleName="Zorg">
+		<getMovie id="77" />
+		<getTalent id="109" />
+	</MovieRoles>
+	<MovieRoles id="102" getRoleName="Bob">
+		<getMovie id="77" />
+		<getTalent id="115" />
+	</MovieRoles>
+	<MovieRoles id="103" getRoleName="Lisa">
+		<getMovie id="77" />
+		<getTalent id="113" />
+	</MovieRoles>
+	<MovieRoles id="104" getRoleName="Hannibal Lecter (1)">
+		<getMovie id="11" />
+		<getTalent id="119" />
+	</MovieRoles>
+	<MovieRoles id="105" getRoleName="Hannibal Lecter (2)">
+		<getMovie id="11" />
+		<getTalent id="120" />
+	</MovieRoles>
+	<MovieRoles id="106" getRoleName="Will Graham">
+		<getMovie id="11" />
+		<getTalent id="116" />
+	</MovieRoles>
+	<MovieRoles id="107" getRoleName="Jack Crawford">
+		<getMovie id="11" />
+		<getTalent id="118" />
+	</MovieRoles>
+	<MovieRoles id="108" getRoleName="Jack Walsh">
+		<getMovie id="12" />
+		<getTalent id="125" />
+	</MovieRoles>
+	<MovieRoles id="109" getRoleName="Marvin Dorfler">
+		<getMovie id="12" />
+		<getTalent id="124" />
+	</MovieRoles>
+	<MovieRoles id="110" getRoleName="Jimmy Serrano">
+		<getMovie id="12" />
+		<getTalent id="118" />
+	</MovieRoles>
+	<MovieRoles id="111" getRoleName="Jonathan Mardukas">
+		<getMovie id="12" />
+		<getTalent id="123" />
+	</MovieRoles>
+	<MovieRoles id="112" getRoleName="Eddie Moscone">
+		<getMovie id="12" />
+		<getTalent id="126" />
+	</MovieRoles>
+	<MovieRoles id="113" getRoleName="Alonzo Mosely">
+		<getMovie id="12" />
+		<getTalent id="122" />
+	</MovieRoles>
+	<MovieRoles id="114" getRoleName="Clay Gregory">
+		<getMovie id="13" />
+		<getTalent id="128" />
+	</MovieRoles>
+	<MovieRoles id="115" getRoleName="Mike Swale">
+		<getMovie id="13" />
+		<getTalent id="127" />
+	</MovieRoles>
+	<MovieRoles id="116" getRoleName="Bridget Gregory">
+		<getMovie id="13" />
+		<getTalent id="130" />
+	</MovieRoles>
+	<MovieRoles id="117" getRoleName="Michael">
+		<getMovie id="14" />
+		<getTalent id="131" />
+	</MovieRoles>
+	<MovieRoles id="118" getRoleName="Lyle">
+		<getMovie id="14" />
+		<getTalent id="54" />
+	</MovieRoles>
+	<MovieRoles id="119" getRoleName="Wayne">
+		<getMovie id="14" />
+		<getTalent id="133" />
+	</MovieRoles>
+	<MovieRoles id="120" getRoleName="Suzanne">
+		<getMovie id="14" />
+		<getTalent id="132" />
+	</MovieRoles>
+	<MovieRoles id="121" getRoleName="Colonel">
+		<getMovie id="15" />
+		<getTalent id="1" />
+	</MovieRoles>
+	<MovieRoles id="122" getRoleName="Lieutenant Colonel Kilgore">
+		<getMovie id="15" />
+		<getTalent id="134" />
+	</MovieRoles>
+	<MovieRoles id="123" getRoleName="Captain Benjamin L. Willard">
+		<getMovie id="15" />
+		<getTalent id="135" />
+	</MovieRoles>
+	<MovieRoles id="124" getRoleName="Clean">
+		<getMovie id="15" />
+		<getTalent id="136" />
+	</MovieRoles>
+	<MovieRoles id="125" getRoleName="Colonel Walter Kurtz">
+		<getMovie id="15" />
+		<getTalent id="4" />
+	</MovieRoles>
+	<MovieRoles id="126" getRoleName="Johanna">
+		<getMovie id="16" />
+		<getTalent id="139" />
+	</MovieRoles>
+	<MovieRoles id="127" getRoleName="Enzo Molinari">
+		<getMovie id="16" />
+		<getTalent id="138" />
+	</MovieRoles>
+	<MovieRoles id="128" getRoleName="Alfredo">
+		<getMovie id="16" />
+		<getTalent id="141" />
+	</MovieRoles>
+	<MovieRoles id="129" getRoleName="Jacques Mayol">
+		<getMovie id="16" />
+		<getTalent id="137" />
+	</MovieRoles>
+	<MovieRoles id="130" getRoleName="Drummer">
+		<getMovie id="17" />
+		<getTalent id="138" />
+	</MovieRoles>
+	<MovieRoles id="131" getRoleName="Fred">
+		<getMovie id="17" />
+		<getTalent id="144" />
+	</MovieRoles>
+	<MovieRoles id="132" getRoleName="Big Negro">
+		<getMovie id="17" />
+		<getTalent id="143" />
+	</MovieRoles>
+	<MovieRoles id="133" getRoleName="Robin">
+		<getMovie id="17" />
+		<getTalent id="142" />
+	</MovieRoles>
+	<MovieRoles id="134" getRoleName="Helena">
+		<getMovie id="17" />
+		<getTalent id="146" />
+	</MovieRoles>
+	<MovieRoles id="135" getRoleName="Florist">
+		<getMovie id="17" />
+		<getTalent id="147" />
+	</MovieRoles>
+	<MovieRoles id="136" getRoleName="Commisaire Gesberg">
+		<getMovie id="17" />
+		<getTalent id="145" />
+	</MovieRoles>
+	<MovieRoles id="137" getRoleName="The Roller">
+		<getMovie id="17" />
+		<getTalent id="109" />
+	</MovieRoles>
+	<MovieRoles id="138" getRoleName="Batman">
+		<getMovie id="17" />
+		<getTalent id="148" />
+	</MovieRoles>
+	<MovieRoles id="139" getRoleName="Cynthia Hawkins">
+		<getMovie id="18" />
+		<getTalent id="149" />
+	</MovieRoles>
+	<MovieRoles id="140" getRoleName="Barbara">
+		<getMovie id="19" />
+		<getTalent id="157" />
+	</MovieRoles>
+	<MovieRoles id="141" getRoleName="Boogie">
+		<getMovie id="19" />
+		<getTalent id="159" />
+	</MovieRoles>
+	<MovieRoles id="142" getRoleName="Fenwick">
+		<getMovie id="19" />
+		<getTalent id="155" />
+	</MovieRoles>
+	<MovieRoles id="143" getRoleName="Modell">
+		<getMovie id="19" />
+		<getTalent id="153" />
+	</MovieRoles>
+	<MovieRoles id="144" getRoleName="Beth">
+		<getMovie id="19" />
+		<getTalent id="158" />
+	</MovieRoles>
+	<MovieRoles id="145" getRoleName="Bagel">
+		<getMovie id="19" />
+		<getTalent id="156" />
+	</MovieRoles>
+	<MovieRoles id="146" getRoleName="Billy">
+		<getMovie id="19" />
+		<getTalent id="154" />
+	</MovieRoles>
+	<MovieRoles id="147" getRoleName="Shrevie">
+		<getMovie id="19" />
+		<getTalent id="150" />
+	</MovieRoles>
+	<MovieRoles id="148" getRoleName="Eddie">
+		<getMovie id="19" />
+		<getTalent id="151" />
+	</MovieRoles>
+	<MovieRoles id="149" getRoleName="Nikita's boyfriend">
+		<getMovie id="20" />
+		<getTalent id="109" />
+	</MovieRoles>
+	<MovieRoles id="150" getRoleName="Zap">
+		<getMovie id="20" />
+		<getTalent id="160" />
+	</MovieRoles>
+	<MovieRoles id="151" getRoleName="Old teacher">
+		<getMovie id="20" />
+		<getTalent id="66" />
+	</MovieRoles>
+	<MovieRoles id="152" getRoleName="Nikita">
+		<getMovie id="20" />
+		<getTalent id="162" />
+	</MovieRoles>
+	<MovieRoles id="153" getRoleName="Le Nettoyeur">
+		<getMovie id="20" />
+		<getTalent id="138" />
+	</MovieRoles>
+	<MovieRoles id="154" getRoleName="Coyotte">
+		<getMovie id="20" />
+		<getTalent id="141" />
+	</MovieRoles>
+	<MovieRoles id="102" />
+	<MovieRoles id="155" getRoleName="Rico">
+		<getMovie id="20" />
+		<getTalent id="163" />
+	</MovieRoles>
+	<MovieRoles id="156" getRoleName="James Conway">
+		<getMovie id="78" />
+		<getTalent id="125" />
+	</MovieRoles>
+	<MovieRoles id="157" getRoleName="Joe Buddha">
+		<getMovie id="78" />
+		<getTalent id="169" />
+	</MovieRoles>
+	<MovieRoles id="158" getRoleName="Tommy DeVito">
+		<getMovie id="78" />
+		<getTalent id="164" />
+	</MovieRoles>
+	<MovieRoles id="159" getRoleName="Karen Hill">
+		<getMovie id="78" />
+		<getTalent id="165" />
+	</MovieRoles>
+	<MovieRoles id="160" getRoleName="Paul Cicero">
+		<getMovie id="78" />
+		<getTalent id="167" />
+	</MovieRoles>
+	<MovieRoles id="161" getRoleName="Henry Hill">
+		<getMovie id="78" />
+		<getTalent id="166" />
+	</MovieRoles>
+	<MovieRoles id="162" getRoleName="Elwood">
+		<getMovie id="73" />
+		<getTalent id="174" />
+	</MovieRoles>
+	<MovieRoles id="163" getRoleName="Soloist">
+		<getMovie id="73" />
+		<getTalent id="178" />
+	</MovieRoles>
+	<MovieRoles id="164" getRoleName="Mystery Woman">
+		<getMovie id="73" />
+		<getTalent id="25" />
+	</MovieRoles>
+	<MovieRoles id="165" getRoleName="Reverend Cleophus James">
+		<getMovie id="73" />
+		<getTalent id="179" />
+	</MovieRoles>
+	<MovieRoles id="166" getRoleName="Ray">
+		<getMovie id="73" />
+		<getTalent id="172" />
+	</MovieRoles>
+	<MovieRoles id="167" getRoleName="Burton Mercer">
+		<getMovie id="73" />
+		<getTalent id="177" />
+	</MovieRoles>
+	<MovieRoles id="168" getRoleName="Chic Lady">
+		<getMovie id="73" />
+		<getTalent id="170" />
+	</MovieRoles>
+	<MovieRoles id="169" getRoleName="Cook County Clerk">
+		<getMovie id="73" />
+		<getTalent id="303" />
+	</MovieRoles>
+	<MovieRoles id="170" getRoleName="Waiter">
+		<getMovie id="73" />
+		<getTalent id="176" />
+	</MovieRoles>
+	<MovieRoles id="171" getRoleName="Soul Food Cafe Owner">
+		<getMovie id="73" />
+		<getTalent id="180" />
+	</MovieRoles>
+	<MovieRoles id="172" getRoleName="Curtis">
+		<getMovie id="73" />
+		<getTalent id="171" />
+	</MovieRoles>
+	<MovieRoles id="173" getRoleName="Joliet Jake">
+		<getMovie id="73" />
+		<getTalent id="175" />
+	</MovieRoles>
+	<MovieRoles id="174" getRoleName="Miles Russell">
+		<getMovie id="21" />
+		<getTalent id="184" />
+	</MovieRoles>
+	<MovieRoles id="175" getRoleName="Bug">
+		<getMovie id="21" />
+		<getTalent id="186" />
+	</MovieRoles>
+	<MovieRoles id="176" getRoleName="Maisy Russell">
+		<getMovie id="21" />
+		<getTalent id="185" />
+	</MovieRoles>
+	<MovieRoles id="177" getRoleName="Tia Russell">
+		<getMovie id="21" />
+		<getTalent id="183" />
+	</MovieRoles>
+	<MovieRoles id="178" getRoleName="Chanice Kobolowski">
+		<getMovie id="21" />
+		<getTalent id="182" />
+	</MovieRoles>
+	<MovieRoles id="179" getRoleName="Buck Russell">
+		<getMovie id="21" />
+		<getTalent id="177" />
+	</MovieRoles>
+	<MovieRoles id="180" getRoleName="Yul Brenner">
+		<getMovie id="22" />
+		<getTalent id="187" />
+	</MovieRoles>
+	<MovieRoles id="181" getRoleName="Junior Bevel">
+		<getMovie id="22" />
+		<getTalent id="188" />
+	</MovieRoles>
+	<MovieRoles id="182" getRoleName="Irv">
+		<getMovie id="22" />
+		<getTalent id="177" />
+	</MovieRoles>
+	<MovieRoles id="183" getRoleName="Leon">
+		<getMovie id="22" />
+		<getTalent id="191" />
+	</MovieRoles>
+	<MovieRoles id="184" getRoleName="Sanka Coffie">
+		<getMovie id="22" />
+		<getTalent id="190" />
+	</MovieRoles>
+	<MovieRoles id="185" getRoleName="Rachael">
+		<getMovie id="66" />
+		<getTalent id="195" />
+	</MovieRoles>
+	<MovieRoles id="186" getRoleName="Batty">
+		<getMovie id="66" />
+		<getTalent id="197" />
+	</MovieRoles>
+	<MovieRoles id="187" getRoleName="Gaff">
+		<getMovie id="66" />
+		<getTalent id="193" />
+	</MovieRoles>
+	<MovieRoles id="188" getRoleName="Pris">
+		<getMovie id="66" />
+		<getTalent id="194" />
+	</MovieRoles>
+	<MovieRoles id="189" getRoleName="Bryant">
+		<getMovie id="66" />
+		<getTalent id="192" />
+	</MovieRoles>
+	<MovieRoles id="190" getRoleName="Deckard">
+		<getMovie id="66" />
+		<getTalent id="1" />
+	</MovieRoles>
+	<MovieRoles id="191" getRoleName="Heather Chandler">
+		<getMovie id="23" />
+		<getTalent id="198" />
+	</MovieRoles>
+	<MovieRoles id="192" getRoleName="J.D.">
+		<getMovie id="23" />
+		<getTalent id="200" />
+	</MovieRoles>
+	<MovieRoles id="193" getRoleName="Heather Duke">
+		<getMovie id="23" />
+		<getTalent id="202" />
+	</MovieRoles>
+	<MovieRoles id="194" getRoleName="Heather McNamara">
+		<getMovie id="23" />
+		<getTalent id="201" />
+	</MovieRoles>
+	<MovieRoles id="195" getRoleName="Veronica">
+		<getMovie id="23" />
+		<getTalent id="199" />
+	</MovieRoles>
+	<MovieRoles id="196" getRoleName="Pat Boone">
+		<getMovie id="24" />
+		<getTalent id="205" />
+	</MovieRoles>
+	<MovieRoles id="197" getRoleName="Roger Smith">
+		<getMovie id="24" />
+		<getTalent id="206" />
+	</MovieRoles>
+	<MovieRoles id="198" getRoleName="Michael Moore">
+		<getMovie id="24" />
+		<getTalent id="207" />
+	</MovieRoles>
+	<MovieRoles id="199" getRoleName="Bob Eubanks">
+		<getMovie id="24" />
+		<getTalent id="204" />
+	</MovieRoles>
+	<MovieRoles id="200" getRoleName="Larry">
+		<getMovie id="25" />
+		<getTalent id="209" />
+	</MovieRoles>
+	<MovieRoles id="201" getRoleName="Chief Karlin">
+		<getMovie id="25" />
+		<getTalent id="210" />
+	</MovieRoles>
+	<MovieRoles id="202" getRoleName="Alan Stanwick">
+		<getMovie id="25" />
+		<getTalent id="212" />
+	</MovieRoles>
+	<MovieRoles id="203" getRoleName="Fletch">
+		<getMovie id="25" />
+		<getTalent id="216" />
+	</MovieRoles>
+	<MovieRoles id="204" getRoleName="Fat Sam">
+		<getMovie id="25" />
+		<getTalent id="215" />
+	</MovieRoles>
+	<MovieRoles id="205" getRoleName="Gail Stanwick">
+		<getMovie id="25" />
+		<getTalent id="214" />
+	</MovieRoles>
+	<MovieRoles id="206" getRoleName="Chick Hearn">
+		<getMovie id="25" />
+		<getTalent id="208" />
+	</MovieRoles>
+	<MovieRoles id="207" getRoleName="Kareem Abdul-Jabbar">
+		<getMovie id="25" />
+		<getTalent id="211" />
+	</MovieRoles>
+	<MovieRoles id="208" getRoleName="Noah Cross">
+		<getMovie id="26" />
+		<getTalent id="217" />
+	</MovieRoles>
+	<MovieRoles id="209" getRoleName="Evelyn Mulwray">
+		<getMovie id="26" />
+		<getTalent id="220" />
+	</MovieRoles>
+	<MovieRoles id="210" getRoleName="Man with Knife">
+		<getMovie id="26" />
+		<getTalent id="107" />
+	</MovieRoles>
+	<MovieRoles id="211" getRoleName="Jake Gittes">
+		<getMovie id="26" />
+		<getTalent id="218" />
+	</MovieRoles>
+	<MovieRoles id="212" getRoleName="Escobar">
+		<getMovie id="26" />
+		<getTalent id="219" />
+	</MovieRoles>
+	<MovieRoles id="213" getRoleName="Al Capone">
+		<getMovie id="27" />
+		<getTalent id="125" />
+	</MovieRoles>
+	<MovieRoles id="214" getRoleName="George Stone">
+		<getMovie id="27" />
+		<getTalent id="221" />
+	</MovieRoles>
+	<MovieRoles id="215" getRoleName="Oscar Wallace">
+		<getMovie id="27" />
+		<getTalent id="222" />
+	</MovieRoles>
+	<MovieRoles id="216" getRoleName="Elliot Ness">
+		<getMovie id="27" />
+		<getTalent id="224" />
+	</MovieRoles>
+	<MovieRoles id="217" getRoleName="Jim Malone">
+		<getMovie id="27" />
+		<getTalent id="223" />
+	</MovieRoles>
+	<MovieRoles id="218" getRoleName="Jess">
+		<getMovie id="28" />
+		<getTalent id="227" />
+	</MovieRoles>
+	<MovieRoles id="219" getRoleName="Marie">
+		<getMovie id="28" />
+		<getTalent id="25" />
+	</MovieRoles>
+	<MovieRoles id="220" getRoleName="Harry Burns">
+		<getMovie id="28" />
+		<getTalent id="226" />
+	</MovieRoles>
+	<MovieRoles id="221" getRoleName="Sally Albright">
+		<getMovie id="28" />
+		<getTalent id="228" />
+	</MovieRoles>
+	<MovieRoles id="222" getRoleName="Father Ellerton">
+		<getMovie id="29" />
+		<getTalent id="237" />
+	</MovieRoles>
+	<MovieRoles id="223" getRoleName="Father Greg">
+		<getMovie id="29" />
+		<getTalent id="230" />
+	</MovieRoles>
+	<MovieRoles id="224" getRoleName="Mrs. Unsworth">
+		<getMovie id="29" />
+		<getTalent id="231" />
+	</MovieRoles>
+	<MovieRoles id="225" getRoleName="Lisa Unsworth">
+		<getMovie id="29" />
+		<getTalent id="234" />
+	</MovieRoles>
+	<MovieRoles id="226" getRoleName="Maria Kerrigan">
+		<getMovie id="29" />
+		<getTalent id="235" />
+	</MovieRoles>
+	<MovieRoles id="227" getRoleName="Housekeeper">
+		<getMovie id="29" />
+		<getTalent id="233" />
+	</MovieRoles>
+	<MovieRoles id="228" getRoleName="Mr. Unsworth">
+		<getMovie id="29" />
+		<getTalent id="236" />
+	</MovieRoles>
+	<MovieRoles id="229" getRoleName="Father Matthew">
+		<getMovie id="29" />
+		<getTalent id="238" />
+	</MovieRoles>
+	<MovieRoles id="230" getRoleName="Graham">
+		<getMovie id="29" />
+		<getTalent id="239" />
+	</MovieRoles>
+	<MovieRoles id="231" getRoleName="Jo March">
+		<getMovie id="30" />
+		<getTalent id="199" />
+	</MovieRoles>
+	<MovieRoles id="232" getRoleName="Marmee March">
+		<getMovie id="30" />
+		<getTalent id="240" />
+	</MovieRoles>
+	<MovieRoles id="233" getRoleName="Laurie">
+		<getMovie id="30" />
+		<getTalent id="242" />
+	</MovieRoles>
+	<MovieRoles id="234" getRoleName="Mrs. Victor">
+		<getMovie id="31" />
+		<getTalent id="243" />
+	</MovieRoles>
+	<MovieRoles id="235" getRoleName="Basie">
+		<getMovie id="31" />
+		<getTalent id="244" />
+	</MovieRoles>
+	<MovieRoles id="236" getRoleName="Jim">
+		<getMovie id="31" />
+		<getTalent id="242" />
+	</MovieRoles>
+	<MovieRoles id="237" getRoleName="Buzz Lightyear">
+		<getMovie id="32" />
+		<getTalent id="264" />
+	</MovieRoles>
+	<MovieRoles id="238" getRoleName="Woody">
+		<getMovie id="32" />
+		<getTalent id="263" />
+	</MovieRoles>
+	<MovieRoles id="239" getRoleName="The Ancient Booer">
+		<getMovie id="72" />
+		<getTalent id="259" />
+	</MovieRoles>
+	<MovieRoles id="240" getRoleName="The Assistant Brute">
+		<getMovie id="72" />
+		<getTalent id="256" />
+	</MovieRoles>
+	<MovieRoles id="241" getRoleName="The Princess Bride">
+		<getMovie id="72" />
+		<getTalent id="251" />
+	</MovieRoles>
+	<MovieRoles id="242" getRoleName="Valerie">
+		<getMovie id="72" />
+		<getTalent id="255" />
+	</MovieRoles>
+	<MovieRoles id="243" getRoleName="The Impressive Clergyman">
+		<getMovie id="72" />
+		<getTalent id="248" />
+	</MovieRoles>
+	<MovieRoles id="244" getRoleName="The Queen">
+		<getMovie id="72" />
+		<getTalent id="258" />
+	</MovieRoles>
+	<MovieRoles id="245" getRoleName="The King">
+		<getMovie id="72" />
+		<getTalent id="261" />
+	</MovieRoles>
+	<MovieRoles id="246" getRoleName="The Grandfather">
+		<getMovie id="72" />
+		<getTalent id="249" />
+	</MovieRoles>
+	<MovieRoles id="247" getRoleName="Vizzini">
+		<getMovie id="72" />
+		<getTalent id="247" />
+	</MovieRoles>
+	<MovieRoles id="248" getRoleName="The Mother">
+		<getMovie id="72" />
+		<getTalent id="257" />
+	</MovieRoles>
+	<MovieRoles id="249" getRoleName="Fezzik">
+		<getMovie id="72" />
+		<getTalent id="250" />
+	</MovieRoles>
+	<MovieRoles id="250" getRoleName="The Albino">
+		<getMovie id="72" />
+		<getTalent id="262" />
+	</MovieRoles>
+	<MovieRoles id="251" getRoleName="Prince Humperdinck">
+		<getMovie id="72" />
+		<getTalent id="245" />
+	</MovieRoles>
+	<MovieRoles id="252" getRoleName="Inigo Montoya">
+		<getMovie id="72" />
+		<getTalent id="246" />
+	</MovieRoles>
+	<MovieRoles id="253" getRoleName="Yellin">
+		<getMovie id="72" />
+		<getTalent id="260" />
+	</MovieRoles>
+	<MovieRoles id="254" getRoleName="Miracle Max">
+		<getMovie id="72" />
+		<getTalent id="226" />
+	</MovieRoles>
+	<MovieRoles id="255" getRoleName="The Grandson">
+		<getMovie id="72" />
+		<getTalent id="252" />
+	</MovieRoles>
+	<MovieRoles id="256" getRoleName="Count Rugen">
+		<getMovie id="72" />
+		<getTalent id="253" />
+	</MovieRoles>
+	<MovieRoles id="257" getRoleName="Westley">
+		<getMovie id="72" />
+		<getTalent id="254" />
+	</MovieRoles>
+	<MovieRoles id="258" getRoleName="Brett">
+		<getMovie id="33" />
+		<getTalent id="267" />
+	</MovieRoles>
+	<MovieRoles id="259" getRoleName="Kane">
+		<getMovie id="33" />
+		<getTalent id="271" />
+	</MovieRoles>
+	<MovieRoles id="260" getRoleName="Dallas">
+		<getMovie id="33" />
+		<getTalent id="270" />
+	</MovieRoles>
+	<MovieRoles id="261" getRoleName="Parker">
+		<getMovie id="33" />
+		<getTalent id="122" />
+	</MovieRoles>
+	<MovieRoles id="262" getRoleName="Lambert">
+		<getMovie id="33" />
+		<getTalent id="266" />
+	</MovieRoles>
+	<MovieRoles id="263" getRoleName="Ash">
+		<getMovie id="33" />
+		<getTalent id="268" />
+	</MovieRoles>
+	<MovieRoles id="264" getRoleName="Ripley">
+		<getMovie id="33" />
+		<getTalent id="269" />
+	</MovieRoles>
+	<MovieRoles id="265" getRoleName="Sarah Connor">
+		<getMovie id="34" />
+		<getTalent id="273" />
+	</MovieRoles>
+	<MovieRoles id="266" getRoleName="Kyle Reese">
+		<getMovie id="34" />
+		<getTalent id="274" />
+	</MovieRoles>
+	<MovieRoles id="267" getRoleName="Terminator">
+		<getMovie id="34" />
+		<getTalent id="272" />
+	</MovieRoles>
+	<MovieRoles id="268" getRoleName="Julie">
+		<getMovie id="35" />
+		<getTalent id="285" />
+	</MovieRoles>
+	<MovieRoles id="117" />
+	<MovieRoles id="269" getRoleName="Roommate">
+		<getMovie id="35" />
+		<getTalent id="288" />
+	</MovieRoles>
+	<MovieRoles id="270" getRoleName="Sandy">
+		<getMovie id="35" />
+		<getTalent id="289" />
+	</MovieRoles>
+	<MovieRoles id="271" getRoleName="Ron">
+		<getMovie id="35" />
+		<getTalent id="287" />
+	</MovieRoles>
+	<MovieRoles id="272" getRoleName="Pumpkin">
+		<getMovie id="36" />
+		<getTalent id="291" />
+	</MovieRoles>
+	<MovieRoles id="273" getRoleName="Winston Wolf">
+		<getMovie id="36" />
+		<getTalent id="296" />
+	</MovieRoles>
+	<MovieRoles id="274" getRoleName="Mia">
+		<getMovie id="36" />
+		<getTalent id="294" />
+	</MovieRoles>
+	<MovieRoles id="275" getRoleName="Butch">
+		<getMovie id="36" />
+		<getTalent id="297" />
+	</MovieRoles>
+	<MovieRoles id="276" getRoleName="Jules">
+		<getMovie id="36" />
+		<getTalent id="169" />
+	</MovieRoles>
+	<MovieRoles id="277" getRoleName="Vincent Vega">
+		<getMovie id="36" />
+		<getTalent id="295" />
+	</MovieRoles>
+	<MovieRoles id="278" getRoleName="Honey Bunny">
+		<getMovie id="36" />
+		<getTalent id="293" />
+	</MovieRoles>
+	<MovieRoles id="279" getRoleName="Fiona">
+		<getMovie id="37" />
+		<getTalent id="300" />
+	</MovieRoles>
+	<MovieRoles id="280" getRoleName="Ada">
+		<getMovie id="37" />
+		<getTalent id="298" />
+	</MovieRoles>
+	<MovieRoles id="281" getRoleName="Stewart">
+		<getMovie id="37" />
+		<getTalent id="96" />
+	</MovieRoles>
+	<MovieRoles id="282" getRoleName="Baines">
+		<getMovie id="37" />
+		<getTalent id="296" />
+	</MovieRoles>
+	<MovieRoles id="283" getRoleName="John Hammond">
+		<getMovie id="38" />
+		<getTalent id="301" />
+	</MovieRoles>
+	<MovieRoles id="284" getRoleName="Ian Malcolm">
+		<getMovie id="38" />
+		<getTalent id="302" />
+	</MovieRoles>
+	<MovieRoles id="285" getRoleName="Dr. Ellie Sattler">
+		<getMovie id="38" />
+		<getTalent id="304" />
+	</MovieRoles>
+	<MovieRoles id="286" getRoleName="Doctor Alan Grant">
+		<getMovie id="38" />
+		<getTalent id="96" />
+	</MovieRoles>
+	<MovieRoles id="287" getRoleName="Oskar Schindler">
+		<getMovie id="39" />
+		<getTalent id="308" />
+	</MovieRoles>
+	<MovieRoles id="288" getRoleName="Itzhak Stern">
+		<getMovie id="39" />
+		<getTalent id="306" />
+	</MovieRoles>
+	<MovieRoles id="289" getRoleName="Amon Goeth">
+		<getMovie id="39" />
+		<getTalent id="307" />
+	</MovieRoles>
+	<MovieRoles id="290" getRoleName="Helen Hirsch">
+		<getMovie id="39" />
+		<getTalent id="305" />
+	</MovieRoles>
+	<MovieRoles id="291" getRoleName="Kent Dorfman">
+		<getMovie id="40" />
+		<getTalent id="309" />
+	</MovieRoles>
+	<MovieRoles id="292" getRoleName="Bluto">
+		<getMovie id="40" />
+		<getTalent id="175" />
+	</MovieRoles>
+	<MovieRoles id="293" getRoleName="Jennings">
+		<getMovie id="40" />
+		<getTalent id="311" />
+	</MovieRoles>
+	<MovieRoles id="294" getRoleName="Katy">
+		<getMovie id="40" />
+		<getTalent id="26" />
+	</MovieRoles>
+	<MovieRoles id="295" getRoleName="Larry Kroger">
+		<getMovie id="40" />
+		<getTalent id="310" />
+	</MovieRoles>
+	<MovieRoles id="296" getRoleName="Wally">
+		<getMovie id="41" />
+		<getTalent id="247" />
+	</MovieRoles>
+	<MovieRoles id="297" getRoleName="Andre">
+		<getMovie id="41" />
+		<getTalent id="312" />
+	</MovieRoles>
+	<MovieRoles id="298" getRoleName="Omar">
+		<getMovie id="42" />
+		<getTalent id="314" />
+	</MovieRoles>
+	<MovieRoles id="299" getRoleName="Johnny">
+		<getMovie id="42" />
+		<getTalent id="316" />
+	</MovieRoles>
+	<MovieRoles id="300" getRoleName="Lena">
+		<getMovie id="43" />
+		<getTalent id="318" />
+	</MovieRoles>
+	<MovieRoles id="301" getRoleName="Madeleine">
+		<getMovie id="43" />
+		<getTalent id="317" />
+	</MovieRoles>
+	<MovieRoles id="302" getRoleName="Duane">
+		<getMovie id="76" />
+		<getTalent id="326" />
+	</MovieRoles>
+	<MovieRoles id="303" getRoleName="Sonny">
+		<getMovie id="76" />
+		<getTalent id="322" />
+	</MovieRoles>
+	<MovieRoles id="304" getRoleName="Lois Farrow">
+		<getMovie id="76" />
+		<getTalent id="320" />
+	</MovieRoles>
+	<MovieRoles id="305" getRoleName="Sam the Lion">
+		<getMovie id="76" />
+		<getTalent id="325" />
+	</MovieRoles>
+	<MovieRoles id="306" getRoleName="Jacy Farrow">
+		<getMovie id="76" />
+		<getTalent id="321" />
+	</MovieRoles>
+	<MovieRoles id="307" getRoleName="Ruth Popper">
+		<getMovie id="76" />
+		<getTalent id="323" />
+	</MovieRoles>
+	<MovieRoles id="308" getRoleName="Teddy Duchamp">
+		<getMovie id="44" />
+		<getTalent id="331" />
+	</MovieRoles>
+	<MovieRoles id="309" getRoleName="Denny Lachance">
+		<getMovie id="44" />
+		<getTalent id="332" />
+	</MovieRoles>
+	<MovieRoles id="310" getRoleName="Ace Merrill">
+		<getMovie id="44" />
+		<getTalent id="327" />
+	</MovieRoles>
+	<MovieRoles id="311" getRoleName="Vern Tassio">
+		<getMovie id="44" />
+		<getTalent id="328" />
+	</MovieRoles>
+	<MovieRoles id="312" getRoleName="Gordie Lachance">
+		<getMovie id="44" />
+		<getTalent id="329" />
+	</MovieRoles>
+	<MovieRoles id="313" getRoleName="Chris Chambers">
+		<getMovie id="44" />
+		<getTalent id="330" />
+	</MovieRoles>
+	<MovieRoles id="314" getRoleName="Mike Waters">
+		<getMovie id="45" />
+		<getTalent id="330" />
+	</MovieRoles>
+	<MovieRoles id="315" getRoleName="Scott Favor">
+		<getMovie id="45" />
+		<getTalent id="334" />
+	</MovieRoles>
+	<MovieRoles id="316" getRoleName="Dorothy Vallens">
+		<getMovie id="46" />
+		<getTalent id="336" />
+	</MovieRoles>
+	<MovieRoles id="317" getRoleName="Frank Booth">
+		<getMovie id="46" />
+		<getTalent id="54" />
+	</MovieRoles>
+	<MovieRoles id="318" getRoleName="Jeffrey Beaumont">
+		<getMovie id="46" />
+		<getTalent id="337" />
+	</MovieRoles>
+	<MovieRoles id="319" getRoleName="Sandy Williams">
+		<getMovie id="46" />
+		<getTalent id="304" />
+	</MovieRoles>
+	<MovieRoles id="320" getRoleName="Gradisca">
+		<getMovie id="47" />
+		<getTalent id="340" />
+	</MovieRoles>
+	<MovieRoles id="248" />
+	<MovieRoles id="321" getRoleName="Titta">
+		<getMovie id="47" />
+		<getTalent id="341" />
+	</MovieRoles>
+	<MovieRoles id="322" getRoleName="Melina">
+		<getMovie id="48" />
+		<getTalent id="346" />
+	</MovieRoles>
+	<MovieRoles id="323" getRoleName="Lori">
+		<getMovie id="48" />
+		<getTalent id="343" />
+	</MovieRoles>
+	<MovieRoles id="324" getRoleName="Quaid">
+		<getMovie id="48" />
+		<getTalent id="272" />
+	</MovieRoles>
+	<MovieRoles id="325" getRoleName="Richter">
+		<getMovie id="48" />
+		<getTalent id="342" />
+	</MovieRoles>
+	<MovieRoles id="326" getRoleName="Cohaagen">
+		<getMovie id="48" />
+		<getTalent id="345" />
+	</MovieRoles>
+	<MovieRoles id="327" getRoleName="Jill Bryant">
+		<getMovie id="75" />
+		<getTalent id="269" />
+	</MovieRoles>
+	<MovieRoles id="328" getRoleName="Guy Hamilton">
+		<getMovie id="75" />
+		<getTalent id="348" />
+	</MovieRoles>
+	<MovieRoles id="329" getRoleName="Billy Kwan">
+		<getMovie id="75" />
+		<getTalent id="349" />
+	</MovieRoles>
+	<MovieRoles id="330" getRoleName="Lilly Dillon">
+		<getMovie id="69" />
+		<getTalent id="351" />
+	</MovieRoles>
+	<MovieRoles id="331" getRoleName="Roy Dillon">
+		<getMovie id="69" />
+		<getTalent id="332" />
+	</MovieRoles>
+	<MovieRoles id="332" getRoleName="Myra Langtry">
+		<getMovie id="69" />
+		<getTalent id="350" />
+	</MovieRoles>
+	<MovieRoles id="333" getRoleName="Anna">
+		<getMovie id="49" />
+		<getTalent id="356" />
+	</MovieRoles>
+	<MovieRoles id="334" getRoleName="Agnes">
+		<getMovie id="49" />
+		<getTalent id="355" />
+	</MovieRoles>
+	<MovieRoles id="335" getRoleName="Maria">
+		<getMovie id="49" />
+		<getTalent id="353" />
+	</MovieRoles>
+	<MovieRoles id="336" getRoleName="Karin">
+		<getMovie id="49" />
+		<getTalent id="354" />
+	</MovieRoles>
+	<MovieRoles id="337" getRoleName="Frances">
+		<getMovie id="50" />
+		<getTalent id="360" />
+	</MovieRoles>
+	<MovieRoles id="338" getRoleName="Vivian Bell">
+		<getMovie id="50" />
+		<getTalent id="358" />
+	</MovieRoles>
+	<MovieRoles id="339" getRoleName="Cay Rivers">
+		<getMovie id="50" />
+		<getTalent id="357" />
+	</MovieRoles>
+	<MovieRoles id="340" getRoleName="Greer Childs">
+		<getMovie id="51" />
+		<getTalent id="364" />
+	</MovieRoles>
+	<MovieRoles id="341" getRoleName="Nola Darling">
+		<getMovie id="51" />
+		<getTalent id="361" />
+	</MovieRoles>
+	<MovieRoles id="342" getRoleName="Mars Blackmon">
+		<getMovie id="51" />
+		<getTalent id="362" />
+	</MovieRoles>
+	<MovieRoles id="343" getRoleName="Jamie Overstreet">
+		<getMovie id="51" />
+		<getTalent id="363" />
+	</MovieRoles>
+	<MovieRoles id="344" getRoleName="Tina">
+		<getMovie id="52" />
+		<getTalent id="368" />
+	</MovieRoles>
+	<MovieRoles id="345" getRoleName="Mother Sister">
+		<getMovie id="52" />
+		<getTalent id="371" />
+	</MovieRoles>
+	<MovieRoles id="346" getRoleName="Jade">
+		<getMovie id="52" />
+		<getTalent id="367" />
+	</MovieRoles>
+	<MovieRoles id="347" getRoleName="Mister Senor Love Daddy">
+		<getMovie id="52" />
+		<getTalent id="169" />
+	</MovieRoles>
+	<MovieRoles id="348" getRoleName="Da Mayor">
+		<getMovie id="52" />
+		<getTalent id="369" />
+	</MovieRoles>
+	<MovieRoles id="349" getRoleName="Buggin' Out">
+		<getMovie id="52" />
+		<getTalent id="366" />
+	</MovieRoles>
+	<MovieRoles id="350" getRoleName="Vito">
+		<getMovie id="52" />
+		<getTalent id="365" />
+	</MovieRoles>
+	<MovieRoles id="351" getRoleName="Mookie">
+		<getMovie id="52" />
+		<getTalent id="362" />
+	</MovieRoles>
+	<MovieRoles id="352" getRoleName="Sal">
+		<getMovie id="52" />
+		<getTalent id="370" />
+	</MovieRoles>
+	<MovieRoles id="192" />
+	<MovieRoles id="353" getRoleName="Darryl">
+		<getMovie id="53" />
+		<getTalent id="372" />
+	</MovieRoles>
+	<MovieRoles id="354" getRoleName="Louise Sawyer">
+		<getMovie id="53" />
+		<getTalent id="240" />
+	</MovieRoles>
+	<MovieRoles id="355" getRoleName="Jimmy">
+		<getMovie id="53" />
+		<getTalent id="373" />
+	</MovieRoles>
+	<MovieRoles id="356" getRoleName="Hal Slocumb">
+		<getMovie id="53" />
+		<getTalent id="296" />
+	</MovieRoles>
+	<MovieRoles id="357" getRoleName="Thelma Dickinson">
+		<getMovie id="53" />
+		<getTalent id="209" />
+	</MovieRoles>
+	<MovieRoles id="358" getRoleName="June Gudmundsdottir">
+		<getMovie id="74" />
+		<getTalent id="379" />
+	</MovieRoles>
+	<MovieRoles id="359" getRoleName="Detective Susan Avery">
+		<getMovie id="74" />
+		<getTalent id="375" />
+	</MovieRoles>
+	<MovieRoles id="360" getRoleName="Griffin Mill">
+		<getMovie id="74" />
+		<getTalent id="376" />
+	</MovieRoles>
+	<MovieRoles id="361" getRoleName="Walter Stuckel">
+		<getMovie id="74" />
+		<getTalent id="378" />
+	</MovieRoles>
+	<MovieRoles id="362" getRoleName="Larry Levy">
+		<getMovie id="74" />
+		<getTalent id="377" />
+	</MovieRoles>
+	<MovieRoles id="363" getRoleName="John Klute">
+		<getMovie id="54" />
+		<getTalent id="311" />
+	</MovieRoles>
+	<MovieRoles id="364" getRoleName="Bree Daniels">
+		<getMovie id="54" />
+		<getTalent id="382" />
+	</MovieRoles>
+	<MovieRoles id="365" getRoleName="Mary X">
+		<getMovie id="55" />
+		<getTalent id="383" />
+	</MovieRoles>
+	<MovieRoles id="366" getRoleName="Henry Spencer">
+		<getMovie id="55" />
+		<getTalent id="384" />
+	</MovieRoles>
+	<MovieRoles id="367" getRoleName="Peggy Ramsay">
+		<getMovie id="56" />
+		<getTalent id="386" />
+	</MovieRoles>
+	<MovieRoles id="368" getRoleName="John Lahr">
+		<getMovie id="56" />
+		<getTalent id="247" />
+	</MovieRoles>
+	<MovieRoles id="369" getRoleName="Joe Orton">
+		<getMovie id="56" />
+		<getTalent id="387" />
+	</MovieRoles>
+	<MovieRoles id="370" getRoleName="Kenneth Halliwell">
+		<getMovie id="56" />
+		<getTalent id="385" />
+	</MovieRoles>
+	<MovieRoles id="371" getRoleName="Jean Brodie">
+		<getMovie id="70" />
+		<getTalent id="390" />
+	</MovieRoles>
+	<MovieRoles id="372" getRoleName="Teddy Lloyd">
+		<getMovie id="70" />
+		<getTalent id="389" />
+	</MovieRoles>
+	<MovieRoles id="270" />
+	<MovieRoles id="373" getRoleName="Tom">
+		<getMovie id="57" />
+		<getTalent id="392" />
+	</MovieRoles>
+	<MovieRoles id="374" getRoleName="Betsy">
+		<getMovie id="57" />
+		<getTalent id="321" />
+	</MovieRoles>
+	<MovieRoles id="375" getRoleName="Iris">
+		<getMovie id="57" />
+		<getTalent id="394" />
+	</MovieRoles>
+	<MovieRoles id="376" getRoleName="Wizard">
+		<getMovie id="57" />
+		<getTalent id="393" />
+	</MovieRoles>
+	<MovieRoles id="377" getRoleName="Travis Bickle">
+		<getMovie id="57" />
+		<getTalent id="125" />
+	</MovieRoles>
+	<MovieRoles id="378" getRoleName="Sport">
+		<getMovie id="57" />
+		<getTalent id="296" />
+	</MovieRoles>
+	<MovieRoles id="379" getRoleName="Frau Bluecher">
+		<getMovie id="58" />
+		<getTalent id="323" />
+	</MovieRoles>
+	<MovieRoles id="380" getRoleName="Elizabeth">
+		<getMovie id="58" />
+		<getTalent id="395" />
+	</MovieRoles>
+	<MovieRoles id="381" getRoleName="The Monster">
+		<getMovie id="58" />
+		<getTalent id="393" />
+	</MovieRoles>
+	<MovieRoles id="382" getRoleName="Dr. Frankenstein">
+		<getMovie id="58" />
+		<getTalent id="397" />
+	</MovieRoles>
+	<MovieRoles id="383" getRoleName="Inga">
+		<getMovie id="58" />
+		<getTalent id="289" />
+	</MovieRoles>
+	<MovieRoles id="384" getRoleName="Igor">
+		<getMovie id="58" />
+		<getTalent id="398" />
+	</MovieRoles>
+	<MovieRoles id="385" getRoleName="Anna Schmidt">
+		<getMovie id="59" />
+		<getTalent id="402" />
+	</MovieRoles>
+	<MovieRoles id="386" getRoleName="Harry Lime">
+		<getMovie id="59" />
+		<getTalent id="399" />
+	</MovieRoles>
+	<MovieRoles id="387" getRoleName="Holly Martins">
+		<getMovie id="59" />
+		<getTalent id="400" />
+	</MovieRoles>
+	<MovieRoles id="388" getRoleName="Major Calloway">
+		<getMovie id="59" />
+		<getTalent id="401" />
+	</MovieRoles>
+	<MovieRoles id="389" getRoleName="T.R. Devlin">
+		<getMovie id="60" />
+		<getTalent id="407" />
+	</MovieRoles>
+	<MovieRoles id="390" getRoleName="Alice Huberman">
+		<getMovie id="60" />
+		<getTalent id="10" />
+	</MovieRoles>
+	<MovieRoles id="391" getRoleName="Alexander Sebastian">
+		<getMovie id="60" />
+		<getTalent id="406" />
+	</MovieRoles>
+	<MovieRoles id="392" getRoleName="Mrs. Kane">
+		<getMovie id="61" />
+		<getTalent id="409" />
+	</MovieRoles>
+	<MovieRoles id="393" getRoleName="Jed Leland">
+		<getMovie id="61" />
+		<getTalent id="400" />
+	</MovieRoles>
+	<MovieRoles id="394" getRoleName="Susan Alexander">
+		<getMovie id="61" />
+		<getTalent id="408" />
+	</MovieRoles>
+	<MovieRoles id="395" getRoleName="Charles Foster Kane">
+		<getMovie id="61" />
+		<getTalent id="399" />
+	</MovieRoles>
+	<MovieRoles id="396" getRoleName="C.K. Dexter Haven">
+		<getMovie id="71" />
+		<getTalent id="407" />
+	</MovieRoles>
+	<MovieRoles id="397" getRoleName="Tracy Lord">
+		<getMovie id="71" />
+		<getTalent id="410" />
+	</MovieRoles>
+	<MovieRoles id="398" getRoleName="Macaulay (Mike) Connor">
+		<getMovie id="71" />
+		<getTalent id="411" />
+	</MovieRoles>
+	<MovieRoles id="399" getRoleName="Harmonica">
+		<getMovie id="62" />
+		<getTalent id="415" />
+	</MovieRoles>
+	<MovieRoles id="400" getRoleName="Cheyenne">
+		<getMovie id="62" />
+		<getTalent id="413" />
+	</MovieRoles>
+	<MovieRoles id="401" getRoleName="Jill McBain">
+		<getMovie id="62" />
+		<getTalent id="414" />
+	</MovieRoles>
+	<MovieRoles id="402" getRoleName="Frank">
+		<getMovie id="62" />
+		<getTalent id="416" />
+	</MovieRoles>
+	<MovieRoles id="403" getRoleName="Paula Trent">
+		<getMovie id="64" />
+		<getTalent id="423" />
+	</MovieRoles>
+	<MovieRoles id="404" getRoleName="Ghoul Man">
+		<getMovie id="64" />
+		<getTalent id="420" />
+	</MovieRoles>
+	<MovieRoles id="405" getRoleName="Vampire Girl">
+		<getMovie id="64" />
+		<getTalent id="424" />
+	</MovieRoles>
+	<MovieRoles id="406" getRoleName="Jeff Trent">
+		<getMovie id="64" />
+		<getTalent id="425" />
+	</MovieRoles>
+	<MovieRoles id="407" getRoleName="Inspector Clay">
+		<getMovie id="64" />
+		<getTalent id="421" />
+	</MovieRoles>
+	<MovieRoles id="408" getRoleName="D'Artagnan">
+		<getMovie id="82" />
+		<getTalent id="427" />
+	</MovieRoles>
+	<MovieRoles id="409" getRoleName="Porthos">
+		<getMovie id="82" />
+		<getTalent id="428" />
+	</MovieRoles>
+	<MovieRoles id="410" getRoleName="Aramis">
+		<getMovie id="82" />
+		<getTalent id="430" />
+	</MovieRoles>
+	<MovieRoles id="411" getRoleName="Athos">
+		<getMovie id="82" />
+		<getTalent id="429" />
+	</MovieRoles>
+	<MovieRoles id="412" getRoleName="Richelieu">
+		<getMovie id="82" />
+		<getTalent id="426" />
+	</MovieRoles>
+	<MovieRoles id="413" getRoleName="Milady de Winter">
+		<getMovie id="82" />
+		<getTalent id="433" />
+	</MovieRoles>
+	<MovieRoles id="414" getRoleName="Rochefort">
+		<getMovie id="82" />
+		<getTalent id="431" />
+	</MovieRoles>
+	<PlotSummaries id="1">
+		<getMovie id="3" />
+	</PlotSummaries>
+	<PlotSummaries id="2">
+		<getMovie id="5" />
+	</PlotSummaries>
+	<PlotSummaries id="3">
+		<getMovie id="67" />
+	</PlotSummaries>
+	<PlotSummaries id="4">
+		<getMovie id="80" />
+	</PlotSummaries>
+	<PlotSummaries id="5">
+		<getMovie id="7" />
+	</PlotSummaries>
+	<PlotSummaries id="6">
+		<getMovie id="81" />
+	</PlotSummaries>
+	<PlotSummaries id="7">
+		<getMovie id="77" />
+	</PlotSummaries>
+	<PlotSummaries id="8">
+		<getMovie id="16" />
+	</PlotSummaries>
+	<PlotSummaries id="9">
+		<getMovie id="17" />
+	</PlotSummaries>
+	<PlotSummaries id="10">
+		<getMovie id="18" />
+	</PlotSummaries>
+	<PlotSummaries id="11">
+		<getMovie id="20" />
+	</PlotSummaries>
+	<PlotSummaries id="12">
+		<getMovie id="72" />
+	</PlotSummaries>
+	<PlotSummaries id="13">
+		<getMovie id="33" />
+	</PlotSummaries>
+	<PlotSummaries id="14">
+		<getMovie id="34" />
+	</PlotSummaries>
+	<PlotSummaries id="15">
+		<getMovie id="83" />
+	</PlotSummaries>
+	<PlotSummaries id="16">
+		<getMovie id="35" />
+	</PlotSummaries>
+	<PlotSummaries id="17">
+		<getMovie id="36" />
+	</PlotSummaries>
+	<PlotSummaries id="18">
+		<getMovie id="37" />
+	</PlotSummaries>
+	<PlotSummaries id="19">
+		<getMovie id="38" />
+	</PlotSummaries>
+	<PlotSummaries id="20">
+		<getMovie id="39" />
+	</PlotSummaries>
+	<PlotSummaries id="21">
+		<getMovie id="40" />
+	</PlotSummaries>
+	<PlotSummaries id="22">
+		<getMovie id="41" />
+	</PlotSummaries>
+	<PlotSummaries id="23">
+		<getMovie id="42" />
+	</PlotSummaries>
+	<PlotSummaries id="24">
+		<getMovie id="43" />
+	</PlotSummaries>
+	<PlotSummaries id="25">
+		<getMovie id="76" />
+	</PlotSummaries>
+	<PlotSummaries id="26">
+		<getMovie id="44" />
+	</PlotSummaries>
+	<PlotSummaries id="27">
+		<getMovie id="45" />
+	</PlotSummaries>
+	<PlotSummaries id="28">
+		<getMovie id="46" />
+	</PlotSummaries>
+	<PlotSummaries id="29">
+		<getMovie id="48" />
+	</PlotSummaries>
+	<PlotSummaries id="30">
+		<getMovie id="75" />
+	</PlotSummaries>
+	<PlotSummaries id="31">
+		<getMovie id="69" />
+	</PlotSummaries>
+	<PlotSummaries id="32">
+		<getMovie id="49" />
+	</PlotSummaries>
+	<PlotSummaries id="33">
+		<getMovie id="50" />
+	</PlotSummaries>
+	<PlotSummaries id="34">
+		<getMovie id="51" />
+	</PlotSummaries>
+	<PlotSummaries id="35">
+		<getMovie id="52" />
+	</PlotSummaries>
+	<PlotSummaries id="36">
+		<getMovie id="53" />
+	</PlotSummaries>
+	<PlotSummaries id="37">
+		<getMovie id="74" />
+	</PlotSummaries>
+	<PlotSummaries id="38">
+		<getMovie id="54" />
+	</PlotSummaries>
+	<PlotSummaries id="39">
+		<getMovie id="55" />
+	</PlotSummaries>
+	<PlotSummaries id="40">
+		<getMovie id="56" />
+	</PlotSummaries>
+	<PlotSummaries id="41">
+		<getMovie id="70" />
+	</PlotSummaries>
+	<PlotSummaries id="42">
+		<getMovie id="57" />
+	</PlotSummaries>
+	<PlotSummaries id="43">
+		<getMovie id="58" />
+	</PlotSummaries>
+	<PlotSummaries id="44">
+		<getMovie id="59" />
+	</PlotSummaries>
+	<PlotSummaries id="45">
+		<getMovie id="60" />
+	</PlotSummaries>
+	<PlotSummaries id="46">
+		<getMovie id="61" />
+	</PlotSummaries>
+	<PlotSummaries id="47">
+		<getMovie id="71" />
+	</PlotSummaries>
+	<PlotSummaries id="48">
+		<getMovie id="62" />
+	</PlotSummaries>
+	<PlotSummaries id="49">
+		<getMovie id="63" />
+	</PlotSummaries>
+	<PlotSummaries id="50">
+		<getMovie id="64" />
+	</PlotSummaries>
+	<PlotSummaries id="51">
+		<getMovie id="47" />
+	</PlotSummaries>
+	<PlotSummaries id="52" getSummary="Dan: This was most certainly a G movie. Right?
+
+Craig: Sorry, man.  I checked.  It was PG.
+
+Bruce: Lucas personally wanted it rated PG because he feared that viewers wouldn't go to a G rated action film.">
+		<getMovie id="65" />
+	</PlotSummaries>
+	<PlotSummaries id="53" getSummary="The Godfather kills everyone and rules the world.">
+		<getMovie id="68" />
+	</PlotSummaries>
+	<PlotSummaries id="54" getSummary="The story of a german town caught in the grip of a child molester/murderer.">
+		<getMovie id="2" />
+	</PlotSummaries>
+	<PlotSummaries id="55" getSummary="A scary french cult movie.">
+		<getMovie id="6" />
+	</PlotSummaries>
+	<PlotSummaries id="56" getSummary="The small town of Hickory, Indiana brings in outsider Coach Norman Dale to lead their outmatched high school basketball team against the rest of the state's best.">
+		<getMovie id="8" />
+	</PlotSummaries>
+	<PlotSummaries id="57" getSummary="Very exciting!">
+		<getMovie id="1" />
+	</PlotSummaries>
+	<PlotSummaries id="58" getSummary="The film follows two young  black basketball players in Chicago as they leave grammar school and enter high school with high expectations for their futures in the world of college and professional basketball.">
+		<getMovie id="9" />
+	</PlotSummaries>
+	<PlotSummaries id="59" getSummary="Middle-aged novelist Humbert Humbert rents a room in Charlotte Haze's house after he falls passionately in love with her daughter Lolita. There are three slight problems, though - one, Charlotte is madly in love with him (unrequited, needless to say); two, Lolita is only fourteen; three, there's a very peculiar figure by the name of Clare Quilty who keeps popping up in the most unexpected places (and sporting equally unexpected accents), who seems to have a similarly unhealthy interest in Lolita.">
+		<getMovie id="4" />
+	</PlotSummaries>
+	<PlotSummaries id="60" getSummary="A Christmas at SOS Amiti› (a french &quot;suicide hotline&quot; equivalent)">
+		<getMovie id="79" />
+	</PlotSummaries>
+	<PlotSummaries id="61" getSummary="Bounty hunter Jack Walsh sets out to bring bail jumper Jonathan Mardukas back to Los Angeles for trial. But after finding him, Walsh discovers that the &quot;Duke&quot; was a mafia accountant who donated millions of dollars to charities after embezzling it from the mafia.">
+		<getMovie id="12" />
+	</PlotSummaries>
+	<PlotSummaries id="62" getSummary="Will Graham is brought out of retirement to pursue an elusive serial killer. In order to find the killer, Graham must return to Dr. Hannibal Lector, the serial killer he captured after almost losing his mind and life.">
+		<getMovie id="11" />
+	</PlotSummaries>
+	<PlotSummaries id="63" getSummary="Dr. Richard Walker and his wive arrive in Paris for a working vacation. But Mrs. Walker disappears almost immediately, leaving Dr. Walker desparately trying to track her down without any french language skills or much help from the french police or the US embassy. Eventually he finds Michelle, the smuggler who also must discover who is behind the abduction.">
+		<getMovie id="10" />
+	</PlotSummaries>
+	<PlotSummaries id="64" getSummary="Copola's movie is based on Conrad's Heart of Darkness set in Vietnam and Cambodia. Captain Benjamin Willard is set on a secret mission to &quot;terminate&quot; the renegade Colonel Kurtz who is waging an effective but independent war against the North Vietnemese.">
+		<getMovie id="15" />
+	</PlotSummaries>
+	<PlotSummaries id="65" getSummary="Bridget Gregory steals drug money from her husband and tries to hid in upstate New York. When her lawyer tells her to blend in and get a boyfriend, things get interesting.">
+		<getMovie id="13" />
+	</PlotSummaries>
+	<PlotSummaries id="66" getSummary="When Michael arrives in the town of Red Rock out of money and down on his luck, Wayne mistakes him for the hit man he hired to kill his wife. But soon Michael meets Wayne's wife and the real hit man arrives and things heat up.">
+		<getMovie id="14" />
+	</PlotSummaries>
+	<PlotSummaries id="67" getSummary="The movie tracks the lives of 5 friends who regulary meet at the Diner to share stories and figure out where their lives are heading.">
+		<getMovie id="19" />
+	</PlotSummaries>
+	<PlotSummaries id="68" getSummary="After finishing his sentence for armed robbery, Jake is release from prison only to discover that the county is going to close the catholic school he and Elwood attended as children. Both set out to recreate &quot;the band&quot; in an attempt to raise enough money to pay the taxes for the school.">
+		<getMovie id="73" />
+	</PlotSummaries>
+	<PlotSummaries id="69" getSummary="Michael Moore tracks the demise of his home town of Flint Michigan. His ultimate goal is to direct his questions to Roger Smith, the president of General Motors.">
+		<getMovie id="24" />
+	</PlotSummaries>
+	<PlotSummaries id="70" getSummary="Jake Gittes is hired for the apparently simple task of documenting the extra-marital activities of her husband. But after encountering a few exceptionally unhelpful and down right violent people, Gittes starts to unravel a maze of corruption and deceit.">
+		<getMovie id="26" />
+	</PlotSummaries>
+	<PlotSummaries id="71" getSummary="Deckard is charged with tracking down and destroying a group of escaped replicants. Of course these replicants are the latest models that are getting all the more human, making Deckard's job all the tougher and raises questions about the role of these machines. Very Sci-Fi.">
+		<getMovie id="66" />
+	</PlotSummaries>
+	<PlotSummaries id="72" getSummary="Based on the true story of Henry Hill. The film tracks the rise of Hill, James Conway, and Tommy DeVito as they work their way up in the mafia.">
+		<getMovie id="78" />
+	</PlotSummaries>
+	<PlotSummaries id="73" getSummary="The ruling clique at Westerberg High is running along smoothly until new comer J.D. (for James Dean?) arrives and convinces Veronica that some mischief would make things much more interesting. When Veronica discovers &quot;mischief&quot; involves bumping off other students and staging elaborate suicide frame-ups things get dark.">
+		<getMovie id="23" />
+	</PlotSummaries>
+	<PlotSummaries id="74" getSummary="Irwin Fletcher is an investigative reporter searching for the story behind the drug trade on the beach. But he soon finds himself drawn into exposing a separate con, that shares some curious players as the drug trade.">
+		<getMovie id="25" />
+	</PlotSummaries>
+	<PlotSummaries id="75" getSummary="Roughly based on the story behind the 1988 Jamamican bobsled team. After being denied places on the summer olympic team as a sprinter, Leon recruits three others and the reluctant coach Irv to join him on the team. Along the way the team encounters many skeptics and discovers the colored past of the coach.">
+		<getMovie id="22" />
+	</PlotSummaries>
+	<PlotSummaries id="76" getSummary="When Mom and Dad have to leave town, bachelor at large, Uncle Buck, comes to take care of the children.">
+		<getMovie id="21" />
+	</PlotSummaries>
+	<PlotSummaries id="77" getSummary="The EOF product attempts to go where no database product has gone before!">
+		<getMovie id="82" />
+	</PlotSummaries>
+	<PlotSummaries id="78" getSummary="An epic-scale World War II film about a privileged boy captured by the Japanese in Shanghai.">
+		<getMovie id="31" />
+	</PlotSummaries>
+	<PlotSummaries id="79" getSummary="Loosely based on the true story of Elliot Ness.
+Frustrated by the penetration of corruption in Chicago, Ness puts together a small independent Treasury officers dedicated to the destruction of the Chicago Mob.
+Good scene stressing the importance of team work.">
+		<getMovie id="27" />
+	</PlotSummaries>
+	<PlotSummaries id="80" getSummary="An idealistic young priest must deal with the poverty of his new parish, the lax attitude of his fellow pastor, a young girl being abused by her father, and his own shame.">
+		<getMovie id="29" />
+	</PlotSummaries>
+	<PlotSummaries id="81" getSummary="Toys come to life when the humans are away.  Classic buddy flick in which a spaceman toy (Buzz Lightyear) arrives at a birthday party and threatens to displace the cowboy (Woody) as the child's favorite toy.  The two rivals get lost and eventually become friends, working together to find their way home.">
+		<getMovie id="32" />
+	</PlotSummaries>
+	<PlotSummaries id="82" getSummary="Based on the novel by Louisa May Alcott.">
+		<getMovie id="30" />
+	</PlotSummaries>
+	<PlotSummaries id="83" getSummary="Harry Burns and Sally Albright gradually become friends over the course of several years and failed partners. Eventually the sleep together and wrecks the friendship. But eventually they get back together and everyone lives happily ever after.">
+		<getMovie id="28" />
+	</PlotSummaries>
+	<PlotSummaries id="84">
+		<getMovie id="84" />
+	</PlotSummaries>
+	<PlotSummaries id="85">
+		<getMovie id="85" />
+	</PlotSummaries>
+	<PlotSummaries id="86">
+		<getMovie id="86" />
+	</PlotSummaries>
+	<PlotSummaries id="87">
+		<getMovie id="87" />
+	</PlotSummaries>
+	<PlotSummaries id="88">
+		<getMovie id="88" />
+	</PlotSummaries>
+	<PlotSummaries id="89">
+		<getMovie id="89" />
+	</PlotSummaries>
+	<Talent id="1" getLastName="Ford" getFirstName="Harrison" getImage="/Users/jeff/images/Jeff.jpg" >
+		<getMovieRoles id="1" />
+		<getMovieRoles id="2" />
+		<getMovieRoles id="97" />
+		<getMovieRoles id="121" />
+		<getMovieRoles id="190" />
+	</Talent>
+	<Talent id="2" getLastName="Lucas" getFirstName="George" />
+	<Talent id="3" getLastName="Hammil" getFirstName="Mark">
+		<getMovieRoles id="6" />
+	</Talent>
+	<Talent id="4" getLastName="Brando" getFirstName="Marlon">
+		<getMovieRoles id="5" />
+		<getMovieRoles id="125" />
+	</Talent>
+	<Talent id="5" getLastName="Keaton" getFirstName="Dianne">
+		<getMovieRoles id="3" />
+	</Talent>
+	<Talent id="6" getLastName="Copola" getFirstName="Francis Ford" />
+	<Talent id="7" getLastName="Pacino" getFirstName="Al">
+		<getMovieRoles id="4" />
+	</Talent>
+	<Talent id="8" getLastName="Bogart" getFirstName="Humphrey">
+		<getMovieRoles id="8" />
+	</Talent>
+	<Talent id="9" getLastName="Curtiz" getFirstName="Michael" />
+	<Talent id="10" getLastName="Bergman" getFirstName="Ingrid">
+		<getMovieRoles id="9" />
+		<getMovieRoles id="390" />
+	</Talent>
+	<Talent id="11" getLastName="Greenstreet" getFirstName="Sidney">
+		<getMovieRoles id="13" />
+	</Talent>
+	<Talent id="12" getLastName="Lorre" getFirstName="Peter" getImage="/Users/jeff/images/Daisy.jpg" >
+		<getMovieRoles id="7" />
+		<getMovieRoles id="10" />
+	</Talent>
+	<Talent id="13" getLastName="Lang" getFirstName="Fritz" />
+	<Talent id="14" getLastName="Lyon" getFirstName="Sue">
+		<getMovieRoles id="15" />
+	</Talent>
+	<Talent id="15" getLastName="Sellers" getFirstName="Peter">
+		<getMovieRoles id="14" />
+	</Talent>
+	<Talent id="16" getLastName="Winters" getFirstName="Shelley">
+		<getMovieRoles id="11" />
+	</Talent>
+	<Talent id="17" getLastName="Mason" getFirstName="James">
+		<getMovieRoles id="12" />
+	</Talent>
+	<Talent id="18" getLastName="Kubrick" getFirstName="Stanley" />
+	<Talent id="19" getLastName="Ritt" getFirstName="Martin" />
+	<Talent id="20" getLastName="Newman" getFirstName="Paul">
+		<getMovieRoles id="16" />
+	</Talent>
+	<Talent id="21" getLastName="Signoret" getFirstName="Simone">
+		<getMovieRoles id="23" />
+	</Talent>
+	<Talent id="22" getLastName="Moranis" getFirstName="Rick">
+		<getMovieRoles id="17" />
+	</Talent>
+	<Talent id="23" getLastName="Thomas" getFirstName="Dave">
+		<getMovieRoles id="19" />
+	</Talent>
+	<Talent id="24" getLastName="Von Sydow" getFirstName="Max">
+		<getMovieRoles id="18" />
+		<getMovieRoles id="74" />
+	</Talent>
+	<Talent id="25" getLastName="Fisher" getFirstName="Carrie">
+		<getMovieRoles id="20" />
+		<getMovieRoles id="164" />
+		<getMovieRoles id="219" />
+	</Talent>
+	<Talent id="26" getLastName="Allen" getFirstName="Karen" getImage="/Users/jeff/images/Jill.jpg" >
+		<getMovieRoles id="21" />
+		<getMovieRoles id="294" />
+	</Talent>
+	<Talent id="27" getLastName="Clouzot" getFirstName="Vera">
+		<getMovieRoles id="22" />
+	</Talent>
+	<Talent id="28" getLastName="Clouzot" getFirstName="Henri-Georges" />
+	<Talent id="29" getLastName="Serrault" getFirstName="Michel">
+		<getMovieRoles id="24" />
+	</Talent>
+	<Talent id="30" getLastName="Meurisse" getFirstName="Paul">
+		<getMovieRoles id="26" />
+	</Talent>
+	<Talent id="31" getLastName="Vanel" getFirstName="Charles">
+		<getMovieRoles id="25" />
+	</Talent>
+	<Talent id="32" getLastName="PoirÝ" getFirstName="Jean-Marie" />
+	<Talent id="33" getLastName="" getFirstName="AnÝmone">
+		<getMovieRoles id="28" />
+	</Talent>
+	<Talent id="34" getLastName="Balasko" getFirstName="Josianne">
+		<getMovieRoles id="27" />
+	</Talent>
+	<Talent id="35" getLastName="Clavier" getFirstName="Christian">
+		<getMovieRoles id="31" />
+	</Talent>
+	<Talent id="36" getLastName="Jugnot" getFirstName="GÝrard">
+		<getMovieRoles id="33" />
+	</Talent>
+	<Talent id="37" getLastName="Chazel" getFirstName="Marie-Anne">
+		<getMovieRoles id="36" />
+	</Talent>
+	<Talent id="38" getLastName="Magnin" getFirstName="Claire">
+		<getMovieRoles id="34" />
+	</Talent>
+	<Talent id="39" getLastName="Lamotte" getFirstName="Martin">
+		<getMovieRoles id="32" />
+	</Talent>
+	<Talent id="40" getLastName="FranÛois" getFirstName="Jacques">
+		<getMovieRoles id="30" />
+	</Talent>
+	<Talent id="41" getLastName="Moynot" getFirstName="Bruno">
+		<getMovieRoles id="35" />
+	</Talent>
+	<Talent id="42" getLastName="Lhermitte" getFirstName="Thierry">
+		<getMovieRoles id="29" />
+	</Talent>
+	<Talent id="43" getLastName="Pinon" getFirstName="Dominique">
+		<getMovieRoles id="38" />
+	</Talent>
+	<Talent id="44" getLastName="Laguna" getFirstName="Silvie">
+		<getMovieRoles id="41" />
+	</Talent>
+	<Talent id="45" getLastName="Saunders" getFirstName="Justine">
+		<getMovieRoles id="42" />
+		<getMovieRoles id="86" />
+	</Talent>
+	<Talent id="46" getLastName="Caro" getFirstName="Marc" />
+	<Talent id="47" getLastName="Dreyfus" getFirstName="Jean-Claude">
+		<getMovieRoles id="40" />
+	</Talent>
+	<Talent id="48" getLastName="Perrier" getFirstName="Jean-FranÛois">
+		<getMovieRoles id="44" />
+	</Talent>
+	<Talent id="49" getLastName="Dougnac" getFirstName="Marie-Laure">
+		<getMovieRoles id="45" />
+	</Talent>
+	<Talent id="50" getLastName="Jeunet" getFirstName="Jean-Pierre" />
+	<Talent id="51" getLastName="Holgado" getFirstName="Ticky">
+		<getMovieRoles id="43" />
+	</Talent>
+	<Talent id="52" getLastName="Pisani" getFirstName="Anne-Marie">
+		<getMovieRoles id="37" />
+	</Talent>
+	<Talent id="53" getLastName="Viard" getFirstName="Karin">
+		<getMovieRoles id="39" />
+	</Talent>
+	<Talent id="54" getLastName="Hopper" getFirstName="Dennis">
+		<getMovieRoles id="46" />
+		<getMovieRoles id="118" />
+		<getMovieRoles id="317" />
+	</Talent>
+	<Talent id="55" getLastName="Anspaugh" getFirstName="David" />
+	<Talent id="56" getLastName="Hershey" getFirstName="Barbara">
+		<getMovieRoles id="48" />
+	</Talent>
+	<Talent id="57" getLastName="Hackman" getFirstName="Gene">
+		<getMovieRoles id="47" />
+	</Talent>
+	<Talent id="58" getLastName="Dommartin" getFirstName="Solveig">
+		<getMovieRoles id="75" />
+	</Talent>
+	<Talent id="59" getLastName="Hurt" getFirstName="William">
+		<getMovieRoles id="90" />
+	</Talent>
+	<Talent id="60" getLastName="Turrin" getFirstName="Enzo">
+		<getMovieRoles id="59" />
+	</Talent>
+	<Talent id="61" getLastName="Falcone" getFirstName="Pietro">
+		<getMovieRoles id="55" />
+	</Talent>
+	<Talent id="62" getLastName="Berk" getFirstName="Ernest">
+		<getMovieRoles id="66" />
+	</Talent>
+	<Talent id="63" getLastName="Takenaka" getFirstName="Naoto">
+		<getMovieRoles id="83" />
+	</Talent>
+	<Talent id="64" getLastName="McMahon" getFirstName="Chalie">
+		<getMovieRoles id="77" />
+	</Talent>
+	<Talent id="65" getLastName="Miyake" getFirstName="Kuniko">
+		<getMovieRoles id="87" />
+	</Talent>
+	<Talent id="66" getLastName="Moreau" getFirstName="Jeanne">
+		<getMovieRoles id="67" />
+		<getMovieRoles id="151" />
+	</Talent>
+	<Talent id="67" getLastName="Willoughby" getFirstName="Bart">
+		<getMovieRoles id="52" />
+	</Talent>
+	<Talent id="68" getLastName="Winterberg" getFirstName="Detlef">
+		<getMovieRoles id="70" />
+	</Talent>
+	<Talent id="69" getLastName="Smirnova" getFirstName="Elena">
+		<getMovieRoles id="78" />
+	</Talent>
+	<Talent id="70" getLastName="Ogata" getFirstName="Yugi">
+		<getMovieRoles id="56" />
+	</Talent>
+	<Talent id="71" getLastName="Jinzan" getFirstName="Zhang">
+		<getMovieRoles id="65" />
+	</Talent>
+	<Talent id="72" getLastName="Mitchell" getFirstName="Eddy">
+		<getMovieRoles id="54" />
+	</Talent>
+	<Talent id="73" getLastName="Leith" getFirstName="Susan">
+		<getMovieRoles id="72" />
+	</Talent>
+	<Talent id="74" getLastName="Ortega" getFirstName="Chick">
+		<getMovieRoles id="89" />
+	</Talent>
+	<Talent id="75" getLastName="Osterlein" getFirstName="Christine">
+		<getMovieRoles id="58" />
+	</Talent>
+	<Talent id="76" getLastName="Livingston" getFirstName="Paul">
+		<getMovieRoles id="68" />
+	</Talent>
+	<Talent id="77" getLastName="Little" getFirstName="Jimmy">
+		<getMovieRoles id="60" />
+	</Talent>
+	<Talent id="78" getLastName="Vogler" getFirstName="Ruediger">
+		<getMovieRoles id="53" />
+	</Talent>
+	<Talent id="79" getLastName="Doria" getFirstName="Diogo">
+		<getMovieRoles id="84" />
+	</Talent>
+	<Talent id="80" getLastName="Jason" getFirstName="Alec">
+		<getMovieRoles id="64" />
+	</Talent>
+	<Talent id="81" getLastName="Lynch" getFirstName="Alfred">
+		<getMovieRoles id="81" />
+	</Talent>
+	<Talent id="82" getLastName="Luchini" getFirstName="Fabrice">
+		<getMovieRoles id="93" />
+	</Talent>
+	<Talent id="83" getLastName="Gulpilil" getFirstName="David">
+		<getMovieRoles id="61" />
+	</Talent>
+	<Talent id="84" getLastName="Fujitani" getFirstName="Miwako">
+		<getMovieRoles id="73" />
+	</Talent>
+	<Talent id="85" getLastName="Rodriguez" getFirstName="Amalia">
+		<getMovieRoles id="57" />
+	</Talent>
+	<Talent id="86" getLastName="Belling" getFirstName="Kylie">
+		<getMovieRoles id="76" />
+	</Talent>
+	<Talent id="87" getLastName="Dumay" getFirstName="Jean-Charles">
+		<getMovieRoles id="88" />
+	</Talent>
+	<Talent id="88" getLastName="Dingo" getFirstName="Ernie">
+		<getMovieRoles id="71" />
+	</Talent>
+	<Talent id="89" getLastName="Walsh" getFirstName="Fred">
+		<getMovieRoles id="63" />
+	</Talent>
+	<Talent id="90" getLastName="Lutz" getFirstName="Adelle">
+		<getMovieRoles id="79" />
+	</Talent>
+	<Talent id="91" getLastName="Graham" getFirstName="Lauren">
+		<getMovieRoles id="82" />
+	</Talent>
+	<Talent id="92" getLastName="Kanbe" getFirstName="Hiroshi">
+		<getMovieRoles id="56" />
+	</Talent>
+	<Talent id="93" getLastName="Chiles" getFirstName="Lois">
+		<getMovieRoles id="69" />
+	</Talent>
+	<Talent id="94" getLastName="Roberts" getFirstName="Rhoda">
+		<getMovieRoles id="85" />
+	</Talent>
+	<Talent id="95" getLastName="Garfield" getFirstName="Allen">
+		<getMovieRoles id="62" />
+	</Talent>
+	<Talent id="96" getLastName="Neil" getFirstName="Sam">
+		<getMovieRoles id="80" />
+		<getMovieRoles id="281" />
+		<getMovieRoles id="286" />
+	</Talent>
+	<Talent id="97" getLastName="Wenders" getFirstName="Wim" />
+	<Talent id="98" getLastName="Thomas" getFirstName="Isiah">
+		<getMovieRoles id="50" />
+	</Talent>
+	<Talent id="99" getLastName="James" getFirstName="Steve" />
+	<Talent id="100" getLastName="Gates" getFirstName="William">
+		<getMovieRoles id="49" />
+	</Talent>
+	<Talent id="101" getLastName="Agee" getFirstName="Arthur">
+		<getMovieRoles id="51" />
+	</Talent>
+	<Talent id="102" getLastName="Vincent" getFirstName="Christian" />
+	<Talent id="103" getLastName="Henry" getFirstName="Judith">
+		<getMovieRoles id="91" />
+	</Talent>
+	<Talent id="104" getLastName="Garrel" getFirstName="Maurice">
+		<getMovieRoles id="94" />
+	</Talent>
+	<Talent id="105" getLastName="Bunel" getFirstName="Marie">
+		<getMovieRoles id="92" />
+	</Talent>
+	<Talent id="106" getLastName="Seigner" getFirstName="Emmanuelle">
+		<getMovieRoles id="96" />
+	</Talent>
+	<Talent id="107" getLastName="Polanski" getFirstName="Roman">
+		<getMovieRoles id="210" />
+	</Talent>
+	<Talent id="108" getLastName="Buckley" getFirstName="Betty">
+		<getMovieRoles id="95" />
+	</Talent>
+	<Talent id="109" getLastName="Anglade" getFirstName="Jean-Hugues">
+		<getMovieRoles id="101" />
+		<getMovieRoles id="137" />
+		<getMovieRoles id="149" />
+	</Talent>
+	<Talent id="110" getLastName="Beineix" getFirstName="Jean-Jacques" />
+	<Talent id="111" getLastName="Dalle" getFirstName="BÝatrice">
+		<getMovieRoles id="99" />
+	</Talent>
+	<Talent id="112" getLastName="Darmont" getFirstName="GÝrard">
+		<getMovieRoles id="100" />
+	</Talent>
+	<Talent id="113" getLastName="De Haviland" getFirstName="Consuelo">
+		<getMovieRoles id="103" />
+	</Talent>
+	<Talent id="114" getLastName="CÝlariÝ" getFirstName="ClÝmentine">
+		<getMovieRoles id="98" />
+	</Talent>
+	<Talent id="115" getLastName="Mathou" getFirstName="Jacques">
+		<getMovieRoles id="102" />
+	</Talent>
+	<Talent id="116" getLastName="Petersen" getFirstName="William">
+		<getMovieRoles id="106" />
+	</Talent>
+	<Talent id="117" getLastName="Mann" getFirstName="Michael" />
+	<Talent id="118" getLastName="Farina" getFirstName="Dennis">
+		<getMovieRoles id="107" />
+		<getMovieRoles id="110" />
+	</Talent>
+	<Talent id="119" getLastName="Cox" getFirstName="Brian">
+		<getMovieRoles id="104" />
+	</Talent>
+	<Talent id="120" getLastName="Butler" getFirstName="Dan">
+		<getMovieRoles id="105" />
+	</Talent>
+	<Talent id="121" getLastName="Brest" getFirstName="Martin" />
+	<Talent id="122" getLastName="Kotto" getFirstName="Yaphet">
+		<getMovieRoles id="113" />
+		<getMovieRoles id="261" />
+	</Talent>
+	<Talent id="123" getLastName="Grodin" getFirstName="Charles">
+		<getMovieRoles id="111" />
+	</Talent>
+	<Talent id="124" getLastName="Ashton" getFirstName="John">
+		<getMovieRoles id="109" />
+	</Talent>
+	<Talent id="125" getLastName="De Niro" getFirstName="Robert">
+		<getMovieRoles id="108" />
+		<getMovieRoles id="156" />
+		<getMovieRoles id="213" />
+		<getMovieRoles id="377" />
+	</Talent>
+	<Talent id="126" getLastName="Pantoliano" getFirstName="Joe">
+		<getMovieRoles id="112" />
+	</Talent>
+	<Talent id="127" getLastName="Berg" getFirstName="Peter">
+		<getMovieRoles id="115" />
+	</Talent>
+	<Talent id="128" getLastName="Pullman" getFirstName="Bill">
+		<getMovieRoles id="114" />
+	</Talent>
+	<Talent id="129" getLastName="Dahl" getFirstName="John" />
+	<Talent id="130" getLastName="Fiorentino" getFirstName="Linda">
+		<getMovieRoles id="116" />
+	</Talent>
+	<Talent id="131" getLastName="Cage" getFirstName="Nicolas">
+		<getMovieRoles id="117" />
+	</Talent>
+	<Talent id="132" getLastName="Boyle" getFirstName="Lara Flynn">
+		<getMovieRoles id="120" />
+	</Talent>
+	<Talent id="133" getLastName="Walsh" getFirstName="J.T.">
+		<getMovieRoles id="119" />
+	</Talent>
+	<Talent id="134" getLastName="Duvall" getFirstName="Robert">
+		<getMovieRoles id="122" />
+	</Talent>
+	<Talent id="135" getLastName="Sheen" getFirstName="Martin">
+		<getMovieRoles id="123" />
+	</Talent>
+	<Talent id="136" getLastName="Fishburne" getFirstName="Laurence">
+		<getMovieRoles id="124" />
+	</Talent>
+	<Talent id="137" getLastName="Barr" getFirstName="Jean-Marc">
+		<getMovieRoles id="129" />
+	</Talent>
+	<Talent id="138" getLastName="Reno" getFirstName="Jean">
+		<getMovieRoles id="127" />
+		<getMovieRoles id="130" />
+		<getMovieRoles id="153" />
+	</Talent>
+	<Talent id="139" getLastName="Arquette" getFirstName="Rosanna">
+		<getMovieRoles id="126" />
+	</Talent>
+	<Talent id="140" getLastName="Besson" getFirstName="Luc" />
+	<Talent id="141" getLastName="Fontana" getFirstName="Patrick">
+		<getMovieRoles id="128" />
+		<getMovieRoles id="154" />
+	</Talent>
+	<Talent id="142" getLastName="Lecas" getFirstName="Jean-Claude">
+		<getMovieRoles id="133" />
+	</Talent>
+	<Talent id="143" getLastName="Blanche" getFirstName="Jimmy">
+		<getMovieRoles id="132" />
+	</Talent>
+	<Talent id="144" getLastName="Lambert" getFirstName="Christophe">
+		<getMovieRoles id="131" />
+	</Talent>
+	<Talent id="145" getLastName="Galabru" getFirstName="Michel">
+		<getMovieRoles id="136" />
+	</Talent>
+	<Talent id="146" getLastName="Adjani" getFirstName="Isabelle">
+		<getMovieRoles id="134" />
+	</Talent>
+	<Talent id="147" getLastName="Bohringer" getFirstName="Richard">
+		<getMovieRoles id="135" />
+	</Talent>
+	<Talent id="148" getLastName="Bacri" getFirstName="Jean-Pierre">
+		<getMovieRoles id="138" />
+	</Talent>
+	<Talent id="149" getLastName="Fernandez" getFirstName="Wilhelmenia">
+		<getMovieRoles id="139" />
+	</Talent>
+	<Talent id="150" getLastName="Stern" getFirstName="Daniel">
+		<getMovieRoles id="147" />
+	</Talent>
+	<Talent id="151" getLastName="Guttenberg" getFirstName="Steve">
+		<getMovieRoles id="148" />
+	</Talent>
+	<Talent id="152" getLastName="Levinson" getFirstName="Barry" />
+	<Talent id="153" getLastName="Reiser" getFirstName="Paul">
+		<getMovieRoles id="143" />
+	</Talent>
+	<Talent id="154" getLastName="Daly" getFirstName="Timothy">
+		<getMovieRoles id="146" />
+	</Talent>
+	<Talent id="155" getLastName="Bacon" getFirstName="Kevin">
+		<getMovieRoles id="142" />
+	</Talent>
+	<Talent id="156" getLastName="Tucker" getFirstName="Michael">
+		<getMovieRoles id="145" />
+	</Talent>
+	<Talent id="157" getLastName="Dowling" getFirstName="Kathyrn">
+		<getMovieRoles id="140" />
+	</Talent>
+	<Talent id="158" getLastName="Barkin" getFirstName="Ellen">
+		<getMovieRoles id="144" />
+	</Talent>
+	<Talent id="159" getLastName="Rourke" getFirstName="Mickey">
+		<getMovieRoles id="141" />
+	</Talent>
+	<Talent id="160" getLastName="CathiÜre" getFirstName="Alain">
+		<getMovieRoles id="150" />
+	</Talent>
+	<Talent id="161" getLastName="Karyo" getFirstName="TchÝky">
+		<getMovieRoles id="102" />
+	</Talent>
+	<Talent id="162" getLastName="Parillaud" getFirstName="Anne">
+		<getMovieRoles id="152" />
+	</Talent>
+	<Talent id="163" getLastName="Duret" getFirstName="Marc">
+		<getMovieRoles id="155" />
+	</Talent>
+	<Talent id="164" getLastName="Pesci" getFirstName="Joe">
+		<getMovieRoles id="158" />
+	</Talent>
+	<Talent id="165" getLastName="Bracco" getFirstName="Lorraine">
+		<getMovieRoles id="159" />
+	</Talent>
+	<Talent id="166" getLastName="Liotta" getFirstName="Ray">
+		<getMovieRoles id="161" />
+	</Talent>
+	<Talent id="167" getLastName="Sorvino" getFirstName="Paul">
+		<getMovieRoles id="160" />
+	</Talent>
+	<Talent id="168" getLastName="Scorsese" getFirstName="Martin" />
+	<Talent id="169" getLastName="Jackson" getFirstName="Samuel L.">
+		<getMovieRoles id="157" />
+		<getMovieRoles id="276" />
+		<getMovieRoles id="347" />
+	</Talent>
+	<Talent id="170" getLastName="Lawson" getFirstName="Twiggy">
+		<getMovieRoles id="168" />
+	</Talent>
+	<Talent id="171" getLastName="Calloway" getFirstName="Cab">
+		<getMovieRoles id="172" />
+	</Talent>
+	<Talent id="172" getLastName="Charles" getFirstName="Ray">
+		<getMovieRoles id="166" />
+	</Talent>
+	<Talent id="173" getLastName="Landis" getFirstName="John" />
+	<Talent id="174" getLastName="Aykroyd" getFirstName="Dan">
+		<getMovieRoles id="162" />
+	</Talent>
+	<Talent id="175" getLastName="Belushi" getFirstName="John">
+		<getMovieRoles id="173" />
+		<getMovieRoles id="292" />
+	</Talent>
+	<Talent id="176" getLastName="Reubens" getFirstName="Paul">
+		<getMovieRoles id="170" />
+	</Talent>
+	<Talent id="177" getLastName="Candy" getFirstName="John">
+		<getMovieRoles id="167" />
+		<getMovieRoles id="179" />
+		<getMovieRoles id="182" />
+	</Talent>
+	<Talent id="178" getLastName="Kahn" getFirstName="Chaka">
+		<getMovieRoles id="163" />
+	</Talent>
+	<Talent id="179" getLastName="Brown" getFirstName="James">
+		<getMovieRoles id="165" />
+	</Talent>
+	<Talent id="180" getLastName="Franklin" getFirstName="Aretha">
+		<getMovieRoles id="171" />
+	</Talent>
+	<Talent id="181" getLastName="Hughes" getFirstName="John" />
+	<Talent id="182" getLastName="Madigan" getFirstName="Amy">
+		<getMovieRoles id="178" />
+	</Talent>
+	<Talent id="183" getLastName="Kelley" getFirstName="Jean Louisa">
+		<getMovieRoles id="177" />
+	</Talent>
+	<Talent id="184" getLastName="Culkin" getFirstName="Macaulay">
+		<getMovieRoles id="174" />
+	</Talent>
+	<Talent id="185" getLastName="Hoffmann" getFirstName="Gaby">
+		<getMovieRoles id="176" />
+	</Talent>
+	<Talent id="186" getLastName="Underwood" getFirstName="Jay D.">
+		<getMovieRoles id="175" />
+	</Talent>
+	<Talent id="187" getLastName="Yoba" getFirstName="Malik">
+		<getMovieRoles id="180" />
+	</Talent>
+	<Talent id="188" getLastName="Lewis" getFirstName="Rawle D.">
+		<getMovieRoles id="181" />
+	</Talent>
+	<Talent id="189" getLastName="Turteltaub" getFirstName="Jon" />
+	<Talent id="190" getLastName="Doug" getFirstName="Doug E.">
+		<getMovieRoles id="184" />
+	</Talent>
+	<Talent id="191" getLastName="Bannock" getFirstName="Derice">
+		<getMovieRoles id="183" />
+	</Talent>
+	<Talent id="192" getLastName="Walsh" getFirstName="Michael Emmet">
+		<getMovieRoles id="189" />
+	</Talent>
+	<Talent id="193" getLastName="Olmos" getFirstName="Edward James">
+		<getMovieRoles id="187" />
+	</Talent>
+	<Talent id="194" getLastName="Hannah" getFirstName="Daryl">
+		<getMovieRoles id="188" />
+	</Talent>
+	<Talent id="195" getLastName="Young" getFirstName="Sean">
+		<getMovieRoles id="185" />
+	</Talent>
+	<Talent id="196" getLastName="Scott" getFirstName="Ridley" />
+	<Talent id="197" getLastName="Hauer" getFirstName="Rutger">
+		<getMovieRoles id="186" />
+	</Talent>
+	<Talent id="198" getLastName="Walker" getFirstName="Kim">
+		<getMovieRoles id="191" />
+	</Talent>
+	<Talent id="199" getLastName="Ryder" getFirstName="Winona">
+		<getMovieRoles id="195" />
+		<getMovieRoles id="231" />
+	</Talent>
+	<Talent id="200" getLastName="Slater" getFirstName="Christian">
+		<getMovieRoles id="192" />
+	</Talent>
+	<Talent id="201" getLastName="Falk" getFirstName="Lisanne">
+		<getMovieRoles id="194" />
+	</Talent>
+	<Talent id="202" getLastName="Doherty" getFirstName="Shannen">
+		<getMovieRoles id="193" />
+	</Talent>
+	<Talent id="203" getLastName="Lehmann" getFirstName="Michael" />
+	<Talent id="204" getLastName="Eubanks" getFirstName="Bob">
+		<getMovieRoles id="199" />
+	</Talent>
+	<Talent id="205" getLastName="Boone" getFirstName="Pat">
+		<getMovieRoles id="196" />
+	</Talent>
+	<Talent id="206" getLastName="Smith" getFirstName="Roger">
+		<getMovieRoles id="197" />
+	</Talent>
+	<Talent id="207" getLastName="Moore" getFirstName="Michael">
+		<getMovieRoles id="198" />
+	</Talent>
+	<Talent id="208" getLastName="Hearn" getFirstName="Chick">
+		<getMovieRoles id="206" />
+	</Talent>
+	<Talent id="209" getLastName="Davis" getFirstName="Geena">
+		<getMovieRoles id="200" />
+		<getMovieRoles id="357" />
+	</Talent>
+	<Talent id="210" getLastName="Baker" getFirstName="Joe Don">
+		<getMovieRoles id="201" />
+	</Talent>
+	<Talent id="211" getLastName="Abdul-Jabbar" getFirstName="Kareem">
+		<getMovieRoles id="207" />
+	</Talent>
+	<Talent id="212" getLastName="Matheson" getFirstName="Tim">
+		<getMovieRoles id="202" />
+	</Talent>
+	<Talent id="213" getLastName="Ritchie" getFirstName="Michael" />
+	<Talent id="214" getLastName="Wheeler-Nicholson" getFirstName="Dana">
+		<getMovieRoles id="205" />
+	</Talent>
+	<Talent id="215" getLastName="Wendt" getFirstName="George">
+		<getMovieRoles id="204" />
+	</Talent>
+	<Talent id="216" getLastName="Chase" getFirstName="Chevy">
+		<getMovieRoles id="203" />
+	</Talent>
+	<Talent id="217" getLastName="Houston" getFirstName="John">
+		<getMovieRoles id="208" />
+	</Talent>
+	<Talent id="218" getLastName="Nicholson" getFirstName="Jack">
+		<getMovieRoles id="211" />
+	</Talent>
+	<Talent id="219" getLastName="Lopez" getFirstName="Perry">
+		<getMovieRoles id="212" />
+	</Talent>
+	<Talent id="220" getLastName="Dunaway" getFirstName="Faye">
+		<getMovieRoles id="209" />
+	</Talent>
+	<Talent id="221" getLastName="Garcia" getFirstName="Andy">
+		<getMovieRoles id="214" />
+	</Talent>
+	<Talent id="222" getLastName="Smith" getFirstName="Charles Martin">
+		<getMovieRoles id="215" />
+	</Talent>
+	<Talent id="223" getLastName="Connery" getFirstName="Sean">
+		<getMovieRoles id="217" />
+	</Talent>
+	<Talent id="224" getLastName="Costner" getFirstName="Kevin">
+		<getMovieRoles id="216" />
+	</Talent>
+	<Talent id="225" getLastName="DePalma" getFirstName="Brian" />
+	<Talent id="226" getLastName="Crystal" getFirstName="Billy">
+		<getMovieRoles id="220" />
+		<getMovieRoles id="254" />
+	</Talent>
+	<Talent id="227" getLastName="Kirby" getFirstName="Bruno">
+		<getMovieRoles id="218" />
+	</Talent>
+	<Talent id="228" getLastName="Ryan" getFirstName="Meg">
+		<getMovieRoles id="221" />
+	</Talent>
+	<Talent id="229" getLastName="Reiner" getFirstName="Rob" />
+	<Talent id="230" getLastName="Roache" getFirstName="Linus">
+		<getMovieRoles id="223" />
+	</Talent>
+	<Talent id="231" getLastName="Sharp" getFirstName="Lesley">
+		<getMovieRoles id="224" />
+	</Talent>
+	<Talent id="232" getLastName="Bird" getFirstName="Antonia" />
+	<Talent id="233" getLastName="Gibbs" getFirstName="Matyelok">
+		<getMovieRoles id="227" />
+	</Talent>
+	<Talent id="234" getLastName="Tremarco" getFirstName="Christine">
+		<getMovieRoles id="225" />
+	</Talent>
+	<Talent id="235" getLastName="Tyson" getFirstName="Cathy">
+		<getMovieRoles id="226" />
+	</Talent>
+	<Talent id="236" getLastName="Pugh" getFirstName="Robert">
+		<getMovieRoles id="228" />
+	</Talent>
+	<Talent id="237" getLastName="Ellis" getFirstName="James">
+		<getMovieRoles id="222" />
+	</Talent>
+	<Talent id="238" getLastName="Wilkinson" getFirstName="Tom">
+		<getMovieRoles id="229" />
+	</Talent>
+	<Talent id="239" getLastName="Carlyle" getFirstName="Robert">
+		<getMovieRoles id="230" />
+	</Talent>
+	<Talent id="240" getLastName="Sarandon" getFirstName="Susan">
+		<getMovieRoles id="232" />
+		<getMovieRoles id="354" />
+	</Talent>
+	<Talent id="241" getLastName="Armstrong" getFirstName="Gillian" />
+	<Talent id="242" getLastName="Bale" getFirstName="Christian">
+		<getMovieRoles id="233" />
+		<getMovieRoles id="236" />
+	</Talent>
+	<Talent id="243" getLastName="Richardson" getFirstName="Miranda">
+		<getMovieRoles id="234" />
+	</Talent>
+	<Talent id="244" getLastName="Malkovich" getFirstName="John">
+		<getMovieRoles id="235" />
+	</Talent>
+	<Talent id="245" getLastName="Sarandon" getFirstName="Chris">
+		<getMovieRoles id="251" />
+	</Talent>
+	<Talent id="246" getLastName="Patinkin" getFirstName="Mandy">
+		<getMovieRoles id="252" />
+	</Talent>
+	<Talent id="247" getLastName="Shawn" getFirstName="Wallace">
+		<getMovieRoles id="247" />
+		<getMovieRoles id="296" />
+		<getMovieRoles id="368" />
+	</Talent>
+	<Talent id="248" getLastName="Cook" getFirstName="Peter">
+		<getMovieRoles id="243" />
+	</Talent>
+	<Talent id="249" getLastName="Falk" getFirstName="Peter">
+		<getMovieRoles id="246" />
+	</Talent>
+	<Talent id="250" getLastName="Andre the Giant" getFirstName="Andre the Giant">
+		<getMovieRoles id="249" />
+	</Talent>
+	<Talent id="251" getLastName="Wright" getFirstName="Robin">
+		<getMovieRoles id="241" />
+	</Talent>
+	<Talent id="252" getLastName="Savage" getFirstName="Fred">
+		<getMovieRoles id="255" />
+	</Talent>
+	<Talent id="253" getLastName="Guest" getFirstName="Christopher">
+		<getMovieRoles id="256" />
+	</Talent>
+	<Talent id="254" getLastName="Elwes" getFirstName="Cary">
+		<getMovieRoles id="257" />
+	</Talent>
+	<Talent id="255" getLastName="Kane" getFirstName="Carol">
+		<getMovieRoles id="242" />
+	</Talent>
+	<Talent id="256" getLastName="Badger" getFirstName="Paul">
+		<getMovieRoles id="240" />
+	</Talent>
+	<Talent id="257" getLastName="Brantley" getFirstName="Betsy">
+		<getMovieRoles id="248" />
+	</Talent>
+	<Talent id="258" getLastName="Dyson" getFirstName="Anne">
+		<getMovieRoles id="244" />
+	</Talent>
+	<Talent id="259" getLastName="Mason" getFirstName="Margery">
+		<getMovieRoles id="239" />
+	</Talent>
+	<Talent id="260" getLastName="Storry" getFirstName="Malcolm">
+		<getMovieRoles id="253" />
+	</Talent>
+	<Talent id="261" getLastName="Gray" getFirstName="Willoughby">
+		<getMovieRoles id="245" />
+	</Talent>
+	<Talent id="262" getLastName="Smith" getFirstName="Mel">
+		<getMovieRoles id="250" />
+	</Talent>
+	<Talent id="263" getLastName="Hanks" getFirstName="Tom">
+		<getMovieRoles id="238" />
+	</Talent>
+	<Talent id="264" getLastName="Allen" getFirstName="Tim">
+		<getMovieRoles id="237" />
+	</Talent>
+	<Talent id="265" getLastName="Lasseter" getFirstName="John" />
+	<Talent id="266" getLastName="Cartwright" getFirstName="Veronica">
+		<getMovieRoles id="262" />
+	</Talent>
+	<Talent id="267" getLastName="Stanton" getFirstName="Harry Dean">
+		<getMovieRoles id="258" />
+	</Talent>
+	<Talent id="268" getLastName="Holm" getFirstName="Ian">
+		<getMovieRoles id="263" />
+	</Talent>
+	<Talent id="269" getLastName="Weaver" getFirstName="Sigourney">
+		<getMovieRoles id="264" />
+		<getMovieRoles id="327" />
+	</Talent>
+	<Talent id="270" getLastName="Skerritt" getFirstName="Tom">
+		<getMovieRoles id="260" />
+	</Talent>
+	<Talent id="271" getLastName="Hurt" getFirstName="John">
+		<getMovieRoles id="259" />
+	</Talent>
+	<Talent id="272" getLastName="Schwarzenegger" getFirstName="Arnold">
+		<getMovieRoles id="267" />
+		<getMovieRoles id="324" />
+	</Talent>
+	<Talent id="273" getLastName="Hamilton" getFirstName="Linda">
+		<getMovieRoles id="265" />
+	</Talent>
+	<Talent id="274" getLastName="Biehn" getFirstName="Michael">
+		<getMovieRoles id="266" />
+	</Talent>
+	<Talent id="275" getLastName="Cameron" getFirstName="James" />
+	<Talent id="276" getLastName="Vargas" getFirstName="Antonio" />
+	<Talent id="277" getLastName="Otto" getFirstName="Barry" />
+	<Talent id="278" getLastName="Hunter" getFirstName="Bill" />
+	<Talent id="279" getLastName="Mercurio" getFirstName="Paul" />
+	<Talent id="280" getLastName="Kruger" getFirstName="Sonia" />
+	<Talent id="281" getLastName="Whitford" getFirstName="Peter" />
+	<Talent id="282" getLastName="Carides" getFirstName="Gia" />
+	<Talent id="283" getLastName="Morice" getFirstName="Tara" />
+	<Talent id="284" getLastName="Thompson" getFirstName="Pat" />
+	<Talent id="285" getLastName="Lange" getFirstName="Jessica">
+		<getMovieRoles id="268" />
+	</Talent>
+	<Talent id="286" getLastName="Pollack" getFirstName="Sydney" />
+	<Talent id="287" getLastName="Coleman" getFirstName="Dabney">
+		<getMovieRoles id="271" />
+	</Talent>
+	<Talent id="288" getLastName="Murray" getFirstName="Bill">
+		<getMovieRoles id="269" />
+	</Talent>
+	<Talent id="289" getLastName="Garr" getFirstName="Teri">
+		<getMovieRoles id="270" />
+		<getMovieRoles id="383" />
+	</Talent>
+	<Talent id="290" getLastName="Hoffman" getFirstName="Dustin">
+		<getMovieRoles id="117" />
+	</Talent>
+	<Talent id="291" getLastName="Roth" getFirstName="Tim">
+		<getMovieRoles id="272" />
+	</Talent>
+	<Talent id="292" getLastName="Tarantino" getFirstName="Quentin" />
+	<Talent id="293" getLastName="Plummer" getFirstName="Amanda">
+		<getMovieRoles id="278" />
+	</Talent>
+	<Talent id="294" getLastName="Thurman" getFirstName="Uma">
+		<getMovieRoles id="274" />
+	</Talent>
+	<Talent id="295" getLastName="Travolta" getFirstName="John">
+		<getMovieRoles id="277" />
+	</Talent>
+	<Talent id="296" getLastName="Keitel" getFirstName="Harvey">
+		<getMovieRoles id="273" />
+		<getMovieRoles id="282" />
+		<getMovieRoles id="356" />
+		<getMovieRoles id="378" />
+	</Talent>
+	<Talent id="297" getLastName="Willis" getFirstName="Bruce">
+		<getMovieRoles id="275" />
+	</Talent>
+	<Talent id="298" getLastName="Hunter" getFirstName="Holly">
+		<getMovieRoles id="280" />
+	</Talent>
+	<Talent id="299" getLastName="Campion" getFirstName="Jane" />
+	<Talent id="300" getLastName="Paquin" getFirstName="Anna">
+		<getMovieRoles id="279" />
+	</Talent>
+	<Talent id="301" getLastName="Attenborough" getFirstName="Richard">
+		<getMovieRoles id="283" />
+	</Talent>
+	<Talent id="302" getLastName="Goldblum" getFirstName="Jeff">
+		<getMovieRoles id="284" />
+	</Talent>
+	<Talent id="303" getLastName="Spielberg" getFirstName="Steven">
+		<getMovieRoles id="169" />
+	</Talent>
+	<Talent id="304" getLastName="Dern" getFirstName="Laura">
+		<getMovieRoles id="285" />
+		<getMovieRoles id="319" />
+	</Talent>
+	<Talent id="305" getLastName="Davidtz" getFirstName="Embeth">
+		<getMovieRoles id="290" />
+	</Talent>
+	<Talent id="306" getLastName="Kingsley" getFirstName="Ben">
+		<getMovieRoles id="288" />
+	</Talent>
+	<Talent id="307" getLastName="Fiennes" getFirstName="Ralph">
+		<getMovieRoles id="289" />
+	</Talent>
+	<Talent id="308" getLastName="Neeson" getFirstName="Liam">
+		<getMovieRoles id="287" />
+	</Talent>
+	<Talent id="309" getLastName="Furst" getFirstName="Stephen">
+		<getMovieRoles id="291" />
+	</Talent>
+	<Talent id="310" getLastName="Hulce" getFirstName="Tom">
+		<getMovieRoles id="295" />
+	</Talent>
+	<Talent id="311" getLastName="Sutherland" getFirstName="Donald">
+		<getMovieRoles id="293" />
+		<getMovieRoles id="363" />
+	</Talent>
+	<Talent id="312" getLastName="Gregory" getFirstName="Andre">
+		<getMovieRoles id="297" />
+	</Talent>
+	<Talent id="313" getLastName="Malle" getFirstName="Louis" />
+	<Talent id="314" getLastName="Warnecke" getFirstName="Gordon">
+		<getMovieRoles id="298" />
+	</Talent>
+	<Talent id="315" getLastName="Frears" getFirstName="Stephen" />
+	<Talent id="316" getLastName="Day-Lewis" getFirstName="Daniel">
+		<getMovieRoles id="299" />
+	</Talent>
+	<Talent id="317" getLastName="" getFirstName="Miou-Miou">
+		<getMovieRoles id="301" />
+	</Talent>
+	<Talent id="318" getLastName="Huppert" getFirstName="Isabelle">
+		<getMovieRoles id="300" />
+	</Talent>
+	<Talent id="319" getLastName="Kurys" getFirstName="Diane" />
+	<Talent id="320" getLastName="Burstyn" getFirstName="Ellen">
+		<getMovieRoles id="304" />
+	</Talent>
+	<Talent id="321" getLastName="Shepherd" getFirstName="Cybill">
+		<getMovieRoles id="306" />
+		<getMovieRoles id="374" />
+	</Talent>
+	<Talent id="322" getLastName="Bottoms" getFirstName="Timothy">
+		<getMovieRoles id="303" />
+	</Talent>
+	<Talent id="323" getLastName="Leachman" getFirstName="Cloris">
+		<getMovieRoles id="307" />
+		<getMovieRoles id="379" />
+	</Talent>
+	<Talent id="324" getLastName="Castle" getFirstName="Nick" />
+	<Talent id="325" getLastName="Johnson" getFirstName="Ben">
+		<getMovieRoles id="305" />
+	</Talent>
+	<Talent id="326" getLastName="Bridges" getFirstName="Jeff">
+		<getMovieRoles id="302" />
+	</Talent>
+	<Talent id="327" getLastName="Sutherland" getFirstName="Kiefer">
+		<getMovieRoles id="310" />
+	</Talent>
+	<Talent id="328" getLastName="O'Connell" getFirstName="Jerry">
+		<getMovieRoles id="311" />
+	</Talent>
+	<Talent id="329" getLastName="Wheaton" getFirstName="Wil">
+		<getMovieRoles id="312" />
+	</Talent>
+	<Talent id="330" getLastName="Phoenix" getFirstName="River">
+		<getMovieRoles id="313" />
+		<getMovieRoles id="314" />
+	</Talent>
+	<Talent id="331" getLastName="Feldman" getFirstName="Corey">
+		<getMovieRoles id="308" />
+	</Talent>
+	<Talent id="332" getLastName="Cusack" getFirstName="John">
+		<getMovieRoles id="309" />
+		<getMovieRoles id="331" />
+	</Talent>
+	<Talent id="333" getLastName="Van Sant Jr." getFirstName="Gus" />
+	<Talent id="334" getLastName="Reeves" getFirstName="Keanu">
+		<getMovieRoles id="315" />
+	</Talent>
+	<Talent id="335" getLastName="Lynch" getFirstName="David" />
+	<Talent id="336" getLastName="Rossellini" getFirstName="Isabella">
+		<getMovieRoles id="316" />
+	</Talent>
+	<Talent id="337" getLastName="MacLachlan" getFirstName="Kyle">
+		<getMovieRoles id="318" />
+	</Talent>
+	<Talent id="338" getLastName="Maggio" getFirstName="Pupella">
+		<getMovieRoles id="248" />
+	</Talent>
+	<Talent id="339" getLastName="Fellini" getFirstName="Federico" />
+	<Talent id="340" getLastName="Noel" getFirstName="Magali">
+		<getMovieRoles id="320" />
+	</Talent>
+	<Talent id="341" getLastName="Zanin" getFirstName="Bruno">
+		<getMovieRoles id="321" />
+	</Talent>
+	<Talent id="342" getLastName="Ironside" getFirstName="Michael">
+		<getMovieRoles id="325" />
+	</Talent>
+	<Talent id="343" getLastName="Stone" getFirstName="Sharon">
+		<getMovieRoles id="323" />
+	</Talent>
+	<Talent id="344" getLastName="Verhoeven" getFirstName="Paul" />
+	<Talent id="345" getLastName="Cox" getFirstName="Ronny">
+		<getMovieRoles id="326" />
+	</Talent>
+	<Talent id="346" getLastName="Ticotin" getFirstName="Rachel">
+		<getMovieRoles id="322" />
+	</Talent>
+	<Talent id="347" getLastName="Weir" getFirstName="Peter" />
+	<Talent id="348" getLastName="Gibson" getFirstName="Mel">
+		<getMovieRoles id="328" />
+	</Talent>
+	<Talent id="349" getLastName="Hunt" getFirstName="Linda">
+		<getMovieRoles id="329" />
+	</Talent>
+	<Talent id="350" getLastName="Bening" getFirstName="Annette">
+		<getMovieRoles id="332" />
+	</Talent>
+	<Talent id="351" getLastName="Huston" getFirstName="Anjelica">
+		<getMovieRoles id="330" />
+	</Talent>
+	<Talent id="352" getLastName="Bergman" getFirstName="Ingmar" />
+	<Talent id="353" getLastName="Ullmann" getFirstName="Liv">
+		<getMovieRoles id="335" />
+	</Talent>
+	<Talent id="354" getLastName="Thulin" getFirstName="Ingrid">
+		<getMovieRoles id="336" />
+	</Talent>
+	<Talent id="355" getLastName="Andersson" getFirstName="Harriet">
+		<getMovieRoles id="334" />
+	</Talent>
+	<Talent id="356" getLastName="Sylwan" getFirstName="Kari">
+		<getMovieRoles id="333" />
+	</Talent>
+	<Talent id="357" getLastName="Charbonneau" getFirstName="Patricia">
+		<getMovieRoles id="339" />
+	</Talent>
+	<Talent id="358" getLastName="Shaver" getFirstName="Helen">
+		<getMovieRoles id="338" />
+	</Talent>
+	<Talent id="359" getLastName="Deitch" getFirstName="Donna" />
+	<Talent id="360" getLastName="Lindley" getFirstName="Audra">
+		<getMovieRoles id="337" />
+	</Talent>
+	<Talent id="361" getLastName="Johns" getFirstName="Tracy Camilla">
+		<getMovieRoles id="341" />
+	</Talent>
+	<Talent id="362" getLastName="Lee" getFirstName="Spike">
+		<getMovieRoles id="342" />
+		<getMovieRoles id="351" />
+	</Talent>
+	<Talent id="363" getLastName="Hicks" getFirstName="Tommy Redmond">
+		<getMovieRoles id="343" />
+	</Talent>
+	<Talent id="364" getLastName="Terrell" getFirstName="John Canada">
+		<getMovieRoles id="340" />
+	</Talent>
+	<Talent id="365" getLastName="Edson" getFirstName="Richard">
+		<getMovieRoles id="350" />
+	</Talent>
+	<Talent id="366" getLastName="Esposito" getFirstName="Giancarlo">
+		<getMovieRoles id="349" />
+	</Talent>
+	<Talent id="367" getLastName="Lee" getFirstName="Joie">
+		<getMovieRoles id="346" />
+	</Talent>
+	<Talent id="368" getLastName="Perez" getFirstName="Rosie">
+		<getMovieRoles id="344" />
+	</Talent>
+	<Talent id="369" getLastName="Davis" getFirstName="Ozzie">
+		<getMovieRoles id="348" />
+	</Talent>
+	<Talent id="370" getLastName="Aiello" getFirstName="Danny">
+		<getMovieRoles id="352" />
+	</Talent>
+	<Talent id="371" getLastName="Dee" getFirstName="Ruby">
+		<getMovieRoles id="345" />
+	</Talent>
+	<Talent id="372" getLastName="McDonald" getFirstName="Christopher">
+		<getMovieRoles id="353" />
+	</Talent>
+	<Talent id="373" getLastName="Madsen" getFirstName="Michael">
+		<getMovieRoles id="355" />
+	</Talent>
+	<Talent id="374" getLastName="Pitt" getFirstName="Brad">
+		<getMovieRoles id="192" />
+	</Talent>
+	<Talent id="375" getLastName="Goldberg" getFirstName="Whoopi">
+		<getMovieRoles id="359" />
+	</Talent>
+	<Talent id="376" getLastName="Robbins" getFirstName="Tim">
+		<getMovieRoles id="360" />
+	</Talent>
+	<Talent id="377" getLastName="Gallagher" getFirstName="Peter">
+		<getMovieRoles id="362" />
+	</Talent>
+	<Talent id="378" getLastName="Ward" getFirstName="Fred">
+		<getMovieRoles id="361" />
+	</Talent>
+	<Talent id="379" getLastName="Scacchi" getFirstName="Greta">
+		<getMovieRoles id="358" />
+	</Talent>
+	<Talent id="380" getLastName="Altman" getFirstName="Robert" />
+	<Talent id="381" getLastName="Pakula" getFirstName="Alan J." />
+	<Talent id="382" getLastName="Fonda" getFirstName="Jane">
+		<getMovieRoles id="364" />
+	</Talent>
+	<Talent id="383" getLastName="Stewart" getFirstName="Charlotte">
+		<getMovieRoles id="365" />
+	</Talent>
+	<Talent id="384" getLastName="Nance" getFirstName="Jack">
+		<getMovieRoles id="366" />
+	</Talent>
+	<Talent id="385" getLastName="Molina" getFirstName="Alfred">
+		<getMovieRoles id="370" />
+	</Talent>
+	<Talent id="386" getLastName="Redgrave" getFirstName="Vanessa">
+		<getMovieRoles id="367" />
+	</Talent>
+	<Talent id="387" getLastName="Oldman" getFirstName="Gary">
+		<getMovieRoles id="369" />
+	</Talent>
+	<Talent id="388" getLastName="Franklin" getFirstName="Pamela">
+		<getMovieRoles id="270" />
+	</Talent>
+	<Talent id="389" getLastName="Stephens" getFirstName="Robert">
+		<getMovieRoles id="372" />
+	</Talent>
+	<Talent id="390" getLastName="Smith" getFirstName="Maggie">
+		<getMovieRoles id="371" />
+	</Talent>
+	<Talent id="391" getLastName="Neame" getFirstName="Ronald" />
+	<Talent id="392" getLastName="Brooks" getFirstName="Albert">
+		<getMovieRoles id="373" />
+	</Talent>
+	<Talent id="393" getLastName="Boyle" getFirstName="Peter">
+		<getMovieRoles id="376" />
+		<getMovieRoles id="381" />
+	</Talent>
+	<Talent id="394" getLastName="Foster" getFirstName="Jodie">
+		<getMovieRoles id="375" />
+	</Talent>
+	<Talent id="395" getLastName="Kahn" getFirstName="Madeline">
+		<getMovieRoles id="380" />
+	</Talent>
+	<Talent id="396" getLastName="Brooks" getFirstName="Mel" />
+	<Talent id="397" getLastName="Wilder" getFirstName="Gene">
+		<getMovieRoles id="382" />
+	</Talent>
+	<Talent id="398" getLastName="Feldman" getFirstName="Marty">
+		<getMovieRoles id="384" />
+	</Talent>
+	<Talent id="399" getLastName="Welles" getFirstName="Orson">
+		<getMovieRoles id="386" />
+		<getMovieRoles id="395" />
+	</Talent>
+	<Talent id="400" getLastName="Cotten" getFirstName="Joseph">
+		<getMovieRoles id="387" />
+		<getMovieRoles id="393" />
+	</Talent>
+	<Talent id="401" getLastName="Howard" getFirstName="Trevor">
+		<getMovieRoles id="388" />
+	</Talent>
+	<Talent id="402" getLastName="Valli" getFirstName="Alida">
+		<getMovieRoles id="385" />
+	</Talent>
+	<Talent id="403" getLastName="Reed" getFirstName="Carol" />
+	<Talent id="404" getLastName="Bogdanovich" getFirstName="Peter" />
+	<Talent id="405" getLastName="Hitchcock" getFirstName="Alfred" />
+	<Talent id="406" getLastName="Rains" getFirstName="Claude">
+		<getMovieRoles id="391" />
+	</Talent>
+	<Talent id="407" getLastName="Grant" getFirstName="Cary">
+		<getMovieRoles id="389" />
+		<getMovieRoles id="396" />
+	</Talent>
+	<Talent id="408" getLastName="Comingore" getFirstName="Dorothy">
+		<getMovieRoles id="394" />
+	</Talent>
+	<Talent id="409" getLastName="Moorehead" getFirstName="Agnes">
+		<getMovieRoles id="392" />
+	</Talent>
+	<Talent id="410" getLastName="Hepburn" getFirstName="Katharine">
+		<getMovieRoles id="397" />
+	</Talent>
+	<Talent id="411" getLastName="Stewart" getFirstName="James">
+		<getMovieRoles id="398" />
+	</Talent>
+	<Talent id="412" getLastName="Cukor" getFirstName="George" />
+	<Talent id="413" getLastName="Robards" getFirstName="Jason">
+		<getMovieRoles id="400" />
+	</Talent>
+	<Talent id="414" getLastName="Cardinale" getFirstName="Claudia">
+		<getMovieRoles id="401" />
+	</Talent>
+	<Talent id="415" getLastName="Bronson" getFirstName="Charles">
+		<getMovieRoles id="399" />
+	</Talent>
+	<Talent id="416" getLastName="Fonda" getFirstName="Henry">
+		<getMovieRoles id="402" />
+	</Talent>
+	<Talent id="417" getLastName="Leone" getFirstName="Sergio" />
+	<Talent id="418" getLastName="Russell" getFirstName="Theresa" />
+	<Talent id="419" getLastName="Roeg" getFirstName="Nicholas" />
+	<Talent id="420" getLastName="Lugosi" getFirstName="Bela">
+		<getMovieRoles id="404" />
+	</Talent>
+	<Talent id="421" getLastName="Johnson" getFirstName="Tor">
+		<getMovieRoles id="407" />
+	</Talent>
+	<Talent id="422" getLastName="Wood Jr." getFirstName="Edward D." />
+	<Talent id="423" getLastName="McKinnon" getFirstName="Mona">
+		<getMovieRoles id="403" />
+	</Talent>
+	<Talent id="424" getLastName="" getFirstName="Vampira">
+		<getMovieRoles id="405" />
+	</Talent>
+	<Talent id="425" getLastName="Walcott" getFirstName="Gregory">
+		<getMovieRoles id="406" />
+	</Talent>
+	<Talent id="426" getLastName="Serlet" getFirstName="Bertrand">
+		<getMovieRoles id="412" />
+	</Talent>
+	<Talent id="427" getLastName="Federighi" getFirstName="Craig">
+		<getMovieRoles id="408" />
+	</Talent>
+	<Talent id="428" getLastName="Arthur" getFirstName="Bruce">
+		<getMovieRoles id="409" />
+	</Talent>
+	<Talent id="429" getLastName="Noyau" getFirstName="Eric">
+		<getMovieRoles id="411" />
+	</Talent>
+	<Talent id="430" getLastName="Willhite" getFirstName="Dan">
+		<getMovieRoles id="410" />
+	</Talent>
+	<Talent id="431" getLastName="Gates" getFirstName="Patrick">
+		<getMovieRoles id="414" />
+	</Talent>
+	<Talent id="432" getLastName="Lydon" getFirstName="Rory" />
+	<Talent id="433" getLastName="Herzer" getFirstName="Stefanie">
+		<getMovieRoles id="413" />
+	</Talent>
+	<Category getName="Action" />
+	<Category getName="Film-noir" />
+	<Category getName="Drama" />
+	<Category getName="Western" />
+	<Category getName="Thriller" />
+	<Category getName="Surreal" />
+	<Category getName="Documentary" />
+	<Category getName="Cult" />
+	<Category getName="Comedy" />
+	<Category getName="Detective" />
+	<Category getName="Romantic" />
+	<Category getName="Animated" />
+	<Category getName="Horror" />
+	<Category getName="Sci-Fi" />
+	<Category getName="Musical" />
+	<RMSchema>
+		<Movie>
+			<getCategory type="string" />
+			<getShowDate type="dateTime" />
+			<id private="true" next="90" primary="true" type="decimal" />
+			<getMovieRoles subtype="MovieRole" type="List" />
+			<getPlotSummary subtype="PlotSummary" type="Map" />
+			<getPosterUrl type="string" />
+			<getRating type="string" />
+			<getRevenue type="decimal" />
+			<getStudio subtype="Studio" type="Map" />
+			<getTitle type="string" />
+			<getTrailerUrl type="string" />
+		</Movie>
+		<MovieRole>
+			<id private="true" next="415" primary="true" type="decimal" />
+			<getMovie subtype="Movie" type="Map" />
+			<getRoleName type="string" />
+			<getTalent subtype="Talent" type="Map" />
+		</MovieRole>
+		<PlotSummary>
+			<id private="true" next="90" primary="true" type="decimal" />
+			<getMovie subtype="Movie" type="Map" />
+			<getSummary type="string" />
+		</PlotSummary>
+		<root type="Map">
+			<Movies subtype="Movie" type="List" />
+			<Studios subtype="Studio" type="List" />
+			<MovieRoles subtype="MovieRole" type="List" />
+			<PlotSummaries subtype="PlotSummary" type="List" />
+			<Talent subtype="Talent" type="List" />
+			<Category subtype="Category" type="List" />
+		</root>
+		<Studio>
+			<getBudget type="decimal" />
+			<id private="true" next="38" primary="true" type="decimal" />
+			<getMovies subtype="Movie" type="List" />
+			<getName type="string" />
+		</Studio>
+		<Talent>
+			<getFirstName type="string" />
+			<id private="true" next="434" primary="true" type="decimal" />
+			<getLastName type="string" />
+			<getMovieRoles subtype="MovieRole" type="List" />
+			<getImage type="string" />
+		</Talent>
+		<Category>
+			<property name="getName" type="string" />
+		</Category>
+	</RMSchema>
+</root>
+

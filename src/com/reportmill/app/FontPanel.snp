@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VBox PrefWidth="275" PrefHeight="260" Padding="4,4,8,4" Spacing="4" FillWidth="true">
+  <HBox Align="CENTER" Padding="4,4,2,4" Spacing="5">
+    <Button Name="FontSizeUpButton" PrefWidth="24" PrefHeight="24" ToolTip="Increase Font Size" image="Format_IncreaseFont.png" />
+    <Button Name="FontSizeDownButton" PrefWidth="24" PrefHeight="24" ToolTip="Decrease Font Size" image="Format_DecreaseFont.png" />
+    <Separator PrefWidth="24" PrefHeight="22" Vertical="true" Visible="false" />
+    <ToggleButton Name="BoldButton" PrefWidth="24" PrefHeight="24" ToolTip="Make Bold" image="Format_Bold.png" />
+    <ToggleButton Name="ItalicButton" PrefWidth="24" PrefHeight="24" ToolTip="Make Italic" image="Format_Italic.png" />
+    <ToggleButton Name="UnderlineButton" PrefWidth="24" PrefHeight="24" ToolTip="Make Underline" image="Format_Underline.png" />
+    <ToggleButton Name="OutlineButton" PrefWidth="24" PrefHeight="24" ToolTip="Make Outline" text="O">
+      <font name="Arial Bold" size="16" />
+    </ToggleButton>
+  </HBox>
+  <HBox GrowHeight="true" Spacing="4" FillHeight="true">
+    <VBox GrowWidth="true" Spacing="4" FillWidth="true">
+      <Label text=" Family" />
+      <ScrollView GrowHeight="true">
+        <ListView Name="FamilyList" />
+      </ScrollView>
+      <TextField Name="FamilyText" />
+    </VBox>
+    <VBox PrefWidth="60" Spacing="4" FillWidth="true">
+      <Label text=" Sizes" />
+      <ScrollView GrowHeight="true">
+        <ListView Name="SizesList" />
+      </ScrollView>
+      <TextField Name="SizeText" />
+    </VBox>
+  </HBox>
+  <ComboBox Name="FontNameComboBox" PrefHeight="23" />
+</VBox>

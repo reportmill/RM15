@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SpringView width="300" height="90" PrefWidth="300" PrefHeight="90">
+  <ToggleButton Name="TableButton" x="10" y="10" width="40" height="40" image="/com/reportmill/apptools/RMTable.png" Selected="true" ToggleGroup="bg1" />
+  <Label x="10" y="50" width="40" height="20" Align="CENTER" text="Table" />
+  <ToggleButton Name="LabelsButton" x="90" y="10" width="40" height="40" image="/com/reportmill/apptools/RMLabels.png" ToggleGroup="bg1" />
+  <Label x="90" y="50" width="40" height="20" Align="CENTER" text="Labels" />
+  <ToggleButton Name="GraphButton" x="170" y="10" width="40" height="40" image="/com/reportmill/apptools/RMGraph.png" ToggleGroup="bg1" />
+  <Label x="170" y="50" width="40" height="20" Align="CENTER" text="Graph" />
+  <ToggleButton Name="CrossTabButton" x="250" y="10" width="40" height="40" image="/com/reportmill/apptools/RMCrossTabFrame.png" ToggleGroup="bg1" />
+  <Label x="240" y="50" width="60" height="20" Align="CENTER" text="CrossTab" />
+</SpringView>

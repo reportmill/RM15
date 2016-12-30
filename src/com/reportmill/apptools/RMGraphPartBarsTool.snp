@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SpringView width="262" height="284" PrefWidth="262" PrefHeight="284">
+  <Label x="8" y="47" width="49" height="18" text="Bar Gap:" />
+  <Spinner Name="BarGapSpinner" x="61" y="45" width="65" height="22" Min="0" Max="1" Value="0" />
+  <Label x="131" y="47" width="131" height="18" text="(as fraction of bar width)" />
+  <Label x="8" y="77" width="49" height="18" text="Set Gap:" />
+  <Spinner Name="SetGapSpinner" x="61" y="75" width="65" height="22" Min="0" Value="0" />
+  <Label x="131" y="77" width="126" height="18" text="(as fraction of bar width)" />
+  <Label x="8" y="114" width="147" height="22" text="Minimum Section Bar Count:" />
+  <Spinner Name="BarCountSpinner" x="158" y="114" width="65" height="22" Min="0" Value="0" />
+</SpringView>

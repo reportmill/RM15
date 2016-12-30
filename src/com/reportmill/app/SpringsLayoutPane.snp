@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SpringView width="250" height="275" PrefWidth="250" PrefHeight="275">
+  <Label x="10" y="10" width="93" height="20" text="Autosizing:">
+    <font name="Arial Bold" size="12" />
+  </Label>
+  <View Name="AutosizingPanel" x="81" y="52" width="100" height="100" LeanX="CENTER" Class="com.reportmill.app.SpringsLayoutPane$AutosizingPanel" />
+  <Button Name="ResetAutosizingButton" x="90" y="159" width="80" height="20" LeanX="CENTER" text="Default" />
+</SpringView>

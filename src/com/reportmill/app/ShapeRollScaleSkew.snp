@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SpringView width="275" height="325" PrefWidth="275" PrefHeight="325">
+  <TitleView x="7" y="9" width="260" height="48" Title="Rotation">
+    <SpringView width="260" height="48" PrefWidth="260" PrefHeight="48">
+      <ThumbWheel Name="RotationThumb" x="14" y="7" width="180" height="16" min="-90" max="90" round="1" />
+      <TextField Name="RotationText" x="199" y="5" width="50" height="20" Align="CENTER" />
+    </SpringView>
+  </TitleView>
+  <TitleView x="7" y="64" width="260" height="94" Title="Scale">
+    <SpringView width="260" height="94" PrefWidth="260" PrefHeight="94">
+      <ThumbWheel Name="ScaleXThumb" x="16" y="7" width="180" height="16" type="linear" min="-5" max="5" round="0.05" />
+      <TextField Name="ScaleXText" x="199" y="5" width="50" height="20" Align="CENTER" />
+      <ThumbWheel Name="ScaleYThumb" x="16" y="33" width="180" height="16" type="linear" min="-5" max="5" round="0.05" />
+      <TextField Name="ScaleYText" x="199" y="31" width="50" height="20" Align="CENTER" />
+      <CheckBox Name="ScaleSymetricCheckBox" x="12" y="53" width="206" height="20" text="Scale Symetrically" Selected="true" />
+      <Label x="3" y="5" width="16" height="20" text="X:" />
+      <Label x="3" y="30" width="16" height="20" text="Y:" />
+    </SpringView>
+  </TitleView>
+  <TitleView x="7" y="165" width="260" height="76" Title="Skew">
+    <SpringView width="260" height="76" PrefWidth="260" PrefHeight="76">
+      <ThumbWheel Name="SkewXThumb" x="16" y="7" width="180" height="16" min="-90" max="90" round="1" />
+      <TextField Name="SkewXText" x="199" y="5" width="50" height="20" Align="CENTER" />
+      <ThumbWheel Name="SkewYThumb" x="16" y="33" width="180" height="16" min="-90" max="90" round="1" />
+      <TextField Name="SkewYText" x="199" y="31" width="50" height="20" Align="CENTER" />
+      <Label x="3" y="5" width="16" height="20" text="X:" />
+      <Label x="3" y="30" width="16" height="20" text="Y:" />
+    </SpringView>
+  </TitleView>
+</SpringView>

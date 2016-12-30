@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SpringView width="275" height="325" PrefWidth="275" PrefHeight="325">
+  <Label x="5" y="5" width="68" height="18" text="Dataset Key:" />
+  <TextField Name="ListKeyText" x="73" y="4" width="196" height="20" />
+  <Label x="5" y="30" width="150" height="20" text="Avery&#169; Product Number:" />
+  <ComboBox Name="LabelFormatsComboBox" x="5" y="50" width="265" height="25" />
+  <Label x="5" y="77" width="80" height="20" Align="CENTER_RIGHT" text="Rows:" />
+  <TextField Name="NumRowsText" x="87" y="77" width="50" height="20" Align="CENTER" />
+  <Label x="139" y="77" width="60" height="20" Align="CENTER_RIGHT" text="Columns:" />
+  <TextField Name="NumColumnsText" x="201" y="77" width="50" height="20" Align="CENTER" />
+  <Label x="5" y="99" width="80" height="20" Align="CENTER_RIGHT" text="Label Width:" />
+  <TextField Name="LabelWidthText" x="87" y="99" width="50" height="20" Align="CENTER" />
+  <Label x="139" y="99" width="60" height="20" Align="CENTER_RIGHT" text="Height:" />
+  <TextField Name="LabelHeightText" x="201" y="99" width="50" height="20" Align="CENTER" />
+  <Label x="5" y="121" width="80" height="20" Align="CENTER_RIGHT" text="Spacing Width:" />
+  <TextField Name="SpacingWidthText" x="87" y="121" width="50" height="20" Align="CENTER" />
+  <Label x="139" y="121" width="60" height="20" Align="CENTER_RIGHT" text="Height:" />
+  <TextField Name="SpacingHeightText" x="201" y="121" width="50" height="20" Align="CENTER" />
+</SpringView>

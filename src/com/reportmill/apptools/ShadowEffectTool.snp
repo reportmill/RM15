@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SpringView width="275" height="220" PrefWidth="275" PrefHeight="220">
+  <ColorWell Name="ShadowColorWell" x="91" y="15" width="60" height="30" />
+  <Label x="39" y="127" width="20" height="22" Align="CENTER_RIGHT" text="X:" />
+  <Spinner Name="ShadowDXSpinner" x="61" y="127" width="60" height="22" Value="0" />
+  <Label x="39" y="156" width="20" height="22" Align="CENTER_RIGHT" text="Y:" />
+  <Spinner Name="ShadowDYSpinner" x="61" y="156" width="60" height="22" Value="0" />
+  <View Name="ShadowOffsetPanel" x="130" y="116" width="70" height="70" Class="com.reportmill.apptools.ShadowEffectTool$OffsetPanel" />
+  <Label x="10" y="48" width="53" height="22" text="Softness:" />
+  <Slider Name="SoftnessSlider" x="10" y="65" width="189" height="29" GrowWidth="true" Min="1" Max="50" Value="4" />
+  <TextField Name="SoftnessText" x="206" y="68" width="56" height="22" LeanX="RIGHT" />
+  <Label x="145" y="96" width="50" height="18" text="Offset:" />
+</SpringView>

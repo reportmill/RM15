@@ -1,0 +1,47 @@
+
+echo "RMStudio Buildapp"
+cd /Temp/RM15/bin
+date > BuildInfo.txt
+
+echo "Getting resources"
+cp /Temp/RMJars/spell.jar .
+
+echo "Creating AppLoader.jar Manifest"
+echo "Main-Class: com.reportmill.app.AppLoader\nClass-Path: spell.jar" > MANIFEST.MF
+
+echo "Creating AppLoader.jar"
+jar cmf MANIFEST.MF AppLoader.jar com/reportmill/app/AppLoader*.class
+
+echo "Creating RMStudio.app"
+cd /Temp/RM15
+export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk1.8.0_111.jdk/Contents/Home"
+$JAVA_HOME/bin/javapackager -deploy -native image -Bruntime=$JAVA_HOME \
+-outdir /Temp/RM15/bin/RMApp -outfile RMStudio15 -name RMStudio15 \
+-appclass com.reportmill.app.AppLoader -v -srcdir /Temp/RM15/bin \
+-srcfiles AppLoader.jar:RMStudio15.jar:spell.jar:BuildInfo.txt
+
+echo "Removing extra JDK files"
+cd /Temp/RM15/bin/RMApp/bundles
+rm -rf RMStudio15.app/Contents/PlugIns/Java.runtime/Contents/Home/jre/lib/jfxrt.jar
+rm -rf RMStudio15.app/Contents/PlugIns/Java.runtime/Contents/Home/jre/lib/libjfx*
+rm -rf RMStudio15.app/Contents/PlugIns/Java.runtime/Contents/Home/jre/lib/libjavafx*
+rm -rf RMStudio15.app/Contents/PlugIns/Java.runtime/Contents/Home/jre/lib/libjfx*
+rm -rf RMStudio15.app/Contents/PlugIns/Java.runtime/Contents/Home/jre/lib/deploy.jar
+rm -rf RMStudio15.app/Contents/PlugIns/Java.runtime/Contents/Home/jre/lib/libg*
+rm -rf RMStudio15.app/Contents/PlugIns/Java.runtime/Contents/Home/jre/lib/plugin.jar
+rm -rf RMStudio15.app/Contents/PlugIns/Java.runtime/Contents/Home/jre/lib/javaws.jar
+rm -rf RMStudio15.app/Contents/PlugIns/Java.runtime/Contents/Home/jre/lib/ext/jfxrt.jar
+rm -rf RMStudio15.app/Contents/PlugIns/Java.runtime/Contents/Home/jre/lib/ext/nashorn.jar
+
+echo "Running codesign"
+codesign -f --deep -s "Developer ID Application: ReportMill Software" RMStudio15.app
+
+echo "Codesign Verify"
+codesign --verify --verbose=4 RMStudio15.app
+
+echo "Spctl Verify"
+spctl --verbose --assess --type execute RMStudio15.app
+
+echo "Making zip"
+rm -rf RMStudio15.app.zip
+zip -rq RMStudio15.app.zip RMStudio15.app

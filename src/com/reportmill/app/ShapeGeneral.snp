@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TabView PrefWidth="275" PrefHeight="325">
+  <font name="Arial" size="12" />
+  <VBox Align="TOP_CENTER" Padding="24,8,8,8" Spacing="10" title="General">
+    <font name="Arial" size="11" />
+    <HBox PrefWidth="250" Spacing="5">
+      <Label text="Name:" />
+      <TextField Name="NameText" GrowWidth="true">
+        <binding aspect="Text" key="SelectedShapes.Name" />
+      </TextField>
+    </HBox>
+    <CheckBox Name="LockedCheckBox" text="Locked">
+      <binding aspect="Selected" key="SelectedShapes.Locked" />
+    </CheckBox>
+    <VBox LeanY="BOTTOM">
+      <Label text="URL:" />
+      <ScrollView PrefWidth="250" PrefHeight="136">
+        <TextView Name="UrlText" FireActionOnReturn="true">
+          <binding aspect="Text" key="SelectedShapes.URL" />
+        </TextView>
+      </ScrollView>
+    </VBox>
+  </VBox>
+  <VBox Padding="16,8,8,8" Spacing="3" FillWidth="true" title="Bindings">
+    <font name="Arial" size="11" />
+    <HBox>
+      <Label text="Key Bindings" />
+      <Label LeanX="RIGHT" text="(enter key in text)" />
+    </HBox>
+    <ScrollView GrowHeight="true">
+      <TableView Name="BindingsTable" ShowHeader="false" GridColor="#c9c9c9">
+        <TableCol PrefWidth="80" />
+        <TableCol GrowWidth="true" />
+      </TableView>
+    </ScrollView>
+    <ScrollView PrefHeight="100">
+      <TextView Name="BindingsText" FireActionOnReturn="true" />
+    </ScrollView>
+  </VBox>
+</TabView>
