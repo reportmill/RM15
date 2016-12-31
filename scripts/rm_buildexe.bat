@@ -1,9 +1,9 @@
 
 echo "Creating RMStudio15.exe"
 pushd Z:\Temp\RM15
-"C:\Program Files\Java\jdk1.8.0_20\bin\javapackager" -deploy -native exe ^
+"C:\Program Files\Java\jdk1.8.0_111\bin\javapackager" -deploy -native exe ^
 -outdir "C:\Users\Jeff\RMApp" -outfile RMStudio15 -name RMStudio15 ^
--appclass com.reportmill.AppLoader -v -srcdir "Z:\Temp\RM15\bin" ^
+-appclass com.reportmill.app.AppLoader -v -srcdir "Z:\Temp\RM15\bin" ^
 -srcfiles AppLoader.jar;RMStudio15.jar;spell.jar;BuildInfo.txt
 
 echo "Signing RMStudio15.exe"
