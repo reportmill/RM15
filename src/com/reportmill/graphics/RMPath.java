@@ -208,7 +208,33 @@ protected int getPointCount(byte t)  { return t==RMPath.CURVE_TO? 3 : t==RMPath.
 /**
  * Returns the bounds for the path.
  */
-public Rect getBounds()  { return _bounds!=null? _bounds : (_bounds=super.getBounds()); }
+public Rect getBounds()
+{
+    // If already set, just return
+    if(_bounds!=null) return _bounds;
+    
+    // Iterate over segments and calculate bounds
+    PathIter aPI = getPathIter(null);
+    double p1x = Double.MAX_VALUE, p1y = Double.MAX_VALUE;
+    double p2x = -Double.MAX_VALUE, p2y = -Double.MAX_VALUE;
+    Rect bnds = new Rect(); double pts[] = new double[6], lx = 0, ly = 0;
+    while(aPI.hasNext()) {
+        switch(aPI.getNext(pts)) {
+            case MoveTo: case LineTo: bnds.setRect(lx=pts[0], ly=pts[1], 0, 0); break;
+            case QuadTo: bnds = Quad.bounds(lx, ly, pts[0], pts[1], lx=pts[2], ly=pts[3], bnds); break;
+            case CubicTo: bnds = Cubic.bounds(lx, ly, pts[0], pts[1], pts[2], pts[3], lx=pts[4], ly=pts[5],bnds); break;
+            case Close: break;
+        }
+        
+        // Combine bounds for segment
+        p1x = Math.min(p1x, bnds.x); p2x = Math.max(p2x, bnds.getMaxX());
+        p1y = Math.min(p1y, bnds.y); p2y = Math.max(p2y, bnds.getMaxY());
+    }
+ 
+    // Return bounds
+    Rect bounds = p1x!=Double.MAX_VALUE? new Rect(p1x, p1y, p2x - p1x, p2y - p1y) : new Rect();
+    return _bounds = bounds;
+}
 
 /**
  * Returns a PathIter for RMPath.

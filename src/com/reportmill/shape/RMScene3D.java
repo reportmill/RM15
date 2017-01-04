@@ -778,7 +778,7 @@ public static class RMShape3D extends RMPolygonShape {
         _path3d = aPath3D;
         RMPath path = aPath3D.getPath(); Rect pbounds = path.getBounds();
         setBounds(pbounds);
-        setPath(path.getPathInRect(new RMRect(0, 0, pbounds.getWidth(), pbounds.getHeight())));
+        setPath(path.getPathInRect(new Rect(0, 0, pbounds.getWidth(), pbounds.getHeight())));
     }
 }
 

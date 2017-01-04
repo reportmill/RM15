@@ -16,14 +16,14 @@ public class RMTextShapeUtils {
 public static Shape getTextPath(RMTextShape aText)
 {
     // Create path and establish bounds of text
-    RMPath path = new RMPath(); path.moveTo(0, 0); path.moveTo(aText.getWidth(), aText.getHeight());
+    Path path = new Path(); path.moveTo(0,0); path.moveTo(aText.getWidth(), aText.getHeight());
     
     // Iterate over text runs
     TextBox tbox = aText.getTextBox();
     for(TextBoxLine line : tbox.getLines())
     for(TextBoxRun run : line.getRuns()) { //if(run.length()==0 || run.isTab()) continue;
         String str = run.getString(); double cspace = run.getStyle().getCharSpacing();
-        path.appendShape(run.getFont().getOutline(str, run.getX(), line.getBaseline(), cspace));
+        path.append(run.getFont().getOutline(str, run.getX(), line.getBaseline(), cspace));
     }
     
     // Return path
