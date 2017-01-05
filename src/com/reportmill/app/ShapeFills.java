@@ -185,9 +185,10 @@ public void respondUI(ViewEvent anEvent)
     // Handle Transparency Slider and Text
     if(anEvent.equals("TransparencySlider") || anEvent.equals("TransparencyText")) {
         shape.undoerSetUndoTitle("Transparency Change");
-        float value = 1 - anEvent.getFloatValue()/100;
+        double eval = anEvent.equals("TransparencySlider")? anEvent.getIntValue() : anEvent.getFloatValue();
+        double val = 1 - eval/100;
         for(RMShape s : shapes)
-            s.setOpacity(value);
+            s.setOpacity(val);
     }
 }
 
