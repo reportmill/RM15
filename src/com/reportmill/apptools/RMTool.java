@@ -503,14 +503,14 @@ public Point getHandlePoint(T aShape, int aHandle, boolean isSuperSelected)
     
     // Get point for given handle
     switch(aHandle) {
-        case HandleNW: return new RMPoint(minX, minY);
-        case HandleNE: return new RMPoint(maxX, minY);
-        case HandleSW: return new RMPoint(minX, maxY);
-        case HandleSE: return new RMPoint(maxX, maxY);
-        case HandleW: return new RMPoint(minX, midY);
-        case HandleE: return new RMPoint(maxX, midY);
-        case HandleN: return new RMPoint(midX, minY);
-        case HandleS: return new RMPoint(midX, maxY);
+        case HandleNW: return new Point(minX, minY);
+        case HandleNE: return new Point(maxX, minY);
+        case HandleSW: return new Point(minX, maxY);
+        case HandleSE: return new Point(maxX, maxY);
+        case HandleW: return new Point(minX, midY);
+        case HandleE: return new Point(maxX, midY);
+        case HandleN: return new Point(midX, minY);
+        case HandleS: return new Point(midX, maxY);
     }
     
     // Return null if invalid handle
@@ -527,7 +527,7 @@ public Rect getHandleRect(T aShape, int aHandle, boolean isSuperSelected)
     Point hpEd = getEditor().convertFromShape(hp.getX(), hp.getY(), aShape);
     
     // Get handle rect at handle point, outset rect by handle width and return
-    Rect hr = new RMRect(Math.round(hpEd.getX()), Math.round(hpEd.getY()), 0, 0);
+    Rect hr = new Rect(Math.round(hpEd.getX()), Math.round(hpEd.getY()), 0, 0);
     hr.inset(-HandleWidth/2);
     return hr;
 }
@@ -783,7 +783,7 @@ private Point dropFile(RMShape aShape, File aFile, Point aPoint)
         getEditorPane().setDataSource(WebURL.getURL(aFile), aPoint.getX(), aPoint.getY());
 
     // If image file, add image shape
-    else if(RMImageData.canRead(ext))
+    else if(Image.canRead(ext))
         runLater(() -> dropImageFile(aShape, path, aPoint));
 
     // If reportmill file, addReportFile

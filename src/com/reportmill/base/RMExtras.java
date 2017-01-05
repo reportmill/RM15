@@ -6,6 +6,7 @@ import com.reportmill.graphics.*;
 import com.reportmill.out.RMPDFWriter;
 import com.reportmill.shape.*;
 import java.util.*;
+import snap.gfx.Rect;
 import snap.util.*;
 
 /**
@@ -164,7 +165,7 @@ public static StringBuffer getImageMap(RMShape aShape, StringBuffer aSB)
 
     // If URL, add map area
     if(aShape.getURL()!=null) {
-        RMRect bounds = aShape.getBoundsInside(); aShape.convertRectToShape(bounds, aShape.getPageShape());
+        Rect bounds = aShape.getBoundsInside(); aShape.convertRectToShape(bounds, aShape.getPageShape());
         buffer.append("<AREA SHAPE=RECT COORDS=\"");
         buffer.append((int)bounds.x + "," + (int)bounds.y + "," + (int)bounds.width + "," + (int)bounds.height + "\" ");
         buffer.append("HREF=\"" + aShape.getURL() + "\" ");

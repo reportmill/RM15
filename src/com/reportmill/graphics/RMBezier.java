@@ -59,7 +59,7 @@ public double getCP2y()  { return _cp2y; }
 /**
  * Returns control point 2 as point.
  */
-public Point getCP2()  { return Point.get(_cp2x,_cp2y); }
+public Point getCP2()  { return new Point(_cp2x,_cp2y); }
 
 /**
  * Returns a specific point on the curve at the given parametric value (from 0-1).

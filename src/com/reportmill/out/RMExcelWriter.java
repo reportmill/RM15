@@ -10,6 +10,7 @@ import java.util.*;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.*;
 import org.apache.poi.ss.util.CellRangeAddress;
+import snap.gfx.Rect;
 import snap.util.*;
 
 /**
@@ -96,7 +97,7 @@ public HSSFWorkbook getWorkbook(RMDocument aDoc)
         getSheetShapes(page, sheetShapes);
         
         // Get the enclosing rect of all the shapes
-        RMRect childrenRect = getBoundsOfExcelChildren(page);
+        Rect childrenRect = getBoundsOfExcelChildren(page);
         
         // Create a crosstab for the entire spreadsheet
         RMShapeTable tempCells = RMShapeTable.createTable(sheetShapes, page, childrenRect);
@@ -161,15 +162,15 @@ private void getSheetShapes(RMShape aShape, List aList)
 /** 
  * a lot like RMShape.getBoundsOfChildren(), but excludes RMTableRPGs
  */
-private RMRect getBoundsOfExcelChildren(RMShape aShape)
+private Rect getBoundsOfExcelChildren(RMShape aShape)
 {
-    RMRect maxBounds = null;
+    Rect maxBounds = null;
 
     // Iterate over shape children
     for(int i=0, iMax=aShape.getChildCount(); i<iMax; i++) { RMShape child = aShape.getChild(i);
         
         // Declare variable for child bounds
-        RMRect childBounds = null;
+        Rect childBounds = null;
         
         // just get the frame for all regular children
         if(!(child instanceof RMTableRPG))
@@ -184,8 +185,7 @@ private RMRect getBoundsOfExcelChildren(RMShape aShape)
 
         // If child bounds, coalesce 
         if (childBounds != null) {
-            if (maxBounds==null)
-                maxBounds = new RMRect(childBounds);
+            if (maxBounds==null) maxBounds = childBounds;
             else maxBounds.unionEvenIfEmpty(childBounds);
         }
     }

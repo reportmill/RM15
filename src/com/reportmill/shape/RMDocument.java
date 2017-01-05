@@ -62,7 +62,7 @@ public class RMDocument extends RMParentShape {
     boolean           _snapMargin = true;
     
     // The margin rect
-    RMRect            _margins = getMarginRectDefault();
+    Rect              _margins = getMarginRectDefault();
     
     // Datasource
     RMDataSource      _dataSource;
@@ -372,25 +372,25 @@ public Rect getMarginRect()
 {
     double marginWidth = getSelectedPage().getWidth() - getMarginLeft() - getMarginRight();
     double marginHeight = getSelectedPage().getHeight() - getMarginTop() - getMarginBottom();
-    return new RMRect(getMarginLeft(), getMarginTop(), marginWidth, marginHeight);
+    return new Rect(getMarginLeft(), getMarginTop(), marginWidth, marginHeight);
 }
 
 /**
  * Sets the margin rect for this document.
  */
-public void setMarginRect(Rect aRect)  { repaint(); _margins = new RMRect(aRect); }
+public void setMarginRect(Rect aRect)  { repaint(); _margins = aRect; }
 
 /**
  * Returns the default margin rect.
  */
-public RMRect getMarginRectDefault()  { return new RMRect(36, 36, 36, 36); }
+public Rect getMarginRectDefault()  { return new Rect(36, 36, 36, 36); }
 
 /**
  * Sets the margin rect for this document.
  */
 public void setMargins(double left, double right, double top, double bottom)
 {
-    setMarginRect(new RMRect(left, top, right, bottom));
+    setMarginRect(new Rect(left, top, right, bottom));
 }
 
 /** Returns the margin rects left value. */
@@ -408,7 +408,7 @@ public double getMarginBottom()  { return _margins.height; }
 /**
  * Returns the size of a document page.
  */
-public RMSize getPageSize()  { return getPageCount()>0? getSelectedPage().getSize() : getPageSizeDefault(); }
+public Size getPageSize()  { return getPageCount()>0? getSelectedPage().getSize() : getPageSizeDefault(); }
 
 /**
  * Sets the size of the document (and all of its pages).
@@ -423,7 +423,7 @@ public void setPageSize(double aWidth, double aHeight)
         getPage(i).setSize(aWidth, aHeight);
     
     // Fire property change
-    firePropChange("PageSize", oldValue, new RMSize(aWidth, aHeight));
+    firePropChange("PageSize", oldValue, new Size(aWidth, aHeight));
     
     // Set page size and revalidate
     setSize(getPrefWidth(), getPrefHeight());
@@ -432,7 +432,7 @@ public void setPageSize(double aWidth, double aHeight)
 /**
  * Returns the default page size.
  */
-public RMSize getPageSizeDefault()  { return new RMSize(612,792); }
+public Size getPageSizeDefault()  { return new Size(612,792); }
 
 /**
  * Returns the autosizing default.

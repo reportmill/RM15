@@ -25,14 +25,14 @@ public static void repaint(List <? extends RMShape> theShapes)
 /**
  * Returns the bounds of a given subset of this shape's children.
  */
-public static RMRect getBoundsOfChildren(RMShape aShape, List <? extends RMShape> aList)
+public static Rect getBoundsOfChildren(RMShape aShape, List <? extends RMShape> aList)
 {
     // If list is null or empty, return this shape's bounds inside
     if(aList==null || aList.size()==0)
         return aShape.getBoundsInside();
     
     // Declare and initialize a rect to frame of first shape in list
-    RMRect rect = aList.get(0).getFrame();
+    Rect rect = aList.get(0).getFrame();
     
     // Iterate over successive shapes in list and union their frames
     for(int i=1, iMax=aList.size(); i<iMax; i++) {
@@ -130,7 +130,7 @@ public static Shape getSubtractedPath(List <RMShape> theShapes, int anInset)
 {
     // Eliminate shapes that don't intersect first shape frame
     RMShape shape0 = theShapes.get(0);
-    RMRect shape0Frame = shape0.getFrame();
+    Rect shape0Frame = shape0.getFrame();
     List <RMShape> shapes = theShapes;
     for(int i=shapes.size()-1; i>=0; i--) { RMShape shape = shapes.get(i);
         if(!shape.getFrame().intersects(shape0Frame)) {
@@ -155,7 +155,7 @@ private static List <Shape> getPathsFromShapes(List <RMShape> theShapes, int anI
     // Iterate over shapes, get bounds of each (inset), path of each (in parent coords) and add to list
     List paths = new ArrayList(theShapes.size());
     for(int i=0, iMax=theShapes.size(); i<iMax; i++) { RMShape shape = theShapes.get(i);
-        RMRect bounds = shape.getBoundsInside(); if(anInset!=0 && i>0) bounds.inset(anInset);
+        Rect bounds = shape.getBoundsInside(); if(anInset!=0 && i>0) bounds.inset(anInset);
         Shape path = shape.getPath().copyFor(bounds);
         path = shape.getConvertedToShape(path, parent);
         paths.add(path);

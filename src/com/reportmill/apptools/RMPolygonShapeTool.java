@@ -153,7 +153,7 @@ public void mouseMoved(T aPolygon, ViewEvent anEvent)
     Point point = getEditor().convertToShape(anEvent.getX(), anEvent.getY(), aPolygon);
     
     // If control point is hit, change cursor to move
-    RMPath path = aPolygon.getPath(); RMSize size = new RMSize(9,9);
+    RMPath path = aPolygon.getPath(); Size size = new Size(9,9);
     if(path.handleAtPointForBounds(point, aPolygon.getBoundsInside(), RMPolygonShape._selectedPointIndex, size)>=0) {
         getEditor().setCursor(Cursor.MOVE);
         anEvent.consume();
@@ -183,7 +183,7 @@ public void mousePressed(T aPolygon, ViewEvent anEvent)
     
     // Otherwise, figure out the size of a handle in path coordinates and set index of path point hit by mouse down
     else {
-        RMSize handles = new RMSize(9,9);
+        Size handles = new Size(9,9);
         int oldSelectedPt = RMPolygonShape._selectedPointIndex;
         int hp = aPolygon.getPath().handleAtPointForBounds(point, aPolygon.getBoundsInside(), oldSelectedPt, handles);
         RMPolygonShape._selectedPointIndex = hp;

@@ -6,8 +6,7 @@ import com.reportmill.base.RMFormat;
 import com.reportmill.base.RMGroup;
 import com.reportmill.graphics.*;
 import java.util.*;
-import snap.gfx.Point;
-import snap.gfx.Pos;
+import snap.gfx.*;
 import snap.util.MathUtils;
 
 /**
@@ -112,7 +111,7 @@ private void addGrid()
     float totalInterval = maxInterval - minInterval;
     
     // Get graph bounds
-    RMRect bounds = _graph.getBoundsInside();
+    Rect bounds = _graph.getBoundsInside();
     
     // Get grid line width/height
     double lineW = isVertical()? bounds.width : 0;
@@ -211,7 +210,7 @@ public void addBars()
             // Set bar color and bounds
             int cindex = i; if(_stacked && (iMax==1 || !_meshed)) cindex = j;
             bar.setColor(_graph.getColor(cindex));
-            RMRect barBounds = getBarBounds(i, j); bar.setBounds(barBounds);
+            Rect barBounds = getBarBounds(i, j); bar.setBounds(barBounds);
             
             // Get layer index
             int layer = _graph.isLayered()? (_meshed? i : j) : 0;
@@ -228,7 +227,7 @@ public void addBars()
 /**
  * Returns the bar bounds for bar at given series and item.
  */
-public RMRect getBarBounds(int aSeriesIndex, int anItemIndex)
+public Rect getBarBounds(int aSeriesIndex, int anItemIndex)
 {
     // Get the referenced series
     RMGraphSeries series = getSeries(aSeriesIndex);
@@ -318,7 +317,7 @@ public RMRect getBarBounds(int aSeriesIndex, int anItemIndex)
     }
     
     // Return bounds
-    return new RMRect(barX, barY, barWidth, barHeight);
+    return new Rect(barX, barY, barWidth, barHeight);
 }
 
 /**
@@ -407,7 +406,7 @@ private void addValueAxisLabels()
         double intervalPosition = isVertical()? height - height*i/(iMax - 1) : width*i/(iMax - 1);
         
         // Get point by graph that we want label to be aligned with
-        Point point2 = isVertical()? Point.get(-5, intervalPosition) : Point.get(intervalPosition, height + 5);
+        Point point2 = isVertical()? new Point(-5, intervalPosition) : new Point(intervalPosition, height + 5);
         
         // Get angle of label bounds perimeter point radial that we want to sync to
         double angle = -valueAxis.getRoll();
@@ -449,7 +448,7 @@ private void addLabelAxisLabels()
 /**
  * Adds a label axis label for given rect and group.
  */
-private void addLabelAxisLabel(RMRect aRect, RMGroup aGroup)
+private void addLabelAxisLabel(Rect aRect, RMGroup aGroup)
 {
     // Create label for group: Get label axis, get label (a clone), set text, do RPG and set best size
     RMGraphPartLabelAxis labelAxis = _graph.getLabelAxis();
@@ -465,8 +464,8 @@ private void addLabelAxisLabel(RMRect aRect, RMGroup aGroup)
         label.setWidth(labelMaxWidth); label.setHeight(label.getBestHeight()); label.setAlignment(Pos.CENTER); }
 
     // Get point by graph that we want label to be aligned with
-    Point point2 = isVertical()? Point.get(aRect.getMidX(), aRect.getMaxY() + 5) :
-        Point.get(aRect.x - 5, aRect.getMidY());
+    Point point2 = isVertical()? new Point(aRect.getMidX(), aRect.getMaxY() + 5) :
+        new Point(aRect.x - 5, aRect.getMidY());
     
     // Get angle of label bounds perimeter point radial that we want to sync to
     double angle = -labelAxis.getRoll();
@@ -534,7 +533,7 @@ public void addLabel(RMTextShape aLabel, RMGraphPartSeries.LabelPos aPosition, R
         label.setWidth(labelMaxWidth); label.setHeight(label.getBestHeight()); label.setAlignment(Pos.CENTER); }
 
     // Get bar rect
-    RMRect barRect = seriesItem.getBar().getFrame();
+    Rect barRect = seriesItem.getBar().getFrame();
     
     // Declare variables for label position
     double labelX = 0;
@@ -575,7 +574,7 @@ public void addLabel(RMTextShape aLabel, RMGraphPartSeries.LabelPos aPosition, R
             
             // Vertical: Align left (+roll) or right (-roll) edge to bar midX, maxY+3
             if(isVertical()) {
-                RMPoint p = new RMPoint(label.getRoll()>0? 0 : label.getWidth(), label.getHeight()/2);
+                Point p = new Point(label.getRoll()>0? 0 : label.getWidth(), label.getHeight()/2);
                 label.convertPointToShape(p, label.getParent());
                 labelX = labelX - (p.x - barRect.getMidX());
                 labelY = labelY - (p.y - barRect.getMaxY()) + label.getHeight()/2*MathUtils.cos(label.getRoll()) + 3;
@@ -583,7 +582,7 @@ public void addLabel(RMTextShape aLabel, RMGraphPartSeries.LabelPos aPosition, R
             
             // Horizontal: Align right edge to bar minX-3, midY
             else {
-                RMPoint p = new RMPoint(label.getWidth(), label.getHeight()/2);
+                Point p = new Point(label.getWidth(), label.getHeight()/2);
                 label.convertPointToShape(p, label.getParent());
                 labelX = labelX - (p.x - barRect.x) - 3;
                 labelY = labelY - (p.y - barRect.getMidY());

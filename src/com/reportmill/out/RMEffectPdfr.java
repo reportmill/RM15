@@ -2,7 +2,7 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.out;
-import com.reportmill.graphics.*;
+import com.reportmill.graphics.RMImageFill;
 import com.reportmill.shape.*;
 import snap.gfx.*;
 
@@ -90,7 +90,7 @@ private static void writeEmbossEffect(RMShape aShape, EmbossEffect anEmboss, RMP
     RMImageFill ifill = new RMImageFill(effectImage);
     
     // Get bounds for image fill and write
-    RMRect bounds = new RMRect(0, 0, effectImage.getWidth(), effectImage.getHeight());
+    Rect bounds = new Rect(0, 0, effectImage.getWidth(), effectImage.getHeight());
     RMFillPdfr.writeImageFill(ifill, null, bounds, aWriter);
 }
     

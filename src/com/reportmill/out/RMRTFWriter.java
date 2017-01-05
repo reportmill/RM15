@@ -216,7 +216,7 @@ public void appendRTF(RMShape aShape, PrintStream ps)
 {
     // Table representing the page is placed relative to margins of the page, whereas nested tables are relative to ...
     if(aShape instanceof RMPage) {
-        RMRect bounds = null; //((RMPage)aShape).getDocument().getMarginRect();
+        Rect bounds = null; //((RMPage)aShape).getDocument().getMarginRect();
         RMShapeTable cells = RMShapeTable.createTable(getRTFShapes(aShape), aShape, bounds);
         appendTable(cells, ps);
     }

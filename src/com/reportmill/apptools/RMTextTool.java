@@ -699,7 +699,7 @@ public Rect getHandleRect(T aTextShape, int handle, boolean isSuperSelected)
         
         // If point outside of parent, return bogus rect
         if(cp.getX()<0 || cp.getX()>aTextShape.getParent().getWidth())
-           return new RMRect(-9999,-9999,0,0);
+           return new Rect(-9999,-9999,0,0);
 
         // Get handle point in text coords
         cp = getHandlePoint(aTextShape, handle, false);

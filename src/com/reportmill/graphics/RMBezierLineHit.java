@@ -48,15 +48,15 @@ public static RMHitInfo getHitInfo(RMBezier aBezier, RMLine aLine, int which)
         Transform rot = Transform.getRotate(-angle);
         
         // Get rotated line
-        RMPoint lp1 = (RMPoint)rot.transform(aLine.getSP(), new RMPoint());
-        RMPoint lp2 = (RMPoint)rot.transform(aLine.getEP(), new RMPoint());
+        Point lp1 = rot.transform(aLine.getSP(), new Point());
+        Point lp2 = rot.transform(aLine.getEP(), new Point());
         RMLine line2 = new RMLine(lp1, lp2);
         
         // Get rotated bezier
-        RMPoint bp1 = (RMPoint)rot.transform(aBezier.getSP(), new RMPoint());
-        RMPoint bp2 = (RMPoint)rot.transform(aBezier.getCP1(), new RMPoint());
-        RMPoint bp3 = (RMPoint)rot.transform(aBezier.getCP2(), new RMPoint());
-        RMPoint bp4 = (RMPoint)rot.transform(aBezier.getEP(), new RMPoint());
+        Point bp1 = rot.transform(aBezier.getSP(), new Point());
+        Point bp2 = rot.transform(aBezier.getCP1(), new Point());
+        Point bp3 = rot.transform(aBezier.getCP2(), new Point());
+        Point bp4 = rot.transform(aBezier.getEP(), new Point());
         RMBezier bez2 = new RMBezier(bp1, bp2, bp3, bp4);
         
         // Check that it did what we expected so we don't go into infinite recursion

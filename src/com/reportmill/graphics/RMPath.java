@@ -131,7 +131,7 @@ private void addElmt(byte anElmt)
 }
 
 /** Adds a point to the points list. */
-private void addPoint(double px, double py)  { _points.add(Point.get(px,py)); }
+private void addPoint(double px, double py)  { _points.add(new Point(px,py)); }
 
 /**
  * Resets the current path with no elements or points.
@@ -469,8 +469,8 @@ public RMHitInfo getHitInfo(RMLine aLine, boolean findFirstHit)
         // If QuadTo, calculate control points for equivalent cubic and fall through
         case QuadTo: 
             pts[2] = pts[1]; 
-            pts[1] = Point.get((2*pts[0].x+pts[1].x)/3, (2*pts[0].y+pts[1].y)/3);
-            pts[0] = Point.get((2*pts[0].x+lastPoint.x)/3, (2*pts[0].y+lastPoint.y)/3); // fall through
+            pts[1] = new Point((2*pts[0].x+pts[1].x)/3, (2*pts[0].y+pts[1].y)/3);
+            pts[0] = new Point((2*pts[0].x+lastPoint.x)/3, (2*pts[0].y+lastPoint.y)/3); // fall through
 
         // If CubicTo, get simple RMBezier and do line/bezier hit detection
         case CubicTo: {
@@ -695,7 +695,7 @@ public RMHitInfo getHitInfo(RMBezier aBezier, boolean findFirstHit)
  * Only returns points that are on the path, except for the control points of
  * selectedPoint (if not -1)
  */
-public int handleAtPointForBounds(Point aPoint, Rect aRect, int selectedPoint, RMSize handleSize)
+public int handleAtPointForBounds(Point aPoint, Rect aRect, int selectedPoint, Size handleSize)
 {
     // convert point from shape coords to path coords
     Point point = pointInPathCoordsFromPoint(aPoint, aRect);
@@ -753,7 +753,7 @@ public int handleAtPointForBounds(Point aPoint, Rect aRect, int selectedPoint, R
 /**
  * Hit test the point (in path coords) against a given path point.
  */
-private boolean hitHandle(Point aPoint, int ptIndex, RMSize handleSize)
+private boolean hitHandle(Point aPoint, int ptIndex, Size handleSize)
 {
     Point p = _points.get(ptIndex);
     Rect br = new Rect(p.x-handleSize.width/2, p.y-handleSize.height/2, handleSize.width, handleSize.height);
@@ -770,7 +770,7 @@ public Point pointInPathCoordsFromPoint(Point aPoint, Rect aRect)
     double sy = bounds.getHeight()/aRect.getHeight();
     double x = (aPoint.getX()-aRect.getMidX())*sx + bounds.getMidX();
     double y = (aPoint.getY()-aRect.getMidY())*sy + bounds.getMidY();
-    return Point.get(x,y);
+    return new Point(x,y);
 }
 
 /**
@@ -848,7 +848,7 @@ public void removeElmt(int elmtIndex)
 /**
  * Sets the path point at the given index to the given point.
  */
-public void setPoint(int index, double px, double py)  { _points.set(index, Point.get(px,py)); _bounds = null; }
+public void setPoint(int index, double px, double py)  { _points.set(index, new Point(px,py)); _bounds = null; }
 
 /**
  * Resets the point at the given index to the given point, while preserving something.
@@ -868,9 +868,9 @@ public void setPointStructured(int index, Point point)
                 Point endPoint = getPoint(index-1), cntrlPnt2 = getPoint(index-2);
                 // endpoint==point winds up putting a NaN in the path 
                 if (!endPoint.equals(point)) {
-                    RMSize size = new RMSize(point.getX() - endPoint.getX(), point.getY() - endPoint.getY());
+                    Size size = new Size(point.getX() - endPoint.getX(), point.getY() - endPoint.getY());
                     size.normalize(); size.negate();
-                    RMSize size2 = new RMSize(cntrlPnt2.getX() - endPoint.getX(), cntrlPnt2.getY() - endPoint.getY());
+                    Size size2 = new Size(cntrlPnt2.getX() - endPoint.getX(), cntrlPnt2.getY() - endPoint.getY());
                     double mag = size2.getMagnitude();
                     setPoint(index-2, endPoint.getX() + size.getWidth()*mag, endPoint.getY() + size.getHeight()*mag);
                 }
@@ -887,9 +887,9 @@ public void setPointStructured(int index, Point point)
                 Point endPoint = getPoint(index+1), otherControlPoint = getPoint(index+2);
                 // don't normalize a point
                 if (!endPoint.equals(point)) {
-                    RMSize size = new RMSize(point.getX() - endPoint.x, point.getY() - endPoint.y);
+                    Size size = new Size(point.getX() - endPoint.x, point.getY() - endPoint.y);
                     size.normalize(); size.negate();
-                    RMSize size2 = new RMSize(otherControlPoint.x - endPoint.x, otherControlPoint.y - endPoint.y);
+                    Size size2 = new Size(otherControlPoint.x - endPoint.x, otherControlPoint.y - endPoint.y);
                     double mag = size2.getMagnitude();
                     setPoint(index+2, endPoint.x+size.width*mag, endPoint.y + size.height*mag);
                 }
@@ -899,8 +899,8 @@ public void setPointStructured(int index, Point point)
 
         // If point index is curve end point, move the second control point by the same amount as main point move
         else if(index - pointIndexForElementIndex == 2) {
-            Point p1 = Point.get(point); p1.subtract(getPoint(index));
-            Point p2 = Point.get(getPoint(index-1)); p2.add(p1);
+            Point p1 = new Point(point); p1.subtract(getPoint(index));
+            Point p2 = new Point(getPoint(index-1)); p2.add(p1);
             setPoint(index-1, p2.getX(), p2.getY());
             if((elmtIndex+1 < _ecount) && (getElmt(elmtIndex+1) == RMPath.CURVE_TO)) {
                 p1 = new Point(point); p1.subtract(getPoint(index));
@@ -912,8 +912,8 @@ public void setPointStructured(int index, Point point)
 
     // If there is a next element and it is a curveto, move its first control point by the same amount as main point move
     else if((elmtIndex+1 < _ecount) && (getElmt(elmtIndex+1) == RMPath.CURVE_TO)) {
-        Point p1 = Point.get(point); p1.subtract(getPoint(index));
-        Point p2 = Point.get(getPoint(index+1)); p2.add(p1);
+        Point p1 = new Point(point); p1.subtract(getPoint(index));
+        Point p2 = new Point(getPoint(index+1)); p2.add(p1);
         setPoint(index+1, p2.getX(), p2.getY());
     }
 
@@ -999,7 +999,7 @@ public RMPath clone()
     RMPath clone = null; try { clone = (RMPath)super.clone(); }
     catch(Exception e) { System.err.println(e); return null; }
     clone._elmts = _elmts.clone(); clone._points = new Vector(getPointCount());
-    for(int i=0, iMax=getPointCount(); i<iMax; i++) clone._points.add(Point.get(getPoint(i)));
+    for(int i=0, iMax=getPointCount(); i<iMax; i++) clone._points.add(new Point(getPoint(i)));
     return clone;
 }
 
@@ -1102,7 +1102,7 @@ public static class RMPathIter extends PathIter {
     public Seg getNext(Point coords[])
     {
         double dcoords[] = new double[6]; Seg seg = getNext(dcoords); int count = seg.getCount();
-        for(int i=0;i<count;i++) coords[i] = Point.get(dcoords[i*2],dcoords[i*2+1]);
+        for(int i=0;i<count;i++) coords[i] = new Point(dcoords[i*2],dcoords[i*2+1]);
         return seg;
     }
 

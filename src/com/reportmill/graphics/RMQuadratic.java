@@ -48,7 +48,7 @@ public double getCP1y()  { return _cp1y; }
 /**
  * Returns control point 1 as point.
  */
-public Point getCP1()  { return Point.get(_cp1x,_cp1y); }
+public Point getCP1()  { return new Point(_cp1x,_cp1y); }
 
 /**
  * Sets the curve values.

@@ -3,7 +3,6 @@
  */
 package com.reportmill.app;
 import com.reportmill.apptools.*;
-import com.reportmill.graphics.*;
 import com.reportmill.shape.*;
 import java.util.*;
 import java.util.List;
@@ -23,7 +22,7 @@ public class RMEditorProxGuide {
     static boolean        _includeSuperSelectedShape = false;
     
     // The list of rects that need to be repainted for proximity guides
-    static List <RMRect>  _guidelineRects = new Vector();
+    static List <Rect>    _guidelineRects = new Vector();
 
 /**
  * Returns whether proximity guides are enabled.
@@ -80,7 +79,7 @@ public static void paintProximityGuides(RMEditor anEditor, Painter aPntr)
 
     // Draw proximity guide lines (with AntiAliasing on?)
     boolean aa = aPntr.setAntialiasing(true);
-    for(RMRect r : _guidelineRects) aPntr.drawLine(r.x, r.y, r.getMaxX(), r.getMaxY());
+    for(Rect r : _guidelineRects) aPntr.drawLine(r.x, r.y, r.getMaxX(), r.getMaxY());
     aPntr.setAntialiasing(aa);
 }
 
@@ -140,7 +139,7 @@ public static void createGuidelines(RMEditor anEditor)
     List candidateShapes = getCandidateShapes(anEditor);
     
     // Get bounds
-    RMRect bounds = RMShapeUtils.getBoundsOfChildren(parent, anEditor.getSelectedShapes());
+    Rect bounds = RMShapeUtils.getBoundsOfChildren(parent, anEditor.getSelectedShapes());
     
     // Create guidelines
     createGuidelines(anEditor, parent, bounds, candidateShapes);
@@ -265,7 +264,7 @@ public static void createGuidelines(RMEditor anEditor, RMShape parent, Rect boun
 /**
  * Adds a guideline rect for the given points.
  */
-private static void addGuideline(Point p1, Point p2)  { _guidelineRects.add(new RMRect(Rect.get(p1, p2))); }
+private static void addGuideline(Point p1, Point p2)  { _guidelineRects.add(Rect.get(p1, p2)); }
 
 /**
  * Returns the given point snapped to relevant proximity guides.
@@ -302,14 +301,14 @@ public static Point pointSnappedToProximityGuides(RMEditor anEditor, Point aPoin
     List candidateShapes = getCandidateShapes(anEditor);
 
     // Declare variable for bounds
-    RMRect bounds;
+    Rect bounds;
 
     // If mode is move, set bounds to snap the entire bounding box
     if(aDragMode==RMSelectTool.DragMode.Move)
         bounds = RMShapeUtils.getBoundsOfChildren(parent, selectedShapes);
     
     // If mode is resize, set bounds to just snap a handle
-    else { bounds = new RMRect(aPoint.getX(), aPoint.getY(), 0, 0); parent.convertRectFromShape(bounds, null); }
+    else { bounds = new Rect(aPoint.getX(), aPoint.getY(), 0, 0); parent.convertRectFromShape(bounds, null); }
 
     // Declare variables for minDX, maxDX, minDY and maxDY
     double minDX = 9999;

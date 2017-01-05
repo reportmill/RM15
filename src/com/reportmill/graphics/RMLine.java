@@ -2,8 +2,7 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.graphics;
-import snap.gfx.Point;
-import snap.gfx.Rect;
+import snap.gfx.*;
 
 /**
  * This class models a simple line, providing methods for extracting points, distance calculation, bisection,
@@ -45,7 +44,7 @@ public double getSPy()  { return _spy; }
 /**
  * Returns the start point.
  */
-public Point getSP()  { return Point.get(_spx,_spy); }
+public Point getSP()  { return new Point(_spx,_spy); }
 
 /**
  * Returns the end point x.
@@ -60,7 +59,7 @@ public double getEPy()  { return _epy; }
 /**
  * Returns the end point.
  */
-public Point getEP()  { return Point.get(_epx,_epy); }
+public Point getEP()  { return new Point(_epx,_epy); }
 
 /**
  * Returns the point on this line at the parametric location t (defined from 0-1).
@@ -174,7 +173,7 @@ public double getMaxY()  { return Math.max(_spy, _epy); }
 /**
  * Returns the bounds of the line.
  */
-public final RMRect getBounds()  { RMRect rect = new RMRect(); getBounds(rect); return rect; }
+public final Rect getBounds()  { Rect rect = new Rect(); getBounds(rect); return rect; }
 
 /**
  * Get bounds of line in given rect.
@@ -296,7 +295,7 @@ public double getAngle(double t)  { return getTangent(t, null); }
 /**
  * Return the tangent at given point.
  */
-public double getTangent(double t, RMSize tan)
+public double getTangent(double t, Size tan)
 {
     // Declare variables for degree and tan width/height
     int degree = getPointCount() - 1;

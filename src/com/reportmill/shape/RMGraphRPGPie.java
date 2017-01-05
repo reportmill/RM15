@@ -48,7 +48,7 @@ public boolean isMeshed()  { if(_graph.getKeyCount()==1) return false; return su
 protected void configure()
 {
     // Get graph area bounds
-    RMRect bounds = _graph.getBoundsInside();
+    Rect bounds = _graph.getBoundsInside();
     
     // Get wedge label text
     RMGraphPartLabelAxis labelAxis = _graph.getLabelAxis();
@@ -155,7 +155,7 @@ protected void configure()
         if(barLabelString!=null) {
             
             // Declare rect for last wedge label bounds
-            RMRect lastLabelBounds = null;
+            Rect lastLabelBounds = null;
             
             // Declare local variable for angle
             double lastAngle = 0;
@@ -213,7 +213,7 @@ protected void configure()
                 if(_graph.getPie().getDrawWedgeLabelLines()) {
                     
                     // Get label frame
-                    RMRect labelFrame = label.getFrame();
+                    Rect labelFrame = label.getFrame();
                     
                     // Declare wedge label line start point to middle of label
                     double startX = labelFrame.getMidX();
@@ -250,7 +250,7 @@ protected void configure()
 /**
  * Returns the bounds for an individual pie in the graph area (when there are multiple keys).
  */
-private RMRect getPieBounds(int anIndex, int aCount, RMRect aRect)
+private Rect getPieBounds(int anIndex, int aCount, Rect aRect)
 {
     // Get width & height
     double width = aRect.width;
@@ -268,7 +268,7 @@ private RMRect getPieBounds(int anIndex, int aCount, RMRect aRect)
     }
 
     // Calculate rect for index, assuming index traverses grid from left to right, top to bottom
-    return new RMRect(aRect.x + (anIndex%x)*width/x, aRect.y + (y - 1 - anIndex/x)*height/y, width/x, height/y);
+    return new Rect(aRect.x + (anIndex%x)*width/x, aRect.y + (y - 1 - anIndex/x)*height/y, width/x, height/y);
 }
 
 /** Creates a rect representing the largest square inside rect. */

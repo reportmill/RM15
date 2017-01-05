@@ -93,7 +93,7 @@ public double height()  { return _height; }
 /**
  * Returns raw x, y, width and height of shape as rect (preserves possible negative sizes).
  */
-public RMRect bounds()  { return new RMRect(x(), y(), width(), height()); }
+public Rect bounds()  { return new Rect(x(), y(), width(), height()); }
 
 /**
  * Returns the X location of the shape.
@@ -172,7 +172,7 @@ public double getMaxY()  { return getY() + getHeight(); }
 /**
  * Returns the XY location of the shape as a point.
  */
-public RMPoint getXY()  { return new RMPoint(getX(), getY()); }
+public Point getXY()  { return new Point(getX(), getY()); }
 
 /**
  * Sets the X and Y location of the shape to the given point (convenience).
@@ -187,7 +187,7 @@ public void setXY(double anX, double aY)  { setX(anX); setY(aY); }
 /**
  * Returns the size of the shape.
  */
-public RMSize getSize()  { return new RMSize(getWidth(), getHeight()); }
+public Size getSize()  { return new Size(getWidth(), getHeight()); }
 
 /**
  * Sets the size of the shape.
@@ -202,7 +202,7 @@ public void setSize(double aWidth, double aHeight)  { setWidth(aWidth); setHeigh
 /**
  * Returns the X, Y, width and height of the shape as a rect (use getFrame if shape has roll/scale/skew).
  */
-public RMRect getBounds()  { return new RMRect(getX(), getY(), getWidth(), getHeight()); }
+public Rect getBounds()  { return new Rect(getX(), getY(), getWidth(), getHeight()); }
 
 /**
  * Sets X, Y, width and height of shape to dimensions in given rect.
@@ -217,9 +217,9 @@ public void setBounds(double anX, double aY, double aW, double aH) { setX(anX); 
 /**
  * Returns the rect in parent coords that fully encloses the shape.
  */
-public RMRect getFrame()
+public Rect getFrame()
 {
-    if(isRSS()) { RMRect rect = getBoundsInside(); convertRectToShape(rect, _parent); return rect; }
+    if(isRSS()) { Rect rect = getBoundsInside(); convertRectToShape(rect, _parent); return rect; }
     return getBounds();
 }
 
@@ -270,7 +270,7 @@ public double getFrameHeight()  { return isRSS()? getFrame().height : getHeight(
 /**
  * Returns the origin of the shape's bounds rect in parent coords.
  */ 
-public RMPoint getFrameXY()  { return isRSS()? new RMPoint(getFrame().getXY()) : getXY(); }
+public Point getFrameXY()  { return isRSS()? new Point(getFrame().getXY()) : getXY(); }
 
 /**
  * Sets a shape's origin such that its bounds rect (in parent coords) has origin at the given point.
@@ -295,8 +295,8 @@ public void setFrameSize(double aWidth, double aHeight)
     }
     
     // Convert X & Y axis to parent coords
-    RMSize x_axis = new RMSize(_width, 0); convertVectorToShape(x_axis, _parent);
-    RMSize y_axis = new RMSize(0, _height); convertVectorToShape(y_axis, _parent);
+    Size x_axis = new Size(_width, 0); convertVectorToShape(x_axis, _parent);
+    Size y_axis = new Size(0, _height); convertVectorToShape(y_axis, _parent);
 
     // Scale widths of X & Y axes in parent coords by ratio of NewWidth/OldWidth
     double sizeByRatio1 = Math.abs(aWidth)/(Math.abs(x_axis.width) + Math.abs(y_axis.width));
@@ -344,7 +344,7 @@ public double getFrameMaxY()  { return isRSS()? getFrame().getMaxY() : getMaxY()
 /**
  * Returns the origin point of the shape in parent's coords.
  */
-public Point getXYP()  { Point p = Point.get(0,0); convertPointToShape(p, _parent); return p; }
+public Point getXYP()  { Point p = new Point(); convertPointToShape(p, _parent); return p; }
 
 /**
  * Sets the origin point of the shape to the given X and Y in parent's coords.
@@ -369,7 +369,7 @@ public void offsetXY(double dx, double dy)  { setXY(_x + dx, _y + dy); }
 /**
  * Returns the bounds of the shape in the shape's own coords.
  */
-public RMRect getBoundsInside()  { return new RMRect(0, 0, getWidth(), getHeight()); }
+public Rect getBoundsInside()  { return new Rect(0, 0, getWidth(), getHeight()); }
 
 /**
  * Returns the bounds of the path associated with this shape in local coords, adjusted to account for stroke width.
@@ -1272,15 +1272,15 @@ public void convertRectFromShape(Rect rect, RMShape shape)
  */
 public Point convertedPointToShape(Point aPnt, RMShape aShp)
 {
-    Point p = Point.get(aPnt); convertPointToShape(p, aShp); return p;
+    Point p = new Point(aPnt); convertPointToShape(p, aShp); return p;
 }
 
 /**
  * Returns the given point converted from the given shape's coords.
  */
-public RMPoint convertedPointFromShape(Point aPoint, RMShape aShape)
+public Point convertedPointFromShape(Point aPoint, RMShape aShape)
 {
-    RMPoint p = new RMPoint(aPoint); convertPointFromShape(p, aShape); return p;
+    Point p = new Point(aPoint); convertPointFromShape(p, aShape); return p;
 }
 
 /**
@@ -1323,7 +1323,7 @@ public Shape getConvertedFromShape(Shape aPath, RMShape aShape)
 public void convertToShape(RMShape aShape)
 {
     // Get center point in shape coords
-    Point cp = Point.get(getWidth()/2, getHeight()/2); convertPointToShape(cp, aShape);
+    Point cp = new Point(getWidth()/2, getHeight()/2); convertPointToShape(cp, aShape);
     
     // Coalesce transforms up the parent chain
     for(RMShape s=_parent; s!=aShape; s=s._parent) {
@@ -1344,7 +1344,7 @@ public void convertToShape(RMShape aShape)
 public void convertFromShape(RMShape aShape)
 {
     // Get center point in parent coords
-    Point cp = Point.get(getWidth()/2, getHeight()/2); convertPointToShape(cp, _parent);
+    Point cp = new Point(getWidth()/2, getHeight()/2); convertPointToShape(cp, _parent);
 
     // Coalesce transforms down the shape chain
     for(RMShape s=_parent; s!=aShape; s=s._parent) {
@@ -1498,8 +1498,8 @@ public RMShape divideShapeFromEdge(double anAmount, byte anEdge, RMShape aNewSha
     RMShape newShape = aNewShape!=null? aNewShape : createDivideShapeRemainder(anEdge);
 
     // Get bounds for this shape and remainder bounds (divide bounds by amount from edge)
-    RMRect bounds = getFrame();
-    RMRect remainder = bounds.divideRect(anAmount, anEdge);
+    Rect bounds = getFrame();
+    Rect remainder = RMRect.divideRect(bounds, anAmount, anEdge, null);
     
     // Set this shape's new bounds and NewShape bounds as remainder
     setFrame(bounds);
@@ -1562,7 +1562,7 @@ public boolean contains(Point aPoint)
         lineWidth = Math.max(8, getStrokeWidth());
     
     // Get bounds, adjusted for line width
-    RMRect bounds = getBoundsInside();
+    Rect bounds = getBoundsInside();
     bounds.inset(-lineWidth/2, -lineWidth/2);
 
     // If point isn't even in bounds rect, just return false
@@ -1583,7 +1583,7 @@ public boolean intersects(Shape aPath)
     float lineWidth = getStrokeWidth();
     
     // Get bounds, adjusted for line width
-    RMRect bounds = getBoundsInside();
+    Rect bounds = getBoundsInside();
     bounds.inset(-lineWidth/2, -lineWidth/2);
 
     // If paths don't even intersect bounds, just return false

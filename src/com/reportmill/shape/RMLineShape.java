@@ -194,7 +194,7 @@ public static class ArrowHead extends RMPolygonShape {
         super.fromXMLShape(anArchiver, anElement);
         float x = anElement.getAttributeFloatValue("xorigin", 0);
         float y = anElement.getAttributeFloatValue("yorigin", 0);
-        _origin = Point.get(x,y);
+        _origin = new Point(x,y);
         
         // Origin is relative to path bounds instead of shape bounds - need to fix now that path always in shape bounds
         Rect prect = _path.getBounds(), srect = getBoundsInside();

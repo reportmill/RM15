@@ -3,8 +3,8 @@
  */
 package com.reportmill.shape;
 import com.reportmill.base.RMGroup;
-import com.reportmill.graphics.RMRect;
 import java.util.*;
+import snap.gfx.Rect;
 import snap.util.ListUtils;
 
 /**
@@ -107,7 +107,7 @@ public float getSectionTotal()
 /**
  * Returns the bounds of the section.
  */
-public RMRect getBounds()
+public Rect getBounds()
 {
     // Declare section x, y, width, height and initialize width/height to graph area width/height
     double x = 0, y = 0, w = _graph.getWidth(), h = _graph.getHeight();
@@ -116,7 +116,7 @@ public RMRect getBounds()
     // If horizontal, divide height by section count and shift y by section-index*section height
     if(_graph.isVertical()) { w /= _graphRPG.getSectionCount(); x += _index*w; }
     else { h /= _graphRPG.getSectionCount(); y += _index*h; }
-    return new RMRect(x, y, w, h); // Return bounds
+    return new Rect(x, y, w, h); // Return bounds
 }
 
 /**
@@ -192,10 +192,10 @@ public class Item {
     public void setBar(RMShape aBar)  { getSeriesItem().setBar(aBar); }
     
     /** Returns the bounds for this section item. */
-    public RMRect getBounds()
+    public Rect getBounds()
     {
         // Get bounds of section, graph bars, effective bar count and index of this section item
-        RMRect bounds = RMGraphSection.this.getBounds();
+        Rect bounds = RMGraphSection.this.getBounds();
         RMGraphPartBars bars = _graph.getBars();
         float barCount = getItemCount() + (getItemCount()-1)*bars.getBarGap() + bars.getSetGap();
         int index = ListUtils.indexOfId(_items, this); // Get index of this section item

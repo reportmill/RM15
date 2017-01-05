@@ -389,7 +389,7 @@ public void paintShape(Painter aPntr)
     RMShapePaintProps props = RMShapePaintProps.get(aPntr); if(!props.isEditing()) return;
     
     // Get table bounds and fill table base rect with light gray
-    RMRect bounds = getBoundsInside();
+    Rect bounds = getBoundsInside();
     double y = getChildCount()>0? getChildLast().getMaxY() + 16 : 0;
     aPntr.setColor(new Color(11/12f)); aPntr.fillRect(0, y, getWidth(), bounds.getMaxY() - y);
 

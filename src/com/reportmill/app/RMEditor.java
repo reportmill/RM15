@@ -400,7 +400,7 @@ public void flushEditingChanges()
 /**
  * Returns first shape hit by point given in View coords.
  */
-public RMShape getShapeAtPoint(double aX, double aY)  { return getShapeAtPoint(Point.get(aX,aY)); }
+public RMShape getShapeAtPoint(double aX, double aY)  { return getShapeAtPoint(new Point(aX,aY)); }
 
 /**
  * Returns first shape hit by point given in View coords.

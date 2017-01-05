@@ -2,7 +2,6 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.app;
-import com.reportmill.graphics.RMRect;
 import com.reportmill.shape.*;
 import java.util.*;
 import snap.gfx.*;
@@ -53,6 +52,12 @@ public class RMViewerInputAdapter {
     public static final int DEFAULT = 1;
     public static final int SELECT_TEXT = 2;
     public static final int SELECT_IMAGE = 3;
+
+    // DivdeRect constants
+    public static final byte MinXEdge = 1;
+    public static final byte MinYEdge = 1<<1;
+    public static final byte MaxXEdge = 1<<2;
+    public static final byte MaxYEdge = 1<<3;
 
 /**
  * Creates a new viewer input adapter.
@@ -283,7 +288,7 @@ ViewEvent createShapeEvent(RMShape s, ViewEvent e, ViewEvent.Type t)  { return g
  */
 public void mousePressedSelText(ViewEvent anEvent)
 {
-    _downPoint = Point.get(anEvent.getX(), anEvent.getY());              // Get down point
+    _downPoint = new Point(anEvent.getX(), anEvent.getY());              // Get down point
     getViewer().repaint(_paintArea.getBounds());  // Repaint paint area
     _paintArea = new Rect();               // Reset area
 }
@@ -294,7 +299,7 @@ public void mousePressedSelText(ViewEvent anEvent)
 public void mouseDraggedSelText(ViewEvent anEvent)
 {
     // Get drag point
-    _dragPoint = Point.get(anEvent.getX(), anEvent.getY());
+    _dragPoint = new Point(anEvent.getX(), anEvent.getY());
     
     // Repaint paint area
     RMViewer viewer = getViewer(); viewer.repaint(_paintArea.getBounds());
@@ -408,7 +413,7 @@ private Shape getTextSelectionArea()
 public void mousePressedSelImage(ViewEvent anEvent)
 {
     // Get down point
-    _downPoint = Point.get(anEvent.getX(), anEvent.getY());
+    _downPoint = new Point(anEvent.getX(), anEvent.getY());
     
     // If rect isn't empty, repaint
     if(!_rect.isEmpty()) getViewer().repaint();
@@ -417,12 +422,12 @@ public void mousePressedSelImage(ViewEvent anEvent)
     Rect rect = getViewer().convertFromShape(_rect, getViewer().getSelectedPage()).getBounds();
     
     // Reset selected sides to edges hit by point
-    Point point = Point.get(anEvent.getX(), anEvent.getY());
-    _selectedSides = rect.isEmpty()? 0 : RMRect.getHitEdges(rect, point, 5);
+    Point point = new Point(anEvent.getX(), anEvent.getY());
+    _selectedSides = rect.isEmpty()? 0 : getHitEdges(rect, point, 5);
     
     // Set drag rect
     _dragPoint = _selectedSides>0 || !rect.contains(anEvent.getX(),anEvent.getY())? null :
-        Point.get(anEvent.getX(), anEvent.getY());
+        new Point(anEvent.getX(), anEvent.getY());
     
     // If no selected sides, reset rect
     if(_selectedSides==0 && _dragPoint==null)
@@ -442,12 +447,12 @@ public void mouseDraggedSelImage(ViewEvent anEvent)
     
     // If there are selected sides, move them
     if(_selectedSides>0)
-        RMRect.setHitEdges(rect, Point.get(anEvent.getX(), anEvent.getY()), _selectedSides);
+        setHitEdges(rect, new Point(anEvent.getX(), anEvent.getY()), _selectedSides);
     
     // Otherwise, if point is in rect, move rect
     else if(_dragPoint!=null) {
         rect.offset(anEvent.getX() - _dragPoint.getX(), anEvent.getY() - _dragPoint.getY());
-        _dragPoint = Point.get(anEvent.getX(), anEvent.getY());
+        _dragPoint = new Point(anEvent.getX(), anEvent.getY());
     }
     
     // Otherwise, reset rect from down point and event event point
@@ -475,7 +480,7 @@ public void mouseMovedSelImage(ViewEvent anEvent)
     Point point = getViewer().convertToShape(anEvent.getX(), anEvent.getY(), getViewer().getSelectedPage());
     
     // Get hit edges
-    int hitEdges = _rect.isEmpty()? 0 : RMRect.getHitEdges(_rect, point, 5);
+    int hitEdges = _rect.isEmpty()? 0 : getHitEdges(_rect, point, 5);
     
     // If selected edge, set cursor
     if(hitEdges!=0)
@@ -538,17 +543,55 @@ private void copySelImage()
 private static Cursor getResizeCursor(int anEdgeMask)
 {
     // Handle W_RESIZE_CURSOR, E_RESIZE_CURSOR, N_RESIZE_CURSOR, S_RESIZE_CURSOR
-    if(anEdgeMask==RMRect.MinXEdge) return Cursor.W_RESIZE;
-    if(anEdgeMask==RMRect.MaxXEdge) return Cursor.E_RESIZE;
-    if(anEdgeMask==RMRect.MinYEdge) return Cursor.N_RESIZE;
-    if(anEdgeMask==RMRect.MaxYEdge) return Cursor.S_RESIZE;
+    if(anEdgeMask==MinXEdge) return Cursor.W_RESIZE;
+    if(anEdgeMask==MaxXEdge) return Cursor.E_RESIZE;
+    if(anEdgeMask==MinYEdge) return Cursor.N_RESIZE;
+    if(anEdgeMask==MaxYEdge) return Cursor.S_RESIZE;
     
     // Handle NW_RESIZE_CURSOR, NE_RESIZE_CURSOR, SW_RESIZE_CURSOR, SE_RESIZE_CURSOR
-    if(anEdgeMask==(RMRect.MinXEdge | RMRect.MinYEdge)) return Cursor.NW_RESIZE;
-    if(anEdgeMask==(RMRect.MaxXEdge | RMRect.MinYEdge)) return Cursor.NE_RESIZE;
-    if(anEdgeMask==(RMRect.MinXEdge | RMRect.MaxYEdge)) return Cursor.SW_RESIZE;
-    if(anEdgeMask==(RMRect.MaxXEdge | RMRect.MaxYEdge)) return Cursor.SE_RESIZE;
+    if(anEdgeMask==(MinXEdge | MinYEdge)) return Cursor.NW_RESIZE;
+    if(anEdgeMask==(MaxXEdge | MinYEdge)) return Cursor.NE_RESIZE;
+    if(anEdgeMask==(MinXEdge | MaxYEdge)) return Cursor.SW_RESIZE;
+    if(anEdgeMask==(MaxXEdge | MaxYEdge)) return Cursor.SE_RESIZE;
     return null; // Return null since not found
+}
+
+/**
+ * Returns the mask of edges hit by the given point.
+ */
+public static int getHitEdges(Rect aRect, Point aPoint, double aRadius)
+{
+    // Check MinXEdge, MaxXEdge, MinYEdge, MaxYEdge
+    int hitEdges = 0;
+    if(Math.abs(aPoint.getX()-aRect.getX()) < aRadius) hitEdges |= MinXEdge;
+    else if(Math.abs(aPoint.getX()-aRect.getMaxX()) < aRadius) hitEdges |= MaxXEdge;
+    if(Math.abs(aPoint.getY()-aRect.getY()) < aRadius) hitEdges |= MinYEdge;
+    else if(Math.abs(aPoint.getY()-aRect.getMaxY()) < aRadius) hitEdges |= MaxYEdge;
+    return hitEdges;
+}
+
+/**
+ * Resets the edges of a rect, given a mask of edges and a new point.
+ */
+public static void setHitEdges(Rect aRect, Point aPoint, int anEdgeMask)
+{
+    // Handle MinXEdge drag
+    if((anEdgeMask & MinXEdge) > 0) {
+        double newX = Math.min(aPoint.getX(), aRect.getMaxX()-1);
+        aRect.setWidth(aRect.getMaxX() - newX); aRect.setX(newX); }
+    
+    // Handle MaxXEdge drag
+    else if((anEdgeMask & MaxXEdge) > 0)
+        aRect.setWidth(Math.max(1, aPoint.getX() - aRect.getX()));
+    
+    // Handle MinYEdge drag
+    if((anEdgeMask & MinYEdge) > 0) {
+        double newY = Math.min(aPoint.getY(), aRect.getMaxY()-1);
+        aRect.setHeight(aRect.getMaxY() - newY); aRect.setY(newY); }
+    
+    // Handle MaxYEdge drag
+    else if((anEdgeMask & MaxYEdge) > 0)
+        aRect.setHeight(Math.max(1, aPoint.getY() - aRect.getY()));
 }
 
 }

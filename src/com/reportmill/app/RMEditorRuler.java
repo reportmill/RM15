@@ -25,7 +25,7 @@ public class RMEditorRuler extends View {
     double                    _zoomFactor;
     
     // The mouse point
-    Point                     _mouse = Point.get(0,0);
+    Point                     _mouse = new Point();
     
     // Ruler constants
     static final int          _rulerWidth = 20;

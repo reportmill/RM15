@@ -91,10 +91,10 @@ public Shape getStrokePath(RMShape aShape)  { return aShape.getPath(); }
 /**
  * Returns the bounds required to render this fill for this shape.
  */
-public RMRect getBounds(RMShape aShape)
+public Rect getBounds(RMShape aShape)
 {
     // Get bounds inset by stroke width
-    RMRect bounds = aShape.getBoundsInside(); bounds.inset(-getWidth()/2); return bounds;
+    Rect bounds = aShape.getBoundsInside(); bounds.inset(-getWidth()/2); return bounds;
 }
 
 /**

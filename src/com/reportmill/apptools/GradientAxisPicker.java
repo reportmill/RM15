@@ -12,8 +12,8 @@ import snap.view.*;
 public class GradientAxisPicker extends View {
 
     // Ivars
-    Point                   _startPoint = Point.get(0.5,0.5);
-    Point                   _endPoint = Point.get(1d, 0.5);
+    Point                   _startPoint = new Point(0.5,0.5);
+    Point                   _endPoint = new Point(1d, 0.5);
     Stop                    _stops[];
     boolean                 _dragging;
     ImagePaint              _background;
@@ -125,14 +125,14 @@ private Rect getBoundsInset()
 private Point convertToBounds(Point aPoint)
 {
     Rect r = getBoundsInset();
-    return Point.get(r.getX() + aPoint.getX()*r.getWidth(), r.getY() + aPoint.getY()*r.getHeight());
+    return new Point(r.getX() + aPoint.getX()*r.getWidth(), r.getY() + aPoint.getY()*r.getHeight());
 }
 
 // Converts a point in bounds coords unit coords.
 private Point convertToProportional(Point aPoint)
 {
     Rect r = getBoundsInset();
-    return Point.get((aPoint.getX()-r.getMinX())/r.getWidth(), (aPoint.getY()-r.getMinY())/r.getHeight());
+    return new Point((aPoint.getX()-r.getMinX())/r.getWidth(), (aPoint.getY()-r.getMinY())/r.getHeight());
 }
 
 /** Returns a texture to be used for the background of transparent gradients */

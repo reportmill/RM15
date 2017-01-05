@@ -2,7 +2,6 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.shape;
-import com.reportmill.graphics.RMRect;
 import snap.gfx.*;
 import snap.util.*;
 
@@ -27,7 +26,7 @@ public void paintShape(Painter aPntr)
     // Table bands should draw a red band around thier perimeter when it is selected
     RMShapePaintProps props = RMShapePaintProps.get(aPntr);
     if(props.isSelected(this) || props.isSuperSelected(this)) {
-        RMRect bounds = getBoundsInside(); bounds.inset(2, 2);
+        Rect bounds = getBoundsInside(); bounds.inset(2, 2);
         aPntr.setColor(Color.RED); aPntr.setStroke(Stroke.Stroke1);
         aPntr.draw(bounds);
     }

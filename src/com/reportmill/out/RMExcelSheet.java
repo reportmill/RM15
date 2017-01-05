@@ -132,7 +132,7 @@ public HSSFShape addNewShape(RMShape aShape, HSSFShapeContainer aParent)
     // The patriarch and the group use different kind of anchors, however.
     if (aParent instanceof HSSFPatriarch) {
         ExcelPoint origin = convertPoint(bounds.getXY());
-        ExcelPoint max = convertPoint(Point.get(bounds.getMaxX(), bounds.getMaxY()));
+        ExcelPoint max = convertPoint(new Point(bounds.getMaxX(), bounds.getMaxY()));
         
         HSSFClientAnchor anchor = new HSSFClientAnchor(origin._dx, origin._dy, max._dx, max._dy, origin._column, origin._row, max._column, max._row);
         

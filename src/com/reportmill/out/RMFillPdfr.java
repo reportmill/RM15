@@ -133,7 +133,7 @@ public static void writeGradientFill(RMShape aShape, RMGradientFill aFill, RMPDF
     
     // Get gradient paint and start/end
     GradientPaint gpnt = aFill.snap().copyFor(aShape.getBoundsInside());
-    Point startPt = Point.get(gpnt.getStartX(), gpnt.getStartY()), endPt = Point.get(gpnt.getEndX(), gpnt.getEndY());
+    Point startPt = new Point(gpnt.getStartX(), gpnt.getStartY()), endPt = new Point(gpnt.getEndX(), gpnt.getEndY());
     
     // In pdf, coordinates of the gradient axis are defined in pattern space.  Pattern space is the same as the
     // page's coordinate system, and doesn't get affected by changes to the ctm. Since the RMGradient returns

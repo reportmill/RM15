@@ -3,7 +3,6 @@
  */
 package com.reportmill.shape;
 import com.reportmill.base.*;
-import com.reportmill.graphics.RMRect;
 import java.util.List;
 import snap.gfx.*;
 import snap.util.*;
@@ -226,7 +225,7 @@ public RMShape rpgAll(ReportOwner anRptOwner, RMShape aParent)
 public void paintShape(Painter aPntr)
 {
     // Get labels bounds
-    RMRect bounds = getBoundsInside();
+    Rect bounds = getBoundsInside();
 
     // Draw frame rect
     aPntr.setColor(Color.DARKGRAY); aPntr.setStroke(Stroke.Stroke1);

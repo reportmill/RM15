@@ -252,10 +252,10 @@ private static double B2(double u) { return 3*u*u*(1-u); }
 private static double B3(double u) { return u*u*u; }
 
 // Vector add, subtract, negate, scale and normalize
-private static Point V2Add(Point a, Point b) { return Point.get(a.x + b.x, a.y + b.y); }
-private static Point V2Sub(Point a, Point b) { return Point.get(a.x - b.x, a.y - b.y); }
-private static Point V2Negate(Point v) { return Point.get(-v.x, -v.y); }
-private static Point V2Scale(Point v, double s) { return Point.get(v.x*s, v.y*s); }
+private static Point V2Add(Point a, Point b) { return new Point(a.x + b.x, a.y + b.y); }
+private static Point V2Sub(Point a, Point b) { return new Point(a.x - b.x, a.y - b.y); }
+private static Point V2Negate(Point v) { return new Point(-v.x, -v.y); }
+private static Point V2Scale(Point v, double s) { return new Point(v.x*s, v.y*s); }
 private static Point V2Normalize(Point v) { v = v.clone(); double l = V2Len(v); if(l!=0) { v.x/=l; v.y/=l; } return v; }
 
 // Vector length, squared length, normalized vector and vector dot product
