@@ -78,11 +78,11 @@ public void respondUI(ViewEvent anEvent)
     
     // Handle DepthSlider and DepthText
     if(anEvent.equals("DepthSlider") || anEvent.equals("DepthText"))
-        scene.setDepth(anEvent.getFloatValue());
+        scene.setDepth(anEvent.equals("DepthSlider")? anEvent.getIntValue() : anEvent.getFloatValue());
 
     // Handle FOVSlider or FOVText
     if(anEvent.equals("FOVSlider") || anEvent.equals("FOVText"))
-        scene.setFocalLength(anEvent.getFloatValue()*72);
+        scene.setFocalLength(anEvent.equals("FOVSlider")? anEvent.getIntValue()*72 : anEvent.getFloatValue()*72);
 }
 
 /**
