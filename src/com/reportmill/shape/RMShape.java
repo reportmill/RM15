@@ -1334,7 +1334,7 @@ public void convertToShape(RMShape aShape)
     
     // Convert center point back from _parent, calc vector to old center from new center (in parent coords) & translate
     convertPointFromShape(cp, _parent);
-    Size v = Size.get(cp.getX() - getWidth()/2, cp.getY() - getHeight()/2); convertVectorToShape(v, _parent);
+    Size v = new Size(cp.getX() - getWidth()/2, cp.getY() - getHeight()/2); convertVectorToShape(v, _parent);
     offsetXY(v.getWidth(), v.getHeight());
 }
 
@@ -1355,7 +1355,7 @@ public void convertFromShape(RMShape aShape)
 
     // Convert center point back from aShape, calc vector to old center from new center (in parent coords) & translate
     convertPointFromShape(cp, aShape);
-    Size v = Size.get(cp.getX() - getWidth()/2, cp.getY() - getHeight()/2); convertVectorToShape(v, _parent);
+    Size v = new Size(cp.getX() - getWidth()/2, cp.getY() - getHeight()/2); convertVectorToShape(v, _parent);
     offsetXY(v.getWidth(), v.getHeight());
 }
 
