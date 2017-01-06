@@ -35,7 +35,7 @@ public class RMDocument extends RMParentShape {
     RMFont            _font = RMFont.getDefaultFont();
     
     // The ReportMill version this document was created with
-    float             _version = SnapUtils.getVersion();
+    float             _version = ReportMill.getVersion();
     
     // The currently selected page index
     int               _selIndex;
@@ -91,8 +91,8 @@ public class RMDocument extends RMParentShape {
     // Unit Enumerations
     public enum Unit { Inch, Point, CM, MM, Pica }
 
-// Set headless flag
-static { GFXEnv.getEnv().setHeadless(); }
+/** Initialize ReportMill. */
+static { ReportMill.init(); }
 
 /**
  * Creates a plain empty document. It's really only used by the archiver.
@@ -813,7 +813,7 @@ protected XMLElement toXMLShape(XMLArchiver anArchiver)
     e.removeAttribute("width"); e.removeAttribute("height");
     
     // Archive Version
-    e.add("version", SnapUtils.getVersion());
+    e.add("version", ReportMill.getVersion());
     
     // Archive DataSource, Font
     XMLElement dxml = _dataSource!=null? anArchiver.toXML(_dataSource, this) : null;

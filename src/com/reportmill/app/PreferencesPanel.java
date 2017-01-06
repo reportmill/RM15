@@ -60,7 +60,7 @@ public boolean apply()
     String licenseKey = StringUtils.min(getViewStringValue("LicenseText"));
     
     // If license is provided but invalid, complain and return
-    if(licenseKey!=null && !SnapUtils.checkString(licenseKey, true)) {
+    if(licenseKey!=null && !ReportMill.checkString(licenseKey, true)) {
         String msg = "The license key entered is invalid - please recheck and try again.";
         DialogBox dbox = new DialogBox("Invalid License"); dbox.setErrorMessage(msg);
         dbox.showMessageDialog(getUI());

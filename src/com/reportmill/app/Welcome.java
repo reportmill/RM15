@@ -5,7 +5,6 @@ package com.reportmill.app;
 import com.reportmill.base.ReportMill;
 import java.io.File;
 import java.util.List;
-import snap.util.SnapUtils;
 import snap.view.*;
 
 /**
@@ -78,7 +77,7 @@ protected void initUI()
     
     // Reset BuildLabel, JavaLabel, LicenseLabel
     String lstring = ReportMill.getLicense()==null? "Unlicensed Copy" : "License: " + ReportMill.getLicense();
-    setViewText("BuildLabel", "Build: " + SnapUtils.getBuildInfo());
+    setViewText("BuildLabel", "Build: " + ReportMill.getBuildInfo());
     setViewText("JavaLabel", "Java: " + System.getProperty("java.runtime.version"));
     setViewText("LicenseLabel", lstring);
         

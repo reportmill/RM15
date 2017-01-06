@@ -7,12 +7,15 @@ import com.reportmill.graphics.*;
 import java.util.*;
 import java.util.prefs.Preferences;
 import snap.gfx.GFXEnv;
-import snap.util.SnapUtils;
+import snap.util.*;
 
 /**
  * This class is used as a helper object by RMDocument to generate a report.
  */
 public class ReportMill {
+    
+    // Whether ReportMill is running as desktop app
+    public static boolean isApp;
     
     // Provides a hook for converting unusual objects to standard objects (like Map, List, String, Number, etc.) 
     public static AppServer appServer = null;
@@ -21,24 +24,14 @@ public class ReportMill {
     private static String  _license;
     
     // Whether RM found a valid license
-    private static boolean _licensed = SnapUtils.checkString(getLicense(), SnapUtils.isApp);
+    private static Boolean _licensed;
     
-/** Static method prints initialization message (when RM invoked by Shell or by other app). */
-static
-{
-    // If not app, print initialization message and turn on headless
-    if(!SnapUtils.isApp) {
-        
-        // Print initialization message
-        System.err.println("Initializing ReportMill (Build Date: " + SnapUtils.getBuildInfo() +
-            ", Version " + SnapUtils.getVersion() + ", JVM " + System.getProperty("java.version") +
-            ", User " + System.getProperty("user.name") + ")");
+    // Whether RM has been initialized
+    private static boolean _initalized;
 
-        // Set headless
-        GFXEnv.getEnv().setHeadless();
-    }
-}
-
+    // The build info string from "BuildInfo.txt" (eg, "Aug-31-04")
+    private static String  _buildInfo;
+    
 /**
  * An interface for classes than want to know about filled shapes.
  */
@@ -69,40 +62,37 @@ public static Object convertFromAppServerType(Object anObj)
  */
 public static String getLicense()
 {
-    // If license hasn't been loaded yet, get it
-    if(_license==null) try {
-        
-        // Get preferences for com.reportmill.Shell and prefs key (HostProperties1 for app, HostProperties2  for engine)
+    // If already set, just return
+    if(_license!=null) return _license;
+    
+    // Get preferences for com.reportmill.Shell and prefs key (HostProperties1 for app, HostProperties2  for engine)
+    try {
         Preferences prefs = Preferences.userNodeForPackage(com.reportmill.Shell.class);
-        String prefsKey = SnapUtils.isApp? "HostProperties1" : "HostProperties2";
-        
-        // Get license for prefs key
+        String prefsKey = isApp? "HostProperties1" : "HostProperties2";
         _license = prefs.get(prefsKey, null);
     }
     
     // Catch exceptions - in case security manager complains
     catch(Throwable t) { System.err.println("ReportMill.getLicense: Can't get license (" + t.getMessage() + ")"); }
-    
-    // Return license
     return _license;
 }
 
 /**
  * Sets the ReportMill license string for the current user.
  */
-public static void setLicense(String aLicense)  { setLicense(aLicense, false, SnapUtils.isApp); }
+public static void setLicense(String aLicense)  { setLicense(aLicense, false, isApp); }
 
 /**
  * Sets the ReportMill license string for the current user (with option to persist).
  */
-public static void setLicense(String aLicense, boolean persistent, boolean isApp)
+public static void setLicense(String aLicense, boolean isPersistent, boolean isApplication)
 {
     // If persistent, save license to preferences
-    if(persistent) try {
+    if(isPersistent) try {
         
         // Get preferences for com.reportmill.Shell and prefs key (HostProperties1 for app, HostProperties2  for engine)
         Preferences prefs = Preferences.userNodeForPackage(com.reportmill.Shell.class);
-        String prefsKey = SnapUtils.isApp? "HostProperties1" : "HostProperties2";
+        String prefsKey = isApp? "HostProperties1" : "HostProperties2";
 
         // Put license for prefs key (or remove if null) and flush preferences
         if(aLicense!=null) prefs.put(prefsKey, aLicense);
@@ -115,35 +105,38 @@ public static void setLicense(String aLicense, boolean persistent, boolean isApp
     
     // Set new license and determine if license is valid
     _license = aLicense;
-    _licensed = SnapUtils.checkString(getLicense(), SnapUtils.isApp);
+    _licensed = checkString(getLicense(), isApp);
 }
 
 /**
  * Returns whether ReportMill has a valid license for the current user.
  */
-public static boolean isLicensed()  { return _licensed; }
+public static boolean isLicensed()
+{
+    if(_licensed!=null) return _licensed;
+    return _licensed = checkString(getLicense(), isApp);
+}
 
 /**
  * Simple lc check.
  */
 public static void lc(RMDocument aDoc)
 {
-    // If unlicensed, add watermark and complain
-    if(!_licensed) {
-        
-        // Add watermark/unlicensed message to each report page
-        for(int i=0; i<aDoc.getPages().size(); i++) addWatermark(aDoc.getPage(i));
+    // If licenced, just return
+    if(isLicensed()) return;
+    
+    // Add watermark/unlicensed message to each report page
+    for(int i=0; i<aDoc.getPages().size(); i++) addWatermark(aDoc.getPage(i));
 
-        // If not app, print warning
-        if(!SnapUtils.isApp) {
-            System.err.println("Warning: Unlicensed copy of ReportMill for host " + SnapUtils.getHostname() +
-                " and user " + System.getProperty("user.name") + " - call 214.513.1636 for license.");
-            System.err.println("    Enter license with: \"java -cp /YourInstallDir/ReportMill.jar " +
-                "com.reportmill.Shell -license <license-string>\"");
-            System.err.println("    Or call \"ReportMill.setLicense(\"<license_string>\") in app " +
-                "prior to report generation.");
-            System.err.println("    This is only a warning (generated report will contain a watermark).");
-        }
+    // If not app, print warning
+    if(!isApp) {
+        System.err.println("Warning: Unlicensed copy of ReportMill for host " + SnapUtils.getHostname() +
+            " and user " + System.getProperty("user.name") + " - call 214.513.1636 for license.");
+        System.err.println("    Enter license with: \"java -cp /YourInstallDir/ReportMill.jar " +
+            "com.reportmill.Shell -license <license-string>\"");
+        System.err.println("    Or call \"ReportMill.setLicense(\"<license_string>\") in app " +
+            "prior to report generation.");
+        System.err.println("    This is only a warning (generated report will contain a watermark).");
     }
 }
 
@@ -172,6 +165,128 @@ private static void addWatermark(RMParentShape aShape)
     evalShape.setFrame(5, aShape.getHeight() - 20, 500, 18);
     evalShape.setURL("http://www.reportmill.com/free");
     aShape.addChild(evalShape);
+}
+
+/**
+ * Checks a string to see if it's valid.
+ */
+public static boolean checkString(String aString, boolean isApplication)
+{
+    // If null string provided, just return
+    if(aString==null) return false;
+
+    // License is uppercase version of string - return if not long enough or has wrong prefix
+    String license = aString.toUpperCase();
+    
+    // Get index of dash in license string
+    int dash = license.indexOf("-"); if(dash<0) return false;
+    
+    // Get license prefix (substring before dash) and suffix (substring after dash)
+    String prefix = license.substring(0, dash);
+    String suffix = license.substring(dash+1);
+    
+    // Decrypt suffix
+    suffix = dString(suffix, "RMRules");
+    
+    // If prefix/suffix lengths not equal, return false
+    if(prefix.length()!=suffix.length()) return false;
+    
+    // Strip off first two characters of suffix
+    suffix = suffix.substring(2);
+    
+    // If prefix doesn't start with suffix, return false
+    if(!prefix.startsWith(suffix)) return false;
+    
+    // Declare local variable for license processor count
+    int procCount = 0;
+        
+    // Decode processor count hex digit at second to last prefix char
+    try { procCount = Integer.parseInt(prefix.substring(prefix.length()-2, prefix.length()-1), Character.MAX_RADIX); }
+    catch(Exception e) { return false; }
+    
+    // If less than actual processor count, return false
+    if((isApplication && procCount!=0) || (!isApplication && procCount<SnapUtils.getProcessorCount())) {
+        if(!isApplication) {
+            System.err.println("Warning: License key not valid for CPU Count " + SnapUtils.getProcessorCount());
+            System.err.println("Warning: License key CPU count is " + procCount);
+        }
+        return false;
+    }
+    
+    // Declare local variable for license version
+    int version = 0;
+    
+    // Decode version hex digit at last prefix char
+    try { version = Integer.parseInt(prefix.substring(prefix.length()-1), Character.MAX_RADIX); }
+    catch(Exception e) { System.err.println("Warning: License key invalid format (2)"); return false; }
+    
+    // If version is less than getVersion(), complain and return false
+    if(version<9) { //getVersion()) { Change back soon
+        System.err.print("Warning: License not valid for RM " + getVersion());
+        System.err.println(" (license valid for RM " + version + ")");
+        return false;
+    }
+
+    // Return true since all checks passed
+    return true;
+}
+
+/**
+ * Decrypts aString with aPassword (takes hex string of form "AC5FDE" and returns human readable string).
+ */
+private static String dString(String aString, String aPassword)
+{
+    if(aString==null || aPassword==null) return null;
+    
+    // Get bytes for string and password
+    byte string[] = ASCIICodec.decodeHex(aString);
+    byte password[] = StringUtils.getBytes(aPassword);
+    
+    // XOR string bytes with password bytes
+    for(int i=0; i<string.length; i++)
+        string[i] = (byte)(string[i]^password[i%password.length]);
+    
+    return StringUtils.getISOLatinString(string);
+}
+
+/**
+ * Returns the ReportMill version.
+ */
+public static float getVersion()  { return 15; }
+
+/**
+ * Returns a build date string (eg, "Jan-26-03") as generated into BuildInfo.txt at build time.
+ */
+public static String getBuildInfo()
+{
+    // If already set, just return
+    if(_buildInfo!=null) return _buildInfo; SnapUtils.getBuildInfo();
+    
+    // If build info file hasn't been loaded, load it
+    try { _buildInfo = SnapUtils.getText(SnapUtils.class.getResourceAsStream("/com/reportmill/BuildInfo.txt")).trim(); }
+    catch(Exception e) { System.err.println("ReportMill.getBuildInfo: " + e); _buildInfo = ""; }
+    return _buildInfo;
+}
+
+/**
+ * Prints initialization message (when RM invoked by Shell or by other app).
+ */
+public static void init()
+{
+    // If already initalized, just return
+    if(_initalized) return; _initalized = true;
+    
+    // If app, just return
+    if(ReportMill.isApp) return;
+        
+    // Print initialization message
+    String bdate = getBuildInfo(), jver = System.getProperty("java.version");
+    String user = System.getProperty("user.name"); double rver = getVersion();
+    System.err.printf("Initializing ReportMill (Build Date: %s, Version %.1f, JVM %s, User %s)\n",
+        bdate, rver, jver, user);
+
+    // Set headless
+    GFXEnv.getEnv().setHeadless();
 }
 
 }

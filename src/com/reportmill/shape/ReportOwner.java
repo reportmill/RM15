@@ -258,7 +258,7 @@ private Object getRMKey(String key)
 {
     if(key.equals("RMRandom")) return MathUtils.randomInt();
     if(key.equals("RMVersion"))
-        return "ReportMill " + SnapUtils.getVersion() + " (Build Date: " + SnapUtils.getBuildInfo() + ")";
+        return String.format("ReportMill %f (Build Date: %s)", ReportMill.getVersion(), ReportMill.getBuildInfo());
     if(key.equals("RMUser")) return System.getProperty("user.name");
     if(key.equals("RMUserHome")) return System.getProperty("user.home");
     if(key.equals("RMProps")) return System.getProperties().toString();

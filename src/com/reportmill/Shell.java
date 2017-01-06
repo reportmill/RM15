@@ -115,7 +115,7 @@ public static void main(String args[])
     
     // If license was provided, install it
     if(license!=null) {
-        if(SnapUtils.checkString(license, false)) {
+        if(ReportMill.checkString(license, false)) {
             ReportMill.setLicense(license, true, false);
             System.err.println("License is valid and has been installed on host " + SnapUtils.getHostname() +
                 " for user " + System.getProperty("user.name") + ".");

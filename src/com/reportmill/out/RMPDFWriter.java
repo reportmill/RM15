@@ -7,7 +7,6 @@ import com.reportmill.graphics.*;
 import com.reportmill.shape.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import snap.util.SnapUtils;
 import snap.pdf.*;
 import snap.pdf.write.*;
 
@@ -62,8 +61,8 @@ public byte[] getBytes(RMDocument aDoc)
     _pfile.setAuthor("ReportMill User");
     
     // Set PDF file creator
-    String version = "ReportMill " + SnapUtils.getVersion();
-    String build = ", Build: " + SnapUtils.getBuildInfo();
+    String version = "ReportMill " + ReportMill.getVersion();
+    String build = ", Build: " + ReportMill.getBuildInfo();
     String jvm = ", JVM: " + System.getProperty("java.version");
     _pfile.setCreator(version + build + jvm);
     

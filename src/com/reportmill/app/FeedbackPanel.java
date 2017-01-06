@@ -50,7 +50,7 @@ public void sendFeedback()
     String license = ReportMill.getLicense();
     if(license==null) license = "Unlicensed Copy";
     environment.append("License: " + license + "\n");
-    environment.append("Build Date: " + SnapUtils.getBuildInfo() + "\n");
+    environment.append("Build Date: " + ReportMill.getBuildInfo() + "\n");
     environment.append("Java VM: " + System.getProperty("java.version") + " (" + System.getProperty("java.vendor") + ")\n");
     environment.append("OS: " + System.getProperty("os.name") + " (" + System.getProperty("os.version") + ")");
     

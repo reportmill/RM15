@@ -4,6 +4,7 @@
 package com.reportmill.app;
 import com.apple.eawt.*;
 import com.apple.eawt.AppEvent.*;
+import com.reportmill.base.ReportMill;
 import javax.swing.SwingUtilities;
 import snap.util.*;
 import snap.view.DialogBox;
@@ -31,7 +32,7 @@ public static void main(String args[])  { SwingUtilities.invokeLater(() -> new A
 public App(String args[])
 {
     // Set app is true
-    SnapUtils.isApp = true;
+    ReportMill.isApp = true;
     
     // Install preferences class
     PrefsUtils.setPrefsClass(com.reportmill.Shell.class);
@@ -48,7 +49,7 @@ public App(String args[])
     // Install Exception reporter
     ExceptionReporter er = new ExceptionReporter();
     er.setURL("http://www.reportmill.com/cgi-bin/cgiemail/email/rm-exception.txt");
-    er.setInfo("ReportMill Version " + SnapUtils.getVersion() + ", Build Date: " + SnapUtils.getBuildInfo());
+    er.setInfo("ReportMill Version " + ReportMill.getVersion() + ", Build Date: " + ReportMill.getBuildInfo());
     Thread.setDefaultUncaughtExceptionHandler(er);
     
     // Run welcome panel
