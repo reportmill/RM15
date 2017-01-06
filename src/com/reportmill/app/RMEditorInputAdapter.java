@@ -207,6 +207,10 @@ public void keyPressed(ViewEvent anEvent)
     else if(keyChar=='6')
         editor.getEditorPane().getInspectorPanel().setVisible(6);
     
+    // If 8 key, show Undo inspector (for undo debugging)
+    else if(keyChar=='8')
+        editor.getEditorPane().getInspectorPanel().setVisible(8);
+    
     // If T key, swap in linked text
     else if(keyChar=='t')
         ((RMTextTool)editor.getTool(RMTextTool.class)).convertToText(editor.getSelectedShape(), "test");

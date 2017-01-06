@@ -14,7 +14,10 @@ import snap.view.*;
 public class InspectorPanel extends RMEditorPane.SupportPane {
     
     // The selection path panel
-    ChildView                 _selectionPathPane;
+    ChildView             _selectionPathPane;
+    
+    // The ShapeButton
+    ToggleButton          _shapeBtn;
     
     // The child inspector current installed in inspector panel
     ViewOwner            _childInspector;
@@ -55,10 +58,11 @@ public void initUI()
 {
     // Get SelectionPathPanel and InspectorPanel
     _selectionPathPane = getView("SelectionPathPanel", ChildView.class);
+    _shapeBtn = getView("ShapeSpecificButton", ToggleButton.class);
     
     // Create the Action that redispatches the event and add the action to the action map
     addKeyActionEvent("UndoAction", "meta Z");
-    getView("OffscreenButton").setPickable(false);
+    //getView("OffscreenButton").setPickable(false);
     
     // Configure Window
     //getWindow().setType(WindowView.TYPE_UTILITY); getWindow().setAlwaysOnTop(true);
@@ -160,13 +164,19 @@ public void setVisible(int anIndex)
     // If index is 6, show _undoInspector
     if(anIndex==6) {
         setInspector(_undoInspector!=null? _undoInspector : (_undoInspector = new UndoInspector(getEditorPane())));
-        setViewValue("OffscreenButton", true);
+        _shapeBtn.getToggleGroup().setSelected(null); //setViewValue("OffscreenButton", true);
     }
     
     // If index is 7, show DataSource Inspector
     if(anIndex==7) {
         setInspector(_dataSource!=null? _dataSource : (_dataSource = new DataSourcePanel(getEditorPane())));
-        setViewValue("OffscreenButton", true);
+        _shapeBtn.getToggleGroup().setSelected(null); //setViewValue("OffscreenButton", true);
+    }
+    
+    // If index is 8, show DataSource Inspector
+    if(anIndex==8) {
+        setInspector(_animation);
+        _shapeBtn.getToggleGroup().setSelected(null); //setViewValue("OffscreenButton", true);
     }
     
     // If inspector panel isn't visible, set window visible
@@ -179,7 +189,7 @@ public void setVisible(int anIndex)
 /**
  * Returns whether the inspector is showing the datasource inspector.
  */
-public boolean isShowingDataSource()  { return isUISet() && getViewBoolValue("OffscreenButton"); }
+public boolean isShowingDataSource()  { return isUISet() && _dataSource!=null && _dataSource.getUI().isShowing(); }
 
 /**
  * Returns the inspector (owner) of the inspector pane.
