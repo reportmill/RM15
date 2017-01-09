@@ -3,6 +3,7 @@
  */
 package com.reportmill.apptools;
 import com.reportmill.app.RMEditor;
+import com.reportmill.app.RMEditorInputAdapter;
 import com.reportmill.app.RMEditorProxGuide;
 import com.reportmill.shape.*;
 import java.util.*;
@@ -45,6 +46,11 @@ public class RMSelectTool extends RMTool {
     public enum DragMode { None, Move, Rotate, Resize, Select, EventDispatch };
     
 /**
+ * Returns the editor event handler.
+ */
+public RMEditorInputAdapter getEditorEvents()  { return getEditor().getEditorInputAdapter(); }
+    
+/**
  * Handles mouse pressed for the select tool.
  */
 public void mousePressed(ViewEvent anEvent)
@@ -64,7 +70,7 @@ public void mousePressed(ViewEvent anEvent)
     _redoMousePressed = false;
 
     // Set downPoint to event location.
-    _downPoint = editor.getEditorInputAdapter().getEventPointInDoc();
+    _downPoint = getEditorEvents().getEventPointInDoc();
     
     // Get shape handle for event point
     _shapeHandle = getShapeHandleAtPoint(anEvent.getPoint());
@@ -132,7 +138,7 @@ public void mousePressed(ViewEvent anEvent)
     }
     
     // Set last point to event point in super selected shape coords
-    _lastMousePoint = editor.getEditorInputAdapter().getEventPointInShape(false);
+    _lastMousePoint = getEditorEvents().getEventPointInShape(false);
     
     // Get editor super selected shape
     RMShape superSelectedShape = editor.getSuperSelectedShape();
@@ -191,13 +197,13 @@ public void mouseDragged(ViewEvent anEvent)
             RMParentShape parent = editor.getSuperSelectedParentShape();
             
             // Get event point in super selected shape coords
-            Point point = editor.getEditorInputAdapter().getEventPointInShape(false);
+            Point point = getEditorEvents().getEventPointInShape(false);
 
             // Move shapes once to event point without SnapToGrid
             moveShapes(_lastMousePoint, point);
                         
             // Get event point snapped to grid & edges, since SnapEdges will now be valid
-            Point pointSnapped = editor.getEditorInputAdapter().getEventPointInShape(shouldSnap, shouldSnap);
+            Point pointSnapped = getEditorEvents().getEventPointInShape(shouldSnap, shouldSnap);
             Point pointSnappedDoc = parent.convertedPointToShape(pointSnapped, null);
             
             // Move shapes again to snapped point
@@ -212,7 +218,7 @@ public void mouseDragged(ViewEvent anEvent)
 
             // Set Undo title
             editor.undoerSetUndoTitle("Rotate");
-            Point point2 = editor.getEditorInputAdapter().getEventPointInShape(false);
+            Point point2 = getEditorEvents().getEventPointInShape(false);
             
             // Iterate over selected shapes and update roll
             for(RMShape shape : editor.getSelectedShapes()) { if(shape.isLocked()) continue;
@@ -229,7 +235,7 @@ public void mouseDragged(ViewEvent anEvent)
             editor.undoerSetUndoTitle("Resize");
             
             // Get event point in super selected shape coords snapped to grid 
-            Point resizePoint = editor.getEditorInputAdapter().getEventPointInShape(shouldSnap);
+            Point resizePoint = getEditorEvents().getEventPointInShape(shouldSnap);
             
             // Move handle to current point and break
             _shapeHandle.getTool().moveShapeHandle(_shapeHandle.getShape(), _shapeHandle.getHandle(), resizePoint);
@@ -366,7 +372,7 @@ private List <RMShape> getHitShapes()
     // Get selection path from rect around currentPoint and _downPoint
     RMEditor editor = getEditor();
     RMParentShape superShape = editor.getSuperSelectedParentShape(); if(superShape==null)return Collections.emptyList();
-    Point curPoint = editor.getEditorInputAdapter().getEventPointInDoc();
+    Point curPoint = getEditorEvents().getEventPointInDoc();
     Rect selRect = Rect.get(curPoint, _downPoint);
     Shape path = superShape.getConvertedFromShape(selRect, null);
 
