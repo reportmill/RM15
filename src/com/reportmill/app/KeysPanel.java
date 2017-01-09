@@ -28,7 +28,7 @@ public class KeysPanel extends RMEditorPane.SupportPane {
     // The icon for a "to-many" branch
     static Image             _doubleArrowImage;
     
-    // The Drag and Drop key, since Java 1.4 doesn't support getting transferable in dragEnter/dragOver.
+    // The Drag and Drop key
     String                   _dragKey;
 
     // Whether to show built in keys
@@ -47,8 +47,8 @@ public class KeysPanel extends RMEditorPane.SupportPane {
     // Shared built-in key nodes
     static List <KeyNode>    _builtInKeyNodes;
 
-    // Shared
-    static KeysPanel         _shared;
+    // Current active KeysPanel
+    static KeysPanel         _active;
 
 /**
  * Creates a new KeysPanel.
@@ -57,7 +57,6 @@ public KeysPanel(RMEditorPane anEP)
 {
     super(anEP);
     _builtInKeyNodes = new ArrayList(); for(String key : _builtInKeys) _builtInKeyNodes.add(new KeyNode(key));
-    if(_shared==null) _shared = this;
 }
 
 /**
@@ -89,7 +88,7 @@ public boolean isSelectedLeaf()
  */
 public static boolean isSelectedToMany()
 {
-    KeyNode node = (KeyNode)_shared._keysBrowser.getSelectedItem();
+    KeyNode node = _active!=null? (KeyNode)_active._keysBrowser.getSelectedItem() : null;
     return node!=null && node._isToMany;
 }
 
@@ -152,6 +151,7 @@ public void respondUI(ViewEvent anEvent)
             return;
         
         // Set the drag key and get drag key with @-signs
+        _active = this;
         _dragKey = _keysBrowser.getPath();
         String dragKeyFull = getKeyPath();
     
@@ -184,15 +184,7 @@ public String getWindowTitle()  { return "Keys Panel"; }
 /**
  * Returns the current drag key.
  */
-public static String getDragKey()
-{
-    return _shared!=null && _shared._keysBrowser!=null? _shared._dragKey : null;
-}
-
-/**
- * Sets the current drag key.
- */
-public static void setDragKey(String aKey)  { _shared._dragKey = aKey; }
+public static String getDragKey()  { return _active!=null? _active._dragKey : null; }
 
 /**
  * Returns the icon of a double right arrow to indicate branch nodes of a "to-many" relationship in a browser.
