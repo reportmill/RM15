@@ -327,13 +327,13 @@ protected void processEvent(ViewEvent anEvent)
     }
     
     // Handle DragEnger
-    else if(anEvent.isDragEnter()) { Dragboard db = anEvent.getDragboard();
+    else if(anEvent.isDragEnter()) { Clipboard db = anEvent.getDragboard();
         if(db.hasColor()) anEvent.acceptDrag();
         //else dtde.rejectDrag();
     }
 
     // Handle DragOver
-    else if(anEvent.isDragOver()) { Dragboard db = anEvent.getDragboard();
+    else if(anEvent.isDragOver()) { Clipboard db = anEvent.getDragboard();
         if(db.hasColor()) { anEvent.acceptDrag(); _dragPoint = anEvent.getPoint(); repaint(); }
     }
 

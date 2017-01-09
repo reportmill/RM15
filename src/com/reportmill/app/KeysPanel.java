@@ -156,7 +156,7 @@ public void respondUI(ViewEvent anEvent)
         String dragKeyFull = getKeyPath();
     
         // Get event Dragboard and start drag
-        Dragboard dboard = anEvent.getDragboard();
+        Clipboard dboard = anEvent.getDragboard();
         dboard.setContent(dragKeyFull);
         dboard.setDragImage(ImageUtils.getImage(dragKeyFull, getSelectedShape().getDocument().getFont()));
         dboard.startDrag();
