@@ -890,14 +890,14 @@ public void paintFront(Painter aPntr)
 }
 
 /**
- * Creates an editor input adapter for viewer adapter.
+ * Override to return as RMEditorEvents.
  */
-public RMViewerInputAdapter createInputAdapter()  { return new RMEditorInputAdapter(this); }
+public RMEditorEvents getEvents()  { return (RMEditorEvents)super.getEvents(); }
 
 /**
- * Returns the even helper object.
+ * Override to return RMEditorEvents.
  */
-public RMEditorInputAdapter getEditorInputAdapter()  { return (RMEditorInputAdapter)getInputAdapter(); }
+public RMViewerEvents createEvents()  { return new RMEditorEvents(this); }
 
 /**
  * Override to revalidate when ideal size changes.

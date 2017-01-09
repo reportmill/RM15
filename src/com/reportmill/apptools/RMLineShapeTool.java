@@ -52,7 +52,7 @@ public void mousePressed(ViewEvent anEvent)
  */
 public void mouseDragged(ViewEvent anEvent)
 {
-    Point currentPoint = getEditor().getEditorInputAdapter().getEventPointInShape(true);
+    Point currentPoint = getEditorEvents().getEventPointInShape(true);
     double dx = currentPoint.getX() - _downPoint.getX();
     double dy = currentPoint.getY() - _downPoint.getY();
     double breakingPoint = 20f;

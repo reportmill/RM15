@@ -55,15 +55,15 @@ public void respondUI(ViewEvent anEvent)
         
     // Handle MoveButton
     if(anEvent.equals("MoveButton"))
-        getViewer().getInputAdapter().setMode(RMViewerInputAdapter.DEFAULT);
+        getViewer().getEvents().setMode(RMViewerEvents.DEFAULT);
     
     // Handle TextButton
     if(anEvent.equals("TextButton"))
-        getViewer().getInputAdapter().setMode(RMViewerInputAdapter.SELECT_TEXT);
+        getViewer().getEvents().setMode(RMViewerEvents.SELECT_TEXT);
 
     // Handle SelectButton
     if(anEvent.equals("SelectButton"))
-        getViewer().getInputAdapter().setMode(RMViewerInputAdapter.SELECT_IMAGE);
+        getViewer().getEvents().setMode(RMViewerEvents.SELECT_IMAGE);
 }
 
 }

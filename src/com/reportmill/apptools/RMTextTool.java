@@ -281,7 +281,7 @@ public void mousePressed(ViewEvent anEvent)
     _downShape = getEditor().getShapeAtPoint(anEvent.getX(),anEvent.getY());
     
     // Get _downPoint from editor
-    _downPoint = getEditor().getEditorInputAdapter().getEventPointInShape(true);
+    _downPoint = getEditorEvents().getEventPointInShape(true);
     
     // Create default text instance and set initial bounds to reasonable value
     RMTextShape tshape = new RMTextShape(); _shape = tshape;
@@ -307,7 +307,7 @@ public void mouseDragged(ViewEvent anEvent)
     _shape.repaint();
     
     // Get event point in shape coords
-    Point point = getEditor().getEditorInputAdapter().getEventPointInShape(true);
+    Point point = getEditorEvents().getEventPointInShape(true);
     
     // Convert point to parent
     _shape.convertPointToShape(point, _shape.getParent());
@@ -334,7 +334,7 @@ public void mouseDragged(ViewEvent anEvent)
 public void mouseReleased(ViewEvent e)
 {
     // Get event point in shape coords
-    Point upPoint = getEditor().getEditorInputAdapter().getEventPointInShape(true);
+    Point upPoint = getEditorEvents().getEventPointInShape(true);
     
     // Convert point to parent
     _shape.convertPointToShape(upPoint, _shape.getParent());

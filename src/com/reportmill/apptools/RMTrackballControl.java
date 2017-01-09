@@ -3,7 +3,7 @@
  */
 package com.reportmill.apptools;
 import com.reportmill.app.RMViewer;
-import com.reportmill.app.RMViewerInputAdapter;
+import com.reportmill.app.RMViewerEvents;
 import com.reportmill.graphics.*;
 import com.reportmill.shape.*;
 import java.util.Random;
@@ -127,13 +127,13 @@ private void addScuff(float theta, float phi)
     _scene.addShape(scuff);
 }
 
-/** Override to provide special input adapter. */
-public RMViewerInputAdapter createInputAdapter()  { return new TBInputAdapter(this); }
+/** Override to provide special event helper. */
+public RMViewerEvents createEvents()  { return new TBInputAdapter(this); }
 
 /**
- * An input adapter for TrackBall.
+ * A Viewer Event helper for TrackBall.
  */
-public class TBInputAdapter extends RMViewerInputAdapter { 
+public class TBInputAdapter extends RMViewerEvents { 
     
     /** Creates new TBInputAdapter. */
     public TBInputAdapter(RMViewer aVwr)  { super(aVwr); }

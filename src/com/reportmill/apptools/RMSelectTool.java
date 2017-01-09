@@ -3,7 +3,6 @@
  */
 package com.reportmill.apptools;
 import com.reportmill.app.RMEditor;
-import com.reportmill.app.RMEditorInputAdapter;
 import com.reportmill.app.RMEditorProxGuide;
 import com.reportmill.shape.*;
 import java.util.*;
@@ -44,11 +43,6 @@ public class RMSelectTool extends RMTool {
 
     // Drag mode constants
     public enum DragMode { None, Move, Rotate, Resize, Select, EventDispatch };
-    
-/**
- * Returns the editor event handler.
- */
-public RMEditorInputAdapter getEditorEvents()  { return getEditor().getEditorInputAdapter(); }
     
 /**
  * Handles mouse pressed for the select tool.

@@ -12,7 +12,7 @@ import snap.view.*;
 /**
  * Handles editor methods specific to event operations.
  */
-public class RMEditorInputAdapter extends RMViewerInputAdapter {
+public class RMEditorEvents extends RMViewerEvents {
     
     // The cached current event for any mouse loop handled by this editor events
     ViewEvent    _currentEvent;
@@ -30,7 +30,7 @@ public class RMEditorInputAdapter extends RMViewerInputAdapter {
 /**
  * Creates a new editor events object.
  */
-public RMEditorInputAdapter(RMViewer aViewer)  { super(aViewer); }
+public RMEditorEvents(RMViewer aViewer)  { super(aViewer); }
 
 /**
  * Returns the viewer as an editor.
@@ -64,7 +64,7 @@ public void mousePressed(ViewEvent anEvent)
     // Get the editor
     RMEditor editor = getEditor();
     
-    // If in preview mode, call viewer input adapter version
+    // If in preview mode, call normal version
     if(editor.isPreview() && !getOverridePreview()) { super.mousePressed(anEvent); return; }
     
     // Set Editor.MouseDown attribute
@@ -95,7 +95,7 @@ public void mouseDragged(ViewEvent anEvent)
     // Get the editor
     RMEditor editor = getEditor();
     
-    // If in preview mode, call viewer input adapter version
+    // If in preview mode, call normal version
     if(editor.isPreview() && !getOverridePreview()) { super.mouseDragged(anEvent); return; }
     
     // If drag event is within 10 pts or 1/100 sec of down event, skip it so user clicks don't annoyingly move things
@@ -126,7 +126,7 @@ public void mouseReleased(ViewEvent anEvent)
     // Get the editor
     RMEditor editor = getEditor();
     
-    // If in preview mode, call viewer input adapter version
+    // If in preview mode, call normal version
     if(editor.isPreview() && !getOverridePreview()) { super.mouseReleased(anEvent); return; }
     
     // Clear Editor.MouseDown attribute
@@ -142,7 +142,7 @@ public void mouseReleased(ViewEvent anEvent)
  */
 public void mouseMoved(ViewEvent anEvent)
 {
-    // If in preview mode, call viewer input adapter version
+    // If in preview mode, call normal version
     RMEditor editor = getEditor();
     if(editor.isPreview() && !getOverridePreview()) { super.mouseMoved(anEvent); return; }
     
@@ -160,7 +160,7 @@ public void mouseMoved(ViewEvent anEvent)
  */
 public void keyReleased(ViewEvent anEvent)
 {
-    // If in preview mode, call viewer input adapter version
+    // If in preview mode, call normal version
     if(getEditor().isPreview() && !getOverridePreview()) { super.keyReleased(anEvent); return; }
 }
 
@@ -169,7 +169,7 @@ public void keyReleased(ViewEvent anEvent)
  */
 public void keyPressed(ViewEvent anEvent)
 {
-    // If in preview mode, call viewer input adapter version
+    // If in preview mode, call normal version
     RMEditor editor = getEditor();
     if(editor.isPreview() && !getOverridePreview()) {
         
@@ -227,7 +227,7 @@ public void keyPressed(ViewEvent anEvent)
  */
 public void keyTyped(ViewEvent anEvent)
 {
-    // If in preview mode, call viewer input adapter version
+    // If in preview mode, call normal version
     if(getEditor().isPreview() && !getOverridePreview()) { super.keyTyped(anEvent); return; }
 }
 

@@ -90,6 +90,11 @@ public RMEditorPane getEditorPane()
 }
 
 /**
+ * Returns the editor event handler.
+ */
+public RMEditorEvents getEditorEvents()  { return getEditor().getEvents(); }
+    
+/**
  * Returns the current selected shape for the current editor.
  */
 public T getSelectedShape()
@@ -329,7 +334,7 @@ public void mousePressed(ViewEvent anEvent)
     getEditor().undoerSetUndoTitle("Add Shape");
 
     // Save the mouse down point
-    _downPoint = getEditor().getEditorInputAdapter().getEventPointInShape(true);
+    _downPoint = getEditorEvents().getEventPointInShape(true);
 
     // Create shape and move to downPoint
     _shape = newInstance();
@@ -346,7 +351,7 @@ public void mousePressed(ViewEvent anEvent)
 public void mouseDragged(ViewEvent anEvent)
 {
     _shape.repaint();
-    Point currentPoint = getEditor().getEditorInputAdapter().getEventPointInShape(true);
+    Point currentPoint = getEditorEvents().getEventPointInShape(true);
     double x = Math.min(_downPoint.getX(), currentPoint.getX());
     double y = Math.min(_downPoint.getY(), currentPoint.getY());
     double w = Math.abs(currentPoint.getX() - _downPoint.getX());

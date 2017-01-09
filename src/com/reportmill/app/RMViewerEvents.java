@@ -12,9 +12,9 @@ import snap.view.*;
  * This class handles functionality related to mouse and keyboard input on a viewer, so that different behavior
  * can easily be swapped in beyond the standard interactive behavior, like text selection or area-selection.
  */
-public class RMViewerInputAdapter {
+public class RMViewerEvents {
 
-    // The viewer this input adapter works for
+    // The viewer
     RMViewer            _viewer;
     
     // The mode
@@ -60,9 +60,9 @@ public class RMViewerInputAdapter {
     public static final byte MaxYEdge = 1<<3;
 
 /**
- * Creates a new viewer input adapter.
+ * Creates a new RMViewerEvents.
  */
-public RMViewerInputAdapter(RMViewer aViewer)  { _viewer = aViewer; }
+public RMViewerEvents(RMViewer aViewer)  { _viewer = aViewer; }
 
 /**
  * Returns the viewer we work for.

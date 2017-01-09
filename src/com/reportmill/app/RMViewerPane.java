@@ -129,7 +129,7 @@ public void print()  { getViewer().print(); }
 /**
  * Copies the current viewer document selection.
  */
-public void copy()  { getViewer().getInputAdapter().copy(); }
+public void copy()  { getViewer().getEvents().copy(); }
 
 /**
  * Runs a dialog panel to request a percentage zoom (which is then set with setZoomFactor).

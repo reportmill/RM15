@@ -66,7 +66,7 @@ public boolean getSmoothPath()  { return false; }
 public void mousePressed(ViewEvent anEvent)
 {
     boolean smoothPath = getSmoothPath(); if(anEvent.isAltDown()) smoothPath = !smoothPath;
-    Point point = getEditor().getEditorInputAdapter().getEventPointInDoc(!smoothPath);
+    Point point = getEditorEvents().getEventPointInDoc(!smoothPath);
 
     // Register all selectedShapes dirty because their handles will probably need to be wiped out
     RMShapeUtils.repaint(getEditor().getSelectedShapes());
@@ -89,7 +89,7 @@ public void mousePressed(ViewEvent anEvent)
  */
 public void mouseDragged(ViewEvent anEvent)
 {
-    Point point = getEditor().getEditorInputAdapter().getEventPointInDoc(!_smoothPathOnMouseUp);
+    Point point = getEditorEvents().getEventPointInDoc(!_smoothPathOnMouseUp);
     Rect rect = _path.getBounds();
 
     if(_smoothPathOnMouseUp || _path.getPointCount()==1) _path.lineTo(point);
@@ -172,7 +172,7 @@ public void mousePressed(T aPolygon, ViewEvent anEvent)
     if(!isSuperSelected(aPolygon)) return;
     
     // Get mouse down point in shape coords (but don't snap to the grid)
-    Point point = getEditor().getEditorInputAdapter().getEventPointInShape(false);
+    Point point = getEditorEvents().getEventPointInShape(false);
     
     // Register shape for repaint
     aPolygon.repaint();
@@ -203,7 +203,7 @@ public void mouseDragged(T aPolygon, ViewEvent anEvent)
 {
     aPolygon.repaint();
     if(RMPolygonShape._selectedPointIndex>=0) {
-        Point point = getEditor().getEditorInputAdapter().getEventPointInShape(true);
+        Point point = getEditorEvents().getEventPointInShape(true);
         RMPath path = aPolygon.getPath();
         point = path.pointInPathCoordsFromPoint(point, aPolygon.getBoundsInside());
         

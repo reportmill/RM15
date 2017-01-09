@@ -41,8 +41,8 @@ public class RMViewer extends View implements PropChangeListener {
     // The previous zoom factor (for toggle zoom)
     double                   _lastZoomFactor = 1;
 
-    // The input adapter that handles input for the viewer
-    RMViewerInputAdapter     _inputAdapter = createInputAdapter();
+    // The helper class that handles events for viewer
+    RMViewerEvents           _events = createEvents();
 
     // The current set of shapes that need to be redrawn after the current event
     List <RMShape>           _dirtyShapes = new Vector(32);
@@ -455,18 +455,18 @@ public void paintFront(Painter aPntr)
     RMShapePaintProps props = createShapePaintProps(); if(props!=null) aPntr.setProps(props);
     RMShapeUtils.paintShape(aPntr, _vshape, bnds, scale);
     if(props!=null) aPntr.setProps(null); //RMShapePainter spntr = getShapePainter(aPntr); spntr.paintShape(_vshape);
-    getInputAdapter().paint(aPntr); // Have input adapter paint above
+    getEvents().paint(aPntr); // Have event helper paint above
 }
 
 /**
- * Returns the input adapter for the viewer (handles mouse and keyboard input).
+ * Returns the event helper for the viewer (handles mouse and keyboard input).
  */
-public RMViewerInputAdapter getInputAdapter()  { return _inputAdapter; }
+public RMViewerEvents getEvents()  { return _events; }
 
 /**
- * Creates a default input adapter.
+ * Creates a default event helper.
  */
-protected RMViewerInputAdapter createInputAdapter()  { return new RMViewerInputAdapter(this); }
+protected RMViewerEvents createEvents()  { return new RMViewerEvents(this); }
 
 /**
  * Handle mouse events.
@@ -474,7 +474,7 @@ protected RMViewerInputAdapter createInputAdapter()  { return new RMViewerInputA
 protected void processEvent(ViewEvent anEvent)
 {
     super.processEvent(anEvent); // Do normal version
-    getInputAdapter().processEvent(anEvent); // Forward to input adapter
+    getEvents().processEvent(anEvent); // Forward to event helper
 }
 
 /**
