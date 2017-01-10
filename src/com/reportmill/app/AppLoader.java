@@ -5,10 +5,8 @@ package com.reportmill.app;
 import java.io.*;
 import java.lang.reflect.Method;
 import java.net.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.text.*;
+import java.util.*;
 import java.util.jar.*;
 import java.util.zip.GZIPInputStream;
 import javax.swing.*;
@@ -28,15 +26,14 @@ public class AppLoader {
 /**
  * Main method - reinvokes main1() on app event thread in exception handler.
  */
-public static void main(final String args[])
+public static void main(String args[])
 {
     // Re-invoke on Swing thread
-    if(!SwingUtilities.isEventDispatchThread()) {
-        SwingUtilities.invokeLater(() -> main(args)); return; }
+    if(!SwingUtilities.isEventDispatchThread()) { SwingUtilities.invokeLater(() -> main(args)); return; }
     
     // Invoke real main with exception handler
     try { main1(args); }
-    catch(Throwable e) { JOptionPane.showMessageDialog(null, e.toString()); e.printStackTrace(); }
+    catch(Throwable e) { showMessage("Error in Main", e.toString()); e.printStackTrace(); }
 }
 
 /**
@@ -46,11 +43,11 @@ public static void main(final String args[])
  *     - Load main Jar into URLClassLoader, load main class and invoke main method
  *     - Check for update from remove site in background
  */
-public static void main1(final String args[]) throws Exception
+public static void main1(String args[]) throws Exception
 {
     // Make sure default jar is in place
     try { copyDefaultMainJar(); }
-    catch(Exception e) { JOptionPane.showMessageDialog(null, e.toString()); e.printStackTrace(); }
+    catch(Exception e) { showMessage("Error Copying Main Jar", e.toString()); e.printStackTrace(); }
     
     // If Update Jar exists, copy it into place
     File jar = getAppFile(JarName);
@@ -144,7 +141,7 @@ private static void checkForUpdates() throws IOException, MalformedURLException
     
     // Let the user know
     String msg = "A new update is available. Restart application to apply";
-    SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(null, msg));
+    SwingUtilities.invokeLater(() -> showMessage("New Update Found", msg));
 }
 
 /**
@@ -162,11 +159,13 @@ private static File getAppDir()  { return getAppDataDir(AppDirName, true); }
  * 
  *  Utility Methods for AppLoader. 
  * 
- * 
- * 
- * 
  */
 
+static void showMessage(String aTitle, String aMsg)
+{
+    JOptionPane.showMessageDialog(null, aMsg, aTitle, JOptionPane.INFORMATION_MESSAGE);
+    //Alert a = new Alert(AlertType.INFORMATION); a.setTitle(aTitle); a.setHeaderText(aMsg); a.showAndWait();
+}
 
 /**
  * Copies a file from one location to another.
@@ -184,8 +183,7 @@ public static File copyFile(File aSource, File aDest) throws IOException
         fos.write(buf, 0, i);
     
     // Close in/out streams and return out file
-    fis.close();
-    fos.close();
+    fis.close(); fos.close();
     return out;
 }
 
@@ -205,18 +203,14 @@ public static void writeBytes(File aFile, byte theBytes[]) throws IOException
  */
 public static File unpack(File aFile, File aDestFile) throws IOException
 {
-    // Get dest file
+    // Get dest file - if already unpacked, return
     File destFile = getUnpackDestination(aFile, aDestFile);
-    
-    // If already unpacked, return
     if(destFile.exists() && destFile.lastModified()>aFile.lastModified())
         return destFile;
     
-    // Create new Gzip input stream
+    // Create streams: FileInputStream -> GZIPInputStream -> JarOutputStream -> FileOutputStream 
     FileInputStream fileInput = new FileInputStream(aFile);
     GZIPInputStream gzipInput = new GZIPInputStream(fileInput);
-        
-    // Create new FileOutput stream JarOutputStream
     FileOutputStream fileOut = new FileOutputStream(destFile);
     JarOutputStream jarOut = new JarOutputStream(fileOut);
     
@@ -224,10 +218,8 @@ public static File unpack(File aFile, File aDestFile) throws IOException
     Pack200.newUnpacker().unpack(gzipInput, jarOut);
     
     // Close streams
-    fileInput.close();
-    gzipInput.close();
-    jarOut.close();
-    fileOut.close();
+    fileInput.close(); gzipInput.close();
+    jarOut.close(); fileOut.close();
     
     // Return destination file
     return destFile;
@@ -238,10 +230,8 @@ public static File unpack(File aFile, File aDestFile) throws IOException
  */
 public static File getUnpackDestination(File aFile, File aDestFile)
 {
-    // Get dest file
+    // Get dest file - if null, create from packed file minus .pack.gz
     File destFile = aDestFile;
-
-    // If dest file is null, create from packed file minus .pack.gz
     if(destFile==null)
         destFile = new File(aFile.getPath().replace(".pack.gz", ""));
 
@@ -266,8 +256,7 @@ public static File getAppDataDir(String aName, boolean doCreate)
 
     // Create file, actual directory (if requested) and return
     File dfile = new File(dir);
-    if(doCreate && aName!=null)
-        dfile.mkdirs();
+    if(doCreate && aName!=null) dfile.mkdirs();
     return dfile;
 }
 
@@ -287,11 +276,8 @@ public static byte[] getBytes(URLConnection aConnection) throws IOException
  */
 public static byte[] getBytes(InputStream aStream) throws IOException
 {
-    // Read contents of InputStream into ByteArrayOutputStream until EOF, return bytes
-    ByteArrayOutputStream bs = new ByteArrayOutputStream();
-    byte chunk[] = new byte[8192];
-    for(int len=aStream.read(chunk, 0, chunk.length); len>0; len=aStream.read(chunk, 0, chunk.length)) {
-        bs.write(chunk, 0, len); }
+    ByteArrayOutputStream bs = new ByteArrayOutputStream(); byte chunk[] = new byte[8192];
+    for(int len=aStream.read(chunk, 0, 8192); len>0; len=aStream.read(chunk, 0, 8192)) bs.write(chunk, 0, len);
     return bs.toByteArray();
 }
 
