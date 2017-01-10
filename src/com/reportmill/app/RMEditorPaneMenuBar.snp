@@ -79,7 +79,6 @@
     <Menu Name="GroupSpecialMenu" text="Group Special">
       <MenuItem Name="GroupInSwitchShapeMenuItem" text="Group in Switch Shape" />
       <MenuItem Name="GroupInScene3DMenuItem" text="Group in 3D Shape" />
-      <MenuItem Name="GroupInScrollPaneMenuItem" text="Group in ScrollView" />
     </Menu>
     <Menu Name="MakeRowColumnMenu" text="Make Row/Column">
       <MenuItem Name="MakeRowTopMenuItem" text="Make Row Top" />
