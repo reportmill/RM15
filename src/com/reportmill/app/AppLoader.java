@@ -21,7 +21,7 @@ public class AppLoader {
     // Constants
     static final String AppDirName = "ReportMill";
     static final String JarName = "RMStudio15.jar";
-    static final String JarURL = "http://reportmill.com/rm15/RMStudio15.jar.pack.gz";
+    static final String JarURL = "http://reportmill.com/rm15/RMStudio15.jar"; // was .pack.gz
     static final String LoaderJarName = "AppLoader.jar"; // 
     static final String MainClass = "com.reportmill.app.App";
 
@@ -123,14 +123,24 @@ private static void checkForUpdates() throws IOException, MalformedURLException
     long mod0 = jarFile.lastModified(), mod1 = connection.getLastModified();
     if(mod0>=mod1) { System.out.println("No update available at " + JarURL + '(' + mod0 + '>' + mod1 + ')'); return; }
     
-    // Get update file and write to JarName.update
+    // Load Update bytes from URL connection
     System.out.println("Loading update from " + JarURL);
     byte bytes[] = getBytes(connection); System.out.println("Update loaded");
-    File updatePacked = getAppFile(JarName + ".pack.gz"), updateFile = getAppFile(JarName + ".update");
-    writeBytes(updatePacked, bytes); System.out.println("Update saved: " + updatePacked);
-    unpack(updatePacked, updateFile); System.out.println("Update unpacked: " + updateFile);
+    File updateFile = getAppFile(JarName + ".update");
+    
+    // If packed write to pack file and unpack
+    if(JarURL.endsWith(".pack.gz")) {
+        File updatePacked = getAppFile(JarName + ".pack.gz");
+        writeBytes(updatePacked, bytes); System.out.println("Update saved: " + updatePacked);
+        unpack(updatePacked, updateFile); System.out.println("Update unpacked: " + updateFile);
+        updatePacked.delete();
+    }
+    
+    // If not packed just write to file
+    else { writeBytes(updateFile, bytes); System.out.println("Update saved: " + updateFile); }
+    
+    // Set modified time so it matches server
     updateFile.setLastModified(mod1);
-    updatePacked.delete();
     
     // Let the user know
     String msg = "A new update is available. Restart application to apply";
