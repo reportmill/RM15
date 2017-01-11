@@ -7,7 +7,7 @@ pushd Z:\Temp\RM15
 -srcfiles AppLoader.jar;RMStudio15.jar;spell.jar;BuildInfo.txt
 
 echo "Signing RMStudio15.exe"
-Z:\Temp\Signtool\signtool sign /f Z:\Temp\Signtool\RMVeriCert.pfx /p rmverisign ^
+Z:\Temp\Signtool\signtool sign /f Z:\Temp\Signtool\RMComoCert.pfx /p rmcomodo ^
 /t http://timestamp.verisign.com/scripts/timstamp.dll C:\Users\Jeff\RMApp\bundles\RMStudio15.exe
 
 echo "Verify Signing RMStudio15.exe"
