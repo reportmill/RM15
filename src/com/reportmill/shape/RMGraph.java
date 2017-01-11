@@ -430,7 +430,7 @@ private RMShape createSampleGraph()
     
     // Do rpg for graph and return
     ReportOwner ro = new ReportOwner(); ro.addModelObject(getSampleObjects());
-    RMParentShape graphRPG = graph.rpgAll(ro, graph);
+    RMParentShape graphRPG = graph.rpgAll(ro, graph, true);
     graphRPG.setXY(0,0); graphRPG.layout(); // Move to (0,0) and layout
     return graphRPG;
 }
@@ -483,13 +483,19 @@ public void propertyChange(PropChange anEvent)
 /**
  * Set ReportMill (which tries to get a dataset from reportmill and calls setObjects).
  */
-public RMParentShape rpgAll(ReportOwner anRptOwner, RMShape aParent)
+public RMParentShape rpgAll(ReportOwner anRptOwner, RMShape aParent)  { return rpgAll(anRptOwner, aParent, false); }
+
+/**
+ * Set ReportMill (which tries to get a dataset from reportmill and calls setObjects).
+ */
+public RMParentShape rpgAll(ReportOwner anRptOwner, RMShape aParent, boolean isSample)
 {
     RMGraph.Type type = getType();
-    if(type==RMGraph.Type.Bar || type==RMGraph.Type.BarH) return new RMGraphRPGBar(this, anRptOwner).getGraphShape();
-    if(type==RMGraph.Type.Pie) return new RMGraphRPGPie(this, anRptOwner).getGraphShape();
-    RMParentShape rpg = new RMGraphRPGLine(this, anRptOwner).getGraphShape(); // Type Area, Line, Scatter
-    rpgBindings(anRptOwner, rpg);
+    RMParentShape rpg = null;
+    if(type==RMGraph.Type.Bar || type==RMGraph.Type.BarH) rpg = new RMGraphRPGBar(this, anRptOwner).getGraphShape();
+    else if(type==RMGraph.Type.Pie) rpg = new RMGraphRPGPie(this, anRptOwner).getGraphShape();
+    else rpg = new RMGraphRPGLine(this, anRptOwner).getGraphShape(); // Type Area, Line, Scatter
+    if(!isSample) rpgBindings(anRptOwner, rpg);
     return rpg;
 }
 
