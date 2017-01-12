@@ -47,8 +47,7 @@ public App(String args[])
     if(SnapUtils.isMac) new AppleAppHandler().init();
     
     // Install Exception reporter
-    ExceptionReporter er = new ExceptionReporter();
-    er.setURL("http://www.reportmill.com/cgi-bin/cgiemail/email/rm-exception.txt");
+    ExceptionReporter er = new ExceptionReporter("ReportMill"); er.setToAddress("support@reportmill.com");
     er.setInfo("ReportMill Version " + ReportMill.getVersion() + ", Build Date: " + ReportMill.getBuildInfo());
     Thread.setDefaultUncaughtExceptionHandler(er);
     

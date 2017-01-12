@@ -3,17 +3,14 @@
  */
 package com.reportmill.app;
 import com.reportmill.base.ReportMill;
-import java.util.*;
 import snap.util.*;
 import snap.view.*;
+import snap.web.WebURL;
 
 /**
  * This class provides a UI panel to send feedback back to ReportMill.
  */
 public class FeedbackPanel extends ViewOwner {
-
-    // The cgimail template URL
-    public static String _url = "http://www.reportmill.com/cgi-bin/cgiemail/email/rm-feedback.txt";
 
 /**
  * Show panel.
@@ -41,35 +38,62 @@ public void initUI()
 }
 
 /**
- * Send feedback via cgiemail at reportmill.com.
+ * Send feedback via SendMail.py at reportmill.com.
  */
 public void sendFeedback()
 {        
     // Configure environment string
-    StringBuffer environment = new StringBuffer();
-    String license = ReportMill.getLicense();
-    if(license==null) license = "Unlicensed Copy";
-    environment.append("License: " + license + "\n");
-    environment.append("Build Date: " + ReportMill.getBuildInfo() + "\n");
-    environment.append("Java VM: " + System.getProperty("java.version") + " (" + System.getProperty("java.vendor") + ")\n");
-    environment.append("OS: " + System.getProperty("os.name") + " (" + System.getProperty("os.version") + ")");
+    StringBuffer env = new StringBuffer();
+    String lic = ReportMill.getLicense(); if(lic==null) lic = "Unlicensed Copy";
+    env.append("License: " + lic + "\n");
+    env.append("Build Date: " + ReportMill.getBuildInfo() + "\n");
+    env.append("Java VM: " + System.getProperty("java.version") + " (" + System.getProperty("java.vendor") + ")\n");
+    env.append("OS: " + System.getProperty("os.name") + " (" + System.getProperty("os.version") + ")");
     
-    // Configure keys
-    final Map map = new HashMap();
-    map.put("user-name", getViewStringValue("UserText"));
-    map.put("user-email", getViewStringValue("EmailText"));
-    map.put("environment", environment.toString());
-    map.put("type", getViewStringValue("TypeComboBox"));
-    map.put("severity", getViewStringValue("SeverityComboBox"));
-    map.put("module", getViewStringValue("ModuleComboBox"));
-    map.put("title", getViewStringValue("TitleText"));
-    map.put("description", getViewStringValue("DescriptionText"));
+    // Get to address
+    String toAddr = "support@reportmill.com";
     
+    // Get from address
+    String name = getViewStringValue("UserText"); int nlen = name!=null? name.length() : 0;
+    String email = getViewStringValue("EmailText"); int elen = email!=null? email.length() : 0;
+    if(nlen>0 && elen>0) email = name + " <" + email + '>';
+    else if(nlen>0) email = name; else if(elen==0) email = "Anonymous";
+    String fromAddr = email;
+    
+    // Get subject
+    String subject = "ReportMill Feedback";
+    
+    // Get body
+    StringBuffer sb = new StringBuffer();
+    sb.append(subject).append('\n').append('\n');
+    sb.append("From: ").append(fromAddr).append('\n');
+    sb.append("Type: ").append(getViewStringValue("TypeComboBox")).append('\n');
+    sb.append("Severity: ").append(getViewStringValue("SeverityComboBox")).append('\n');
+    sb.append("Module: ").append(getViewStringValue("ModuleComboBox")).append('\n').append('\n');
+    sb.append("Title: ").append(getViewStringValue("TitleText")).append('\n').append('\n');
+    sb.append(getViewStringValue("DescriptionText")).append('\n').append('\n').append(env);
+    String body = sb.toString();
+    
+    // Get URL
+    String url = "http://www.reportmill.com/cgi-bin/SendMail.py";
+
     // Send email in background thread
     new Thread() { public void run() {
-        Exception e = URLUtils.sendCGIEmail(_url, map);
-        if(e!=null) e.printStackTrace();
+        String str = sendMail(toAddr, fromAddr, subject, body, url);
+        if(str!=null) System.out.println("ExceptionReporter Response: " + str);
     }}.start();
+}
+
+/**
+ * Sends an email with given from, to, subject, body and SendMail url.
+ */
+public static String sendMail(String toAddr, String fromAddr, String aSubj, String aBody, String aURL)
+{
+    // Create full message text, create URL, post text bytes and return response string
+    String text = String.format("To=%s\nFrom=%s\nSubject=%s\n%s", toAddr, fromAddr, aSubj, aBody);
+    WebURL url = WebURL.getURL(aURL);
+    byte bytes[] = url.postBytes(text.getBytes());
+    return bytes!=null? new String(bytes) : null;
 }
 
 }
