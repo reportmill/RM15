@@ -3,7 +3,10 @@
  */
 package com.reportmill.app;
 import com.reportmill.graphics.*;
+import java.util.ArrayList;
+import java.util.List;
 import snap.gfx.Font;
+import snap.util.StringUtils;
 import snap.view.*;
 
 /**
@@ -16,6 +19,12 @@ public class FontPanel extends ViewOwner {
     
     // The EditorPane
     RMEditorPane    _editorPane;
+    
+    // The FamilyText TextField
+    TextField       _familyText;
+    
+    // The FamilyList ListView
+    ListView        _familyList;
 
 /**
  * Creates a new FontPanel for EditorPane.
@@ -37,8 +46,20 @@ public RMEditorPane getEditorPane()  { return _editorPane; }
  */
 protected void initUI()
 {
-    setViewItems("FamilyList", RMFont.getFamilyNames());
-    setViewItems("SizesList", new Object[] { 6,8,9,10,11,12,14,16,18,22,24,36,48,64,72,96,128,144 }); 
+    // Get/configure FamilyList
+    _familyList = getView("FamilyList", ListView.class);
+    setViewItems(_familyList, RMFont.getFamilyNames());
+    
+    // Get/configure FamilyTest
+    _familyText = getView("FamilyText", TextField.class);
+    enableEvents(_familyText, KeyType);
+    _familyText.addPropChangeListener(pce -> {
+        if(_familyText.isFocused()) _familyText.selectAll();
+        else resetLater();
+    }, View.Focused_Prop);
+    
+    // Configure SizesList
+    setViewItems("SizesList", new Object[] { 6,8,9,10,11,12,14,16,18,22,24,36,48,64,72,96,128,144 });
 }
 
 /**
@@ -54,11 +75,30 @@ public void resetUI()
     String familyName = font.getFamily();
     double size = font.getSize();
     
-    // Reset FamilyList, SizesList, SizeText, SizeThumb, and Bold, Italic, Underline and Outline buttons
-    setViewValue("FamilyList", familyName);
-    setViewValue("FamilyText", familyName);
+    // If FamilyText focused, set FamilyList to font family names matching FamilyText prefix
+    if(_familyText.isFocused()) {
+        boolean selEmpty = _familyText.isSelEmpty(); int selStart = _familyText.getSelStart();
+        String text = _familyText.getText(); if(!selEmpty) text = text.substring(0, selStart);
+        List <String> fnames = getFamilyNamesForPrefix(selStart>0? text : "");
+        String fname = selStart>0? (fnames.size()>0? fnames.get(0) : text) : familyName;
+        _familyList.setItems(fnames);
+        _familyList.setSelectedItem(fname);
+        if(fname!=null) {
+            _familyText.setText(fname);
+            _familyText.setSel(selStart, fname.length());
+        }
+    }
+    
+    // Do normal reset FamilyList, FamilyText
+    else {
+        _familyList.setItems((Object[])RMFont.getFamilyNames());
+        _familyList.setSelectedItem(familyName);
+        _familyText.setText(familyName);
+    }
+    
+    // Reset SizesList, SizeText, SizeThumb, and Bold, Italic, Underline and Outline buttons
     setViewValue("SizesList", (int)size);
-    setViewValue("SizeText", "" + size + " pt"); //setNodeValue("SizeThumb", size);
+    setViewValue("SizeText", StringUtils.toString(size) + " pt");
     setViewValue("BoldButton", font.isBold());
     setViewEnabled("BoldButton", font.getBold()!=null);
     setViewValue("ItalicButton", font.isItalic());
@@ -73,6 +113,7 @@ public void resetUI()
     setViewItems("FontNameComboBox", familyNames);
     String fn = font.getFontFile().getNativeName(); setViewSelectedItem("FontNameComboBox", fn);
     setViewEnabled("FontNameComboBox", familyNames.length>1);
+    
 }
 
 /**
@@ -121,11 +162,19 @@ public void respondUI(ViewEvent anEvent)
     }
 
     // Handle FamilyList
-    if(anEvent.equals("FamilyList")) {
+    if(anEvent.equals("FamilyList") || (anEvent.equals("FamilyText") && anEvent.isActionEvent())) {
         String familyName = getViewStringValue("FamilyList");
         String fontName = RMFont.getFontNames(familyName)[0];
         RMFont font = RMFont.getFont(fontName, 12);
         RMEditorShapes.setFontFamily(editor, font);
+    }
+    
+    // Handle FamilyText
+    if(anEvent.equals("FamilyText")) {
+        
+        // Handle BackSpace key: fire deleteBackward(), since first normal key just clears completion text
+        if(anEvent.isKeyType() && anEvent.isBackSpaceKey())
+            _familyText.deleteBackward();
     }
     
     // Handle FontNameComboBox
@@ -133,6 +182,17 @@ public void respondUI(ViewEvent anEvent)
         RMFont font = RMFont.getFont(anEvent.getStringValue(), 12);
         RMEditorShapes.setFontName(editor, font);
     }
+}
+
+/**
+ * Return the family name for prefix.
+ */
+private List <String> getFamilyNamesForPrefix(String aPrefix)
+{
+    String fnames[] = RMFont.getFamilyNames();
+    List <String> list = new ArrayList();
+    for(String name : fnames) if(StringUtils.startsWithIC(name, aPrefix)) list.add(name);
+    return list;
 }
     
 /** Returns the name for the inspector window. */
