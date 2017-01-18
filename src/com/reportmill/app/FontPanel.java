@@ -5,8 +5,8 @@ package com.reportmill.app;
 import com.reportmill.graphics.*;
 import java.util.ArrayList;
 import java.util.List;
-import snap.gfx.Font;
-import snap.util.StringUtils;
+import snap.gfx.*;
+import snap.util.*;
 import snap.view.*;
 
 /**
@@ -25,6 +25,15 @@ public class FontPanel extends ViewOwner {
     
     // The FamilyList ListView
     ListView        _familyList;
+    
+    // Whether to show all fonts (or PDF only)
+    boolean         _showAll = true;
+    
+    // The PDF Family names
+    String          _pdfFonts[];
+
+    // All PDF built in font family names.
+    static String   _pdfBuiltIns[] = { "Arial", "Helvetica", "Times", "Courier", "Symbol", "ZapfDingbats" };
 
 /**
  * Creates a new FontPanel for EditorPane.
@@ -42,13 +51,33 @@ public RMEditor getEditor()  { return _editorPane.getEditor(); }
 public RMEditorPane getEditorPane()  { return _editorPane; }
 
 /**
+ * Returns the array of font family names.
+ */
+public String[] getFamilyNames()
+{
+    return _showAll? Font.getFamilyNames() : getPDFFamilyNames();
+}
+
+/**
+ * Returns the array of font family names.
+ */
+public String[] getPDFFamilyNames()
+{
+    if(_pdfFonts!=null) return _pdfFonts;
+    List pdfs = new ArrayList();
+    for(String name : _pdfBuiltIns) { Font font = Font.get(name, 12);
+        if(font!=null) pdfs.add(font.getFamily()); }
+    return _pdfFonts = (String[])pdfs.toArray(new String[0]);
+}
+
+/**
  * Initialize UI panel.
  */
 protected void initUI()
 {
     // Get/configure FamilyList
     _familyList = getView("FamilyList", ListView.class);
-    setViewItems(_familyList, RMFont.getFamilyNames());
+    setViewItems(_familyList, getFamilyNames());
     
     // Get/configure FamilyTest
     _familyText = getView("FamilyText", TextField.class);
@@ -60,6 +89,10 @@ protected void initUI()
     
     // Configure SizesList
     setViewItems("SizesList", new Object[] { 6,8,9,10,11,12,14,16,18,22,24,36,48,64,72,96,128,144 });
+    
+    // Configure SizeText
+    TextField sizeText = getView("SizeText", TextField.class);
+    sizeText.addPropChangeListener(pce -> { if(sizeText.isFocused()) sizeText.selectAll(); }, View.Focused_Prop);
 }
 
 /**
@@ -91,7 +124,7 @@ public void resetUI()
     
     // Do normal reset FamilyList, FamilyText
     else {
-        _familyList.setItems((Object[])RMFont.getFamilyNames());
+        _familyList.setItems((Object[])getFamilyNames());
         _familyList.setSelectedItem(familyName);
         _familyText.setText(familyName);
     }
@@ -156,10 +189,8 @@ public void respondUI(ViewEvent anEvent)
         RMEditorShapes.setFontSize(editor, anEvent.getFloatValue(), false);
     
     // Handle SizeText
-    if(anEvent.equals("SizeText")) {
+    if(anEvent.equals("SizeText"))
         RMEditorShapes.setFontSize(editor, anEvent.getFloatValue(), false);
-        editor.requestFocus();
-    }
 
     // Handle FamilyList
     if(anEvent.equals("FamilyList") || (anEvent.equals("FamilyText") && anEvent.isActionEvent())) {
@@ -177,6 +208,10 @@ public void respondUI(ViewEvent anEvent)
             _familyText.deleteBackward();
     }
     
+    // Handle AllButton, PDFButton
+    if(anEvent.equals("AllButton")) _showAll = true;
+    if(anEvent.equals("PDFButton")) _showAll = false;
+    
     // Handle FontNameComboBox
     if(anEvent.equals("FontNameComboBox")) {
         RMFont font = RMFont.getFont(anEvent.getStringValue(), 12);
@@ -189,7 +224,7 @@ public void respondUI(ViewEvent anEvent)
  */
 private List <String> getFamilyNamesForPrefix(String aPrefix)
 {
-    String fnames[] = RMFont.getFamilyNames();
+    String fnames[] = getFamilyNames();
     List <String> list = new ArrayList();
     for(String name : fnames) if(StringUtils.startsWithIC(name, aPrefix)) list.add(name);
     return list;

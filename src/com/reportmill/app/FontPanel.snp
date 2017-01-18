@@ -12,15 +12,23 @@
     </ToggleButton>
   </HBox>
   <HBox GrowHeight="true" Spacing="4" FillHeight="true">
-    <VBox GrowWidth="true" Spacing="4" FillWidth="true">
-      <Label text=" Family" />
+    <VBox GrowWidth="true" Spacing="2" FillWidth="true">
+      <HBox Padding="0,4,0,0">
+        <Label text=" Family" PrefHeight="14" />
+        <ToggleButton Name="AllButton" PrefWidth="28" PrefHeight="14" LeanX="RIGHT" text="All" Position="CENTER_LEFT" Selected="true" ToggleGroup="bg1">
+          <Font name="Arial" size="9" />
+        </ToggleButton>
+        <ToggleButton Name="PDFButton" PrefWidth="28" PrefHeight="14" LeanX="RIGHT" text="PDF" Position="CENTER_RIGHT" ToggleGroup="bg1">
+          <Font name="Arial" size="9" />
+        </ToggleButton>
+      </HBox>
       <ScrollView GrowHeight="true">
         <ListView Name="FamilyList" />
       </ScrollView>
       <TextField Name="FamilyText" />
     </VBox>
-    <VBox PrefWidth="60" Spacing="4" FillWidth="true">
-      <Label text=" Sizes" />
+    <VBox PrefWidth="60" Spacing="2" FillWidth="true">
+      <Label text=" Sizes" PrefHeight="14" />
       <ScrollView GrowHeight="true">
         <ListView Name="SizesList" />
       </ScrollView>
