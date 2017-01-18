@@ -110,7 +110,7 @@ public String getLocalCurrencySymbol()
     // just replace them with spaces
     for(int i=0; i<separators.length; ++i)
         if(separators[i]!=null && separators[i].length()>0)
-            symbol = StringUtils.replace(symbol, separators[i], ' ');
+            symbol = symbol.replace(separators[i], " ");
     
     // trim up the ends
     return symbol.trim();

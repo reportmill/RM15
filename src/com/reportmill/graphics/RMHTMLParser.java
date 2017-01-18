@@ -80,7 +80,7 @@ private static class HTMLParser extends HTMLEditorKit.ParserCallback {
         String s2 = aString;
         if(aString.indexOf(';')>aString.indexOf('&')) {
             for(int i=0, iMax=_symMap.length; i<iMax; i++) {
-                aString = StringUtils.replace(aString, _symMap[i].ce, _symMap[i].map);
+                aString = aString.replace(_symMap[i].ce, _symMap[i].str);
                 if(aString!=s2) {
                     if(aString.indexOf(';')>aString.indexOf('&'))
                         s2 = aString;
@@ -325,7 +325,7 @@ private static class SymMap {
     char    sym;
     
     // The same character in the unicode character set
-    char    map;
+    char    map; String str;
     
     // Character entity representation (eg., "&whatever;")
     String  ce;
@@ -333,7 +333,7 @@ private static class SymMap {
     /** Returns a mapping for a given symbol/unicode character and its name and character entity representation. */
     public SymMap(int aSym, int aMap, String aName, String charEnt)
     {
-        sym = (char)aSym; map = (char)aMap; ce = charEnt;
+        sym = (char)aSym; map = (char)aMap; str = String.valueOf(map); ce = charEnt;
     }
     
     /** Returns an array of symbol characters. */
