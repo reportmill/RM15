@@ -146,7 +146,6 @@ public void resetUI()
     setViewItems("FontNameComboBox", familyNames);
     String fn = font.getFontFile().getNativeName(); setViewSelectedItem("FontNameComboBox", fn);
     setViewEnabled("FontNameComboBox", familyNames.length>1);
-    
 }
 
 /**
@@ -181,8 +180,13 @@ public void respondUI(ViewEvent anEvent)
     if(anEvent.equals("OutlineButton"))
         RMEditorShapes.setTextBorder(editor);
     
-    // Handle SizeThumbwheel
-    //if(anEvent.equals("SizeThumb")) RMEditorShapes.setFontSize(editor, anEvent.getIntValue(), false);
+    // Handle FontPickerButton
+    if(anEvent.equals("FontPickerButton")) {
+        RMFont ofont = RMEditorShapes.getFont(editor);
+        Font font = new FontPicker().showPicker(editor, ofont);
+        if(font!=null) { RMFont rfont = RMFont.get(font);
+            RMEditorShapes.setFontFamily(editor, rfont); }
+    }
     
     // Handle SizesList
     if(anEvent.equals("SizesList") && anEvent.getValue()!=null)

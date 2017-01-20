@@ -3,19 +3,21 @@
   <HBox Align="CENTER" Padding="4,4,2,4" Spacing="5">
     <Button Name="FontSizeUpButton" PrefWidth="24" PrefHeight="24" ToolTip="Increase Font Size" image="Format_IncreaseFont.png" />
     <Button Name="FontSizeDownButton" PrefWidth="24" PrefHeight="24" ToolTip="Decrease Font Size" image="Format_DecreaseFont.png" />
-    <Separator PrefWidth="24" PrefHeight="22" Vertical="true" Visible="false" />
+    <Separator PrefWidth="12" PrefHeight="22" Vertical="true" Visible="false" />
     <ToggleButton Name="BoldButton" PrefWidth="24" PrefHeight="24" ToolTip="Make Bold" image="Format_Bold.png" />
     <ToggleButton Name="ItalicButton" PrefWidth="24" PrefHeight="24" ToolTip="Make Italic" image="Format_Italic.png" />
     <ToggleButton Name="UnderlineButton" PrefWidth="24" PrefHeight="24" ToolTip="Make Underline" image="Format_Underline.png" />
     <ToggleButton Name="OutlineButton" PrefWidth="24" PrefHeight="24" ToolTip="Make Outline" text="O">
       <font name="Arial Bold" size="16" />
     </ToggleButton>
+    <Separator PrefWidth="12" PrefHeight="22" Vertical="true" Visible="false" />
+    <Button Name="FontPickerButton" PrefWidth="24" PrefHeight="24" ToolTip="Show Font Picker" image="/snap/viewx/pkg.images/Find.png" />
   </HBox>
   <HBox GrowHeight="true" Spacing="4" FillHeight="true">
     <VBox GrowWidth="true" Spacing="2" FillWidth="true">
       <HBox Padding="0,4,0,0">
         <Label text=" Family" PrefHeight="14" />
-        <ToggleButton Name="AllButton" PrefWidth="28" PrefHeight="14" LeanX="RIGHT" text="All" Position="CENTER_LEFT" Selected="true" ToggleGroup="bg1">
+        <ToggleButton Name="AllButton" PrefWidth="28" PrefHeight="14" LeanX="RIGHT" text="ALL" Position="CENTER_LEFT" Selected="true" ToggleGroup="bg1">
           <Font name="Arial" size="9" />
         </ToggleButton>
         <ToggleButton Name="PDFButton" PrefWidth="28" PrefHeight="14" LeanX="RIGHT" text="PDF" Position="CENTER_RIGHT" ToggleGroup="bg1">
