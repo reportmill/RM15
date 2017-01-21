@@ -156,27 +156,19 @@ public void respondUI(ViewEvent anEvent)
     // Get current editor
     RMEditor editor = getEditor();
     
-    // Handle FontSizeUpButton
+    // Handle FontSizeUpButton, FontSizeDownButton
     if(anEvent.equals("FontSizeUpButton")) { Font font = RMEditorShapes.getFont(editor);
         RMEditorShapes.setFontSize(editor, font.getSize()<16? 1 : 2, true); }
-    
-    // Handle FontSizeDownButton
     if(anEvent.equals("FontSizeDownButton")) { Font font = RMEditorShapes.getFont(editor);
         RMEditorShapes.setFontSize(editor, font.getSize()<16? -1 : -2, true); }
     
-    // Handle BoldButton
+    // Handle BoldButton, ItalicButton, UnderlineButton, OutlineButton
     if(anEvent.equals("BoldButton"))
         RMEditorShapes.setFontBold(editor, anEvent.getBoolValue());
-    
-    // Handle ItalicButton
     if(anEvent.equals("ItalicButton"))
         RMEditorShapes.setFontItalic(editor, anEvent.getBoolValue());
-    
-    // Handle UnderlineButton
     if(anEvent.equals("UnderlineButton"))
         RMEditorShapes.setUnderlined(editor);
-    
-    // Handle OutlineButton
     if(anEvent.equals("OutlineButton"))
         RMEditorShapes.setTextBorder(editor);
     

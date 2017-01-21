@@ -3,9 +3,12 @@
  */
 package com.reportmill.app;
 import com.reportmill.apptools.*;
+import com.reportmill.base.RMFormat;
+import com.reportmill.base.RMNumberFormat;
 import com.reportmill.graphics.*;
 import com.reportmill.shape.*;
 import java.util.*;
+import snap.gfx.Font;
 import snap.util.*;
 import snap.view.*;
 import snap.viewx.ColorButton;
@@ -34,12 +37,20 @@ protected void resetUI()
 {
     // Get the editor
     RMEditor editor = getEditor();
+    Font font = RMEditorShapes.getFont(editor);
     
     // Update UndoButton, RedoButton
     Undoer undoer = editor.getUndoer();
     setViewEnabled("UndoButton", undoer!=null && undoer.getUndoSetLast()!=null);
     setViewEnabled("RedoButton", undoer!=null && undoer.getRedoSetLast()!=null);
     
+    // Update MoneyButton, PercentButton, CommaButton
+    RMFormat fmt = RMEditorShapes.getFormat(editor);
+    RMNumberFormat nfmt = fmt instanceof RMNumberFormat? (RMNumberFormat)fmt : null;
+    setViewValue("MoneyButton", nfmt!=null && nfmt.isLocalCurrencySymbolUsed());
+    setViewValue("PercentButton", nfmt!=null && nfmt.isPercentSymbolUsed());
+    setViewValue("CommaButton", nfmt!=null && nfmt.isGroupingUsed());
+        
     // Reset PreviewEditButton state if out of sync
     if(getViewBoolValue("PreviewEditButton")==getEditorPane().isEditing())
         setViewValue("PreviewEditButton", !getEditorPane().isEditing());
@@ -49,6 +60,20 @@ protected void resetUI()
     ToggleButton toolButton = getView(toolButtonName, ToggleButton.class);
     if(toolButton!=null && !toolButton.isSelected())
         toolButton.setSelected(true);
+        
+    // Reset BoldButton, ItalicButton, UnderlineButton
+    setViewValue("BoldButton", font.isBold());
+    setViewEnabled("BoldButton", font.getBold()!=null);
+    setViewValue("ItalicButton", font.isItalic());
+    setViewEnabled("ItalicButton", font.getItalic()!=null);
+    setViewValue("UnderlineButton", RMEditorShapes.isUnderlined(editor));
+    
+    // Update AlignLeftButton, AlignCenterButton, AlignRightButton, AlignFullButton, AlignTopButton, AlignMiddleButton
+    RMTypes.AlignX alignX = RMEditorShapes.getAlignmentX(editor);
+    setViewValue("AlignLeftButton", alignX==RMTypes.AlignX.Left);
+    setViewValue("AlignCenterButton", alignX==RMTypes.AlignX.Center);
+    setViewValue("AlignRightButton", alignX==RMTypes.AlignX.Right);
+    setViewValue("AlignFullButton", alignX==RMTypes.AlignX.Full);
 }
 
 /**
@@ -86,6 +111,48 @@ protected void respondUI(ViewEvent anEvent)
     if(anEvent.equals("TextColorButton"))
         RMEditorShapes.setTextColor(editor, RMColor.get(anEvent.getView(ColorButton.class).getColor()));
 
+    // Handle MoneyButton: If currently selected format is number format, add or remove dollars
+    RMFormat fmt = RMEditorShapes.getFormat(editor);
+    RMNumberFormat nfmt = fmt instanceof RMNumberFormat? (RMNumberFormat)fmt : null;
+    if(anEvent.equals("MoneyButton")) {
+        if(nfmt==null) RMEditorShapes.setFormat(editor, RMNumberFormat.CURRENCY);
+        else { nfmt = nfmt.clone(); // Clone it
+            nfmt.setLocalCurrencySymbolUsed(!nfmt.isLocalCurrencySymbolUsed()); // Toggle whether $ is used
+            RMEditorShapes.setFormat(editor, nfmt); }
+    }
+    
+    // Handle PercentButton: If currently selected format is number format, add or remove percent symbol
+    if(anEvent.equals("PercentButton")) {
+        if(nfmt==null) RMEditorShapes.setFormat(editor, new RMNumberFormat("#,##0.00 %"));
+        else { nfmt = nfmt.clone(); // Clone it
+            nfmt.setPercentSymbolUsed(!nfmt.isPercentSymbolUsed()); // Toggle whether percent symbol is used
+            RMEditorShapes.setFormat(editor, nfmt); }
+    }
+    
+    // Handle CommaButton: If currently selected format is number format, add or remove grouping
+    if(anEvent.equals("CommaButton")) {
+        if(nfmt==null) RMEditorShapes.setFormat(editor, new RMNumberFormat("#,##0.00"));
+        else { nfmt = nfmt.clone();
+            nfmt.setGroupingUsed(!nfmt.isGroupingUsed()); // Toggle whether grouping is used
+            RMEditorShapes.setFormat(editor, nfmt); }
+    }
+    
+    // Handle DecimalAddButton: If currently selected format is number format, add decimal
+    if(anEvent.equals("DecimalAddButton") && nfmt!=null) {
+        nfmt = nfmt.clone();
+        nfmt.setMinimumFractionDigits(nfmt.getMinimumFractionDigits()+1); // Add decimal digits
+        nfmt.setMaximumFractionDigits(nfmt.getMinimumFractionDigits());
+        RMEditorShapes.setFormat(editor, nfmt);
+    }
+    
+    // Handle DecimalRemoveButton: If currently selected format is number format, remove decimal digits
+    if(anEvent.equals("DecimalRemoveButton") && nfmt!=null) {
+        nfmt = nfmt.clone(); // Clone it
+        nfmt.setMinimumFractionDigits(nfmt.getMinimumFractionDigits()-1); // Remove decimal digits
+        nfmt.setMaximumFractionDigits(nfmt.getMinimumFractionDigits());
+        RMEditorShapes.setFormat(editor, nfmt);
+    }
+    
     // Handle Preview/Edit button and PreviewMenuItem
     if(anEvent.equals("PreviewEditButton") || anEvent.equals("PreviewMenuItem")) {
         
@@ -112,6 +179,23 @@ protected void respondUI(ViewEvent anEvent)
             if(anEvent.getName().startsWith(tool.getClass().getSimpleName())) {
                 getEditor().setCurrentTool(tool); break; }
     }
+    
+    // Handle FontSizeUpButton, FontSizeDownButton
+    if(anEvent.equals("FontSizeUpButton")) { Font font = RMEditorShapes.getFont(editor);
+        RMEditorShapes.setFontSize(editor, font.getSize()<16? 1 : 2, true); }
+    if(anEvent.equals("FontSizeDownButton")) { Font font = RMEditorShapes.getFont(editor);
+        RMEditorShapes.setFontSize(editor, font.getSize()<16? -1 : -2, true); }
+    
+    // Handle BoldButton, ItalicButton, UnderlineButton
+    if(anEvent.equals("BoldButton")) RMEditorShapes.setFontBold(editor, anEvent.getBoolValue());
+    if(anEvent.equals("ItalicButton")) RMEditorShapes.setFontItalic(editor, anEvent.getBoolValue());
+    if(anEvent.equals("UnderlineButton")) RMEditorShapes.setUnderlined(editor);
+        
+    // Handle AlignLeftButton, AlignCenterButton, AlignRightButton, AlignFullButton
+    if(anEvent.equals("AlignLeftButton")) RMEditorShapes.setAlignmentX(editor, RMTypes.AlignX.Left);
+    if(anEvent.equals("AlignCenterButton")) RMEditorShapes.setAlignmentX(editor, RMTypes.AlignX.Center);
+    if(anEvent.equals("AlignRightButton")) RMEditorShapes.setAlignmentX(editor, RMTypes.AlignX.Right);
+    if(anEvent.equals("AlignFullButton")) RMEditorShapes.setAlignmentX(editor, RMTypes.AlignX.Full);
     
     // Handle AddTableButton, AddGraphButton, AddLabelsButton, AddCrossTabFrameButton
     if(anEvent.equals("AddTableButton")) RMTableTool.addTable(getEditor(), null);
