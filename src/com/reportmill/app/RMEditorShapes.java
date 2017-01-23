@@ -614,24 +614,26 @@ public static RMFont getFont(RMEditor anEditor)
 /**
  * Sets the font family of editor's selected shape(s).
  */
-public static void setFontFamily(RMEditor anEditor, RMFont aFont)
+public static void setFontFamily(RMEditor anEditor, Font aFont)
 {
+    RMFont font = RMFont.get(aFont);
     for(int i=0, iMax=anEditor.getSelectedOrSuperSelectedShapeCount(); i<iMax; i++) {
         RMShape shape = anEditor.getSelectedOrSuperSelectedShape(i);
         RMTool tool = anEditor.getTool(shape);
-        tool.setFontFamilyDeep(anEditor, shape, aFont);
+        tool.setFontFamilyDeep(anEditor, shape, font);
     }
 }
 
 /**
  * Sets the font name of editor's selected shape(s).
  */
-public static void setFontName(RMEditor anEditor, RMFont aFont)
+public static void setFontName(RMEditor anEditor, Font aFont)
 {
+    RMFont font = RMFont.get(aFont);
     for(int i=0, iMax=anEditor.getSelectedOrSuperSelectedShapeCount(); i<iMax; i++) {
         RMShape shape = anEditor.getSelectedOrSuperSelectedShape(i);
         RMTool tool = anEditor.getTool(shape);
-        tool.setFontNameDeep(anEditor, shape, aFont);
+        tool.setFontNameDeep(anEditor, shape, font);
     }
 }
 

@@ -18,9 +18,15 @@ import snap.viewx.ColorButton;
  */
 public class RMEditorPaneToolBar extends RMEditorPane.SupportPane {
 
+    // The font face ListText
+    ListText          _fontFaceListText;
+    
+    // The font size ListText
+    ListText          _fontSizeListText;
+    
     // The toolbar tools
     RMTool            _toolBarTools[];
-
+    
 /**
  * Creates a new editor pane tool bar.
  */
@@ -28,6 +34,21 @@ public RMEditorPaneToolBar(RMEditorPane anEP)
 {
     super(anEP);
     _toolBarTools = createToolBarTools();
+}
+
+/**
+ * Initialize UI.
+ */
+protected void initUI()
+{
+    // Get/configure FontFaceListText
+    _fontFaceListText = getView("FontFaceListText", ListText.class);
+    _fontFaceListText.setItems((Object[])Font.getFamilyNames());
+    
+    // Get/configure FontSizeListText
+    _fontSizeListText = getView("FontSizeListText", ListText.class);
+    Object sizes[] = { 6, 8, 9, 10, 11, 12, 14, 16, 18, 22, 24, 36, 48, 64, 72, 96, 128, 144 };
+    _fontSizeListText.setItems(sizes);
 }
 
 /**
@@ -60,6 +81,10 @@ protected void resetUI()
     ToggleButton toolButton = getView(toolButtonName, ToggleButton.class);
     if(toolButton!=null && !toolButton.isSelected())
         toolButton.setSelected(true);
+        
+    // Reset FontFaceListText, FontSizeListText
+    _fontFaceListText.setSelectedItem(font.getFamily());
+    _fontSizeListText.setText(StringUtils.toString(font.getSize()) + " pt");
         
     // Reset BoldButton, ItalicButton, UnderlineButton
     setViewValue("BoldButton", font.isBold());
@@ -178,6 +203,22 @@ protected void respondUI(ViewEvent anEvent)
         for(RMTool tool : _toolBarTools)
             if(anEvent.getName().startsWith(tool.getClass().getSimpleName())) {
                 getEditor().setCurrentTool(tool); break; }
+    }
+    
+    // Handle FontFaceListText
+    if(anEvent.equals("FontFaceListText")) {
+        String familyName = anEvent.getText();
+        String fontNames[] = Font.getFontNames(familyName); if(fontNames==null || fontNames.length==0) return;
+        String fontName = fontNames[0];
+        Font font = Font.get(fontName, 12);
+        RMEditorShapes.setFontFamily(editor, font);
+        editor.requestFocus();
+    }
+    
+    // Handle FontSizeListText
+    if(anEvent.equals("FontSizeListText")) {
+        RMEditorShapes.setFontSize(editor, anEvent.getFloatValue(), false);
+        editor.requestFocus();
     }
     
     // Handle FontSizeUpButton, FontSizeDownButton
