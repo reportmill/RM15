@@ -18,11 +18,11 @@ import snap.viewx.ColorButton;
  */
 public class RMEditorPaneToolBar extends RMEditorPane.SupportPane {
 
-    // The font face ListText
-    ListText          _fontFaceListText;
+    // The font face ComboBox
+    ComboBox          _fontFaceComboBox;
     
-    // The font size ListText
-    ListText          _fontSizeListText;
+    // The font size ComboBox
+    ComboBox          _fontSizeComboBox;
     
     // The toolbar tools
     RMTool            _toolBarTools[];
@@ -41,14 +41,14 @@ public RMEditorPaneToolBar(RMEditorPane anEP)
  */
 protected void initUI()
 {
-    // Get/configure FontFaceListText
-    _fontFaceListText = getView("FontFaceListText", ListText.class);
-    _fontFaceListText.setItems((Object[])Font.getFamilyNames());
+    // Get/configure FontFaceComboBox
+    _fontFaceComboBox = getView("FontFaceComboBox", ComboBox.class);
+    _fontFaceComboBox.setItems((Object[])Font.getFamilyNames());
     
-    // Get/configure FontSizeListText
-    _fontSizeListText = getView("FontSizeListText", ListText.class);
+    // Get/configure FontSizeComboBox
+    _fontSizeComboBox = getView("FontSizeComboBox", ComboBox.class);
     Object sizes[] = { 6, 8, 9, 10, 11, 12, 14, 16, 18, 22, 24, 36, 48, 64, 72, 96, 128, 144 };
-    _fontSizeListText.setItems(sizes);
+    _fontSizeComboBox.setItems(sizes);
 }
 
 /**
@@ -82,9 +82,9 @@ protected void resetUI()
     if(toolButton!=null && !toolButton.isSelected())
         toolButton.setSelected(true);
         
-    // Reset FontFaceListText, FontSizeListText
-    _fontFaceListText.setSelectedItem(font.getFamily());
-    _fontSizeListText.setText(StringUtils.toString(font.getSize()) + " pt");
+    // Reset FontFaceComboBox, FontSizeComboBox
+    _fontFaceComboBox.setSelectedItem(font.getFamily());
+    _fontSizeComboBox.setText(StringUtils.toString(font.getSize()) + " pt");
         
     // Reset BoldButton, ItalicButton, UnderlineButton
     setViewValue("BoldButton", font.isBold());
@@ -205,8 +205,8 @@ protected void respondUI(ViewEvent anEvent)
                 getEditor().setCurrentTool(tool); break; }
     }
     
-    // Handle FontFaceListText
-    if(anEvent.equals("FontFaceListText")) {
+    // Handle FontFaceComboBox
+    if(anEvent.equals("FontFaceComboBox")) {
         String familyName = anEvent.getText();
         String fontNames[] = Font.getFontNames(familyName); if(fontNames==null || fontNames.length==0) return;
         String fontName = fontNames[0];
@@ -215,8 +215,8 @@ protected void respondUI(ViewEvent anEvent)
         editor.requestFocus();
     }
     
-    // Handle FontSizeListText
-    if(anEvent.equals("FontSizeListText")) {
+    // Handle FontSizeComboBox
+    if(anEvent.equals("FontSizeComboBox")) {
         RMEditorShapes.setFontSize(editor, anEvent.getFloatValue(), false);
         editor.requestFocus();
     }

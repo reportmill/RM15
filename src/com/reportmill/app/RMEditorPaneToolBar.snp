@@ -39,9 +39,9 @@
     <ToggleButton Name="PencilToolButton" PrefWidth="24" PrefHeight="24" ToolTip="Pencil Tool" image="/com/reportmill/apptools/RMPencilShape.png" Position="CENTER_RIGHT" ToggleGroup="bg1" />
   </HBox>
   <Separator PrefWidth="16" PrefHeight="18" Vertical="true" />
-  <ListText name="FontFaceListText" MinWidth="80" PrefHeight="22" ShowButton="false" />
+  <ComboBox name="FontFaceComboBox" MinWidth="80" PrefHeight="22" ShowTextField="true" ShowButton="false" />
   <Separator PrefWidth="1" PrefHeight="18" Vertical="true" Visible="false" />
-  <ListText name="FontSizeListText" MinWidth="35" PrefHeight="22" ShowButton="false" />
+  <ComboBox name="FontSizeComboBox" MinWidth="35" PrefHeight="22" ShowTextField="true" ShowButton="false" />
   <Button Name="FontSizeUpButton" PrefWidth="22" PrefHeight="22" ToolTip="Increase Font Size" image="Format_IncreaseFont.png" ShowBorder="false" />
   <Button Name="FontSizeDownButton" PrefWidth="22" PrefHeight="22" ToolTip="Decrease Font Size" image="Format_DecreaseFont.png" ShowBorder="false" />
   <Separator PrefWidth="8" PrefHeight="18" Vertical="true" />
