@@ -31,7 +31,7 @@ protected View createUI()
         MenuBar mbar = mbarOwnr.getUI(MenuBar.class);
         mbarOwnr.getView("QuitMenuItem").setEnabled(false);
         BorderView bpane = new BorderView(); bpane.setTop(mbar); bpane.setCenter(_epane.getUI());
-        bpane.addEventHandler(e -> handleKeyEvent(e), KeyPress);
+        bpane.addEventFilter(e -> handleKeyEvent(e), KeyPress);
         return bpane;
     }
     
