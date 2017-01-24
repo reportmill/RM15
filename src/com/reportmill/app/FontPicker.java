@@ -38,7 +38,7 @@ public Font showPicker(View aView, Font aFont)
 protected View createUI()
 {
     _vbox = new VBox(); _vbox.setFillWidth(true);
-    ScrollView scroll = new ScrollView(_vbox); scroll.setPrefSize(500,400); scroll.setGrowHeight(true);
+    ScrollView scroll = new ScrollView(_vbox); scroll.setPrefSize(720,540); scroll.setGrowHeight(true);
     return scroll;
 }
 

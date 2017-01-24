@@ -145,7 +145,7 @@ public void respondUI(ViewEvent anEvent)
     // Handle FontPickerButton
     if(anEvent.equals("FontPickerButton")) {
         RMFont ofont = RMEditorShapes.getFont(editor);
-        Font font = new FontPicker().showPicker(editor, ofont);
+        Font font = new FontPicker().showPicker(getEditorPane().getUI(), ofont);
         if(font!=null) { RMFont rfont = RMFont.get(font);
             RMEditorShapes.setFontFamily(editor, rfont); }
     }
