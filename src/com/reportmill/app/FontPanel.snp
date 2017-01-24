@@ -27,7 +27,7 @@
       <ScrollView GrowHeight="true">
         <ListView Name="FamilyList" />
       </ScrollView>
-      <TextField Name="FamilyText" />
+      <ComboBox Name="FamilyComboBox" ShowTextField="true" ShowButton="false" FilterList="true" />
     </VBox>
     <VBox PrefWidth="60" Spacing="2" FillWidth="true">
       <Label text=" Sizes" PrefHeight="14" />
