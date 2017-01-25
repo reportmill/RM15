@@ -31,9 +31,6 @@ import snap.util.*;
  */
 public class RMDocument extends RMParentShape {
 
-    // The default document font
-    RMFont            _font = RMFont.getDefaultFont();
-    
     // The ReportMill version this document was created with
     float             _version = ReportMill.getVersion();
     
@@ -126,17 +123,7 @@ public String getFilename()  { return getSourceURL()!=null? getSourceURL().getPa
 /**
  * Returns the document's default font.
  */
-public RMFont getFont()  { return _font; }
-
-/**
- * Sets the document default font.
- */
-public void setFont(RMFont aFont)
-{
-    if(SnapUtils.equals(aFont, getFont()) || aFont==null) return;
-    firePropChange("Font", _font, _font = aFont);
-    super.setFont(aFont); // Do normal version
-}
+public RMFont getFont()  { return RMFont.getDefaultFont(); }
 
 /**
  * Returns the version this document was loaded as.
@@ -815,10 +802,9 @@ protected XMLElement toXMLShape(XMLArchiver anArchiver)
     // Archive Version
     e.add("version", ReportMill.getVersion());
     
-    // Archive DataSource, Font
+    // Archive DataSource
     XMLElement dxml = _dataSource!=null? anArchiver.toXML(_dataSource, this) : null;
     if(dxml!=null && dxml.getAttributeCount()>0) e.add(dxml);
-    if(!SnapUtils.equals(getFont(), RMFont.getDefaultFont())) e.add(anArchiver.toXML(getFont(), this));
     
     // Archive PageLayout, Unit
     if(getPageLayout()!=PageLayout.Single) e.add("page-layout", getPageLayout().name());
@@ -869,10 +855,9 @@ protected void fromXMLShape(XMLArchiver anArchiver, XMLElement anElement)
     _version = anElement.getAttributeFloatValue("version", 8.0f);
     anArchiver.setVersion(_version);
     
-    // Unarchive Datasource, Font
+    // Unarchive Datasource
     XMLElement dxml = anElement.get("datasource");
     if(dxml!=null) setDataSource(anArchiver.fromXML(dxml, RMDataSource.class, this));
-    if(anElement.getElement("font")!=null) _font = (RMFont)anArchiver.fromXML(anElement.getElement("font"), null);
     
     // Unarchive PageLayout, Unit
     if(anElement.hasAttribute("page-layout")) setPageLayout(anElement.getAttributeValue("page-layout"));
