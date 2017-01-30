@@ -34,6 +34,9 @@ public class InspectorPanel extends RMEditorPane.SupportPane {
     // The inspector for shape animation
     Animation            _animation = new Animation(getEditorPane());
     
+    // The inspector for shape animation
+    ShapeTree            _shapeTree = new ShapeTree(getEditorPane());
+    
     // The inspector for Undo
     UndoInspector        _undoInspector;
     
@@ -58,6 +61,7 @@ public void initUI()
 {
     // Get SelectionPathPanel and InspectorPanel
     _selectionPathPane = getView("SelectionPathPanel", ChildView.class);
+    enableEvents(_selectionPathPane, MouseRelease);
     _shapeBtn = getView("ShapeSpecificButton", ToggleButton.class);
     
     // Create the Action that redispatches the event and add the action to the action map
@@ -129,6 +133,10 @@ public void respondUI(ViewEvent anEvent)
     if(anEvent.getName().startsWith("SelPath"))
         popSelection(SnapUtils.intValue(anEvent.getName()));
     
+    // Handle SelectionPathPanel
+    if(anEvent.equals("SelectionPathPanel") && anEvent.isMouseRelease())
+        setVisible(9);
+    
     // Reset ui
     resetUI();
 }
@@ -177,6 +185,12 @@ public void setVisible(int anIndex)
     if(anIndex==8) {
         setInspector(_animation);
         _shapeBtn.getToggleGroup().setSelected(null); //setViewValue("OffscreenButton", true);
+    }
+    
+    // If index is 9, show ShapeTree Inspector
+    if(anIndex==9) {
+        setInspector(_shapeTree);
+        _shapeBtn.getToggleGroup().setSelected(null);
     }
     
     // If inspector panel isn't visible, set window visible
