@@ -12,16 +12,6 @@ import snap.gfx.*;
 public class RMShapeUtils {
 
 /**
- * Convenience to mark a whole list of shapes for repaint.
- */
-public static void repaint(List <? extends RMShape> theShapes)
-{
-    // Iterate over shapes in list and call set needs repaint
-    for(int i=0, iMax=theShapes.size(); i<iMax; i++)
-        theShapes.get(i).repaint();
-}
-
-/**
  * Returns the bounds of a given subset of this shape's children.
  */
 public static Rect getBoundsOfChildren(RMShape aShape, List <? extends RMShape> aList)

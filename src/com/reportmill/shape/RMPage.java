@@ -45,16 +45,6 @@ public class RMPage extends RMParentShape {
     // The animator for the page
     RMAnimator          _childAnimator;
     
-    // Plexing
-    Plexing             _plexing = Plexing.Simplex;
-    
-    // Constants for Plexing
-    public enum Plexing {
-        Simplex,
-        Duplex,
-        TumbleDuplex
-    };
-
 /**
  * Creates a plain empty page.
  */
@@ -276,20 +266,6 @@ public void resetLayers()
     
     // Reset layer index
     _layerIndex = 0;
-}
-
-/**
- * Returns the page plexing (whether it prints to one page, page back & front, or back & front with tumble).
- */
-public Plexing getPlexing()  { return _plexing; }
-
-/**
- * Sets the page plexing (whether it prints to one page, page back & front, or back & front with tumble).
- */
-public void setPlexing(Plexing aPlexing)
-{
-    if(aPlexing.equals(_plexing)) return;
-    firePropChange("Plexing", _plexing, _plexing = aPlexing);
 }
 
 /**
@@ -621,11 +597,10 @@ protected XMLElement toXMLShape(XMLArchiver anArchiver)
     // Archive basic shape attributes and reset name
     XMLElement e = super.toXMLShape(anArchiver); e.setName("page");
     
-    // Archive DatasetKey, PaintBackground, ClipChildren, ChildAnimator, Plexing
+    // Archive DatasetKey, PaintBackground, ClipChildren, ChildAnimator
     if(getDatasetKey()!=null && getDatasetKey().length()>0) e.add("dataset-key", getDatasetKey());
     if(!getPaintBackground()) e.add("paint-background", false);
     if(_childAnimator!=null && !_childAnimator.isEmpty()) e.add(_childAnimator.toXML(anArchiver));
-    if(!getPlexing().equals(Plexing.Simplex)) e.add("plexing", getPlexing());
 
     // Return xml element
     return e;
@@ -668,13 +643,12 @@ protected void fromXMLShape(XMLArchiver anArchiver, XMLElement anElement)
     // Unarchive basic shape attributes
     super.fromXMLShape(anArchiver, anElement);
     
-    // Unarchive DatasetKey, PaintBackground, ClipChildren, ChildAnimator, Plexing
+    // Unarchive DatasetKey, PaintBackground, ClipChildren, ChildAnimator
     if(anElement.hasAttribute("dataset-key")) setDatasetKey(anElement.getAttributeValue("dataset-key"));
     if(anElement.hasAttribute("paint-background"))
         setPaintBackground(anElement.getAttributeBoolValue("paint-background"));
     if(anElement.get("animator")!=null)
         setChildAnimator(anArchiver.fromXML(anElement.get("animator"), RMAnimator.class, null));
-    if(anElement.hasAttribute("plexing")) setPlexing(Plexing.valueOf(anElement.getAttributeValue("plexing")));
     setVisible(true); // Stupid RM13 RMDocumentLayout set visible to false on multi-page templates and wrote it out
 }
 

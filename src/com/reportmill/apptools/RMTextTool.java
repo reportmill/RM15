@@ -132,7 +132,7 @@ public void respondUI(ViewEvent anEvent)
     List <RMTextShape> texts = (List)getSelectedShapes();
     
     // Register repaint for texts
-    RMShapeUtils.repaint(texts);
+    texts.forEach(i -> i.repaint());
     
     // Handle TextArea: Send KeyEvents to Editor.TextEditor (and update its selection after MouseEvents)
     /*if(anEvent.getTarget()==_textArea) {
@@ -275,7 +275,7 @@ public void mouseMoved(T aShape, ViewEvent anEvent)
 public void mousePressed(ViewEvent anEvent)
 {
     // Register all selectedShapes dirty because their handles will probably need to be wiped out
-    RMShapeUtils.repaint(getEditor().getSelectedShapes());
+    getEditor().getSelectedShapes().forEach(i -> i.repaint());
 
     // Get shape hit by down point
     _downShape = getEditor().getShapeAtPoint(anEvent.getX(),anEvent.getY());

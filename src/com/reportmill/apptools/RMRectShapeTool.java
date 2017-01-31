@@ -35,14 +35,9 @@ public void resetUI()
  */
 public void respondUI(ViewEvent anEvent)
 {
-    // Get the current rectangle (just return if null)
+    // Get the current rect shape and list of rectshapes (just return if null)
     RMRectShape rect = getSelectedShape(); if(rect==null) return;
-    
-    // Get selected rectangles
     List <RMRectShape> rects = (List)getSelectedShapes();
-    
-    // Register rects for repaint (and thus undo)
-    RMShapeUtils.repaint(rects);
 
     // Handle Rounding Radius Thumb & Text
     if(anEvent.equals("RoundingThumb") || anEvent.equals("RoundingText")) {

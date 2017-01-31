@@ -21,25 +21,25 @@ import snap.view.ViewEvent;
 public class RMSelectTool extends RMTool {
     
     // The mode of current even loop (Move, Resize, etc.)
-    DragMode      _dragMode = DragMode.None;
+    DragMode        _dragMode = DragMode.None;
     
     // The point of last mouse
-    Point         _lastMousePoint;
+    Point           _lastMousePoint;
     
     // A construct representing a shape whose handle was hit and the handle
-    RMShapeHandle _shapeHandle;
+    RMShapeHandle   _shapeHandle;
     
     // The shape handling mouse events
-    RMShape       _eventShape;
+    RMShape         _eventShape;
 
     // The current selection rect (during DragModeSelect)
-    Rect          _selectionRect = new Rect();
+    Rect            _selectionRect = new Rect();
     
     // The list of shapes currently selected while selecting
-    List          _whileSelectingSelectedShapes = new Vector();
+    List <RMShape>  _whileSelectingSelectedShapes = new Vector();
     
     // Whether to re-enter mouse pressed
-    boolean       _redoMousePressed;
+    boolean         _redoMousePressed;
 
     // Drag mode constants
     public enum DragMode { None, Move, Rotate, Resize, Select, EventDispatch };
@@ -53,7 +53,7 @@ public void mousePressed(ViewEvent anEvent)
     RMEditor editor = getEditor();
 
     // Call setNeedsRepaint on superSelectedShapes to wipe out handles
-    RMShapeUtils.repaint(editor.getSuperSelectedShapes());
+    editor.getSuperSelectedShapes().forEach(i -> i.repaint());
 
     // See if tool wants to handle this one
     RMTool toolShared = editor.getTool(editor.getSelectedOrSuperSelectedShapes());
@@ -241,11 +241,8 @@ public void mouseDragged(ViewEvent anEvent)
             // Get current hit shapes
             List newShapes = getHitShapes();
             
-            // Set current selected shapes to be redrawn
-            for(int i=0, iMax=_whileSelectingSelectedShapes.size(); i<iMax; i++)
-                ((RMShape)_whileSelectingSelectedShapes.get(i)).repaint();
-            
-            // Set current selection rect to be redrawn
+            // Repaint selected shapes and SelectionRect
+            _whileSelectingSelectedShapes.forEach(i -> i.repaint());
             editor.repaint(editor.convertFromShape(_selectionRect.getInsetRect(-2), null).getBounds());
             
             // Get new _selectionRect and clear _whileSelectingSelectedShapes
@@ -262,9 +259,8 @@ public void mouseDragged(ViewEvent anEvent)
             // If shit key not down, select all new shapes
             else _whileSelectingSelectedShapes.addAll(newShapes);
 
-            // Set newly selected shapes and new selection rect to be redrawn
-            for(int i=0, iMax=_whileSelectingSelectedShapes.size(); i<iMax; i++)
-                ((RMShape)_whileSelectingSelectedShapes.get(i)).repaint();
+            // Repaint selected shapes and SelectionRect
+            _whileSelectingSelectedShapes.forEach(i -> i.repaint());
             editor.repaint(editor.convertFromShape(_selectionRect.getInsetRect(-2), null).getBounds());
 
             // break
