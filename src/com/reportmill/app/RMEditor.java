@@ -407,24 +407,24 @@ public RMShape getShapeAtPoint(double aX, double aY)  { return getShapeAtPoint(n
  */
 public RMShape getShapeAtPoint(Point aPoint)
 {
-    // Get superSelectedShape
-    RMShape superSelectedShape = getSuperSelectedShape();
+    // Get superSelShape
+    RMShape superSelShape = getSuperSelectedShape();
     
-    // If superSelectedShape is document, start with the selected page instead (maybe should go)
-    if(superSelectedShape==getDocument())
-        superSelectedShape = getSelectedPage();
+    // If superSelectedShape is document, start with page instead (maybe should go)
+    if(superSelShape==getDocument())
+        superSelShape = getSelectedPage();
 
     // Get the point in superSelectedShape's coords
-    Point point = convertToShape(aPoint.x, aPoint.y, superSelectedShape);
+    Point point = convertToShape(aPoint.x, aPoint.y, superSelShape);
 
     // Get child of superSelectedShape hit by point
-    RMShape shapeAtPoint = getChildShapeAtPoint(superSelectedShape, point);
+    RMShape shapeAtPoint = getChildShapeAtPoint(superSelShape, point);
     
     // If no superSelectedShape child hit by point, find first superSelectedShape that is hit & set to shapeAtPoint
-    while(superSelectedShape!=null && shapeAtPoint==null) {
-        superSelectedShape.convertPointToShape(point, superSelectedShape.getParent());
-        superSelectedShape = superSelectedShape.getParent();
-        shapeAtPoint = getChildShapeAtPoint(superSelectedShape, point);
+    while(superSelShape!=getContent() && shapeAtPoint==null) {
+        superSelShape.convertPointToShape(point, superSelShape.getParent());
+        superSelShape = superSelShape.getParent();
+        shapeAtPoint = getChildShapeAtPoint(superSelShape, point);
     }
 
     // See if point really hits an upper level shape that overlaps shapeAtPoint
@@ -442,9 +442,8 @@ public RMShape getShapeAtPoint(Point aPoint)
             
             // If child not equal to original shape, change shapeAtPoint
             if(hitChild != ssShape) {
-                superSelectedShape = ssShape.getParent();
-                shapeAtPoint = hitChild;
-                point = pnt;
+                superSelShape = ssShape.getParent();
+                shapeAtPoint = hitChild; point = pnt;
             }
             
             // Update loop shape/point variables
@@ -456,7 +455,7 @@ public RMShape getShapeAtPoint(Point aPoint)
     // Make sure page is worst case
     if(shapeAtPoint==null || shapeAtPoint==getDocument())
         shapeAtPoint = getSelectedPage();
-
+        
     // Return shape at point
     return shapeAtPoint;
 }

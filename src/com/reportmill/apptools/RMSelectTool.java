@@ -371,7 +371,7 @@ private List <RMShape> getHitShapes()
     Shape path = superShape.getConvertedFromShape(selRect, null);
 
     // If selection rect is outside super selected shape, move up shape hierarchy
-    while(superShape.getParent()!=null &&
+    while(superShape!=editor.getContent() &&
         !path.getBounds().intersectsEvenIfEmpty(editor.getTool(superShape).getBoundsSuperSelected(superShape))) {
         RMParentShape parent = superShape.getParent();
         editor.setSuperSelectedShape(parent);
