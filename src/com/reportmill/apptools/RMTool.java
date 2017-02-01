@@ -410,7 +410,7 @@ public void mouseMoved(T aShape, ViewEvent anEvent)
     
     // If shape handle is non-null, set cursor and return
     if(shapeHandle!=null)
-        cursor = shapeHandle.getTool().getHandleCursor(shapeHandle.getShape(), shapeHandle.getHandle());
+        cursor = shapeHandle.tool.getHandleCursor(shapeHandle.shape, shapeHandle.handle);
     
     // If mouse not on handle, check for mouse over a shape
     else {
@@ -644,19 +644,12 @@ public int getHandleOpposing(int handle)
 public static class RMShapeHandle {
 
     // The shape, handle index and shape tool
-    RMShape _shape; int _handle; RMTool _tool;
+    public RMShape  shape;
+    public int      handle;
+    public RMTool   tool;
     
     /** Creates a new shape-handle. */
-    public RMShapeHandle(RMShape aShape, int aHndl, RMTool aTool) { _shape = aShape; _handle = aHndl; _tool = aTool; }
-    
-    /** Returns the shape. */
-    public RMShape getShape()  { return _shape; }
-    
-    /** Returns the handle. */
-    public int getHandle()  { return _handle; }
-    
-    /** Returns the tool. */
-    public RMTool getTool()  { return _tool; }
+    public RMShapeHandle(RMShape aShape, int aHndl, RMTool aTool) { shape = aShape; handle = aHndl; tool = aTool; }
 }
 
 /**

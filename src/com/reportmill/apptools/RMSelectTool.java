@@ -76,11 +76,11 @@ public void mousePressed(ViewEvent anEvent)
         _dragMode = DragMode.Resize;
         
         // Register shape handle shape for repaint
-        _shapeHandle.getShape().repaint();
+        _shapeHandle.shape.repaint();
 
         // If _selectedShape is superSelected, select it instead
-        if(isSuperSelected(_shapeHandle.getShape()))
-            editor.setSelectedShape(_shapeHandle.getShape());
+        if(isSuperSelected(_shapeHandle.shape))
+            editor.setSelectedShape(_shapeHandle.shape);
 
         // Just return
         return;
@@ -232,7 +232,7 @@ public void mouseDragged(ViewEvent anEvent)
             Point resizePoint = getEditorEvents().getEventPointInShape(shouldSnap);
             
             // Move handle to current point and break
-            _shapeHandle.getTool().moveShapeHandle(_shapeHandle.getShape(), _shapeHandle.getHandle(), resizePoint);
+            _shapeHandle.tool.moveShapeHandle(_shapeHandle.shape, _shapeHandle.handle, resizePoint);
             break;
 
         // Handle DragModeSelect

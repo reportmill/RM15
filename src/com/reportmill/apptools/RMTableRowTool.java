@@ -284,8 +284,8 @@ public void mouseMoved(T aTableRow, ViewEvent anEvent)
     if(shapeHandle!=null) {
 
         // If shape handle shape is structured text, set cursor, consume event and return
-        if(shapeHandle.getShape() instanceof RMTextShape && ((RMTextShape)shapeHandle.getShape()).isStructured()) {
-            if(shapeHandle.getHandle()==HandleNW) getEditor().setCursor(Cursor.W_RESIZE);
+        if(shapeHandle.shape instanceof RMTextShape && ((RMTextShape)shapeHandle.shape).isStructured()) {
+            if(shapeHandle.handle==HandleNW) getEditor().setCursor(Cursor.W_RESIZE);
             else getEditor().setCursor(Cursor.E_RESIZE);
             anEvent.consume(); return;
         }
