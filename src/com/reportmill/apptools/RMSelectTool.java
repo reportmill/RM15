@@ -411,7 +411,7 @@ public void paintTool(Painter aPntr)
     for(int i=1, iMax=editor.getSuperSelectedShapeCount(); i<iMax; i++) {
         RMShape shape = editor.getSuperSelectedShape(i);
         RMTool tool = editor.getTool(shape);
-        tool.paintShapeHandles(shape, aPntr, true);
+        tool.paintHandles(shape, aPntr, true);
     }
     
     // Get selected shapes
@@ -424,7 +424,7 @@ public void paintTool(Painter aPntr)
     // Iterate over SelectedShapes and have tool paint Selected
     for(int i=0, iMax=selectedShapes.size(); i<iMax; i++) { RMShape shape = (RMShape)selectedShapes.get(i);
         RMTool tool = editor.getTool(shape);
-        tool.paintShapeHandles(shape, aPntr, false);
+        tool.paintHandles(shape, aPntr, false);
     }
 
     // Draw _selectionRect

@@ -610,7 +610,7 @@ public String getToolTip(T aTextShape, ViewEvent anEvent)
 /**
  * Paints selected shape indicator, like handles (and maybe a text linking indicator).
  */
-public void paintShapeHandles(T aTextShape, Painter aPntr, boolean isSuperSelected)
+public void paintHandles(T aTextShape, Painter aPntr, boolean isSuperSelected)
 {
     // If text is structured, draw rectangle buttons
     if(aTextShape.isStructured()) {
@@ -625,7 +625,7 @@ public void paintShapeHandles(T aTextShape, Painter aPntr, boolean isSuperSelect
 
     // If not structured or text linking, draw normal
     else if(!isSuperSelected)
-        super.paintShapeHandles(aTextShape, aPntr, isSuperSelected);
+        super.paintHandles(aTextShape, aPntr, isSuperSelected);
     
     // Call paintTextLinkIndicator
     if(isPaintingTextLinkIndicator(aTextShape))

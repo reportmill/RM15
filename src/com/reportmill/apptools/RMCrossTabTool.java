@@ -368,10 +368,10 @@ private MenuItem createMenuItem(String t, String n)  { MenuItem mi = new MenuIte
 /**
  * Highlights the selected cells or dividers.
  */
-public void paintShapeHandles(T aShape, Painter aPntr, boolean isSuperSelected)
+public void paintHandles(T aShape, Painter aPntr, boolean isSuperSelected)
 {
-    // If not super-selected just do normal paintShapeHandles and return
-    if(!isSuperSelected) { super.paintShapeHandles(aShape, aPntr, isSuperSelected); return; }
+    // If not super-selected just do normal paintHandles and return
+    if(!isSuperSelected) { super.paintHandles(aShape, aPntr, isSuperSelected); return; }
     
     // Get the table and declare rect to highlight
     RMEditor editor = getEditor();
@@ -411,8 +411,8 @@ public void paintShapeHandles(T aShape, Painter aPntr, boolean isSuperSelected)
         aPntr.draw(drawShape);
     }
     
-    // Do normal paintShapeHandles
-    super.paintShapeHandles(aShape, aPntr, isSuperSelected);
+    // Do normal paintHandles
+    super.paintHandles(aShape, aPntr, isSuperSelected);
 }
 
 /**

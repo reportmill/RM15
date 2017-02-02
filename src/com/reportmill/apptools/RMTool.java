@@ -454,7 +454,7 @@ public void paintTool(Painter aPntr)  { }
 /**
  * Handles painting shape handles (or any indication that a shape is selected/super-selected).
  */
-public void paintShapeHandles(T aShape, Painter aPntr, boolean isSuperSelected)
+public void paintHandles(T aShape, Painter aPntr, boolean isSuperSelected)
 {
     // If no handles, just return
     if(getHandleCount(aShape)==0) return;
