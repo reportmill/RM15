@@ -610,26 +610,52 @@ public String getToolTip(T aTextShape, ViewEvent anEvent)
 /**
  * Paints selected shape indicator, like handles (and maybe a text linking indicator).
  */
-public void paintHandles(T aTextShape, Painter aPntr, boolean isSuperSelected)
+public void paintHandles(T aText, Painter aPntr, boolean isSuperSelected)
 {
+    // Paint bounds rect (*maybe*): Set color (red if selected, light gray otherwise), get bounds path and draw
+    if(paintBoundsRect(aText)) {
+        aPntr.save();
+        aPntr.setColor(getEditor().isSuperSelected(aText)? new Color(.9f, .4f, .4f) : Color.LIGHTGRAY);
+        aPntr.setStroke(Stroke.Stroke1.copyForDashes(3, 2));
+        Shape path = aText.getPath().copyFor(aText.getBoundsInside());
+        path = getEditor().convertFromShape(path, aText);
+        aPntr.setAntialiasing(false); aPntr.draw(path); aPntr.setAntialiasing(true);
+        aPntr.restore();
+    }
+
     // If text is structured, draw rectangle buttons
-    if(aTextShape.isStructured()) {
+    if(aText.isStructured()) {
         
         // Iterate over shape handles, get rect and draw
         aPntr.setAntialiasing(false);
-        for(int i=0, iMax=getHandleCount(aTextShape); i<iMax; i++) {
-            Rect hr = getHandleRect(aTextShape, i, isSuperSelected);
+        for(int i=0, iMax=getHandleCount(aText); i<iMax; i++) {
+            Rect hr = getHandleRect(aText, i, isSuperSelected);
             aPntr.drawButton(hr, false); }
         aPntr.setAntialiasing(true);
     }
 
     // If not structured or text linking, draw normal
     else if(!isSuperSelected)
-        super.paintHandles(aTextShape, aPntr, isSuperSelected);
+        super.paintHandles(aText, aPntr, isSuperSelected);
     
     // Call paintTextLinkIndicator
-    if(isPaintingTextLinkIndicator(aTextShape))
-        paintTextLinkIndicator(aTextShape, aPntr);
+    if(isPaintingTextLinkIndicator(aText))
+        paintTextLinkIndicator(aText, aPntr);
+}
+
+/**
+ * Returns whether to draw bounds rect.
+ */
+private boolean paintBoundsRect(T aText)
+{
+    RMEditor editor = getEditor();
+    if(aText.getStroke()!=null) return false; // If text draws it's own stroke, return false
+    if(!editor.isEditing()) return false; // If editor is previewing, return false
+    if(aText.isStructured()) return false; // If structured text, return false
+    if(editor.isSelected(aText) || editor.isSuperSelected(aText)) return true; // If selected, return true
+    if(aText.length()==0) return true; // If text is zero length, return true
+    if(aText.getDrawsSelectionRect()) return true; // If text explicitly draws selection rect, return true
+    return false; // Otherwise, return false
 }
 
 /**

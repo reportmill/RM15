@@ -730,16 +730,6 @@ public void paintShape(Painter aPntr)
     // Paint normal background
     super.paintShape(aPntr);
     
-    // Paint bounds rect (*maybe*): Set color (red if selected, light gray otherwise), get bounds path and draw
-    RMShapePaintProps props = RMShapePaintProps.get(aPntr);
-    if(paintBoundsRect(aPntr, props)) {
-        aPntr.setColor(props.isSuperSelected(this)? new Color(.9f, .4f, .4f) : Color.LIGHTGRAY);
-        aPntr.setStroke(Stroke.Stroke1.copyForDashes(3, 2));
-        Shape path = getPath().copyFor(getBoundsInside());
-        aPntr.setAntialiasing(false); aPntr.draw(path); aPntr.setAntialiasing(true);
-        aPntr.setStroke(Stroke.Stroke1);
-    }
-
     // Clip to shape bounds (cache clip)
     aPntr.save();
     aPntr.clip(getBoundsInside());
@@ -778,20 +768,6 @@ protected void paintTextEditor(Painter aPntr, RMTextEditor aTE)
         if(spath!=null) { aPntr.setColor(Color.RED); aPntr.setStroke(Stroke.StrokeDash1); aPntr.draw(spath);
             aPntr.setColor(Color.BLACK); aPntr.setStroke(Stroke.Stroke1); }
     }
-}
-
-/**
- * Returns whether to draw bounds rect.
- */
-private boolean paintBoundsRect(Painter aPntr, RMShapePaintProps aProps)
-{
-    if(getStroke()!=null) return false; // If text draws it's own stroke, return false
-    if(!aProps.isEditing()) return false; // If editor is previewing, return false
-    if(isStructured()) return false; // If structured text, return false
-    if(aProps.isSelected(this) || aProps.isSuperSelected(this)) return true; // If selected, return true
-    if(length()==0) return true; // If text is zero length, return true
-    if(getDrawsSelectionRect()) return true; // If text explicitly draws selection rect, return true
-    return false; // Otherwise, return false
 }
 
 /**
