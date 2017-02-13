@@ -222,10 +222,12 @@ protected void initUI()
     // Enable Events for editor
     enableEvents(getEditor(), MousePress, MouseRelease);
     
-    // Configure Window ClassName, MenuBar, Image and enable window events
+    // Set RootView MenuBar
+    getRootView().setMenuBar(getMenuBar().getUI());
+    
+    // Configure Window ClassName, Image and enable window events
     WindowView win = getWindow();
     win.setType(WindowView.TYPE_MAIN);
-    win.setMenuBar(getMenuBar().getUI());
     win.setImage(getFrameIcon());
     enableEvents(win, WinClose);
 }
