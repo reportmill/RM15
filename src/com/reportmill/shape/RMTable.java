@@ -65,7 +65,7 @@ public String getDatasetKey()  { return _datasetKey; }
 public void setDatasetKey(String aKeyPath)
 {
     // Get key path with no @-signs
-    String keyPath = StringUtils.delete(aKeyPath, "@");
+    String keyPath = aKeyPath!=null? aKeyPath.replace("@", "") : null;
     
     // If value already set, just return
     if(SnapUtils.equals(keyPath, _datasetKey)) return;
