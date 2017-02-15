@@ -153,7 +153,7 @@ public static class ArrowHead extends RMPolygonShape {
     {
         RMPath p = new RMPath();
         p.moveTo(0,0); p.lineTo(-2.828, 2.828); p.lineTo(-2.121, 3.535);
-        p.lineTo(1.4142, 0); p.lineTo(-2.121, -3.535); p.lineTo(-2.828, -2.828); p.closePath();
+        p.lineTo(1.4142, 0); p.lineTo(-2.121, -3.535); p.lineTo(-2.828, -2.828); p.close();
         Rect r = p.getBounds();
         setSize(r.getWidth(), r.getHeight());
         setPath(p);

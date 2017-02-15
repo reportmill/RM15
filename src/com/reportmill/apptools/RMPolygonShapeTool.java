@@ -7,7 +7,9 @@ import com.reportmill.graphics.*;
 import com.reportmill.shape.*;
 import java.util.List;
 import snap.gfx.*;
+import snap.gfx.PathIter.Seg;
 import snap.view.*;
+import static com.reportmill.apptools.RMPolygonShapeUtils.*;
 
 /**
  * This class manages creation and editing of polygon shapes.
@@ -107,13 +109,13 @@ public void mouseReleased(ViewEvent anEvent)
 {
     if(_smoothPathOnMouseUp && _pointCountOnMouseDown<_path.getPointCount()) {
         getEditor().repaint();
-        RMPathFitCurves.fitCurveFromPointIndex(_path, _pointCountOnMouseDown);
+        PathFitCurves.fitCurveFromPointIndex(_path, _pointCountOnMouseDown);
     }
 
     // Check to see if point landed in first point
     if(_path.getPointCount() > 2) {
-        byte lastElmnt = _path.getElmtLast();
-        int lastPointIndex = _path.getPointCount() - (lastElmnt==RMPath.LINE_TO? 2 : 4);
+        Seg lastElmnt = _path.getSegLast();
+        int lastPointIndex = _path.getPointCount() - (lastElmnt==Seg.LineTo? 2 : 4);
         Point beginPoint = _path.getPoint(0);
         Point lastPoint = _path.getPoint(lastPointIndex);
         Point thisPoint = _path.getPointLast();
@@ -124,14 +126,14 @@ public void mouseReleased(ViewEvent anEvent)
 
         // If mouseUp is in startPoint, create poly and surrender to selectTool
         if(currentHandleRect.intersectsRect(firstHandleRect)) {
-            if(lastElmnt==RMPath.LINE_TO) _path.removeLastElmt();
-            _path.closePath();
+            if(lastElmnt==Seg.LineTo) _path.removeLastSeg();
+            _path.close();
             createPath = true;
         }
 
         // If mouseUp is in startPoint, create poly and surrender to selectTool
         if(currentHandleRect.intersectsRect(lastHandleRect)) {
-            if(_path.getElmtLast() == RMPath.LINE_TO) _path.removeLastElmt();
+            if(_path.getSegLast()==Seg.LineTo) _path.removeLastSeg();
             createPath = true;
         }
         
@@ -154,7 +156,7 @@ public void mouseMoved(T aPolygon, ViewEvent anEvent)
     
     // If control point is hit, change cursor to move
     RMPath path = aPolygon.getPath(); Size size = new Size(9,9);
-    if(path.handleAtPointForBounds(point, aPolygon.getBoundsInside(), RMPolygonShape._selectedPointIndex, size)>=0) {
+    if(handleAtPointForBounds(path, point, aPolygon.getBoundsInside(), RMPolygonShape._selectedPointIndex, size)>=0) {
         getEditor().setCursor(Cursor.MOVE);
         anEvent.consume();
     }
@@ -185,7 +187,7 @@ public void mousePressed(T aPolygon, ViewEvent anEvent)
     else {
         Size handles = new Size(9,9);
         int oldSelectedPt = RMPolygonShape._selectedPointIndex;
-        int hp = aPolygon.getPath().handleAtPointForBounds(point, aPolygon.getBoundsInside(), oldSelectedPt, handles);
+        int hp = handleAtPointForBounds(aPolygon.getPath(), point, aPolygon.getBoundsInside(), oldSelectedPt, handles);
         RMPolygonShape._selectedPointIndex = hp;
     
         if(anEvent.isPopupTrigger())
@@ -205,11 +207,11 @@ public void mouseDragged(T aPolygon, ViewEvent anEvent)
     if(RMPolygonShape._selectedPointIndex>=0) {
         Point point = getEditorEvents().getEventPointInShape(true);
         RMPath path = aPolygon.getPath();
-        point = path.pointInPathCoordsFromPoint(point, aPolygon.getBoundsInside());
+        point = pointInPathCoordsFromPoint(path, point, aPolygon.getBoundsInside());
         
         // Clone path, move control point & do all the other path funny business, reset path
         RMPath newPath = path.clone();
-        newPath.setPointStructured(RMPolygonShape._selectedPointIndex, point);
+        setPointStructured(newPath, RMPolygonShape._selectedPointIndex, point);
         aPolygon.resetPath(newPath);
     } 
 }
@@ -303,12 +305,11 @@ public Rect getBoundsSuperSelected(T aShape)
  */
 private Rect getControlPointBounds(RMPath path)
 {
-    // Get element index for selected control point handle
-    int mouseDownElmtIndex = path.getElmtIndexForPointIndex(RMPolygonShape._selectedPointIndex);
-    if((mouseDownElmtIndex >= 0) &&
-        (path.getElmt(mouseDownElmtIndex) == RMPath.CURVE_TO) &&
-        (path.getElmtPointIndex(mouseDownElmtIndex) == RMPolygonShape._selectedPointIndex))
-        mouseDownElmtIndex--;
+    // Get segment index for selected control point handle
+    int mouseDownIndex = path.getSegIndexForPointIndex(RMPolygonShape._selectedPointIndex);
+    if(mouseDownIndex>=0 && path.getSeg(mouseDownIndex)==Seg.CubicTo &&
+        (path.getSegPointIndex(mouseDownIndex) == RMPolygonShape._selectedPointIndex))
+        mouseDownIndex--;
 
     // Iterate over path elements
     Point p0 = path.getPointCount()>0? new Point(path.getPoint(0)) : new Point();
@@ -327,11 +328,11 @@ private Rect getControlPointBounds(RMPath path)
         
         // Handle CubicTo
         case CubicTo: {
-            if((i-1)==mouseDownElmtIndex) {
+            if((i-1)==mouseDownIndex) {
                 p1x = Math.min(p1x, pts[0]); p1y = Math.min(p1y, pts[1]);
                 p2x = Math.max(p2x, pts[0]); p2y = Math.max(p2y, pts[1]);
             }
-            if(i==mouseDownElmtIndex) {
+            if(i==mouseDownIndex) {
                 p1x = Math.min(p1x, pts[2]); p1y = Math.min(p1y, pts[3]);
                 p2x = Math.max(p2x, pts[2]); p2y = Math.max(p2y, pts[3]);
             }
@@ -360,7 +361,7 @@ public void runContextMenu(RMPolygonShape aPolyShape, ViewEvent anEvent)
     
     // If clicked on a valid handle, add 'delete point' to menu, 
     if(pindex>=0) {
-        if(path.pointOnPath(pindex)) { // Only on-path points can be deleted
+        if(pointOnPath(path, pindex)) { // Only on-path points can be deleted
             mtitle = "Delete Anchor Point"; mname ="DeletePointMenuItem"; }
     }
     
@@ -393,17 +394,17 @@ public void deleteSelectedPoint()
     RMPolygonShape p = getSelectedShape();
     RMPath path = p.getPath().clone();
 
-    // get the index of the path element corresponding to the selected control point
-    int elementIndex = path.getElmtIndexForPointIndex(RMPolygonShape._selectedPointIndex);
+    // get the index of the path segment corresponding to the selected control point
+    int sindex = path.getSegIndexForPointIndex(RMPolygonShape._selectedPointIndex);
 
     // mark for repaint & undo
     p.repaint();
 
-    // delete the point from path in parent coords
-    path.removeElmt(elementIndex);
+    // Delete the point from path in parent coords
+    path.removeSeg(sindex);
 
     // if all points have been removed, delete the shape itself
-    if (path.getElmtCount()==0) {
+    if (path.getSegCount()==0) {
         getEditor().undoerSetUndoTitle("Delete Shape");
         p.getParent().repaint();
         p.removeFromParent();

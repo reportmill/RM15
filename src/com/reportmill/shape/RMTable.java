@@ -441,7 +441,7 @@ public void paintShape(Painter aPntr)
             // Draw drop-down arrow
             RMPath p = new RMPath(); p.moveTo(titleX + titleWidth + 2.5f, titleY - 6f);
             p.lineTo(titleX + titleWidth + 5.5f, titleY - 1f);
-            p.lineTo(titleX + titleWidth + 8.5f, titleY - 6f); p.closePath();
+            p.lineTo(titleX + titleWidth + 8.5f, titleY - 6f); p.close();
             aPntr.fill(p);
             
             // Draw button Structured button as a white bezel with jail bars

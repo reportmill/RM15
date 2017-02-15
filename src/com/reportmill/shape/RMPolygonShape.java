@@ -4,6 +4,7 @@
 package com.reportmill.shape;
 import com.reportmill.graphics.*;
 import snap.gfx.*;
+import snap.gfx.PathIter.Seg;
 import snap.util.*;
 
 /**
@@ -72,13 +73,13 @@ public void paintShape(Painter aPntr)
     RMPath path = getPath();
     
     // Declare some path iteration variables
-    byte lastElement = -1;
+    Seg lastElement = null;
     int currentPointIndex = 0;
     Point pnts[] = new Point[3];
     float HW = 6, HHW= HW/2;
 
     // Iterate over path segements
-    for(int i=0; i<path.getElmtCount(); i++) { int pointIndex = path.getElmtPointIndex(i);
+    for(int i=0; i<path.getSegCount(); i++) { int pointIndex = path.getSegPointIndex(i);
         
         // Get points
         pnts[0] = pointIndex<path.getPointCount()? path.getPoint(pointIndex++) : null;
@@ -86,8 +87,8 @@ public void paintShape(Painter aPntr)
         pnts[2] = pointIndex<path.getPointCount()? path.getPoint(pointIndex++) : null;
         
         // Get segment type and next segment type
-        byte element = path.getElmt(i);
-        byte nextElement = i+1<path.getElmtCount()? path.getElmt(i+1) : -1;
+        Seg element = path.getSeg(i);
+        Seg nextElement = i+1<path.getSegCount()? path.getSeg(i+1) : null;
 
         // Set color black for control lines and so alpha is correct for buttons
         aPntr.setColor(Color.BLACK);
@@ -95,9 +96,9 @@ public void paintShape(Painter aPntr)
         // Draw buttons for all segment endPoints
         switch(element) {
 
-            // Handle MOVE_TO & LINE_TO: just draw button
-            case RMPath.MOVE_TO:
-            case RMPath.LINE_TO: {
+            // Handle MoveTo & LineTo: just draw button
+            case MoveTo:
+            case LineTo: {
                 Rect hrect = new Rect(pnts[0].x-HHW, pnts[0].y-HHW, HW, HW);
                 aPntr.drawButton(hrect, false);
                 currentPointIndex++;
@@ -105,13 +106,13 @@ public void paintShape(Painter aPntr)
             }
 
             // Handle CURVE_TO: If selectedPointIndex is CurveTo, draw line to nearest endPoint and button
-            case RMPath.CURVE_TO: {
+            case CubicTo: {
                 
                 // If controlPoint1's point index is the selectedPointIndex or last end point was selectedPointIndex
                 // or lastElement was a CurveTo and it's controlPoint2's pointIndex was the selectedPointIndex
                 //   then draw control line from controlPoint1 to last end point and draw handle for control point 1
                 if(currentPointIndex==_selectedPointIndex || currentPointIndex-1==_selectedPointIndex ||
-                   (lastElement==RMPath.CURVE_TO && currentPointIndex-2==_selectedPointIndex)) {
+                   (lastElement==Seg.CubicTo && currentPointIndex-2==_selectedPointIndex)) {
                     Point lastPoint = path.getPoint(currentPointIndex-1);
                     aPntr.setStroke(Stroke.Stroke1);
                     aPntr.drawLine(pnts[0].getX(), pnts[0].getY(), lastPoint.getX(), lastPoint.getY());
@@ -123,7 +124,7 @@ public void paintShape(Painter aPntr)
                 // selectedPointIndex or if next element is CurveTo and it's cp1 point index is
                 // selectedPointIndex then draw control line from cp2 to end point and draw handle for cp2
                 else if(currentPointIndex+1==_selectedPointIndex || currentPointIndex+2==_selectedPointIndex ||
-                    (nextElement==RMPath.CURVE_TO && currentPointIndex+3==_selectedPointIndex)) {
+                    (nextElement==Seg.CubicTo && currentPointIndex+3==_selectedPointIndex)) {
                     aPntr.setStroke(Stroke.Stroke1);
                     aPntr.drawLine(pnts[1].getX(), pnts[1].getY(), pnts[2].getX(), pnts[2].getY());
                     aPntr.drawButton(pnts[1].x-HHW, pnts[1].y-HHW, HW, HW, false);

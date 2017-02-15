@@ -2,7 +2,7 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.graphics;
-import snap.gfx.Point;
+import snap.gfx.*;
 import snap.util.ListUtils;
 import java.util.*;
 
@@ -151,7 +151,7 @@ public void addPath(RMPath aPath, double aDepth)
     // Iterate over elements in given path
     RMPath.RMPathIter piter = aPath.getPathIter(null); Point pts[] = new Point[3];
     for(int i=0; piter.hasNext(); i++) switch(piter.getNext(pts)) {
-        case MoveTo: if(i+1<aPath.getElmtCount() && aPath.getElmt(i+1)!=MOVE_TO)
+        case MoveTo: if(i+1<aPath.getSegCount() && aPath.getSeg(i+1)!=PathIter.Seg.MoveTo)
                 moveTo(pts[0].x, pts[0].y, aDepth); break;
         case LineTo: lineTo(pts[0].x, pts[0].y, aDepth); break;
         case QuadTo: quadTo(pts[0].x, pts[0].y, aDepth, pts[1].x, pts[1].y, aDepth); break;
@@ -341,7 +341,7 @@ public RMPath getPath()
             case LINE_TO: path.lineTo(pts[0].x, pts[0].y); break;
             case QUAD_TO: path.quadTo(pts[0].x, pts[0].y, pts[1].x, pts[1].y); break;
             case CURVE_TO: path.curveTo(pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x, pts[2].y); break;
-            case CLOSE: path.closePath();
+            case CLOSE: path.close();
         }
     }
     

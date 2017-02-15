@@ -26,26 +26,7 @@ import snap.util.*;
         }
 
 ******************************************************************************/
-public class RMPath extends Shape implements Cloneable, XMLArchiver.Archivable {
-    
-    // Array of operators for path
-    byte          _elmts[] = new byte[4];
-    
-    // Actual number of operators (can be less than _elements array length)
-    int           _ecount;
-    
-    // Array of points for path
-    List <Point>  _points = new Vector(8);
-    
-    // Rule describing how inner path perimeters are displayed when filled
-    byte          _windingRule = WIND_NON_ZERO;
-    
-    // The rect that just contains the path
-    Rect          _bounds;
-
-    // Constants describing how inner path perimeters are filled and clipped
-    public static final byte WIND_NON_ZERO = 0; // Inner perimeters drawn in same dir as outer pmtr filled
-    public static final byte WIND_EVEN_ODD = 1; // Inner perimeters are alternately not covered
+public class RMPath extends Path implements Cloneable, XMLArchiver.Archivable {
     
     // Constants describing path element types (MoveToPoint, LineToPoint, CurveToPoint, Close)
     public static final byte MOVE_TO = 1;
@@ -62,12 +43,12 @@ public RMPath()  { }
 /**
  * Creates a path for the given shape.
  */
-public RMPath(Shape aShape)  { appendShape(aShape); }
+public RMPath(Shape aShape)  { super(aShape); }
 
 /**
  * Creates a path for the given path iterator.
  */
-public RMPath(PathIter aPI)  { appendPathIter(aPI); }
+public RMPath(PathIter aPI)  { super(aPI); }
 
 /**
  * Adds a MoveTo element to the path for the given point.
@@ -75,240 +56,15 @@ public RMPath(PathIter aPI)  { appendPathIter(aPI); }
 public void moveTo(Point p) { moveTo(p.getX(), p.getY()); }
 
 /**
- * Adds a MoveTo element to the path for the given point.
- */
-public void moveTo(double px, double py)  { addElmt(MOVE_TO); addPoint(px, py); }
-  
-/**
  * Adds a LineTo element to the path for the given point.
  */
 public void lineTo(Point p) { lineTo(p.getX(), p.getY()); }
 
 /**
- * Adds a LineTo element to the path for the given point.
- */
-public void lineTo(double px, double py)  { addElmt(LINE_TO); addPoint(px, py); }
-
-/**
- * Adds a QuadTo element to the path for the given point and control point.
- */
-public void quadTo(Point cp, Point p) { quadTo(cp.getX(), cp.getY(), p.getX(), p.getY()); }
-
-/**
- * Adds a QuadTo element to the path for the given point and control point.
- */
-public void quadTo(double cpx, double cpy, double px, double py)
-{
-    addElmt(QUAD_TO); addPoint(cpx, cpy); addPoint(px, py);
-}
-
-/**
- * Adds a CurveTo element to the path for the given point and control points.
- */
-public void curveTo(Point cp1, Point cp2, Point p)
-{
-    curveTo(cp1.getX(), cp1.getY(), cp2.getX(), cp2.getY(), p.getX(), p.getY());
-}
-
-/**
- * Adds a CurveTo element to the path for the given point and control points.
- */
-public void curveTo(double cp1x, double cp1y, double cp2x, double cp2y, double px, double py)
-{
-    addElmt(CURVE_TO); addPoint(cp1x, cp1y); addPoint(cp2x, cp2y); addPoint(px, py);
-}
-
-/**
- * Adds a Close element to the given path.
- */
-public void closePath()  { addElmt(CLOSE); }
-
-/** Adds an element to the elements array. */
-private void addElmt(byte anElmt)
-{
-    if(_ecount==_elmts.length) _elmts = Arrays.copyOf(_elmts, _elmts.length*2);
-    _elmts[_ecount++] = anElmt; _bounds = null;
-}
-
-/** Adds a point to the points list. */
-private void addPoint(double px, double py)  { _points.add(new Point(px,py)); }
-
-/**
- * Resets the current path with no elements or points.
- */
-public void reset()  { _ecount = 0; _points.clear(); _bounds = null; }
-
-/**
- * Returns a new path from a shape.
- */
-public void appendShape(Shape aShape)  { appendPathIter(aShape.getPathIter(null)); }
-
-/**
- * Returns a new path from a PathIter.
- */
-public void appendPathIter(PathIter aPI)
-{
-    double pts[] = new double[6];
-    while(aPI.hasNext()) {
-        switch(aPI.getNext(pts)) {
-            case MoveTo: moveTo(pts[0], pts[1]); break;
-            case LineTo: lineTo(pts[0], pts[1]); break;
-            case QuadTo: quadTo(pts[0], pts[1], pts[2], pts[3]); break;
-            case CubicTo: curveTo(pts[0], pts[1], pts[2], pts[3], pts[4], pts[5]); break;
-            case Close: closePath();
-        }
-    }
-}
-
-/**
- * Returns the winding rule which describes how inner path perimeters are filled and clipped.
- */
-public byte getWindingRule()  { return _windingRule; }
-
-/**
- * Sets the winding rule which describes how inner path perimeters are filled and clipped.
- */
-public void setWindingRule(byte windingRule)  { _windingRule = windingRule; }
-
-/**
- * Returns the number of elements in this path.
- */
-public int getElmtCount()  { return _ecount; }
-
-/**
- * Returns the element type at the given index.
- */
-public byte getElmt(int anIndex)  { return _elmts[anIndex]; }
-
-/**
- * Returns the last element.
- */
-public byte getElmtLast()  { return _ecount>0? _elmts[_ecount-1] : 0; }
-
-/**
- * Returns the number of points in the path.
- */
-public int getPointCount()  { return _points.size(); }
-
-/**
- * Returns the point at the given index.
- */
-public Point getPoint(int anIndex)  { return _points.get(anIndex); }
-
-/**
- * Returns the last point in the path.
- */
-public Point getPointLast()  { return getPointCount()>0? getPoint(getPointCount()-1) : new Point(); }
-
-/**
- * Returns the point count for given element type.
- */
-protected int getPointCount(byte t)  { return t==RMPath.CURVE_TO? 3 : t==RMPath.QUAD_TO? 2 : t==RMPath.CLOSE? 0 : 1; }
-
-/**
- * Returns the bounds for the path.
- */
-public Rect getBounds()
-{
-    // If already set, just return
-    if(_bounds!=null) return _bounds;
-    
-    // Iterate over segments and calculate bounds
-    PathIter aPI = getPathIter(null);
-    double p1x = Double.MAX_VALUE, p1y = Double.MAX_VALUE;
-    double p2x = -Double.MAX_VALUE, p2y = -Double.MAX_VALUE;
-    Rect bnds = new Rect(); double pts[] = new double[6], lx = 0, ly = 0;
-    while(aPI.hasNext()) {
-        switch(aPI.getNext(pts)) {
-            case MoveTo: case LineTo: bnds.setRect(lx=pts[0], ly=pts[1], 0, 0); break;
-            case QuadTo: bnds = Quad.bounds(lx, ly, pts[0], pts[1], lx=pts[2], ly=pts[3], bnds); break;
-            case CubicTo: bnds = Cubic.bounds(lx, ly, pts[0], pts[1], pts[2], pts[3], lx=pts[4], ly=pts[5],bnds); break;
-            case Close: break;
-        }
-        
-        // Combine bounds for segment
-        p1x = Math.min(p1x, bnds.x); p2x = Math.max(p2x, bnds.getMaxX());
-        p1y = Math.min(p1y, bnds.y); p2y = Math.max(p2y, bnds.getMaxY());
-    }
- 
-    // Return bounds
-    Rect bounds = p1x!=Double.MAX_VALUE? new Rect(p1x, p1y, p2x - p1x, p2y - p1y) : new Rect();
-    return _bounds = bounds;
-}
-
-/**
  * Returns a PathIter for RMPath.
  */
-public RMPathIter getPathIter(Transform aTrans)  { return new RMPathIter(this, aTrans); }
+public RMPathIter getPathIter(Transform aTrans)  { return new RMPathIter(super.getPathIter(aTrans)); }
 
-/**
- * Returns the point index for a given element.
- */
-public int getElmtPointIndex(int anIndex)
-{
-    // Iterate over segments and increment point index
-    int pointIndex = 0;
-    for(int i=0; i<anIndex; i++)
-        switch(getElmt(i)) {
-            case MOVE_TO:
-            case LINE_TO: pointIndex++; break;
-            case QUAD_TO: pointIndex += 2; break;
-            case CURVE_TO: pointIndex += 3; break;
-            default: break;
-        }
-    
-    // Return calculated point index
-    return pointIndex;
-}
-
-/**
- * Returns the element index for the given point index.
- */
-public int getElmtIndexForPointIndex(int index)
-{
-    // Iterate over segments and increment element index
-    int elementIndex = 0;
-    for(int pointIndex=0; pointIndex<=index; elementIndex++)
-        switch(getElmt(elementIndex)) {
-            case MOVE_TO:
-            case LINE_TO: pointIndex++; break;
-            case QUAD_TO: pointIndex += 2; break;
-            case CURVE_TO: pointIndex += 3; break;
-            default: break;
-        }
-    
-    // Return calculated element index
-    return elementIndex - 1;
-}
-
-/**
- * Returns the total number of points associated with a given type of path element.
- */
-public int pointCountForElmt(int element)
-{ 
-    switch(element) {
-        case MOVE_TO: 
-        case LINE_TO: return 1;
-        case QUAD_TO: return 2;
-        case CURVE_TO: return 3;
-        default: return 0;
-    }
-}
-
-/**
- * Returns true of the point at pointIndex is on the path, and false if it is on the convex hull.
- */ 
-public boolean pointOnPath(int pointIndex)
-{
-    int elIndex = getElmtIndexForPointIndex(pointIndex);
-    int indexInElement = pointIndex - getElmtPointIndex(elIndex);
-    
-    // Only the last point is actually on the path
-    int elType = getElmt(elIndex);
-    int numPts = pointCountForElmt(elType);
-    return indexInElement == numPts-1;
-}
-    
 /**
  * Returns whether path has any open subpaths.
  */
@@ -502,39 +258,6 @@ public RMHitInfo getHitInfo(RMLine aLine, boolean findFirstHit)
 }
 
 /**
- * Converts a path into a list of RMLine/RMQuadratic/RMBezier.
- */
-public List <? extends RMLine> getSegments() 
-{
-    // Iterate over elements
-    RMPathIter piter = getPathIter(null); List <RMLine> segments = new ArrayList();
-    Point pts[] = new Point[3], lastPoint = new Point(), lastMoveToPoint = lastPoint;
-    while(piter.hasNext()) switch(piter.getNext(pts)) {
-        
-        // Handle MoveTo
-        case MoveTo: lastPoint = lastMoveToPoint = pts[0]; break;
-
-        // Handle Close: set points to last MoveTo and fall through to LineTo
-        case Close: pts[0] = lastMoveToPoint;
-
-        // Handle LineTo
-        case LineTo:
-            if(!lastPoint.equals(pts[0]))
-                segments.add(new RMLine(lastPoint, lastPoint = pts[0]));
-            break;
-            
-        // Handle QuadTo
-        case QuadTo: segments.add(new RMQuadratic(lastPoint, pts[0], lastPoint = pts[1])); break;
-        
-        // Handle CurveTo
-        case CubicTo: segments.add(new RMBezier(lastPoint, pts[0], pts[1], lastPoint = pts[2])); break;
-    }
-    
-    // Return paths
-    return segments;
-}
-
-/**
  * Converts a path into a list subpath lists of RMLine/RMQuadratic/RMBezier.
  */
 public List <List <? extends RMLine>> getSubpathsSegments() 
@@ -589,7 +312,7 @@ public void addSegments(List <? extends RMLine> theSegments)
     // Iterate over segments
     for(int i=0, iMax=theSegments.size(); i<iMax; i++) { RMLine segment = theSegments.get(i);
         if(segment.getClass()==RMLine.class && segment.getEP().equals(startPoint))
-            closePath();
+            close();
         else addSegment(segment);
     }
 }
@@ -601,324 +324,14 @@ public void addSegment(RMLine aSegment)
 {
     // Handle Bezier
     if(aSegment instanceof RMBezier) { RMBezier b = (RMBezier)aSegment;
-        curveTo(b.getCP1(), b.getCP2(), b.getEP()); }
+        curveTo(b.getCP1x(), b.getCP1y(), b.getCP2x(), b.getCP2y(), b.getEPx(), b.getEPy()); }
    
     // Handle Quadratic
     else if(aSegment instanceof RMQuadratic) { RMQuadratic q = (RMQuadratic)aSegment;
-        quadTo(q.getCP1(), q.getEP()); }
+        quadTo(q.getCP1x(), q.getCP1y(), q.getEPx(), q.getEPy()); }
    
     // Handle basic Line
     else lineTo(aSegment.getEP());
-}
-
-/**
- * Returns the hit info for the given bezier curve against this path.
- */
-public RMHitInfo getHitInfo(RMBezier aBezier, boolean findFirstHit)
-{
-    // Iterate over path segments
-    RMPathIter piter = getPathIter(null); RMHitInfo hitInfo = null;
-    Point pts[] = new Point[3], lastPoint = new Point(), lastMoveToPoint = lastPoint;
-    for(int i=0; piter.hasNext(); i++) switch(piter.getNext(pts)) {
-
-        // Handle MoveTo: Just update last point & last move-to point and break
-        case MoveTo: lastPoint = lastMoveToPoint = pts[0]; break;
-
-        // Handle Close: If last point is last move-to point, just break
-        case Close: if(lastPoint.equals(lastMoveToPoint))
-               break;
-            
-            // Otherwise set current segment point to last move-to point and fall through to LineTo
-            pts[0] = lastMoveToPoint;
-
-        // Handle LineTo
-        case LineTo: {
-            
-            // Create line for current path segment and get hit info for given beizer and current path segment
-            RMLine line = new RMLine(lastPoint, pts[0]);
-            RMHitInfo newHitInfo = aBezier.getHitInfo(line);
-
-            // If hit, see if we need to findFirstHit or just return hitInfo
-            if(newHitInfo!=null) {
-
-                // If findFirstHit, see if newHitInfo hit is closer in than current hitInfo
-                if(findFirstHit) {
-                    if(hitInfo==null || newHitInfo._r<hitInfo._r) {
-                        hitInfo = newHitInfo; hitInfo._index = i; }
-                }
-
-                // If not findFirstHit, just return newHitInfo
-                else return newHitInfo;
-            }
-
-            // Update last point and break
-            lastPoint = pts[0]; break;
-        }
-
-        // Handle QuadTo
-        case QuadTo:
-            
-            // Convert quad-to to curve-to and fall through to CubicTo
-            pts[2] = pts[1]; pts[1] = pts[0];
-
-        // CubicTo
-        case CubicTo: {
-            
-            // Create bezier for current path segment and get hit info for given bezier and current path segment
-            RMBezier bezier = new RMBezier(lastPoint, pts[0], pts[1], pts[2]);
-            RMHitInfo newHitInfo = aBezier.getHitInfo(bezier);
-
-            // If hit, see if we need to findFirstHit or just return hitInfo
-            if(newHitInfo!=null) {
-
-                // If findFirstHit, see if newHitInfo hit is closer in than current hitInfo
-                if(findFirstHit) {
-                    if(hitInfo==null || newHitInfo._r<hitInfo._r) {
-                        hitInfo = newHitInfo; hitInfo._index = i; }
-                }
-
-                // If not findFirstHit, just return newHitInfo
-                else return newHitInfo;
-            }
-
-            // Update last point and break
-            lastPoint = pts[2]; break;
-        }
-    }
-
-    // Return hit info
-    return hitInfo;
-}
-
-/**
- * Returns the handle index for a given point against this path scaled to the given rect.
- * Only returns points that are on the path, except for the control points of
- * selectedPoint (if not -1)
- */
-public int handleAtPointForBounds(Point aPoint, Rect aRect, int selectedPoint, Size handleSize)
-{
-    // convert point from shape coords to path coords
-    Point point = pointInPathCoordsFromPoint(aPoint, aRect);
-
-    // Check against off-path control points of selected path first, otherwise you might never be able to select one
-    if(selectedPoint != -1) {
-        int offPathPoints[]=new int[2];
-        int noffPathPoints=0;
-        int ecount = getElmtCount();
-        int eindex = getElmtIndexForPointIndex(selectedPoint);
-        int elmt = getElmt(eindex);
-        
-        // If the selected point is one of the on path points, figure out the indices of the others
-        if (pointOnPath(selectedPoint)) {
-            
-            // If the selected element is a curveto or quadto, the second to the last control point will be active
-            if(elmt==CURVE_TO || elmt==QUAD_TO)
-                offPathPoints[noffPathPoints++] = selectedPoint-1;
-
-            // If the element following the selected element is a curveto, it's first control point will be active
-            if (eindex<ecount-1 && getElmt(eindex+1)==CURVE_TO)
-                offPathPoints[noffPathPoints++] = selectedPoint+1;
-        }
-        
-        // If selected point is off-path, add it to list to check and then figure out what other point might be active
-        else {
-            offPathPoints[noffPathPoints++] = selectedPoint;
-            
-            // if selected point is first control point, check previous segment, otherwise check next segment
-            if (selectedPoint == getElmtPointIndex(eindex)) {
-                if((eindex>0) && (getElmt(eindex-1)==CURVE_TO))
-                    offPathPoints[noffPathPoints++] = selectedPoint-2;
-            }
-            else {
-                if((eindex<ecount-1) && (getElmt(eindex+1)==CURVE_TO)) 
-                    offPathPoints[noffPathPoints++] = selectedPoint+2;
-            }
-        }
-        
-        // hit test any selected off-path handles
-        for(int i=0; i<noffPathPoints; ++i)
-            if(hitHandle(point, offPathPoints[i], handleSize))
-                return offPathPoints[i];
-    }
-    
-    // Check the rest of the points, but only ones that are actually on the path
-    for(int i=0, iMax=getPointCount(); i<iMax; i++)
-        if(hitHandle(point, i, handleSize) && pointOnPath(i))
-            return i;
-
-    // nothing hit
-    return -1;
-}
-        
-/**
- * Hit test the point (in path coords) against a given path point.
- */
-private boolean hitHandle(Point aPoint, int ptIndex, Size handleSize)
-{
-    Point p = _points.get(ptIndex);
-    Rect br = new Rect(p.x-handleSize.width/2, p.y-handleSize.height/2, handleSize.width, handleSize.height);
-    return br.contains(aPoint.getX(), aPoint.getY());
-}
-
-/**
- * Returns the given point converted to path coords for given path bounds.
- */
-public Point pointInPathCoordsFromPoint(Point aPoint, Rect aRect)
-{
-    Rect bounds = getBounds();
-    double sx = bounds.getWidth()/aRect.getWidth();
-    double sy = bounds.getHeight()/aRect.getHeight();
-    double x = (aPoint.getX()-aRect.getMidX())*sx + bounds.getMidX();
-    double y = (aPoint.getY()-aRect.getMidY())*sy + bounds.getMidY();
-    return new Point(x,y);
-}
-
-/**
- * Removes the last element from the path.
- */
-public void removeLastElmt()
-{
-    // Handle specific element type
-    switch(getElmt(_ecount-1)) {
-        case CURVE_TO: ListUtils.removeLast(_points);
-        case QUAD_TO: ListUtils.removeLast(_points);
-        case MOVE_TO: case LINE_TO: ListUtils.removeLast(_points); break;
-        default: break;
-    }
-    
-    // Decrement the element count and invalidate bounds
-    _ecount--; _bounds = null;
-}
-
-/**
- * Removes an element, reconnecting the elements on either side of the deleted element.
- */
-public void removeElmt(int elmtIndex) 
-{
-    // range check
-    if((elmtIndex<0) || (elmtIndex>=_ecount))
-        throw new IndexOutOfBoundsException("element index " + elmtIndex + " out of bounds");
-    
-    // If this is the last element, nuke it
-    if(elmtIndex==_ecount-1) {
-        removeLastElmt();
-        if(_ecount>0 && getElmt(_ecount-1)==MOVE_TO) // but don't leave stray moveto sitting around
-            removeLastElmt();
-        return;
-    }
-        
-    // Get some info
-    int pindex = getElmtPointIndex(elmtIndex);  // get the index to the first point for this element
-    int etype = getElmt(elmtIndex);            // the type of element (MOVETO,LINETO,etc)
-    int nPts = pointCountForElmt(etype);      // and how many points are associated with this element
-    int nDeletedPts = nPts;                  // how many points to delete from the points array
-    int nDeletedElmts = 1;                  // how many elements to delete (usually 1)
-    int deletedElmntIndex = elmtIndex;     // index to delete from element array (usually same as original index)
-    
-    // delete all poins but the last of the next segment
-    if(etype==MOVE_TO) {
-        nDeletedPts = pointCountForElmt(getElmt(elmtIndex+1));
-        ++deletedElmntIndex;  // delete the next element and preserve the MOVETO
-    }
-    
-    else {
-        // If next element is a curveTo, we are merging 2 curves into one, so delete points such that slopes
-        // at endpoints of new curve match the starting and ending slopes of the originals.
-        if(getElmt(elmtIndex+1)==CURVE_TO)
-            pindex++;
-        
-        // Deleting the only curve or a line in a subpath can leave a stray moveto. If that happens, delete it, too
-        else if ((getElmt(elmtIndex-1) == MOVE_TO) && (getElmt(elmtIndex+1)==MOVE_TO)){
-          ++nDeletedElmts;
-          --deletedElmntIndex;
-          ++nDeletedPts;
-          --pindex;
-        }
-    }
-    
-    // Remove the element
-    System.arraycopy(_elmts, deletedElmntIndex+nDeletedElmts, _elmts, deletedElmntIndex,
-        _ecount-deletedElmntIndex-nDeletedElmts);
-    _ecount -= nDeletedElmts;
-    
-    // Remove the points and invalidate bounds
-    ListUtils.remove(_points, pindex, pindex+nDeletedPts); _bounds = null;
-}
-    
-/**
- * Sets the path point at the given index to the given point.
- */
-public void setPoint(int index, double px, double py)  { _points.set(index, new Point(px,py)); _bounds = null; }
-
-/**
- * Resets the point at the given index to the given point, while preserving something.
- */
-public void setPointStructured(int index, Point point)
-{
-    int elmtIndex = getElmtIndexForPointIndex(index);
-    byte elmt = getElmt(elmtIndex);
-
-    // If point at index is part of a curveto, perform structured set
-    if(elmt == RMPath.CURVE_TO) {
-        int pointIndexForElementIndex = getElmtPointIndex(elmtIndex);
-
-        // If point index is control point 1, and previous element is a curveto, bring control point 2 of previous curveto in line
-        if(index - pointIndexForElementIndex == 0) {
-            if((elmtIndex-1 > 0) && (getElmt(elmtIndex-1) == RMPath.CURVE_TO)) {
-                Point endPoint = getPoint(index-1), cntrlPnt2 = getPoint(index-2);
-                // endpoint==point winds up putting a NaN in the path 
-                if (!endPoint.equals(point)) {
-                    Size size = new Size(point.getX() - endPoint.getX(), point.getY() - endPoint.getY());
-                    size.normalize(); size.negate();
-                    Size size2 = new Size(cntrlPnt2.getX() - endPoint.getX(), cntrlPnt2.getY() - endPoint.getY());
-                    double mag = size2.getMagnitude();
-                    setPoint(index-2, endPoint.getX() + size.getWidth()*mag, endPoint.getY() + size.getHeight()*mag);
-                }
-                else {
-                    // Illustrator pops the otherControlPoint here to what it was at the 
-                    // start of the drag loop.  Not sure that's much better...
-                }
-            }
-        }
-
-        // If point index is control point 2, and next element is a curveto, bring control point 1 of next curveto in line
-        else if(index - pointIndexForElementIndex == 1) {
-            if((elmtIndex+1<_ecount) && (getElmt(elmtIndex+1) == RMPath.CURVE_TO)) {
-                Point endPoint = getPoint(index+1), otherControlPoint = getPoint(index+2);
-                // don't normalize a point
-                if (!endPoint.equals(point)) {
-                    Size size = new Size(point.getX() - endPoint.x, point.getY() - endPoint.y);
-                    size.normalize(); size.negate();
-                    Size size2 = new Size(otherControlPoint.x - endPoint.x, otherControlPoint.y - endPoint.y);
-                    double mag = size2.getMagnitude();
-                    setPoint(index+2, endPoint.x+size.width*mag, endPoint.y + size.height*mag);
-                }
-                else { }
-            }
-        }
-
-        // If point index is curve end point, move the second control point by the same amount as main point move
-        else if(index - pointIndexForElementIndex == 2) {
-            Point p1 = new Point(point); p1.subtract(getPoint(index));
-            Point p2 = new Point(getPoint(index-1)); p2.add(p1);
-            setPoint(index-1, p2.getX(), p2.getY());
-            if((elmtIndex+1 < _ecount) && (getElmt(elmtIndex+1) == RMPath.CURVE_TO)) {
-                p1 = new Point(point); p1.subtract(getPoint(index));
-                p2 = new Point(getPoint(index+1)); p2.add(p1);
-                setPoint(index+1, p2.getX(), p2.getY());
-            }
-        }
-    }
-
-    // If there is a next element and it is a curveto, move its first control point by the same amount as main point move
-    else if((elmtIndex+1 < _ecount) && (getElmt(elmtIndex+1) == RMPath.CURVE_TO)) {
-        Point p1 = new Point(point); p1.subtract(getPoint(index));
-        Point p2 = new Point(getPoint(index+1)); p2.add(p1);
-        setPoint(index+1, p2.getX(), p2.getY());
-    }
-
-    // Set point at index to requested point
-    setPoint(index, point.getX(), point.getY());
 }
 
 /**
@@ -932,7 +345,7 @@ public RMPath getPathFlattened()
     while(piter.hasNext()) switch(piter.getNext(pnts)) {
         case MoveTo: path.moveTo(pnts[0], pnts[1]); lastx = pnts[0]; lasty = pnts[1]; break;
         case LineTo: path.lineTo(pnts[0], pnts[1]); lastx = pnts[0]; lasty = pnts[1]; break;
-        case Close: path.closePath(); break;
+        case Close: path.close(); break;
         case QuadTo: pnts[4] = pnts[0]; pnts[5] = pnts[1]; pnts[2] = (2*pnts[0]+pnts[2])/3;
             pnts[3] = (2*pnts[1]+pnts[3])/3; pnts[0] = (2*pnts[0]+lastx)/3; pnts[1] = (2*pnts[1]+lasty)/3;
         case CubicTo:
@@ -967,41 +380,14 @@ private void addCubicFlat(RMBezier aBezier)
  */
 public void transformBy(Transform aTrans)
 {
-    for(int i=0, iMax=_points.size(); i<iMax; i++)
-        getPoint(i).transformBy(aTrans);
-    _bounds = null;
-}
-
-/**
- * Standard equals implementation.
- */
-public boolean equals(Object anObj)
-{
-    // Check identity & class and get other path
-    if(anObj==this) return true;
-    if(!(anObj instanceof RMPath)) return false;
-    RMPath path = (RMPath)anObj;
-    
-    // Check ElementCount, WindingRule, Elements and Points
-    if(path._ecount!=_ecount) return false;
-    if(path._windingRule!=_windingRule) return false;
-    if(!ArrayUtils.equals(path._elmts, _elmts)) return false;
-    if(!SnapUtils.equals(path._points, _points)) return false;
-    return true; // Return true since all checks passed
+    for(int i=0, iMax=getPointCount(); i<iMax; i++) { Point p = getPoint(i); aTrans.transform(p,p);
+        setPoint(i, p.x, p.y); }
 }
 
 /**
  * Standard clone implementation.
  */
-public RMPath clone()
-{
-    // Do normal Object clone, copy elements list and points list
-    RMPath clone = null; try { clone = (RMPath)super.clone(); }
-    catch(Exception e) { System.err.println(e); return null; }
-    clone._elmts = _elmts.clone(); clone._points = new Vector(getPointCount());
-    for(int i=0, iMax=getPointCount(); i<iMax; i++) clone._points.add(new Point(getPoint(i)));
-    return clone;
-}
+public RMPath clone()  { return (RMPath)super.clone(); }
 
 /**
  * XML archival.
@@ -1011,10 +397,6 @@ public XMLElement toXML(XMLArchiver anArchiver)
     // Get new element named path
     XMLElement e = new XMLElement("path");
     
-    // Archive winding rule
-    if(_windingRule!=WIND_NON_ZERO)
-        e.add("wind", "even-odd");
-
     // Archive individual elements/points
     RMPathIter piter = getPathIter(null); Point pts[] = new Point[3];
     while(piter.hasNext()) switch(piter.getNext(pts)) {
@@ -1052,10 +434,6 @@ public XMLElement toXML(XMLArchiver anArchiver)
  */
 public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
 {
-    // Unarchive winding rule
-    if(anElement.getAttributeValue("wind", "non-zero").equals("even-odd"))
-        setWindingRule(WIND_EVEN_ODD);
-
     // Unarchive individual elements/points
     for(int i=0, iMax=anElement.size(); i<iMax; i++) { XMLElement e = anElement.get(i);
         if(e.getName().equals("mv"))
@@ -1070,7 +448,7 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
                 e.getAttributeFloatValue("cp2x"), e.getAttributeFloatValue("cp2y"),
                 e.getAttributeFloatValue("x"), e.getAttributeFloatValue("y"));
         else if(e.getName().equals("cl"))
-            closePath();
+            close();
     }
     
     // Return this path
@@ -1083,32 +461,21 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
 public static class RMPathIter extends PathIter {
     
     /** Creates a new PathPathIter for Path. */
-    RMPathIter(RMPath aPath, Transform aTrans)  { _path = aPath; _trans = aTrans; }
-    RMPath _path; Transform _trans; int _sindex, _pindex;
+    RMPathIter(PathIter aPI)  { _piter = aPI; } PathIter _piter; double _pts[] = new double[6];
     
     /** Returns whether PathIter has another segement. */
-    public boolean hasNext()  { return _sindex<_path._ecount; }
+    public boolean hasNext()  { return _piter.hasNext(); }
     
     /** Returns the next segment. */
-    public Seg getNext(double coords[])
-    {
-        byte etype = _path._elmts[_sindex++]; Seg seg = seg(etype); int count = seg.getCount();
-        for(int i=0;i<count;i++) { Point p = _path.getPoint(_pindex++); coords[i*2] = p.x; coords[i*2+1] = p.y; }
-        if(_trans!=null) _trans.transform(coords, count);
-        return seg;
-    }
+    public Seg getNext(double coords[])  { return _piter.getNext(coords); }
     
     /** Returns the next segment (Point coords). Not very efficient. */
-    public Seg getNext(Point coords[])
+    public Seg getNext(Point pts[])
     {
-        double dcoords[] = new double[6]; Seg seg = getNext(dcoords); int count = seg.getCount();
-        for(int i=0;i<count;i++) coords[i] = new Point(dcoords[i*2],dcoords[i*2+1]);
+        Seg seg = getNext(_pts);
+        for(int i=0;i<seg.getCount();i++) pts[i] = new Point(_pts[i*2], _pts[i*2+1]);
         return seg;
     }
-
-    /** Returns the PathIter.Seg type for given type. */
-    Seg seg(byte t) { switch(t) { case CURVE_TO: return Seg.CubicTo; case QUAD_TO: return Seg.QuadTo;
-        case MOVE_TO: return Seg.MoveTo; case LINE_TO: return Seg.LineTo; default: return Seg.Close; } }
 }
 
 }
