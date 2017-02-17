@@ -109,7 +109,7 @@ public void mouseReleased(ViewEvent anEvent)
 {
     if(_smoothPathOnMouseUp && _pointCountOnMouseDown<_path.getPointCount()) {
         getEditor().repaint();
-        PathFitCurves.fitCurveFromPointIndex(_path, _pointCountOnMouseDown);
+        _path.fitToCurve(_pointCountOnMouseDown);
     }
 
     // Check to see if point landed in first point
