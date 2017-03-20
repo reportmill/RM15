@@ -573,6 +573,9 @@ protected void fromXMLChildren(XMLArchiver anArchiver, XMLElement anElement)
     RMGrouper grouper = new RMGrouper();
     grouper.addGroupings(groupings);
     setGrouper(grouper);
+    
+    // Legacy fix for unlikely case that vestigial PageBreak index exists
+    if(getPageBreakGroupIndex()>=getGroupingCount()) setPageBreakGroupIndex(-1);
 }
 
 /**
