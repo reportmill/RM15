@@ -254,8 +254,6 @@ private Entity getEntity(Object anObject, Class aClass, String aKey, int aDepth,
         
         // Get property name
         String pname = getUseGetAndIsMethodsOnly()? RMKey.getStandard(methodName) : methodName;
-        if(pname.length()>0 && Character.isDigit(pname.charAt(0)))
-            pname = methodName;
         
         // Add and/or configure property
         getProperty(obj, method.getReturnType(), pname, aDepth, entity);
