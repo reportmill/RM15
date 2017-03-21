@@ -253,10 +253,12 @@ private Entity getEntity(Object anObject, Class aClass, String aKey, int aDepth,
         catch(Exception e) { }
         
         // Get property name
-        String propertyName = getUseGetAndIsMethodsOnly()? RMKey.getStandard(methodName) : methodName;
+        String pname = getUseGetAndIsMethodsOnly()? RMKey.getStandard(methodName) : methodName;
+        if(pname.length()>0 && Character.isDigit(pname.charAt(0)))
+            pname = methodName;
         
         // Add and/or configure property
-        getProperty(obj, method.getReturnType(), propertyName, aDepth, entity);
+        getProperty(obj, method.getReturnType(), pname, aDepth, entity);
     }
     
     // Add object/entity to processed lists
