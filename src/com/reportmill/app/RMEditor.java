@@ -58,8 +58,8 @@ public class RMEditor extends RMViewer implements DeepChangeListener {
     // Icon for XML image
     static Image        _xmlImage = Image.get(RMEditor.class, "DS_XML.png");
     
-    // XML Image location for animation
-    static double       _xmlLocX = -9999, _xmlLocY;
+    // XML Image offset for animation
+    static double       _xmlDX, _xmlDY;
     
     // Constants for PropertyChanges
     public static final String CurrentTool_Prop = "CurrentTool";
@@ -831,7 +831,7 @@ public Rect getZoomFocusRect()
 }
 
 /**
- * Overrides JComponent implementation to paint viewer shapes and page, margin, grid, etc.
+ * Overrides Viewer implementation to paint tool extras, guides, datasource image.
  */
 public void paintFront(Painter aPntr)
 {
@@ -846,40 +846,17 @@ public void paintFront(Painter aPntr)
     // Paint proximity guides
     RMEditorProxGuide.paintProximityGuides(this, aPntr);
     
-    // If datasource is present and we're editing, draw _xmlImage in lower right corner of document
-    RMDataSource dataSource = getDataSource();
-    if(dataSource!=null && isEditing()) {
+    // If datasource is present and editing, draw XMLImage in lower right corner of doc
+    if(getDataSource()!=null && isEditing()) {
 
-        // Drawing something relative to the visible rect means we have to disable BLIT_SCROLL_MODE
-        //if(getParent() instanceof JViewport) { JViewport vp = (JViewport)getParent();
-        //    if(vp.getScrollMode()!=JViewport.SIMPLE_SCROLL_MODE) vp.setScrollMode(JViewport.SIMPLE_SCROLL_MODE); }
-        
-        // Get visible rect and Viewport X & Y
+        // Get visible rect and image X & Y
         Rect vrect = getVisRect();
         int x = (int)vrect.getMaxX() - 53;
         int y = (int)vrect.getMaxY() - 53;
         
-        // Ease in animation over 1.8 seconds (1800ms)
-        if(_xmlLocX>-999) {
-            
-            // If DropTime is 0, set from current time
-            if(_dropTime==0) _dropTime = System.currentTimeMillis();
-            
-            // Get time from previous time to now
-            float t = (System.currentTimeMillis() - _dropTime)/1800f;
-            
-            // If time greater than 1, reset location, otherwise, increment location and register for repaint
-            if(t>=1) { _xmlLocX = -9999; _dropTime = 0; }
-            else {
-                x = (int)(_xmlLocX + (x - _xmlLocX)*(1-Math.pow(1-t,3)));
-                y = (int)(_xmlLocY + (y - _xmlLocY)*(1-Math.pow(1-t,3)));
-                repaint(x-20, y-20, 73, 73);
-            }
-        }
-        
         // Draw semi-transparent image: Cache previous composite, set semi-transparent composite, paint image, restore
         aPntr.setOpacity(.9);
-        aPntr.drawImage(_xmlImage, x, y, 53, 53);
+        aPntr.drawImage(_xmlImage, x + _xmlDX, y + _xmlDY, 53, 53);
         aPntr.setOpacity(1);
     }
     
@@ -949,10 +926,20 @@ public RMDataSource getDataSource()  { RMDocument d = getDocument(); return d!=n
 /**
  * Sets the datasource associated with the editor's document.
  */
-public void setDataSource(RMDataSource aDataSource)
+public void setDataSource(RMDataSource aDataSource, double aX, double aY)
 {
     getDocument().setDataSource(aDataSource);
     repaint();
+
+    // If valid drop point, animate into place
+    if(aX>0) {
+        Rect vrect = getVisRect(); double dx = aX - (vrect.getMaxX() - 53), dy = aY - (vrect.getMaxY() - 53);
+        getAnimCleared(1800).setOnFrame(a -> {
+            _xmlDX = SnapUtils.doubleValue(a.interpolate(dx, 0));
+            _xmlDY = SnapUtils.doubleValue(a.interpolate(dy, 0));
+            repaint();
+        }).play();
+    }
 }
 
 /**

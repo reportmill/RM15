@@ -75,12 +75,17 @@ public RMEditorPaneMenuBar createMenuBar()  { return new RMEditorPaneMenuBar(thi
 public RMDataSource getDataSource()  { return getEditor().getDataSource(); }
 
 /**
+ * Sets the datasource associated with the editor's document.
+ */
+public void setDataSource(RMDataSource aDataSource)  { setDataSource(aDataSource, -1, -1); }
+
+/**
  * Sets the datasource for the panel.
  */
-public void setDataSource(RMDataSource aDataSource)
+public void setDataSource(RMDataSource aDataSource, double aX, double aY)
 {
     // Set DataSource in editor, show DataSource inspector, KeysBrowser and refocus window
-    getEditor().setDataSource(aDataSource);
+    getEditor().setDataSource(aDataSource, aX, aY);
     getAttributesPanel().setVisibleName(AttributesPanel.KEYS);
     if(getWindow().isVisible()) getWindow().toFront();
 }
@@ -108,8 +113,8 @@ public void setDataSource(WebURL aURL, double aX, double aY)
         return;
     }        
         
-    // Set datasource in editor pane
-    setDataSource(dsource); RMEditor._xmlLocX = aX; RMEditor._xmlLocY = aY;
+    // Set DataSource in editor, show DataSource inspector, KeysBrowser and refocus window
+    setDataSource(dsource, aX, aY);
 }
 
 /**
