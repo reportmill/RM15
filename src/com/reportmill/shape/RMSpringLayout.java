@@ -132,7 +132,7 @@ private RMSpringSizer getSizer()  { return _sizer!=null? _sizer : (_sizer=new RM
 public double getBestHeight(RMShape aChild)
 {
     double minH = aChild.getMinHeight();
-    double prefH = !(aChild instanceof RMImageShape)? aChild.getPrefHeight() : aChild.getHeight();
+    double prefH = aChild.getPrefHeight();
     return Math.max(prefH, minH);
 }
 

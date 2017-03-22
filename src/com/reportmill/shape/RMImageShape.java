@@ -182,20 +182,23 @@ protected double computePrefHeight(double aWidth)
  */
 public RMShape rpgShape(ReportOwner aRptOwner, RMShape aParent)
 {
-    // If no key, do normal version
-    if(getKey()==null || getKey().length()==0) return super.rpgShape(aRptOwner, aParent);
+    // Do normal version
+    RMImageShape clone = (RMImageShape)super.rpgShape(aRptOwner, aParent);
     
-    // Get value for key (if string literal, get real string)
-    Object value = RMKeyChain.getValue(aRptOwner, getKey());
-    if(value instanceof RMKeyChain) value = ((RMKeyChain)value).getValue();
+    // If key: Evaluate key for image and set
+    String key = getKey();
+    if(key!=null && key.length()>0) {
+        Object value = RMKeyChain.getValue(aRptOwner, getKey());
+        if(value instanceof RMKeyChain) value = ((RMKeyChain)value).getValue();
+        RMImageData idata = RMImageData.getImageData(value, 0);
+        clone.setImageData(idata);
+    }
+
+    // This prevents RMImageShape from growing to actual image size in report
+    // Probably need a GrowShapeToFit attribute to allow RPG image shape to grow
+    clone.setPrefHeight(getHeight()*getScaleY());
     
-    // Get ImageData for value
-    RMImageData idata = RMImageData.getImageData(value, 0);
-    
-    // Create clone, set new ImageData and return
-    RMImageShape clone = (RMImageShape)clone();
-    clone.setImageData(idata);
-    clone.setPrefHeight(getHeight()); // Probably need a GrowShapeToFit attribute to allow RPG image shape to grow
+    // Return clone
     return clone;
 }
 
