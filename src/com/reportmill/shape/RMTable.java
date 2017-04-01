@@ -276,6 +276,16 @@ public void setStartingPageBreak(boolean aFlag)
 }
 
 /**
+ * Returns whether table does printing even if no objects (which really depends on whether first row is a header
+ * that does this).
+ */
+public boolean isPrintEvenIfGroupIsEmpty()
+{
+    RMTableRow row = getChildCount()>0? getRow(0) : null;
+    return row!=null&& row.getPrintEvenIfGroupIsEmpty() && row.getTitle().endsWith(" Header");
+}
+
+/**
  * Returns the number of columns that this table should be repeated over on the same page before paginating.
  */
 public int getColumnCount()  { return _columnCount; }
