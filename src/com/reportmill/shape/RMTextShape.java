@@ -647,8 +647,8 @@ protected RMShape rpgShape(ReportOwner anRptOwner, RMShape aParent)
     if(getCoalesceNewlines())
         string.coalesceNewlines();
 
-    // Trim whitespace from end of string
-    int len = string.length(), end = len; while(end>0 && Character.isWhitespace(string.charAt(end-1))) end--;
+    // Trim line ends from end of string to prevent extra empty line height
+    int len = string.length(), end = len; while(end>0 && StringUtils.isLineEndChar(string.charAt(end-1))) end--;
     if(end!=len)
         string.removeChars(end, len);
 
