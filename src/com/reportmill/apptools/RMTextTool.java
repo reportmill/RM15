@@ -349,8 +349,7 @@ public void mouseReleased(ViewEvent e)
         }
         
         // If hit shape is Rectangle, Oval or Polygon, swap for RMText and return
-        else if((_downShape instanceof RMRectShape || _downShape instanceof RMOvalShape ||
-                _downShape instanceof RMPolygonShape) && (!_downShape.isLocked())) {
+        else if(shouldConvertToText(_downShape)) {
             _shape.removeFromParent();
             convertToText(_downShape, null);
         }
@@ -788,6 +787,17 @@ public Class getShapeClass()  { return RMTextShape.class; }
  * Returns the name of this tool to be displayed by inspector.
  */
 public String getWindowTitle()  { return "Text Inspector"; }
+
+/**
+ * Returns whether text tool should convert to text.
+ */
+public boolean shouldConvertToText(RMShape aShape)
+{
+    if(aShape instanceof RMImageShape) return false;
+    if(aShape.isLocked()) return false;
+    return aShape instanceof RMRectShape || aShape instanceof RMOvalShape ||
+        aShape instanceof RMPolygonShape;
+}
 
 /**
  * Converts a shape to a text shape.

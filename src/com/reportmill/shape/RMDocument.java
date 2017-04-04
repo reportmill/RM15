@@ -699,7 +699,7 @@ protected void layoutChildren()
 {
     // Get document
     int selectedIndex = getSelectedIndex();
-    double offscreen = getWidth() + 10;
+    double offscreen = getWidth() + 5000;
     
     // If no pages or selected page, return
     if(getPageCount()==0 || getSelectedPage()==null) return;

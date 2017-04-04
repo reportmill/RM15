@@ -781,7 +781,7 @@ private Point dropFile(RMShape aShape, File aFile, Point aPoint)
         getEditorPane().setDataSource(WebURL.getURL(aFile), aPoint.getX(), aPoint.getY());
 
     // If image file, add image shape
-    else if(Image.canRead(ext))
+    else if(RMImageData.canRead(ext))
         runLater(() -> dropImageFile(aShape, path, aPoint));
 
     // If reportmill file, addReportFile
