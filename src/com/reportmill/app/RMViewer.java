@@ -480,12 +480,15 @@ protected void processEvent(ViewEvent anEvent)
 /**
  * Returns the preferred size of the viewer (includes ZoomFactor).
  */
-public double getPrefWidthImpl(double aH)  { double w = getPrefWidthBase(); if(isZoomToFactor()) w *= getZoomFactor(); return w; }
+protected double getPrefWidthImpl(double aH)
+{
+    double w = getPrefWidthBase(); if(isZoomToFactor()) w *= getZoomFactor(); return w;
+}
 
 /**
  * Returns the preferred size of the viewer (ignores Zoom).
  */
-public double getPrefWidthBase()
+protected double getPrefWidthBase()
 {
     // Get doc width, add gutter if not PageLayout.Single and return
     double w = _vshape.getPrefWidth();
@@ -496,12 +499,15 @@ public double getPrefWidthBase()
 /**
  * Returns the preferred size of the viewer (includes ZoomFactor).
  */
-public double getPrefHeightImpl(double aW)  { double h = getPrefHeightBase(); if(isZoomToFactor()) h *= getZoomFactor(); return h; }
+protected double getPrefHeightImpl(double aW)
+{
+    double h = getPrefHeightBase(); if(isZoomToFactor()) h *= getZoomFactor(); return h;
+}
 
 /**
  * Returns the preferred size of the viewer (ignores Zoom).
  */
-public double getPrefHeightBase()
+protected double getPrefHeightBase()
 {
     // Get doc height, add gutter if not PageLayout.Single and return
     double h = _vshape.getPrefHeight();

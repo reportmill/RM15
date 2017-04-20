@@ -68,10 +68,10 @@ public int getUnitWidth()
 }
         
 /** Override to control size. */
-public double getPrefWidthImpl(double aH)  { return isHorizontal()? getDoc().getWidth() : _rulerWidth; }
+protected double getPrefWidthImpl(double aH)  { return isHorizontal()? getDoc().getWidth() : _rulerWidth; }
 
 /** Override to control size. */
-public double getPrefHeightImpl(double aW)  { return isHorizontal()? _rulerWidth : getDoc().getHeight(); }
+protected double getPrefHeightImpl(double aW)  { return isHorizontal()? _rulerWidth : getDoc().getHeight(); }
 
 /**
  * Sets the mouse point.
