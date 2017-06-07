@@ -562,36 +562,9 @@ public void write(File aFile)  { write(aFile.getAbsolutePath()); }
 public void writePDF(String aPath)  { SnapUtils.writeBytes(getBytesPDF(), aPath); }
 
 /**
- * Returns the total time needed to animate this document (total of all page animators).
- */
-public float getMaxTime()
-{
-    float duration = 0;
-    for(int i=0, iMax=getPageCount(); i<iMax; i++) {
-        RMAnimator animator = getPage(i).getChildAnimator();
-        duration += animator==null? 0 : animator.getMaxTime(); }
-    return duration;
-}
-
-/**
  * Returns the document itself (over-ridden from RMShape).
  */
 public RMDocument getDocument()  { return this; }
-
-/**
- * Returns the animator for a specific page.
- */
-public RMAnimator getAnimator(int anIndex)  { return getPage(anIndex).getChildAnimator(); }
-
-/**
- * Returns the animator for the last page.
- */
-public RMAnimator getAnimatorLast()  { return getPageLast().getChildAnimator(); }
-
-/**
- * Returns whether the last animator loops.
- */
-public boolean getLoops()  { return getAnimatorLast()==null? false : getAnimatorLast().getLoops(); }
 
 /**
  * Returns a subreport document for given name (override to improve).

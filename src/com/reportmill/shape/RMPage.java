@@ -2,7 +2,6 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.shape;
-import com.reportmill.graphics.*;
 import java.util.*;
 import snap.gfx.*;
 import snap.util.*;
@@ -10,7 +9,7 @@ import snap.util.*;
 /**
  * The RMPage class represents an individual page in an RMDocument. For the most part, it's like every other RMShape,
  * except that it has the ability to break children into "layers" for more convenient editing. Layers are sub-ranges of
- * children that can be set to be invisible or locked. An RMPage also has its own child animator.
+ * children that can be set to be invisible or locked.
  *
  * It's not common for developers to use much or RMPage's unique functionality programmatically, however, you might use
  * it briefly when disecting a template like this:
@@ -41,9 +40,6 @@ public class RMPage extends RMParentShape {
 
     // The list of layers for this page
     List <RMPageLayer>  _layers = new Vector();
-    
-    // The animator for the page
-    RMAnimator          _childAnimator;
     
 /**
  * Creates a plain empty page.
@@ -414,33 +410,6 @@ public boolean isHittable(RMShape aChild)
  */
 public RMParentShape getPageShape()  { return this; }
 
-/**
- * Returns the child animator associated with this page, creating one if it doesn't exist (if requested).
- */
-public RMAnimator getChildAnimator(boolean doCreate)
-{
-    // If child animator hasn't been created and create was requested, create and set child animator
-    if(_childAnimator==null && doCreate)
-        setChildAnimator(new RMAnimator());
-    
-    // Return child animator
-    return _childAnimator;
-}
-
-/**
- * Sets the child animator associated with this page.
- */
-protected void setChildAnimator(RMAnimator anAnimator)
-{
-    // Set new child animator
-    if(_childAnimator!=null) _childAnimator.removePropChangeListener(this);
-    _childAnimator = anAnimator;
-    if(_childAnimator!=null) _childAnimator.addPropChangeListener(this);
-
-    // If new animator, set owner to this page
-    if(anAnimator!=null)
-        anAnimator.setOwner(this);    
-}
 
 /**
  * Returns the "Page" number of this page (used to resolve @Page@ key references).
@@ -585,7 +554,6 @@ public RMPage clone()
 {
     RMPage clone = (RMPage)super.clone(); // Do normal shape clone
     clone._layerIndex = 0; clone._layers = null; // Clear LayerIndex and Layers
-    if(_childAnimator!=null)clone.setChildAnimator(_childAnimator.clone()); // If child animator, get real copy of it
     return clone;
 }
 
@@ -597,10 +565,9 @@ protected XMLElement toXMLShape(XMLArchiver anArchiver)
     // Archive basic shape attributes and reset name
     XMLElement e = super.toXMLShape(anArchiver); e.setName("page");
     
-    // Archive DatasetKey, PaintBackground, ClipChildren, ChildAnimator
+    // Archive DatasetKey, PaintBackground, ClipChildren
     if(getDatasetKey()!=null && getDatasetKey().length()>0) e.add("dataset-key", getDatasetKey());
     if(!getPaintBackground()) e.add("paint-background", false);
-    if(_childAnimator!=null && !_childAnimator.isEmpty()) e.add(_childAnimator.toXML(anArchiver));
 
     // Return xml element
     return e;
@@ -643,12 +610,10 @@ protected void fromXMLShape(XMLArchiver anArchiver, XMLElement anElement)
     // Unarchive basic shape attributes
     super.fromXMLShape(anArchiver, anElement);
     
-    // Unarchive DatasetKey, PaintBackground, ClipChildren, ChildAnimator
+    // Unarchive DatasetKey, PaintBackground, ClipChildren
     if(anElement.hasAttribute("dataset-key")) setDatasetKey(anElement.getAttributeValue("dataset-key"));
     if(anElement.hasAttribute("paint-background"))
         setPaintBackground(anElement.getAttributeBoolValue("paint-background"));
-    if(anElement.get("animator")!=null)
-        setChildAnimator(anArchiver.fromXML(anElement.get("animator"), RMAnimator.class, null));
     setVisible(true); // Stupid RM13 RMDocumentLayout set visible to false on multi-page templates and wrote it out
 }
 

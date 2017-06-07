@@ -70,7 +70,7 @@ public void close()  { getWindow().setVisible(false); }
 protected void initUI()
 {
     // Install WelcomeAnim.Viewer
-    RMViewer viewer = new RMViewer(); viewer.setContent(getClass().getResource("WelcomeAnim.rpt")); viewer.play();
+    RMViewer viewer = new RMViewer(); viewer.setContent(getClass().getResource("WelcomeAnim.rpt"));
     View wlabel = getView("WelcomeAnimLabel");
     viewer.setSize(wlabel.getWidth(), wlabel.getHeight());
     getUI(ChildView.class).addChild(viewer, 1);

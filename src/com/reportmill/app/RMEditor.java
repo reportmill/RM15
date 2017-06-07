@@ -1009,14 +1009,6 @@ public void deepChange(PropChangeListener aShape, PropChange anEvent)
         // Add property change
         undoer.addPropertyChange(anEvent);
         
-        // If adding child, add to child animator newborns
-        String pname = anEvent.getPropertyName();
-        if(pname.equals("Child") && anEvent.getNewValue()!=null) {
-            RMShape parent = (RMShape)anEvent.getSource(), child = (RMShape)anEvent.getNewValue();
-            if(parent.getChildAnimator()!=null)
-                parent.getChildAnimator().addNewborn(child);
-        }
-        
         // Save UndoerChanges after delay
         saveUndoerChangesLater();
     }
@@ -1044,11 +1036,6 @@ protected void saveUndoerChanges()
     
     // Save undo changes
     undoer.saveChanges();
-    
-    // Re-enable animator
-    RMShape shape = getSelectedOrSuperSelectedShape();
-    if(shape.getAnimator()!=null)
-        shape.getAnimator().setEnabled(true);
 }
 
 /**

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document version="13">
   <page width="445" height="275">
-    <animator max-time="5000" loop="true" />
     <image-shape width="445" height="275">
       <fill color="#00000000" type="image" resource="1650309375" />
     </image-shape>
@@ -9,12 +8,6 @@
       <stroke />
       <fill color="#390219" />
       <effect type="blur" radius="10" />
-      <KeyFrame time="1000">
-        <KeyValue key="roll" value="0" />
-      </KeyFrame>
-      <KeyFrame time="3500">
-        <KeyValue key="roll" value="-360" />
-      </KeyFrame>
       <path>
         <mv x="40" y="320" />
         <ln x="180" y="320" />
@@ -43,12 +36,6 @@
       <stroke />
       <fill color="#ff0000" />
       <effect type="emboss" radius="3" azimuth="90" altitude="90" />
-      <KeyFrame time="1000">
-        <KeyValue key="roll" value="0" />
-      </KeyFrame>
-      <KeyFrame time="3500">
-        <KeyValue key="roll" value="-360" />
-      </KeyFrame>
       <path>
         <mv x="40" y="320" />
         <ln x="180" y="320" />
@@ -66,12 +53,6 @@
         <polygon width="50" height="50" asize="-~-,-~-">
           <stroke />
           <fill color="#ff0000" />
-          <KeyFrame time="1000">
-            <KeyValue key="roll" value="0" />
-          </KeyFrame>
-          <KeyFrame time="3500">
-            <KeyValue key="roll" value="-360" />
-          </KeyFrame>
           <path>
             <mv x="40" y="320" />
             <ln x="180" y="320" />

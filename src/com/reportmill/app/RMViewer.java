@@ -2,7 +2,6 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.app;
-import com.reportmill.graphics.*;
 import com.reportmill.shape.*;
 import java.awt.print.*;
 import java.util.*;
@@ -89,15 +88,9 @@ public void setContent(RMParentShape aShape)
     // If already set, just return
     if(aShape==getContent()) return;
     
-    // If old shape, stop animation
-    if(getContent()!=null) stop();
-    
     // Set new document and fire property change
     RMShape shape = getContent(); _vshape.setContent(aShape);
     firePropChange(Content_Prop, shape, aShape);
-    
-    // If Showing, start playing
-    if(isShowing()) play();
     
     // Set ZoomToFitFactor and relayout/repaint (for possible size change)
     setZoomToFitFactor();
@@ -158,43 +151,6 @@ public void pageForward()  { setSelectedPageIndex(getSelectedPageIndex()+1); }
  * Selects the previous page.
  */
 public void pageBack()  { setSelectedPageIndex(getSelectedPageIndex()-1); }
-
-/**
- * Starts any animation viewer might have.
- */
-public void play()
-{
-    // If animated, start playing doc
-    if(isEditing()) return;
-    RMAnimator animator = _vshape.getChildAnimator(); if(animator==null || animator.isRunning()) return;
-    animator.setTime(0); animator.setResetTimeOnStop(false);
-    animator.play();
-    animator.addAnimatorListener(new RMAnimator.Listener() {
-        public void animatorStarted(RMAnimator anAnimator) { }
-        public void animatorUpdated(RMAnimator anAnimator) { }
-        public void animatorStopped(RMAnimator anAnimator) { anAnimator.removeAnimatorListener(this); }
-    });
-}
-
-/**
- * Stops any animation viewer might have.
- */
-public void stop()
-{
-    RMAnimator animator = _vshape.getChildAnimator(); if(animator==null) return;
-    animator.stop();
-}
-
-/**
- * Override to play/stop animation.
- */
-protected void setShowing(boolean aValue)
-{
-    if(aValue==isShowing()) return;
-    super.setShowing(aValue); //_vshape.setShowing(aValue);
-    if(aValue) play();
-    else stop();
-}
 
 /**
  * Returns the bounds of the viewer document.

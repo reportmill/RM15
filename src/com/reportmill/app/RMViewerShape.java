@@ -2,7 +2,6 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.app;
-import com.reportmill.graphics.RMAnimator;
 import com.reportmill.graphics.RMColor;
 import com.reportmill.shape.*;
 import snap.gfx.*;
@@ -110,14 +109,6 @@ public int getSelectedPageIndex()  { RMDocument d = getDocument(); return d!=nul
 public void setSelectedPageIndex(int anIndex)
 {
     RMDocument doc = getDocument(); if(doc!=null) doc.setSelectedIndex(anIndex);
-}
-
-/**
- * Return child animator.
- */
-public RMAnimator getChildAnimator()
-{
-    return _content instanceof RMDocument? ((RMDocument)_content).getSelectedPage().getChildAnimator() : null;
 }
 
 /**

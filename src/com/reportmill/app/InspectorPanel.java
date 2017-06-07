@@ -32,9 +32,6 @@ public class InspectorPanel extends RMEditorPane.SupportPane {
     ShapeGeneral         _shapeGeneral = new ShapeGeneral(getEditorPane());
     
     // The inspector for shape animation
-    Animation            _animation = new Animation(getEditorPane());
-    
-    // The inspector for shape animation
     ShapeTree            _shapeTree = new ShapeTree(getEditorPane());
     
     // The inspector for Undo
@@ -121,10 +118,6 @@ public void respondUI(ViewEvent anEvent)
     if(anEvent.equals("ShapeGeneralButton"))
         setInspector(_shapeGeneral);
     
-    // Handle AnimationButton
-    if(anEvent.equals("AnimationButton"))
-        setInspector(_animation);
-    
     // Handle UndoAction
     if(anEvent.equals("UndoAction"))
         getEditor().undo();
@@ -178,12 +171,6 @@ public void setVisible(int anIndex)
     // If index is 7, show DataSource Inspector
     if(anIndex==7) {
         setInspector(_dataSource!=null? _dataSource : (_dataSource = new DataSourcePanel(getEditorPane())));
-        _shapeBtn.getToggleGroup().setSelected(null); //setViewValue("OffscreenButton", true);
-    }
-    
-    // If index is 8, show DataSource Inspector
-    if(anIndex==8) {
-        setInspector(_animation);
         _shapeBtn.getToggleGroup().setSelected(null); //setViewValue("OffscreenButton", true);
     }
     

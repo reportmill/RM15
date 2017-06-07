@@ -808,15 +808,6 @@ public void propertyChange(PropChange anEvent)
     // Get DeepChangeListener count (just return if zero)
     int deepListenerCount = getListenerCount(DeepChangeListener.class); if(deepListenerCount==0) return;
     
-    // If change is fill/stroke, convert property name to "Fill.xxx" or "Stroke.xxx" for the sake of animation
-    if(anEvent.getSource() instanceof RMFill) {
-        Object source = anEvent.getSource();
-        String prefix = source==getFill()? "Fill" : source==getStroke()? "Stroke" : null;
-        String propertyName = prefix + "." + anEvent.getPropertyName();
-        anEvent = new PropChange(this, propertyName, anEvent.getOldValue(), anEvent.getNewValue());
-        repaint();
-    }
-    
     // Propagate to this shape's DeepChangeListeners (if present)
     for(int i=0, iMax=getListenerCount(DeepChangeListener.class); i<iMax; i++)
         getListener(DeepChangeListener.class, i).deepChange(this, anEvent);
@@ -874,64 +865,6 @@ public void setLocked(boolean aValue)
     if(aValue==isLocked()) return;
     Object oldValue = put("Locked", aValue); // Cache old value
     firePropChange("Locked", oldValue, aValue);
-}
-
-/**
- * Returns the timeline for animating shape property changes.
- */
-public RMTimeline getTimeline()  { return getTimeline(false); }
-
-/**
- * Returns the timeline for animating shape property changes, with an option to create if absent.
- */
-public RMTimeline getTimeline(boolean create)
-{
-    // Get timeline from attributes map
-    RMTimeline timeline = (RMTimeline)get("Anim");
-    
-    // If null and create is requested, create
-    if(timeline==null && create)
-        setTimeline(timeline = new RMTimeline(this));
-
-    // Return timeline
-    return timeline;
-}
-
-/**
- * Sets the shape timeline.
- */
-protected void setTimeline(RMTimeline aTimeline)
-{
-    // Stop listening to old timeline property changes
-    if(getTimeline()!=null) getTimeline().removePropChangeListener(this);
-    
-    // Set anim
-    put("Anim", aTimeline);
-    
-    // Set owner to this shape and start listening for property changes
-    if(aTimeline!=null) {
-        aTimeline.setOwner(this);
-        aTimeline.addPropChangeListener(this);
-    }
-}
-
-/**
- * Tells the shape's timeline to update the shape to the given time in milliseconds. Recurses to shape children.
- */
-public void setTime(int aTime)
-{
-    // Get shape timeline and set time (if non-null)
-    RMTimeline timeline = getTimeline();
-    if(timeline!=null) {
-        undoerDisable();
-        timeline.setTime(aTime);
-        undoerEnable();
-    }
-    
-    // If children have same animator as this shape, recurse setTime to children
-    if(getAnimator()==getChildAnimator())
-        for(int i=0, iMax=getChildCount(); i<iMax; i++)
-            getChild(i).setTime(aTime);
 }
 
 /**
@@ -1513,33 +1446,6 @@ public RMShape divideShapeFromEdge(double anAmount, byte anEdge, RMShape aNewSha
 protected RMShape createDivideShapeRemainder(byte anEdge)  { return clone(); }
 
 /**
- * Returns the animator that this shape registers changes with.
- */
-public RMAnimator getAnimator()  { return getAnimator(false); }
-
-/**
- * Returns the animator that this shape registers changes with (creating, if requested and currently null).
- */
-public RMAnimator getAnimator(boolean create)
-{
-    return getParent()!=null? getParent().getChildAnimator(create) : null;
-}
-
-/**
- * Returns the animator that this shape's children use.
- */
-public RMAnimator getChildAnimator()  { return getChildAnimator(false); }
-
-/**
- * Returns the animator that this shape's children use (creating, if requested and currently null). The base
- * implementation passes request onto ancestors, but some subclasses create and manage one (RMPage, RMSwitchShape).
- */
-public RMAnimator getChildAnimator(boolean create)
-{
-    return getParent()!=null? getParent().getChildAnimator(create) : null;
-}
-
-/**
  * Returns whether shape accepts mouse events (true if URL is present).
  */
 public boolean acceptsMouse()  { return getURL()!=null; }
@@ -1707,10 +1613,6 @@ public RMShape clone()
     
     // Copy attributes map
     clone._attrMap = _attrMap.clone();
-    
-    // If shape has timeline, clone it
-    if(getTimeline()!=null)
-        clone.setTimeline(getTimeline().clone(clone));
     
     // Clone bindings and add to clone (with hack to make sure clone has it's own, non-shared, attr map)
     for(int i=0, iMax=getBindingCount(); i<iMax; i++) {
@@ -2026,86 +1928,6 @@ public boolean getStrokeOnTop()  { return false; }
 public Shape getClipShape()  { return null; }
 
 /**
- * Called to update shape anim.
- */
-public void animUpdate(PropChange anEvent)
-{
-    // Return if shape is a new-born
-    if(getAnimator()==null || getAnimator().isNewborn(this) || !getAnimator().isEnabled()) return;
-    
-    // If change is anim property, add record
-    if(isAnimProperty(anEvent.getPropertyName()))
-        addTimelineEntry(anEvent.getPropertyName(), anEvent.getNewValue(), anEvent.getOldValue());
-    
-    // Add anim records for Fill
-    else if(anEvent.getPropertyName().equals("Fill")) {
-        RMFill f1 = (RMFill)anEvent.getNewValue();
-        RMFill f2 = (RMFill)anEvent.getOldValue();
-        RMColor c1 = f1!=null? f1.getColor() : RMColor.clearWhite;
-        RMColor c2 = f2!=null? f2.getColor() : RMColor.clearWhite;
-        addTimelineEntry("Color", c1, c2);
-    }
-    
-    // Add anim records for Fill.Color
-    else if(anEvent.getPropertyName().equals("Fill.Color"))
-        addTimelineEntry("Color", anEvent.getNewValue(), anEvent.getOldValue());
-    
-    // Add anim records for Stroke
-    else if(anEvent.getPropertyName().equals("Stroke")) {
-        RMStroke s1 = (RMStroke)anEvent.getNewValue();
-        RMStroke s2 = (RMStroke)anEvent.getOldValue();
-        RMColor c1 = s1!=null? s1.getColor() : RMColor.clearWhite;
-        RMColor c2 = s2!=null? s2.getColor() : RMColor.clearWhite;
-        addTimelineEntry("StrokeColor", c1, c2);
-        float lw1 = s1!=null? s1.getWidth() : 0;
-        float lw2 = s2!=null? s2.getWidth() : 0;
-        addTimelineEntry("StrokeWidth", lw1, lw2);
-    }
-    
-    // Add anim records for Stroke.Color
-    else if(anEvent.getPropertyName().equals("Stroke.Color"))
-        addTimelineEntry("StrokeColor", anEvent.getNewValue(), anEvent.getOldValue());
-    
-    // Add anim records for Stroke.Width
-    else if(anEvent.getPropertyName().equals("Stroke.Width"))
-        addTimelineEntry("StrokeWidth", anEvent.getNewValue(), anEvent.getOldValue());
-}
-
-/**
- * Adds a record to the timeline.
- */
-private void addTimelineEntry(String aKey, Object aValue, Object anOldValue)
-{
-    // Just return if values equal
-    if(SnapUtils.equals(aValue, anOldValue)) return;
-    
-    // Get animator and current time
-    RMAnimator animator = getAnimator();
-    int time = animator.getTime();
-    int oldTime = animator.getScopeTime();
-    
-    // Get timeline (just return if no timeline or time zero and no key/values for this property) 
-    RMTimeline timeline = getTimeline(time!=0);
-    if(timeline!=null)
-        timeline.addKeyFrameKeyValue(this, aKey, aValue, time, anOldValue, oldTime);
-}
-
-/**
- * Returns whether given property name is anim property.
- */
-public boolean isAnimProperty(String aPropertyName)
-{
-    // Declare anim properties
-    String animProps[] = { "X", "Y", "Width", "Height", "Roll", "ScaleX", "ScaleY", "SkewX", "SkewY", "Opacity",
-        "Radius", "StartAngle", "SweepAngle", // For RMRectangle, RMOval
-        "Depth", "Yaw", "Pitch", "Roll3D", "FocalLenth", "OffsetZ" // for RMScene3D
-    };
-    
-    // Return true if is anim property
-    return ArrayUtils.contains(animProps, aPropertyName);
-}
-
-/**
  * XML Archival.
  */
 public XMLElement toXML(XMLArchiver anArchiver)
@@ -2157,9 +1979,6 @@ public XMLElement toXML(XMLArchiver anArchiver)
     // Archive Locked
     if(isLocked()) e.add("locked", true);
     
-    // Archive shape timeline
-    if(getTimeline()!=null) getTimeline().toXML(anArchiver, e);
-
     // Archive bindings
     for(int i=0, iMax=getBindingCount(); i<iMax; i++)
         e.add(getBinding(i).toXML(anArchiver));
@@ -2231,10 +2050,6 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
     
     // Unarchive Locked
     setLocked(anElement.getAttributeBoolValue("locked"));
-    
-    // Unarchive animation
-    if(anElement.getElement("KeyFrame")!=null || anElement.getElement("anim")!=null) {
-        getTimeline(true).fromXML(this, anArchiver, anElement); getAnimator(true); }
     
     // Unarchive bindings
     for(int i=anElement.indexOf("binding"); i>=0; i=anElement.indexOf("binding",i+1)) { XMLElement bxml=anElement.get(i);

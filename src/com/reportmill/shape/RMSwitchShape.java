@@ -3,7 +3,6 @@
  */
 package com.reportmill.shape;
 import com.reportmill.base.RMKeyChain;
-import com.reportmill.graphics.*;
 import java.util.*;
 import java.util.List;
 import snap.gfx.*;
@@ -23,9 +22,6 @@ public class RMSwitchShape extends RMParentShape {
 
     // An optional key to specify what version should be used in RPG clone
     String          _versionKey;
-
-    // A dedicated animator, since each version can have its own timeline
-    RMAnimator      _childAnimator;
 
 /**
  * Returns the currently selected version string for the switch shape.
@@ -54,10 +50,6 @@ public void setVersion(String aName)
     // Transfer attributes from this shape to outgoing shape
     transferAttributes(outShape);
     
-    // Turn off outShape animator
-    if(isViewing() && outShape.getChildAnimator()!=null && outShape.getChildAnimator().isRunning())
-        outShape.getChildAnimator().stop();
-
     // Get place-holder "incomingShape" (if needed, make one by copying defaultVersion)
     RMSwitchShape inShape = getAlternates().get(aName);
     if(inShape == null) {
@@ -76,10 +68,6 @@ public void setVersion(String aName)
 
     // Set value and fire property change
     firePropChange("Version", _version, _version = aName);
-    
-    // Turn on animator
-    if(isViewing() && getChildAnimator()!=null)
-        getChildAnimator().play();
 }
 
 /**
@@ -97,14 +85,8 @@ protected void transferAttributes(RMSwitchShape toShape)
     for(RMShape child : getChildArray())
         toShape.addChild(child);
     
-    // Copy child animator
-    toShape.setChildAnimator(_childAnimator);
-    
     // Reset origin
     toShape.setXYP(origin.getX(), origin.getY());
-    
-    // Reset animator and children to null, since they've been transferred to toShape
-    setChildAnimator(null);
 }
 
 /**
@@ -192,30 +174,6 @@ public String getVersionKey()  { return _versionKey; }
 public void setVersionKey(String aVersionKey)  { _versionKey = aVersionKey; }
 
 /**
- * Returns the child animator of the switch shape (creating it if absent and requested).
- */
-public RMAnimator getChildAnimator(boolean doCreate)
-{
-    if(_childAnimator==null && doCreate) setChildAnimator(new RMAnimator());
-    return _childAnimator;
-}
-
-/**
- * Sets the child animator to the given animator.
- */
-protected void setChildAnimator(RMAnimator anAnimator)
-{
-    // Set new child animator
-    if(_childAnimator!=null) _childAnimator.removePropChangeListener(this);
-    _childAnimator = anAnimator;
-    if(_childAnimator!=null) _childAnimator.addPropChangeListener(this);
-
-    // If new animator, set owner to this page
-    if(anAnimator!=null)
-        anAnimator.setOwner(this);    
-}
-
-/**
  * Overrides standard shape method to resize alternates.
  */
 public void setWidth(double aWidth)
@@ -244,10 +202,6 @@ public void paintShape(Painter aPntr)
     // Paint shape normally
     super.paintShape(aPntr);
 }
-
-/** Overrides shape implementation to start animator if it should be playing. */
-//void shapeShown() { if(isViewing()&&getChildAnim()!=null&&!getChildAnim().isRunning())getChildAnim().play(); }
-//void shapeHidden() { if(getChildAnim()!=null && getChildAnim().isRunning()) getChildAnim().stop(); }
 
 /**
  * Report generation.
@@ -281,7 +235,6 @@ public RMSwitchShape clone()
 {
     RMSwitchShape clone = (RMSwitchShape)super.clone(); // Get normal shape clone
     clone._alternates = null; // Clone alternates
-    clone.setChildAnimator(SnapUtils.clone(_childAnimator)); // Clone child animator
     return clone; // Return clone
 }
 
@@ -339,9 +292,8 @@ protected XMLElement toXMLShape(XMLArchiver anArchiver)
     // Archive basic shape attributes and reset element name
     XMLElement e = super.toXMLShape(anArchiver); e.setName("switchshape");
 
-    // Archive VersionKey, ChildAnimator
+    // Archive VersionKey
     if(_versionKey!=null && _versionKey.length()>0) e.add("version-key", _versionKey);
-    if(_childAnimator!=null && !_childAnimator.isEmpty()) e.add(_childAnimator.toXML(anArchiver));
     return e; // Return xml element
 }
 
@@ -376,10 +328,6 @@ protected void toXMLChildren(XMLArchiver anArchiver, XMLElement anElement)
  */
 protected void fromXMLShape(XMLArchiver anArchiver, XMLElement anElement)
 {
-    // Unarchive child animator (do this first, so it will be there for children to register)
-    if(anElement.get("animator")!=null)
-        setChildAnimator(anArchiver.fromXML(anElement.get("animator"), RMAnimator.class, null));
-        
     // Unarchive basic shape attributes
     super.fromXMLShape(anArchiver, anElement);
 
