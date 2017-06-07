@@ -28,8 +28,7 @@ import snap.view.*;
  *   shape.setOpacity(.667f);
  * </pre></blockquote>
  */
-public class RMShape extends SnapObject implements Cloneable, PropChangeListener, DeepChangeListener,
-                                                                            RMTypes, Archivable {
+public class RMShape extends SnapObject implements Cloneable, DeepChangeListener, RMTypes, Archivable {
 
     // X location of shape
     double         _x = 0;
@@ -787,39 +786,13 @@ public void setFormat(RMFormat aFormat)
 /**
  * Adds a deep change listener to shape to listen for shape changes and property changes received by shape.
  */
-public void addDeepChangeListener(DeepChangeListener aListener)
+public void addDeepChangeListener(DeepChangeListener aLsnr)
 {
-    addListener(DeepChangeListener.class, aListener);  // Add listener
-    if(getListenerCount(DeepChangeListener.class)==1)   // If first listener, add for children
+    boolean first = !hasDeepChangeListener();
+    super.addDeepChangeListener(aLsnr);
+    if(first)   // If first listener, add for children
         for(int i=0, iMax=getChildCount(); i<iMax; i++) { RMShape child = getChild(i);
             child.addPropChangeListener(this); child.addDeepChangeListener(this); }
-}
-
-/**
- * Removes a deep change listener from shape.
- */
-public void removeDeepChangeListener(DeepChangeListener aLstnr)  { removeListener(DeepChangeListener.class, aLstnr); }
-
-/**
- * Property change listener implementation.
- */
-public void propertyChange(PropChange anEvent)
-{
-    // Get DeepChangeListener count (just return if zero)
-    int deepListenerCount = getListenerCount(DeepChangeListener.class); if(deepListenerCount==0) return;
-    
-    // Propagate to this shape's DeepChangeListeners (if present)
-    for(int i=0, iMax=getListenerCount(DeepChangeListener.class); i<iMax; i++)
-        getListener(DeepChangeListener.class, i).deepChange(this, anEvent);
-}
-
-/**
- * Deep property change listener implementation.
- */
-public void deepChange(PropChangeListener aLsnr, PropChange anEvent)
-{
-    for(int i=0, iMax=getListenerCount(DeepChangeListener.class); i<iMax; i++)
-        getListener(DeepChangeListener.class, i).deepChange(aLsnr, anEvent);
 }
 
 /**

@@ -65,7 +65,7 @@ public void addChild(RMShape aChild, int anIndex)
     addLayoutChild(aChild);
     
     // If this shape has PropChangeListeners, start listening to children as well
-    if(getListenerCount(DeepChangeListener.class)>0) {
+    if(hasDeepChangeListener()) {
         aChild.addPropChangeListener(this); aChild.addDeepChangeListener(this); }
     
     // Fire property change
