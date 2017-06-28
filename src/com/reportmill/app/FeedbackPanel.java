@@ -23,8 +23,8 @@ public void showPanel(View aView)
     if(!dbox.showConfirmDialog(null)) return;
     
     // Update preferences and send feedback
-    PrefsUtils.prefsPut("ExceptionUserName", getViewStringValue("UserText"));
-    PrefsUtils.prefsPut("ExceptionEmail", getViewStringValue("EmailText"));
+    Prefs.get().set("ExceptionUserName", getViewStringValue("UserText"));
+    Prefs.get().set("ExceptionEmail", getViewStringValue("EmailText"));
     sendFeedback();
 }
 
@@ -33,8 +33,8 @@ public void showPanel(View aView)
  */
 public void initUI()
 {
-    setViewValue("UserText", PrefsUtils.prefs().get("ExceptionUserName", ""));
-    setViewValue("EmailText", PrefsUtils.prefs().get("ExceptionEmail", ""));
+    setViewValue("UserText", Prefs.get().get("ExceptionUserName", ""));
+    setViewValue("EmailText", Prefs.get().get("ExceptionEmail", ""));
 }
 
 /**

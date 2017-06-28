@@ -37,10 +37,10 @@ public class RMTextEditor {
     double              _downX, _downY;
 
     // Whether RM should be spell checking
-    public static boolean isSpellChecking = PrefsUtils.prefs().getBoolean("SpellChecking", false);
+    public static boolean isSpellChecking = Prefs.get().getBoolean("SpellChecking", false);
     
     // Whether hyphenating is activated
-    static boolean      _hyphenating = PrefsUtils.prefs().getBoolean("Hyphenating", false);
+    static boolean      _hyphenating = Prefs.get().getBoolean("Hyphenating", false);
 
 /**
  * Returns the text box used to layout text.
@@ -852,6 +852,6 @@ public static final boolean isHyphenating()  { return _hyphenating; }
 /**
  * Sets whether layout tries to hyphenate wrapped words.
  */
-public static final void setHyphenating(boolean aValue)  { PrefsUtils.prefsPut("Hyphenating", _hyphenating = aValue); }
+public static final void setHyphenating(boolean aValue)  { Prefs.get().set("Hyphenating", _hyphenating = aValue); }
 
 }

@@ -29,8 +29,8 @@ public void showPanel(View aView)
 public void initUI()
 {
     // Set LicenseText & EnableExceptionsCheckBox
-    setViewValue("LicenseText", PrefsUtils.prefs().get("HostProperties1", null));
-    setViewValue("EnableExceptionsCheckBox", PrefsUtils.prefs().getBoolean("ExceptionReportingEnabled", true));
+    setViewValue("LicenseText", Prefs.get().get("HostProperties1", null));
+    setViewValue("EnableExceptionsCheckBox", Prefs.get().getBoolean("ExceptionReportingEnabled", true));
     
     // Set NumberFormatsText & DateFormatsText
     setViewValue("NumberFormatsText", _formatPanel.getNumberFormatsString());
@@ -71,7 +71,7 @@ public boolean apply()
     ReportMill.setLicense(licenseKey, true, true);
 
     // Save the exception reporting pref
-    PrefsUtils.prefsPut("ExceptionReportingEnabled", getViewBoolValue("EnableExceptionsCheckBox"));
+    Prefs.get().set("ExceptionReportingEnabled", getViewBoolValue("EnableExceptionsCheckBox"));
     
     // Get pref panel number formats and the original number formats
     String nums = getViewStringValue("NumberFormatsText");
@@ -93,7 +93,7 @@ public boolean apply()
         // Add new format string to default (clear it if it's the default)
         if(nums.equals(_formatPanel.getDefaultNumberFormatsString()))
             nums = null;
-        PrefsUtils.prefsPut("NumberFormats", nums);
+        Prefs.get().set("NumberFormats", nums);
     }
     
     // Get pref panel date formats and original date formats
@@ -116,14 +116,11 @@ public boolean apply()
         // Add new format string to default (clear it if it's the default)
         if(dates.equals(_formatPanel.getDefaultDateFormatsString()))
             dates = null;
-        PrefsUtils.prefsPut("DateFormats2", dates);
+        Prefs.get().set("DateFormats2", dates);
     }
     
-    // Flush properties to registry
-    try { PrefsUtils.prefs().flush(); }
-    catch(Exception e) { e.printStackTrace(); }
-    
-    // Return true if everything went as planned
+    // Flush properties to registry and return true
+    Prefs.get().flush();
     return true;
 }
 

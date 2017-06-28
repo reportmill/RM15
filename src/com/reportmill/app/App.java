@@ -35,7 +35,7 @@ public App(String args[])
     ReportMill.isApp = true;
     
     // Install preferences class
-    PrefsUtils.setPrefsClass(com.reportmill.Shell.class);
+    Prefs.setPrefsClass(com.reportmill.Shell.class);
 
     // This prevents Windows boxes from bringing up the Drive A not ready error
     System.setSecurityManager(null);
@@ -93,7 +93,7 @@ public static void quitApp()
                 Welcome.getShared().setEnabled(old); return; }
 
     // Flush Properties to registry and exit
-    try { PrefsUtils.prefs().flush(); } catch(Exception e) { e.printStackTrace(); }
+    try { Prefs.get().flush(); } catch(Exception e) { e.printStackTrace(); }
     System.exit(0);
 }
 

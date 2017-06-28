@@ -4,7 +4,6 @@
 package com.reportmill.app;
 import java.io.File;
 import java.util.*;
-import java.util.prefs.*;
 import snap.util.*;
 import snap.view.*;
 
@@ -100,10 +99,10 @@ public static List <String> getRecentPaths()
 public static List <File> getRecentFiles()
 {
     // Get prefs for RecentDocuments (just return if missing)
-    Preferences prefs = PrefsUtils.prefs();
-    try { if(!prefs.nodeExists("RecentDocuments")) return new ArrayList(); }
-    catch(BackingStoreException bse) { return new ArrayList(); }
-    prefs = prefs.node("RecentDocuments");
+    Prefs prefs = Prefs.get().getChild("RecentDocuments");
+    //try { if(!prefs.nodeExists("RecentDocuments")) return new ArrayList(); }
+    //catch(BackingStoreException bse) { return new ArrayList(); }
+    //prefs = prefs.node("RecentDocuments");
     
     // Add to the list only if the file is around and readable
     List list = new ArrayList();
@@ -131,20 +130,15 @@ public static void addRecentFile(String aPath)
     docs.remove(path); docs.add(0, path);
     
     // Add at most 10 files to the preferences list
-    Preferences prefs = PrefsUtils.prefs().node("RecentDocuments");
+    Prefs prefs = Prefs.get().getChild("RecentDocuments");
     for(int i=0; i<docs.size() && i<10; i++) 
-        prefs.put("index"+i, docs.get(i));
+        prefs.set("index"+i, docs.get(i));
 }
 
 /**
  * Clears recent documents from preferences.
  */
-public void clearRecentFiles()
-{
-    Preferences p = PrefsUtils.prefs();
-    try { if(p.nodeExists("RecentDocuments")) p.node("RecentDocuments").removeNode(); }
-    catch(BackingStoreException e) { }
-}
+public void clearRecentFiles()  { Prefs.get().getChild("RecentDocuments").clear(); }
 
 /**
  * Returns a menu for recent files.
