@@ -774,10 +774,10 @@ private Point dropFile(RMShape aShape, File aFile, Point aPoint)
     
     // Get path and extension (set to empty string if null)
     String path = aFile.getPath();
-    String ext = FilePathUtils.getExtension(path); if(ext==null) ext = "";
+    String ext = FilePathUtils.getExtension(path); if(ext==null) return aPoint; ext = ext.toLowerCase();
 
     // If xml file, pass it to setDataSource()
-    if(ext.equalsIgnoreCase("xml") || ext.equalsIgnoreCase("json"))
+    if(ext.equals("xml") || ext.equals("json"))
         getEditorPane().setDataSource(WebURL.getURL(aFile), aPoint.getX(), aPoint.getY());
 
     // If image file, add image shape
@@ -785,7 +785,7 @@ private Point dropFile(RMShape aShape, File aFile, Point aPoint)
         runLater(() -> dropImageFile(aShape, path, aPoint));
 
     // If reportmill file, addReportFile
-    //else if(ext.equalsIgnoreCase("rpt")) RMNestedDocTool.dropReportFile(getEditor(), aShape, path, aPoint);
+    else if(ext.equals("rpt")) dropReportFile(aShape, path, aPoint);
     
     // Return point offset by 10
     aPoint.offset(10, 10); return aPoint;
@@ -847,6 +847,34 @@ private void dropImageFile(RMShape aShape, String aPath, Point aPoint)
     
     // Select imageShape and SelectTool
     editor.setSelectedShape(imageShape);
+    editor.setCurrentToolToSelectTool();
+}
+
+/**
+ * Called to handle a report file drop on the editor.
+ */
+public void dropReportFile(RMShape aShape, String aPath, Point aPoint)
+{
+    // Find a parent shape that accepts children
+    RMEditor editor = getEditor();
+    RMParentShape parent = aShape instanceof RMParentShape? (RMParentShape)aShape : aShape.getParent();
+    while(!editor.getTool(parent).getAcceptsChildren(parent))
+        parent = parent.getParent();
+    
+    // Get document for dropped file and embedded document shape for document
+    RMDocument doc = RMDocument.getDoc(aPath);
+    RMNestedDoc ndoc = new RMNestedDoc(); ndoc.setNestedDoc(doc);
+    
+    // Center embedded document around drop point
+    Point point = editor.convertToShape(aPoint.x, aPoint.y, parent);
+    ndoc.setXY(point);
+
+    // Add edoc to document
+    editor.undoerSetUndoTitle("Add Embedded Document");
+    parent.addChild(ndoc);
+
+    // Select edoc and selectTool
+    editor.setSelectedShape(ndoc);
     editor.setCurrentToolToSelectTool();
 }
 
