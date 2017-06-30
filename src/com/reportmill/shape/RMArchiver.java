@@ -68,7 +68,7 @@ private RMDocument getDocPDF(Object aSource, RMDocument aBaseDoc)
     while(doc.getPageCount()>0) doc.removePage(0);
     
     // Get image data for source and iterate over each PDF page and create/add document page
-    RMImageData imageData = RMImageData.getImageData(aSource, 0);
+    RMImageData imageData = RMImageData.getImageData(aSource);
     for(int i=0, iMax=imageData.getPageCount(); i<iMax; i++) { RMImageData pageData = imageData.getPage(i);
         RMPage page = doc.addPage();
         page.setSize(pageData.getImageWidth(), pageData.getImageHeight());

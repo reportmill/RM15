@@ -66,16 +66,16 @@ public class RMImageData implements Cloneable {
     static List <WeakReference<RMImageData>>  _cache = new ArrayList();
     
     // A shared empty ImageData
-    public static RMImageData EMPTY = getImageData(RMImageData.class.getResourceAsStream("DefaultImage.png"), 0);
+    public static RMImageData EMPTY = getImageData(RMImageData.class.getResourceAsStream("DefaultImage.png"));
     
 /**
  * Returns an image data loaded from aSource. If image type supports multiple pages, page index can be specified.
  */
-public static synchronized RMImageData getImageData(Object aSource, int aPageIndex)
+public static synchronized RMImageData getImageData(Object aSource)
 {
     // If source is null, return EMPTY, if image data, return it dereferencing given page
     if(aSource==null) return EMPTY;
-    if(aSource instanceof RMImageData) return ((RMImageData)aSource).getPage(aPageIndex);
+    if(aSource instanceof RMImageData) return (RMImageData)aSource;
     
     // Get source url
     WebURL url = null; try { url = WebURL.getURL(aSource); } catch(Exception e) { }
@@ -89,7 +89,7 @@ public static synchronized RMImageData getImageData(Object aSource, int aPageInd
         // If source matches cached source, return
         if(url!=null && url.equals(idata.getSourceURL()) || aSource==idata.getSource()) {
             idata.refresh();
-            return idata.getPage(aPageIndex);
+            return idata;
         }
     }
     
@@ -98,7 +98,7 @@ public static synchronized RMImageData getImageData(Object aSource, int aPageInd
     
     // Create new ImageData, add to cache (as WeakReference) and return
     RMImageData idata = RMImageDataPDF.canRead(bytes)? new RMImageDataPDF() : new RMImageData();
-    idata.setSource(url!=null? url : bytes!=null? bytes : aSource, aPageIndex);
+    idata.setSource(url!=null? url : bytes!=null? bytes : aSource, 0);
     _cache.add(new WeakReference(idata));
     return idata;
 }
@@ -356,6 +356,19 @@ public void paint(Painter aPntr, double x, double y, double w, double h)
         Transform transform = Transform.get(sx, 0, 0, sy, x, y);
         aPntr.drawImage(image, transform);
     }
+}
+
+/**
+ * Standard toString implementation.
+ */
+public String toString()
+{
+    String str = getClass().getSimpleName() + " { ";
+    str += "Type=" + getType() + ", Width=" + getWidth() + ", Height=" + getHeight();
+    if(getPageCount()>0) str += ", Page=" + getPageIndex();
+    if(getSourceURL()!=null) str += ", URL=" + getSourceURL();
+    str += " }";
+    return str;
 }
 
 /**

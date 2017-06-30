@@ -75,7 +75,7 @@ public void setImageData(RMImageData anImageData)
 /**
  * Sets the image data from given source.
  */
-public void setImageData(Object aSource)  { setImageData(RMImageData.getImageData(aSource, 0)); }
+public void setImageData(Object aSource)  { setImageData(RMImageData.getImageData(aSource)); }
 
 /**
  * Returns the page index.
@@ -190,7 +190,7 @@ public RMShape rpgShape(ReportOwner aRptOwner, RMShape aParent)
     if(key!=null && key.length()>0) {
         Object value = RMKeyChain.getValue(aRptOwner, getKey());
         if(value instanceof RMKeyChain) value = ((RMKeyChain)value).getValue();
-        RMImageData idata = RMImageData.getImageData(value, 0);
+        RMImageData idata = RMImageData.getImageData(value);
         clone.setImageData(idata);
     }
 
@@ -285,8 +285,9 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
     String rname = anElement.getAttributeValue("resource");
     if(rname!=null) {
         byte bytes[] = anArchiver.getResource(rname); // Get resource bytes
+        _imageData = RMImageData.getImageData(bytes); // Create new image data
         int page = anElement.getAttributeIntValue("PageIndex"); // Unarchive page number
-        _imageData = RMImageData.getImageData(bytes, page); // Create new image data
+        if(page>0 && _imageData!=null) _imageData = _imageData.getPage(page); // reset page
     }
     
     // Unarchive ImageName
@@ -294,7 +295,7 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
     if(_iname!=null) {
         Image img = Image.get(anArchiver.getSourceURL(), _iname);
         if(img!=null)
-            _imageData = RMImageData.getImageData(img.getBytes(), 0);
+            _imageData = RMImageData.getImageData(img.getBytes());
     }
     
     // Unarchive Key, Padding, GrowToFit, PreserveRatio

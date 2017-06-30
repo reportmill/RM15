@@ -34,7 +34,7 @@ public RMImageFill(Object aSource)  { this(aSource, false); }
  */
 public RMImageFill(Object aSource, boolean isTiled)
 {
-    _idata = RMImageData.getImageData(aSource, 0);
+    _idata = RMImageData.getImageData(aSource);
     if(isTiled) _snap = new ImagePaint(_idata.getImage());
     else _snap = new ImagePaint(_idata.getImage(), new Rect(0,0,1,1), false);
 }
@@ -179,8 +179,9 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
     String iname = anElement.getAttributeValue("resource");
     if(iname!=null) {
         byte bytes[] = anArchiver.getResource(iname); // Get resource bytes
+        _idata = RMImageData.getImageData(bytes); // Create new image data
         int page = anElement.getAttributeIntValue("page"); // Unarchive page number
-        _idata = RMImageData.getImageData(bytes, page); // Create new image data
+        if(page>0 && _idata!=null) _idata = _idata.getPage(page);
     }
     
     // Unarchive Tile, legacy FillStyle (Stretch=0, Tile=1, Fit=2, FitIfNeeded=3)
