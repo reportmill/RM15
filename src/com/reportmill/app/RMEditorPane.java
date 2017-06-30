@@ -32,7 +32,7 @@ public class RMEditorPane extends RMViewerPane {
     AttributesPanel        _attrsPanel = createAttributesPanel();
     
     // The image for a window frame icon
-    static Image           _frameIcon = Image.get(RMEditorPane.class, "ReportMill16x16.png");
+    static Image           _frameImg;
 
 /**
  * Creates a new EditorPane.
@@ -354,7 +354,10 @@ public String getWindowTitle()
 /**
  * Returns the icon for the editor window frame.
  */
-public static Image getFrameIcon()  { return _frameIcon; }
+public static Image getFrameIcon()
+{
+    return _frameImg!=null? _frameImg : (_frameImg=Image.get(RMEditorPane.class, "ReportMill16x16.png"));
+}
 
 /**
  * Creates a new default editor pane.
