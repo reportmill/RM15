@@ -24,8 +24,10 @@ jar cf ReportMill15.jar \
     -C ../../SnapKit/bin snap/web
 
 echo "Creating RMStudio15 Manifest"
-echo "Main-Class: com.reportmill.app.App\nClass-Path: spell.jar" > MANIFEST.MF
-echo "Application-Name: RMStudio15\nPermissions: all-permissions" >> MANIFEST.MF
+echo "Main-Class: com.reportmill.app.App" > MANIFEST.MF
+echo "Class-Path: spell.jar" >> MANIFEST.MF
+echo "Application-Name: RMStudio15" >> MANIFEST.MF
+echo "Permissions: all-permissions" >> MANIFEST.MF
 echo "Codebase: *" >> MANIFEST.MF
 
 echo "Creating RMStudio15.jar"
