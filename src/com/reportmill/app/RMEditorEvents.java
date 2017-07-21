@@ -213,7 +213,7 @@ public void keyPressed(ViewEvent anEvent)
     
     // If T key, swap in linked text
     else if(keyChar=='t')
-        ((RMTextTool)editor.getTool(RMTextTool.class)).convertToText(editor.getSelectedShape(), "test");
+        ((RMTextTool)editor.getTool(RMTextShape.class)).convertToText(editor.getSelectedShape(), "test");
     
     // Otherwise, set consume to false
     else return;
