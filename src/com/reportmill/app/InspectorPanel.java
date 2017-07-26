@@ -188,6 +188,16 @@ public void setVisible(int anIndex)
 }
 
 /**
+ * Returns whether inspector should update when editor does.
+ */
+public boolean isResetWithEditor()
+{
+    if(!isVisible()) return false;
+    if(!ViewUtils.isMouseDown()) return true;
+    return getInspector()==_shapePlacement;
+}
+
+/**
  * Returns whether the inspector is showing the datasource inspector.
  */
 public boolean isShowingDataSource()  { return isUISet() && _dataSource!=null && _dataSource.getUI().isShowing(); }

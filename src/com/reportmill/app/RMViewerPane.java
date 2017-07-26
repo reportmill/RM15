@@ -29,29 +29,6 @@ public class RMViewerPane extends ViewOwner implements PropChangeListener {
     ViewOwner         _btmToolBar;
     
 /**
- * Initializes the UI.
- */
-protected View createUI()
-{
-    // Create and configure viewer
-    _viewer = createViewer();
-    _viewer.addPropChangeListener(this); // Listen to PropertyChanges
-    _scrollView = new ScrollView(); _scrollView.setFill(new snap.gfx.Color("#c0c0c0"));
-
-    _scrollView.setContent(_viewer);
-    
-    // Create ScrollBorderView
-    _scrollBorderView = new BorderView(); _scrollBorderView.setCenter(_scrollView);
-
-    // Create BorderView and add TopToolBar, ScrollView/Viewer and BottomToolBar
-    BorderView bpane = new BorderView();
-    bpane.setTop(getTopToolBar().getUI());
-    bpane.setCenter(_scrollBorderView);
-    bpane.setBottom(getBottomToolBar().getUI());
-    return bpane;
-}
-
-/**
  * Returns the viewer for this viewer pane.
  */
 public RMViewer getViewer()  { if(_viewer==null) getUI(); return _viewer; }
@@ -161,12 +138,35 @@ public void previewPDF()
 }
 
 /**
+ * Initializes the UI.
+ */
+protected View createUI()
+{
+    // Create and configure viewer
+    _viewer = createViewer();
+    _viewer.addPropChangeListener(this); // Listen to PropertyChanges
+    _scrollView = new ScrollView(); _scrollView.setFill(new snap.gfx.Color("#c0c0c0"));
+
+    _scrollView.setContent(_viewer);
+    
+    // Create ScrollBorderView
+    _scrollBorderView = new BorderView(); _scrollBorderView.setCenter(_scrollView);
+
+    // Create BorderView and add TopToolBar, ScrollView/Viewer and BottomToolBar
+    BorderView bpane = new BorderView();
+    bpane.setTop(getTopToolBar().getUI());
+    bpane.setCenter(_scrollBorderView);
+    bpane.setBottom(getBottomToolBar().getUI());
+    return bpane;
+}
+
+/**
  * Resets UI.
  */
 protected void resetUI()
 {
-    getTopToolBar().resetLater();
-    getBottomToolBar().resetLater();
+    if(!ViewUtils.isMouseDown()) getTopToolBar().resetLater();
+    if(!ViewUtils.isMouseDown()) getBottomToolBar().resetLater();
 }
 
 /**

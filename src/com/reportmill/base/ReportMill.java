@@ -157,13 +157,13 @@ private static void addWatermark(RMParentShape aShape)
     aShape.addChild(evalShape, 0);
 
     // Get attributed string with bottom eval message in 12pt
-    String msg = "ReportMill Evaluation - request a free license at reportmill.com/free.";
+    String msg = "ReportMill Evaluation - for more information go to reportmill.com.";
     xstring = new RMXString(msg, RMFont.Helvetica12);
 
     // Create evalShape license string in lower left corner
     evalShape = new RMTextShape(xstring);
     evalShape.setFrame(5, aShape.getHeight() - 20, 500, 18);
-    evalShape.setURL("http://www.reportmill.com/free");
+    evalShape.setURL("http://www.reportmill.com");
     aShape.addChild(evalShape);
 }
 

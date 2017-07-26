@@ -261,9 +261,9 @@ protected void resetUI()
     if(_hruler!=null) { _hruler.repaint(); _vruler.repaint(); }
     
     // Reset MenuBar, InspectorPanel and AttributesPanel
-    getMenuBar().resetLater();
-    if(getInspectorPanel().isVisible()) getInspectorPanel().resetLater();
-    if(getAttributesPanel().isVisible()) getAttributesPanel().resetLater();
+    if(!ViewUtils.isMouseDown()) getMenuBar().resetLater();
+    if(getInspectorPanel().isResetWithEditor()) getInspectorPanel().resetLater();
+    if(getAttributesPanel().isVisible() && !ViewUtils.isMouseDown()) getAttributesPanel().resetLater();
 }
 
 /**
