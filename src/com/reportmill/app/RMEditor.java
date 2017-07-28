@@ -1022,6 +1022,7 @@ public void deepChange(PropChangeListener aShape, PropChange anEvent)
  */
 protected void saveUndoerChanges()
 {
+    _saveChangesRunnable = null;
     // If MouseIsDown, come back later
     if(ViewUtils.isMouseDown()) {
         saveUndoerChangesLater(); return; }
@@ -1041,8 +1042,13 @@ protected void saveUndoerChanges()
 /**
  * Saves undo changes after a delay.
  */
-protected void saveUndoerChangesLater()  { getEnv().runLaterOnce("SaveChangesLater", _saveChangesRunnable); }
-private Runnable _saveChangesRunnable = () -> saveUndoerChanges();
+protected void saveUndoerChangesLater()
+{
+    if(_saveChangesRunnable==null)
+        getEnv().runDelayed(_saveChangesRunnable = _scrShared, 400, true);
+}
+
+private Runnable _saveChangesRunnable, _scrShared = () -> saveUndoerChanges();
 
 /**
  * A RMShapePaintProps subclass for editor.
