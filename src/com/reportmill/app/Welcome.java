@@ -15,6 +15,9 @@ public class Welcome extends ViewOwner {
     // Whether welcome panel is enabled
     boolean         _enabled;
     
+    // A preloaded editor to speed up first open
+    RMEditorPane    _preloadEdPane;
+    
     // Shared welcome panel
     static Welcome  _shared;
     
@@ -57,6 +60,9 @@ public void runWelcome()
 
     // Make welcome panel visible
     getWindow().setVisible(true);
+    
+    // Preload an editor pane while use ponders the welcome panel
+    runLater(() -> _preloadEdPane = newEditorPane());
 }
 
 /**
@@ -151,6 +157,13 @@ public void open(String aPath)
 /**
  * Creates a new editor for new or opened documents.
  */
-public RMEditorPane newEditorPane()  { return new RMEditorPane(); }
+public RMEditorPane newEditorPane()
+{
+    // Use/clear cached version if set
+    if(_preloadEdPane!=null) { RMEditorPane ep = _preloadEdPane; _preloadEdPane = null; return ep; }
+    
+    // Otherwise, return new pane
+    return new RMEditorPane();
+}
 
 }
