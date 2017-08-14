@@ -34,9 +34,9 @@ public App(String args[])
     // Set app is true
     ReportMill.isApp = true;
     
-    // Install preferences class
-    Prefs.setPrefsClass(com.reportmill.Shell.class);
-
+    // Set default preferences
+    Prefs.setPrefsDefault(Prefs.getPrefs(com.reportmill.Shell.class));
+    
     // This prevents Windows boxes from bringing up the Drive A not ready error
     System.setSecurityManager(null);
     

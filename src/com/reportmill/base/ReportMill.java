@@ -5,7 +5,6 @@ package com.reportmill.base;
 import com.reportmill.shape.*;
 import com.reportmill.graphics.*;
 import java.util.*;
-import java.util.prefs.Preferences;
 import snap.gfx.GFXEnv;
 import snap.util.*;
 
@@ -67,8 +66,8 @@ public static String getLicense()
     
     // Get preferences for com.reportmill.Shell and prefs key (HostProperties1 for app, HostProperties2  for engine)
     try {
-        Preferences prefs = Preferences.userNodeForPackage(com.reportmill.Shell.class);
         String prefsKey = isApp? "HostProperties1" : "HostProperties2";
+        Prefs prefs = Prefs.getPrefs(com.reportmill.Shell.class); //Preferences.userNodeForPackage(Shell.class);
         _license = prefs.get(prefsKey, null);
     }
     
@@ -91,11 +90,11 @@ public static void setLicense(String aLicense, boolean isPersistent, boolean isA
     if(isPersistent) try {
         
         // Get preferences for com.reportmill.Shell and prefs key (HostProperties1 for app, HostProperties2  for engine)
-        Preferences prefs = Preferences.userNodeForPackage(com.reportmill.Shell.class);
+        Prefs prefs = Prefs.getPrefs(com.reportmill.Shell.class); //Preferences.userNodeForPackage(Shell.class);
         String prefsKey = isApp? "HostProperties1" : "HostProperties2";
 
         // Put license for prefs key (or remove if null) and flush preferences
-        if(aLicense!=null) prefs.put(prefsKey, aLicense);
+        if(aLicense!=null) prefs.set(prefsKey, aLicense);
         else prefs.remove(prefsKey);
         prefs.flush();
     }
