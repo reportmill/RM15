@@ -61,9 +61,11 @@ public void respondUI(ViewEvent anEvent)
     // Handle BindingsTable
     if(anEvent.equals("BindingsTable")) {
         
-        // Handle MouseClick
-        if(anEvent.getClickCount()==2)
-            requestFocus(getView("BindingsText"));
+        // Handle MouseRelease: Select text
+        if(anEvent.isMouseRelease()) {
+            requestFocus("BindingsText");
+            getView("BindingsText", TextView.class).selectAll();
+        }
             
         // Handle DragDrop
         if(anEvent.isDragDrop()) {

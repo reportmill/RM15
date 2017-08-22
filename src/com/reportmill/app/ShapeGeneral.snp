@@ -15,7 +15,7 @@
     <VBox LeanY="BOTTOM">
       <Label text="URL:" />
       <ScrollView PrefWidth="250" PrefHeight="136">
-        <TextView Name="UrlText" FireActionOnReturn="true">
+        <TextView Name="UrlText" FireActionOnReturn="true" FireActionOnFocusLost="true">
           <binding aspect="Text" key="SelectedShapes.URL" />
         </TextView>
       </ScrollView>
@@ -27,14 +27,12 @@
       <Label text="Key Bindings" />
       <Label LeanX="RIGHT" text="(enter key in text)" />
     </HBox>
-    <ScrollView GrowHeight="true">
-      <TableView Name="BindingsTable" ShowHeader="false" GridColor="#c9c9c9">
-        <TableCol PrefWidth="80" />
-        <TableCol GrowWidth="true" />
-      </TableView>
-    </ScrollView>
+    <TableView Name="BindingsTable" GrowHeight="true" ShowHeader="false" GridColor="#c9c9c9">
+      <TableCol PrefWidth="80" />
+      <TableCol GrowWidth="true" />
+    </TableView>
     <ScrollView PrefHeight="100">
-      <TextView Name="BindingsText" FireActionOnReturn="true" />
+      <TextView Name="BindingsText" FireActionOnReturn="true" FireActionOnFocusLost="true" />
     </ScrollView>
   </VBox>
 </TabView>
