@@ -935,10 +935,10 @@ public static class TextShapePane extends TextView {
     RMTextEditor ted()  { RMEditor e = editor(); return e!=null? e.getTextEditor() : null; }
     
     /** Sets the character index of the start and end of the text selection. */
-    public void setSel(int aStart, int anEnd, int anAnchor)
+    public void setSel(int aStart, int aEnd)
     {
-        super.setSel(aStart, anEnd, anAnchor);
-        RMTextEditor ted = ted(); if(ted!=null) ted.setSel(aStart,anEnd, anAnchor);
+        super.setSel(aStart, aEnd);
+        RMTextEditor ted = ted(); if(ted!=null) ted.setSel(aStart,aEnd);
         RMTextShape text = text(); if(text!=null) text.repaint();
     }
 }

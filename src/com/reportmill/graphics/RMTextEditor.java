@@ -110,14 +110,9 @@ public void setSel(int newStartEnd)  { setSel(newStartEnd, newStartEnd); }
 /**
  * Sets the character index of the start and end of the text selection.
  */
-public void setSel(int aStart, int anEnd)  { setSel(aStart, anEnd, anEnd); }
-
-/**
- * Sets the character index of the start and end of the text selection.
- */
-public void setSel(int aStart, int anEnd, int anAnchor)
+public void setSel(int aStart, int anEnd)
 {
-    _sel = new TextSel(getTextBox(), aStart, anEnd, anAnchor); _istyle = null;
+    _sel = new TextSel(getTextBox(), aStart, anEnd); _istyle = null;
 }
 
 /**
@@ -133,7 +128,7 @@ public int getSelEnd()  { return _sel.getEnd(); }
 /**
  * Returns the character index of the last explicitly selected char (confined to the bounds of the selection).
  */
-public int getSelAnchor()  { return _sel.getAnchor(); }
+public int getSelIndex()  { return _sel.getAnchor(); }
 
 /**
  * Selects all the characters in the text editor.
@@ -405,7 +400,7 @@ public void delete(int aStart, int anEnd, boolean doUpdateSel)
     
     // If update selection requested, update selection to start of deleted range
     if(doUpdateSel)
-        setSel(aStart, aStart, aStart);
+        setSel(aStart);
 }
 
 /**
@@ -508,8 +503,8 @@ public void keyForward(boolean isShiftDown)
 {
     // If shift is down, extend selection forward
     if(isShiftDown) {
-        if(getSelAnchor()==getSelStart() && !isSelEmpty()) setSel(getSelStart()+1, getSelEnd());
-        else { setSel(getSelStart(), getSelEnd()+1, getSelEnd()+1); }
+        if(getSelIndex()==getSelStart() && !isSelEmpty()) setSel(getSelStart()+1, getSelEnd());
+        else { setSel(getSelStart(), getSelEnd()+1); }
         return;
     }
     
@@ -524,8 +519,8 @@ public void keyBackward(boolean isShiftDown)
 {
     // If shift is down, extend selection back
     if(isShiftDown) {
-        if(getSelAnchor()==getSelEnd() && !isSelEmpty()) setSel(getSelStart(), getSelEnd()-1);
-        else { setSel(getSelStart()-1, getSelEnd(), getSelStart()-1); }
+        if(getSelIndex()==getSelEnd() && !isSelEmpty()) setSel(getSelStart(), getSelEnd()-1);
+        else { setSel(getSelEnd(), getSelStart()-1); }
         return;
     }
     
