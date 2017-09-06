@@ -8,11 +8,36 @@ import com.reportmill.shape.*;
 import java.util.*;
 import snap.gfx.Rect;
 import snap.util.*;
+import snap.web.WebURL;
 
 /**
  * This file is just meant to hold various utility methods that customers have asked for.
  */
 public class RMExtras {
+    
+    // The Hollywood db URL
+    static WebURL       _hollywoodURL;
+    
+    // The Movies Rpt URL
+    static WebURL       _moviesURL;
+    
+/**
+ * Returns the Hollywood db URL.
+ */
+public static WebURL getHollywoodURL()
+{
+    if(_hollywoodURL!=null) return _hollywoodURL;
+    return _hollywoodURL = WebURL.getURL(RMExtras.class.getResource("/com/reportmill/examples/HollywoodDB.xml"));
+}
+
+/**
+ * Returns the Movies Rpt URL.
+ */
+public static WebURL getMoviesURL()
+{
+    if(_moviesURL!=null) return _moviesURL;
+    return _moviesURL = WebURL.getURL(RMExtras.class.getResource("/com/reportmill/examples/Movies.rpt"));
+}
 
 /**
  * Iterates over all document (or shape) text and replaces occurrences of the first string with the second.
@@ -256,10 +281,10 @@ public static void addToPage(RMDocument aDoc1, RMDocument aDoc2)
 public static void addPageBetweenPages()
 {
     // Get template
-    RMDocument template = new RMDocument("Jar:/com/reportmill/examples/Movies.rpt");
+    RMDocument template = new RMDocument(getMoviesURL());
     
     // Get objects
-    Map map = new RMXMLReader().readObject("Jar:/com/reportmill/examples/HollywoodDB.xml", template.getDataSourceSchema());
+    Map map = new RMXMLReader().readObject(getHollywoodURL(), template.getDataSourceSchema());
     
     // Generate report
     RMDocument report = template.generateReport(map);
@@ -317,8 +342,8 @@ public static void setTimeZone(RMShape aShape, TimeZone aTimeZone)
  */
 public static void passwordReport()
 {
-    Map dset = new RMXMLReader().readObject("Jar:/com/reportmill/examples/HollywoodDB.xml");
-    RMDocument template = new RMDocument("Jar:/com/reportmill/examples/Movies.rpt");
+    Map dset = new RMXMLReader().readObject(getHollywoodURL());
+    RMDocument template = new RMDocument(getMoviesURL());
     RMDocument report = template.generateReport(dset);
     
     RMPDFWriter rm = new RMPDFWriter(); //rm.setUnmodifiable("Test");

@@ -2,12 +2,11 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.app;
-import com.reportmill.base.RMDataSource;
+import com.reportmill.base.*;
 import com.reportmill.shape.*;
 import java.io.File;
 import snap.util.*;
 import snap.view.*;
-import snap.web.WebURL;
 
 /**
  * Some utility methods for RMEditorPane.
@@ -19,7 +18,7 @@ public class RMEditorPaneUtils {
  */
 public static void connectToDataSource(RMEditorPane anEP)
 {
-    RMDataSource ds = new RMDataSource(WebURL.getURL("Jar:/com/reportmill/examples/HollywoodDB.xml"));
+    RMDataSource ds = new RMDataSource(RMExtras.getHollywoodURL());
     if(ds!=null) anEP.setDataSource(ds);
 }
 
