@@ -162,8 +162,9 @@ public RMEditorPane newEditorPane()
     // Use/clear cached version if set
     if(_preloadEdPane!=null) { RMEditorPane ep = _preloadEdPane; _preloadEdPane = null; return ep; }
     
-    // Otherwise, return new pane
-    return new RMEditorPane();
+    // Otherwise, return new pane with UI loaded
+    RMEditorPane ep = new RMEditorPane(); ep.getUI();
+    return ep;
 }
 
 }
