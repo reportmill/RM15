@@ -248,9 +248,8 @@ public void resetSelectionPathMatrix()
         
         // Set button images
         Image img = editor.getTool(shp).getImage();
-        Image img2 = getImage(img, 40, 40, Color.CLEAR); button.setImage(img2);
-        //Image img3 = getImage(img, 40, 40, Color.WHITE); button.setSelImage(img3);
-        button.setToolTip(shp.getClass().getSimpleName()); // Tooltip
+        button.setImage(img);
+        button.setToolTip(shp.getClass().getSimpleName());
         if(shp==selectedShape) button.setSelected(true);  // Whether selected
         
         // Add button to selection path panel and button group
@@ -258,15 +257,6 @@ public void resetSelectionPathMatrix()
         getToggleGroup("SelectionPath").add(button);
         if(shp!=_deepestShape) _selectionPathPane.addChild(new Sep(), 1);
     }
-}
-
-/** Returns an image as a new size, centered, with given background color. */
-private Image getImage(Image anImg, int aW, int aH, Color aColor)
-{
-    Image img = Image.get(aW, aH, aColor.getAlpha()<1);
-    Painter pntr = img.getPainter(); pntr.setColor(aColor); pntr.fillRect(0,0,aW,aH);
-    pntr.drawImage(anImg, (aW-anImg.getWidth())/2, (aH-anImg.getHeight())/2); pntr.flush();
-    return img;
 }
 
 /**
