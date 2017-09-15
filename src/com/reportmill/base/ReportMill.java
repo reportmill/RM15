@@ -5,7 +5,7 @@ package com.reportmill.base;
 import com.reportmill.shape.*;
 import com.reportmill.graphics.*;
 import java.util.*;
-import snap.gfx.GFXEnv;
+import snap.gfx.GFXUtils;
 import snap.util.*;
 
 /**
@@ -285,7 +285,7 @@ public static void init()
         bdate, rver, jver, user);
 
     // Set headless
-    GFXEnv.getEnv().setHeadless();
+    GFXUtils.setHeadless();
 }
 
 }
