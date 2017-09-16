@@ -262,7 +262,7 @@ public void drop(T aCell, ViewEvent anEvent)
         super.drop(aCell, anEvent);
     
         // Get the string
-        String string = anEvent.getDragString(); //ClipboardUtils.getString(anEvent.getTransferable());
+        String string = anEvent.getClipboard().getString(); //ClipboardUtils.getString(anEvent.getTransferable());
     
         // If this cell is header row or header column and there is no grouping, set grouping
         if((aCell.isColumnHeader() || aCell.isRowHeader()) && aCell.getGrouping()==null) {

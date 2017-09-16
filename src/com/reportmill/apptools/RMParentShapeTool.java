@@ -26,7 +26,7 @@ public String getWindowTitle()  { return "Group Shape Inspector"; }
  */
 public void dropString(T aShape, ViewEvent anEvent)
 {
-    Clipboard cb = anEvent.getDragboard(); //Transferable transferable = anEvent.getTransferable();
+    Clipboard cb = anEvent.getClipboard(); //Transferable transferable = anEvent.getTransferable();
     getEditor().undoerSetUndoTitle("Drag and Drop Key");
     RMEditorClipboard.paste(getEditor(), cb, aShape, anEvent.getPoint());    
 }

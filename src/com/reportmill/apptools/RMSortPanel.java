@@ -121,7 +121,7 @@ public void respondUI(ViewEvent anEvent)
         
         // Handle drop: Get drop string and add sort
         if(anEvent.isDragDropEvent()) {    //int toRow = _sortsTable.rowAtPoint(anEvent.getLocation());
-            String string = anEvent.getDropString(); string = StringUtils.delete(string, "@");
+            String string = anEvent.getClipboard().getString(); string = StringUtils.delete(string, "@");
             shape.undoerSetUndoTitle("Add Sort Order");
             grouping.addSort(new RMSort(string));
         }

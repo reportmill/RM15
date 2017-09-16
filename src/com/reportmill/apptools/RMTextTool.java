@@ -767,7 +767,7 @@ public void drop(T aShape, ViewEvent anEvent)
 {
     // If a keys panel drop, add key to text
     if(KeysPanel.getDragKey()!=null) {
-        String string = anEvent.getDragString();
+        String string = anEvent.getClipboard().getString();
         RMTextShape text = aShape;
         if(text.length()==0)
             text.setText(string);

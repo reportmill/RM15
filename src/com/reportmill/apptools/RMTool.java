@@ -5,7 +5,6 @@ package com.reportmill.apptools;
 import com.reportmill.app.*;
 import com.reportmill.shape.*;
 import com.reportmill.graphics.*;
-import java.io.File;
 import java.util.*;
 import snap.data.Entity;
 import snap.gfx.*;
@@ -688,10 +687,10 @@ public boolean acceptsDrag(T aShape, ViewEvent anEvent)
     if(aShape.isRoot()) return true;
     
     // Return true for Color drag or File drag
-    if(anEvent.hasDragContent(Clipboard.COLOR)) return true;
+    if(anEvent.getClipboard().hasColor()) return true;
     
     // Handle file drag - really just want to check for images here, but can't ask for transferable contents yet
-    if(anEvent.hasDragFiles())
+    if(anEvent.getClipboard().hasFiles())
         return true;
     
     // Return true in any case if accepts children
@@ -723,15 +722,15 @@ public void drop(T aShape, ViewEvent anEvent)
         KeysPanel.dropDragKey(aShape, anEvent);
 
     // Handle String drop
-    else if(anEvent.hasDragString())
+    else if(anEvent.getClipboard().hasString())
         dropString(aShape, anEvent);
 
     // Handle color panel drop
-    else if(anEvent.hasDragContent(Clipboard.COLOR))
+    else if(anEvent.getClipboard().hasColor())
         dropColor(aShape, anEvent);
 
     // Handle File drop - get list of dropped files and add individually
-    else if(anEvent.hasDragFiles())
+    else if(anEvent.getClipboard().hasFiles())
         dropFiles(aShape, anEvent);
 }
 
@@ -745,7 +744,7 @@ public void dropString(T aShape, ViewEvent anEvent)  { }
  */
 public void dropColor(RMShape aShape, ViewEvent anEvent)
 {
-    Color color = anEvent.getDragboard().getColor();
+    Color color = anEvent.getClipboard().getColor();
     getEditor().undoerSetUndoTitle("Set Fill Color");
     aShape.setFill(new RMFill(RMColor.get(color)));
 }
@@ -755,26 +754,18 @@ public void dropColor(RMShape aShape, ViewEvent anEvent)
  */
 public void dropFiles(RMShape aShape, ViewEvent anEvent)
 {
-    List <File> filesList = anEvent.getDropFiles(); Point point = anEvent.getPoint();
-    for(File file : filesList)
+    List <ClipboardFile> filesList = anEvent.getClipboard().getFiles(); Point point = anEvent.getPoint();
+    for(ClipboardFile file : filesList)
         point = dropFile(aShape, file, anEvent.getPoint());
 }
 
 /**
  * Called to handle a file drop on the editor.
  */
-private Point dropFile(RMShape aShape, File aFile, Point aPoint)
+private Point dropFile(RMShape aShape, ClipboardFile aFile, Point aPoint)
 {
-    // If directory, recurse and return
-    if(aFile.isDirectory()) { Point point = aPoint;
-        for(File file : aFile.listFiles())
-            point = dropFile(aShape, file, point);
-        return point;
-    }
-    
     // Get path and extension (set to empty string if null)
-    String path = aFile.getPath();
-    String ext = FilePathUtils.getExtension(path); if(ext==null) return aPoint; ext = ext.toLowerCase();
+    String ext = aFile.getExtension(); if(ext==null) return aPoint; ext = ext.toLowerCase();
 
     // If xml file, pass it to setDataSource()
     if(ext.equals("xml") || ext.equals("json"))
@@ -782,10 +773,10 @@ private Point dropFile(RMShape aShape, File aFile, Point aPoint)
 
     // If image file, add image shape
     else if(RMImageData.canRead(ext))
-        runLater(() -> dropImageFile(aShape, path, aPoint));
+        runLater(() -> dropImageFile(aShape, aFile, aPoint));
 
     // If reportmill file, addReportFile
-    else if(ext.equals("rpt")) dropReportFile(aShape, path, aPoint);
+    else if(ext.equals("rpt")) dropReportFile(aShape, aFile, aPoint);
     
     // Return point offset by 10
     aPoint.offset(10, 10); return aPoint;
@@ -794,8 +785,11 @@ private Point dropFile(RMShape aShape, File aFile, Point aPoint)
 /**
  * Called to handle an image drop on the editor.
  */
-private void dropImageFile(RMShape aShape, String aPath, Point aPoint)
+private void dropImageFile(RMShape aShape, ClipboardFile aFile, Point aPoint)
 {
+    // Get image source
+    Object imgSrc = aFile.getSourceURL()!=null? aFile.getSourceURL() : aFile.getBytes();
+    
     // If image hit a real shape, see if user wants it to be a texture
     RMEditor editor = getEditor();
     if(aShape!=editor.getSelectedPage()) {
@@ -812,7 +806,7 @@ private void dropImageFile(RMShape aShape, String aPath, Point aPoint)
             case 0: while(!editor.getTool(aShape).getAcceptsChildren(aShape)) aShape = aShape.getParent(); break;
             
             // Handle Create Texture
-            case 1: aShape.setFill(new RMImageFill(aPath, true));
+            case 1: aShape.setFill(new RMImageFill(imgSrc, true));
             
             // Handle Cancel
             case 2: return;
@@ -824,7 +818,7 @@ private void dropImageFile(RMShape aShape, String aPath, Point aPoint)
     Point point = editor.convertToShape(aPoint.x, aPoint.y, parent);
     
     // Create new image shape
-    RMImageShape imageShape = new RMImageShape(aPath);
+    RMImageShape imageShape = new RMImageShape(imgSrc);
     
     // If image not PDF and is bigger than hit shape, shrink down
     if(!imageShape.getImageData().getType().equals("pdf"))
@@ -853,7 +847,7 @@ private void dropImageFile(RMShape aShape, String aPath, Point aPoint)
 /**
  * Called to handle a report file drop on the editor.
  */
-public void dropReportFile(RMShape aShape, String aPath, Point aPoint)
+private void dropReportFile(RMShape aShape, ClipboardFile aFile, Point aPoint)
 {
     // Find a parent shape that accepts children
     RMEditor editor = getEditor();
@@ -862,7 +856,7 @@ public void dropReportFile(RMShape aShape, String aPath, Point aPoint)
         parent = parent.getParent();
     
     // Get document for dropped file and embedded document shape for document
-    RMDocument doc = RMDocument.getDoc(aPath);
+    RMDocument doc = RMDocument.getDoc(aFile.getBytes());
     RMNestedDoc ndoc = new RMNestedDoc(); ndoc.setNestedDoc(doc);
     
     // Center embedded document around drop point

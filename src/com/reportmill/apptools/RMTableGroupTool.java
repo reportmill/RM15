@@ -129,8 +129,8 @@ public void respondUI(ViewEvent anEvent)
             if(anEvent.isDragDrop()) {
                 
                 // If drag is String, accept text
-                if(anEvent.hasDragString()) {
-                    String dropString = anEvent.getDragString();
+                if(anEvent.getClipboard().hasString()) {
+                    String dropString = anEvent.getClipboard().getString();
                     dropString = StringUtils.delete(dropString, "@"); // Bogus - delete @ signs
                     addChildTable(getMainTable(), null, dropString);
                     anEvent.dropComplete();  // Register drop complete
