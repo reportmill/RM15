@@ -842,6 +842,17 @@ private void dropImageFile(RMShape aShape, ClipboardFile aFile, Point aPoint)
     // Select imageShape and SelectTool
     editor.setSelectedShape(imageShape);
     editor.setCurrentToolToSelectTool();
+    
+    // If image not loaded, resize when loaded
+    Image img = imageShape.getImageData().getImage();
+    if(!img.isLoaded()) {
+        img.addPropChangeListener(pce -> {
+            double mx = imageShape.getX() + imageShape.getWidth()/2, my = imageShape.getY() + imageShape.getHeight()/2;
+            double w = img.getWidth(), h = img.getHeight();
+            Rect rect = new Rect(mx-w/2,my-h/2,w,h); rect.snap();
+            imageShape.setBounds(rect);
+        });
+    }
 }
 
 /**
