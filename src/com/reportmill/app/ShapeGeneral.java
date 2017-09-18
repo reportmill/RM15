@@ -69,7 +69,7 @@ public void respondUI(ViewEvent anEvent)
             
         // Handle DragDrop
         if(anEvent.isDragDrop()) {
-            Clipboard dboard = anEvent.getDragboard(); anEvent.acceptDrag();
+            Clipboard dboard = anEvent.getClipboard(); anEvent.acceptDrag();
             if(dboard.hasString()) {
                 int row = _bindingsTable.getRowAt(anEvent.getX(), anEvent.getY()); if(row<0) return;
                 String pname = shape.getPropNames()[row];
