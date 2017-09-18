@@ -155,8 +155,8 @@ public void respondUI(ViewEvent anEvent)
         _dragKey = _keysBrowser.getPath();
         String dragKeyFull = getKeyPath();
     
-        // Get event Dragboard and start drag
-        Clipboard dboard = anEvent.getDragboard();
+        // Get event Clipboard and start drag
+        Clipboard dboard = anEvent.getClipboard();
         dboard.setContent(dragKeyFull);
         dboard.setDragImage(ImageUtils.getImage(dragKeyFull, getSelectedShape().getDocument().getFont()));
         dboard.startDrag();
@@ -223,7 +223,7 @@ public static void dropDragKey(RMShape aShape, ViewEvent anEvent)
     else {
         aShape.repaint();
         editor.undoerSetUndoTitle("Drag and Drop Key");
-        Clipboard cb = anEvent.getDragboard();
+        Clipboard cb = anEvent.getClipboard();
         RMEditorClipboard.paste(editor, cb, (RMParentShape)aShape, anEvent.getPoint());
     }
 }
