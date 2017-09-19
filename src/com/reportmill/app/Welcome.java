@@ -56,7 +56,6 @@ public void runWelcome()
     for(File file : files) {
         MenuItem mi = new MenuItem(); mi.setName("RecentFilesMenuItem"); mi.setText(file.getName());
         mi.setProp("File", file); mi.setOwner(this); recentFilesButton.addItem(mi); }
-    recentFilesButton.setEnabled(files.size()>0);
 
     // Make welcome panel visible
     getWindow().setVisible(true);
