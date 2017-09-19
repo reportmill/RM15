@@ -415,14 +415,22 @@ public void paintTool(Painter aPntr)
     }
     
     // Get selected shapes
-    List selectedShapes = editor.getSelectedShapes();
+    List <RMShape> selectedShapes = editor.getSelectedShapes();
     
     // If in mouse loop, substitute "while selecting shapes"
-    if(editor.isMouseDown())
+    if(editor.isMouseDown()) {
+        
+        // Bogus - Make sure that text bounds are drawn
+        for(RMShape shape : selectedShapes) { if(!(shape instanceof RMTextShape)) continue;
+            RMTextTool tool = (RMTextTool)editor.getTool(shape);
+            tool.paintBoundsRect((RMTextShape)shape, aPntr);
+        }
+    
         selectedShapes = _whileSelectingSelectedShapes;
+    }
 
     // Iterate over SelectedShapes and have tool paint Selected
-    for(int i=0, iMax=selectedShapes.size(); i<iMax; i++) { RMShape shape = (RMShape)selectedShapes.get(i);
+    for(int i=0, iMax=selectedShapes.size(); i<iMax; i++) { RMShape shape = selectedShapes.get(i);
         RMTool tool = editor.getTool(shape);
         tool.paintHandles(shape, aPntr, false);
     }

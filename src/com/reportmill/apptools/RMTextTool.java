@@ -611,16 +611,8 @@ public String getToolTip(T aTextShape, ViewEvent anEvent)
  */
 public void paintHandles(T aText, Painter aPntr, boolean isSuperSelected)
 {
-    // Paint bounds rect (*maybe*): Set color (red if selected, light gray otherwise), get bounds path and draw
-    if(paintBoundsRect(aText)) {
-        aPntr.save();
-        aPntr.setColor(getEditor().isSuperSelected(aText)? new Color(.9f, .4f, .4f) : Color.LIGHTGRAY);
-        aPntr.setStroke(Stroke.Stroke1.copyForDashes(3, 2));
-        Shape path = aText.getPath().copyFor(aText.getBoundsInside());
-        path = getEditor().convertFromShape(path, aText);
-        aPntr.setAntialiasing(false); aPntr.draw(path); aPntr.setAntialiasing(true);
-        aPntr.restore();
-    }
+    // Paint bounds rect (maybe)
+    paintBoundsRect(aText, aPntr);
 
     // If text is structured, draw rectangle buttons
     if(aText.isStructured()) {
@@ -643,9 +635,24 @@ public void paintHandles(T aText, Painter aPntr, boolean isSuperSelected)
 }
 
 /**
- * Returns whether to draw bounds rect.
+ * Paint bounds rect (maybe): Set color (red if selected, light gray otherwise), get bounds path and draw.
  */
-private boolean paintBoundsRect(T aText)
+public void paintBoundsRect(RMTextShape aText, Painter aPntr)
+{
+    if(!isShowBoundsRect(aText)) return;
+    aPntr.save();
+    aPntr.setColor(getEditor().isSuperSelected(aText)? new Color(.9f, .4f, .4f) : Color.LIGHTGRAY);
+    aPntr.setStroke(Stroke.Stroke1.copyForDashes(3, 2));
+    Shape path = aText.getPath().copyFor(aText.getBoundsInside());
+    path = getEditor().convertFromShape(path, aText);
+    aPntr.setAntialiasing(false); aPntr.draw(path); aPntr.setAntialiasing(true);
+    aPntr.restore();
+}
+
+/**
+ * Returns whether to show bounds rect.
+ */
+private boolean isShowBoundsRect(RMTextShape aText)
 {
     RMEditor editor = getEditor();
     if(aText.getStroke()!=null) return false; // If text draws it's own stroke, return false
