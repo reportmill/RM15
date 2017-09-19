@@ -163,7 +163,8 @@ public RMEditorPane newEditorPane()
     if(_preloadEdPane!=null) { RMEditorPane ep = _preloadEdPane; _preloadEdPane = null; return ep; }
     
     // Otherwise, return new pane with UI loaded
-    RMEditorPane ep = new RMEditorPane(); ep.getUI();
+    RMEditorPane ep = new RMEditorPane();
+    ep.getUI().setGrowWidth(true); // So it will expand to page in browser
     return ep;
 }
 
