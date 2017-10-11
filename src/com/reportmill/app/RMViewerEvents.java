@@ -348,8 +348,9 @@ private void copySelText()
         doc.getPage(0).addChild(clone); }
     
     // Add doc RTF and CSV to clipboard
-    Clipboard.get().setContent("text/rtf", doc.getBytesRTF(), Clipboard.STRING, doc.getBytesCSV());
-    //tkit.getSystemClipboard().setContents(new TextSelectorTransferrable(doc), null);
+    Clipboard cb = Clipboard.getCleared();
+    cb.addData(doc.getBytesCSV());
+    cb.addData("text/rtf", doc.getBytesRTF());
 }
 
 /**
@@ -534,7 +535,7 @@ private void copySelImage()
     Image img2 = img.getSubimage(_rect.getX(), _rect.getY(), _rect.getWidth(), _rect.getHeight());
     
     // Get transferable and add to clipboard
-    Clipboard.get().setContent(img2); //tkit.getSysClipboard().setContents(new ImageSelectorTransferrable(img2), null);
+    Clipboard.get().addData(img2);
 }
 
 /**

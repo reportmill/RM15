@@ -4,7 +4,6 @@
 package com.reportmill.app;
 import com.reportmill.graphics.RMXString;
 import com.reportmill.shape.*;
-import java.io.*;
 import java.util.*;
 import snap.gfx.Point;
 import snap.util.*;
@@ -15,9 +14,8 @@ import snap.view.*;
  */
 public class RMEditorClipboard {
     
-    // A defined data flavor for RM shapes and DataFlavors supported by RMEditor
-    //public static DataFlavor RMDataFlavor = new DataFlavor("application/reportmill", "ReportMill Shape Data");
-    //public static DataFlavor SupportedFlavors[] = { RMDataFlavor, DataFlavor.stringFlavor };
+    // The MIME type for reportmill xstring
+    public static final String    RM_XML_TYPE = "reportmill/xml";
     
 /**
  * Handles editor cut operation.
@@ -49,11 +47,14 @@ public static void copy(RMEditor anEditor)
     else if(!(anEditor.getSelectedOrSuperSelectedShape() instanceof RMDocument) &&
             !(anEditor.getSelectedOrSuperSelectedShape() instanceof RMPage)) {
         
-        // Get xml for selected shapes, create and set in EditorClipboard and install in SystemClipboard
+        // Get xml for selected shapes
         XMLElement xml = new RMArchiver().writeObject(anEditor.getSelectedOrSuperSelectedShapes());
-        //RMEditorClipboard ec = new RMEditorClipboard(xml.getBytes());tkit.getSystemClipboard().setContents(ec,null);
-        Clipboard cb = Clipboard.get();
-        cb.setContent("RMData", xml.getBytes(), Clipboard.STRING, xml.toString());
+        String xmlStr = xml.toString();
+        
+        // Get System clipboard and add data as RMData and String (text/plain)
+        Clipboard cb = Clipboard.getCleared();
+        cb.addData(RM_XML_TYPE, xmlStr);
+        cb.addData(xmlStr);
         
         // Reset Editor.LastCopyShape/LastPasteShape
         anEditor._lastCopyShape = anEditor.getSelectedShape(0); anEditor._lastPasteShape = null;
@@ -74,9 +75,8 @@ public static void paste(RMEditor anEditor)
     
     // If not text editing, do paste for system clipboard
     else {
-        Clipboard cb = Clipboard.get(); //tkit.getSystemClipboard().getContents(null);
         RMParentShape parent = anEditor.firstSuperSelectedShapeThatAcceptsChildren();
-        paste(anEditor, cb, parent, null);
+        paste(anEditor, Clipboard.get(), parent, null);
     }
 }
 
@@ -89,7 +89,7 @@ public static void paste(RMEditor anEditor, Clipboard aCB, RMParentShape aParent
     RMShape pastedShape = null;
 
     // If PasteBoard has ReportMill Data, paste it
-    if(aCB.hasContent("RMData")) try { //isDataFlavorSupported(RMDataFlavor)) try {
+    if(aCB.hasData(RM_XML_TYPE)) {
         
         // Unarchive shapes from clipboard bytes
         Object object = getShapesFromClipboard(anEditor, aCB);
@@ -120,15 +120,12 @@ public static void paste(RMEditor anEditor, Clipboard aCB, RMParentShape aParent
         
     }
     
-    // Catch paste RMData exceptions
-    catch(Exception e) { e.printStackTrace(); }
-    
     // Paste Image
-    //else if(aCB.isDataFlavorSupported(DataFlavor.imageFlavor)) try {
-    //    Image image = (Image)contents.getTransferData(DataFlavor.imageFlavor);
-    //    byte bytes[] = RMAWTUtils.getBytesJPEG(image);
-    //    pastedShape = new RMImageShape(bytes); }
-    //catch(Exception e) { e.printStackTrace(); }
+    else if(aCB.hasImage()) {
+        ClipboardData idata = aCB.getImageData();
+        byte bytes[] = idata.getBytes();
+        pastedShape = new RMImageShape(bytes);
+    }
     
     // paste pdf
     else if((pastedShape=getTransferPDF(aCB)) != null) { }
@@ -137,11 +134,8 @@ public static void paste(RMEditor anEditor, Clipboard aCB, RMParentShape aParent
     else if((pastedShape=getTransferText(aCB)) != null) { }
         
     // Might as well log unsupported paste types
-    else {
-        //DataFlavor flvrs[] = contents.getTransferDataFlavors();
-        //for(DataFlavor f : flvrs) System.err.println("Unsupported flavor: " + f.getMimeType() + " " + f.getSubType());
-        ViewUtils.beep();
-    }
+    else { //for(String type : aCB.getMIMETypes()) System.err.println("Unsupported type: " + type);
+        ViewUtils.beep(); }
 
     // Add pastedShape
     if(pastedShape!=null) {
@@ -182,34 +176,25 @@ public static RMShape getShapeFromClipboard(RMEditor anEditor)
 public static Object getShapesFromClipboard(RMEditor anEditor, Clipboard aCB)
 {
     // If no contents, use system clipboard
-    if(aCB==null)
-        aCB = Clipboard.get(); // tkit.getSystemClipboard().getContents(null);        
+    Clipboard cboard = aCB!=null? aCB : Clipboard.get();
     
-    // If PasteBoard has ReportMill Data, paste it
-    if(aCB.hasContent("RMData")) try { //isDataFlavorSupported(RMDataFlavor)) try {
-    
-        // Get bytes from clipboard
-        InputStream bis = (InputStream)aCB.getContent("RMData"); //getTransferData(RMDataFlavor);
-        byte bytes[] = new byte[bis.available()];
-        bis.read(bytes);
-        
-        // Get unarchived object from clipboard bytes
-        Object object = new RMArchiver().readObject(bytes);
+    // If no RMData, just return
+    if(!cboard.hasData(RM_XML_TYPE))
+        return null;
 
-        // A bit of a hack - remove any non-shapes (plugins for one)
-        if(object instanceof List) { List list = (List)object;
-            for(int i=list.size()-1; i>=0; --i)
-                if(!(list.get(i) instanceof RMShape))
-                    list.remove(i);
-        }
-        
-        // Return object
-        return object;
+    // Get unarchived object from clipboard bytes
+    byte bytes[] = cboard.getDataBytes(RM_XML_TYPE);
+    Object obj = new RMArchiver().readObject(bytes);
+
+    // A bit of a hack - remove any non-shapes (plugins for one)
+    if(obj instanceof List) { List list = (List)obj;
+        for(int i=list.size()-1; i>=0; --i)
+            if(!(list.get(i) instanceof RMShape))
+                list.remove(i);
     }
-    
-    // Handle exceptions and return
-    catch(Exception e) { e.printStackTrace(); }
-    return null;
+        
+    // Return object
+    return obj;
 }
 
 /**
@@ -217,8 +202,8 @@ public static Object getShapesFromClipboard(RMEditor anEditor, Clipboard aCB)
  */
 public static RMShape getTransferText(Clipboard aCB) 
 {
-    String string = aCB.getString();
-    return string==null? null : new RMTextShape(string);
+    String str = aCB.getString();
+    return str!=null? new RMTextShape(str) : null;
 }
 
 /**
@@ -226,22 +211,9 @@ public static RMShape getTransferText(Clipboard aCB)
  */
 public static RMShape getTransferPDF(Clipboard aCB) 
 {
-    try {
-        //DataFlavor pdflav = new DataFlavor("application/pdf");
-        if(aCB.hasContent("application/pdf")) { //.isDataFlavorSupported(pdflav)) {
-            InputStream ps = (InputStream)aCB.getContent("application/pdf"); //contents.getTransferData(pdflav);
-            if(ps!=null) return new RMImageShape(ps);
-        }
-    }
-    catch(Exception e) { e.printStackTrace(); } return null;
+    if(!aCB.hasData("application/pdf")) return null;
+    byte bytes[] = aCB.getDataBytes("application/pdf");
+    return bytes!=null? new RMImageShape(bytes) : null;
 }
-
-/** Transferable methods. */
-//public DataFlavor[] getTransferDataFlavors()  { return SupportedFlavors; }
-//public boolean isDataFlavorSupported(DataFlavor f){ return f.equals(RMDataFlavor)||f.equals(DataFlavor.stringFlavor);}
-/*public Object getTransferData(DataFlavor aFlavor) throws UnsupportedFlavorException, IOException {
-    if(aFlavor.equals(RMDataFlavor)) return new ByteArrayInputStream(_bytes);
-    if(aFlavor.equals(DataFlavor.stringFlavor)) return new String(_bytes);
-    throw new UnsupportedFlavorException(aFlavor); }*/
 
 }

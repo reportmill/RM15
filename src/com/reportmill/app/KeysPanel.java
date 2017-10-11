@@ -156,10 +156,10 @@ public void respondUI(ViewEvent anEvent)
         String dragKeyFull = getKeyPath();
     
         // Get event Clipboard and start drag
-        Clipboard dboard = anEvent.getClipboard();
-        dboard.setContent(dragKeyFull);
-        dboard.setDragImage(ImageUtils.getImage(dragKeyFull, getSelectedShape().getDocument().getFont()));
-        dboard.startDrag();
+        Clipboard cboard = anEvent.getClipboard();
+        cboard.addData(dragKeyFull);
+        cboard.setDragImage(ImageUtils.getImage(dragKeyFull, getSelectedShape().getDocument().getFont()));
+        cboard.startDrag();
     }
     
     // Handle KeysBrowser DragSourceEnd

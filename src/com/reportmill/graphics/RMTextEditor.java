@@ -4,7 +4,6 @@
 package com.reportmill.graphics;
 import com.reportmill.base.RMFormat;
 import com.reportmill.shape.RMArchiver;
-import java.io.*;
 import snap.gfx.*;
 import snap.util.*;
 import snap.view.*;
@@ -42,6 +41,9 @@ public class RMTextEditor {
     // Whether hyphenating is activated
     static boolean      _hyphenating = Prefs.get().getBoolean("Hyphenating", false);
 
+    // The MIME type for reportmill xstring
+    public static final String    RM_XSTRING_TYPE = "reportmill/xstring";
+    
 /**
  * Returns the text box used to layout text.
  */
@@ -467,11 +469,15 @@ public void copy()
     // If no selection, just return
     if(isSelEmpty()) return;
         
-    // Get xstring for selected characters and install xstring transferable in system clipboard
-    RMXString string = getXString().substring(getSelStart(), getSelEnd());
-    byte bytes[] = new XMLArchiver().toXML(string).getBytes();
+    // Get xstring for selected characters and get as XML string and plain string
+    RMXString xStr = getXString().substring(getSelStart(), getSelEnd());
+    String xmlStr = new XMLArchiver().toXML(xStr).toString();
+    String str = xStr.getText();
+    
+    // Add to clipboard as rm-xstring and String (text/plain)
     Clipboard cb = Clipboard.get();
-    cb.setContent("rm-xstring", bytes, Clipboard.STRING, string.getText());
+    cb.addData(RM_XSTRING_TYPE, xmlStr);
+    cb.addData(str);
 }
 
 /**
@@ -480,17 +486,16 @@ public void copy()
 public void paste()
 {
     // If Clipboard has RMXString, paste it
-    Clipboard cb = Clipboard.get();
-    if(cb.hasContent("rm-xstring")) {
-        InputStream istream = cb.getContent("rm-xstring", InputStream.class);
-        byte bytes[] = SnapUtils.getBytes(istream);
-        RMXString string = (RMXString)new RMArchiver().readObject(bytes);
-        replace(string.getRichText());
+    Clipboard cboard = Clipboard.get();
+    if(cboard.hasData(RM_XSTRING_TYPE)) {
+        byte bytes[] = cboard.getDataBytes(RM_XSTRING_TYPE);
+        RMXString xStr = (RMXString)new RMArchiver().readObject(bytes);
+        replace(xStr.getRichText());
     }
     
     // If Clipboard has String, paste it
-    else if(cb.hasString()) {
-        String str = cb.getString();
+    else if(cboard.hasString()) {
+        String str = cboard.getString();
         if(str!=null && str.length()>0)
             replace(str);
     }

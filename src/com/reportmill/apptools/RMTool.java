@@ -10,7 +10,6 @@ import snap.data.Entity;
 import snap.gfx.*;
 import snap.util.*;
 import snap.view.*;
-import snap.web.*;
 
 /**
  * This is the base class for tools in RM - the objects that provide GUI editing for RM shapes.
@@ -754,22 +753,22 @@ public void dropColor(RMShape aShape, ViewEvent anEvent)
  */
 public void dropFiles(RMShape aShape, ViewEvent anEvent)
 {
-    List <ClipboardFile> filesList = anEvent.getClipboard().getFiles(); Point point = anEvent.getPoint();
-    for(ClipboardFile file : filesList)
+    List <ClipboardData> filesList = anEvent.getClipboard().getFiles(); Point point = anEvent.getPoint();
+    for(ClipboardData file : filesList)
         point = dropFile(aShape, file, anEvent.getPoint());
 }
 
 /**
  * Called to handle a file drop on the editor.
  */
-private Point dropFile(RMShape aShape, ClipboardFile aFile, Point aPoint)
+private Point dropFile(RMShape aShape, ClipboardData aFile, Point aPoint)
 {
     // Get path and extension (set to empty string if null)
     String ext = aFile.getExtension(); if(ext==null) return aPoint; ext = ext.toLowerCase();
 
     // If xml file, pass it to setDataSource()
     if(ext.equals("xml") || ext.equals("json"))
-        getEditorPane().setDataSource(WebURL.getURL(aFile), aPoint.getX(), aPoint.getY());
+        getEditorPane().setDataSource(aFile.getSourceURL(), aPoint.getX(), aPoint.getY());
 
     // If image file, add image shape
     else if(RMImageData.canRead(ext))
@@ -785,7 +784,7 @@ private Point dropFile(RMShape aShape, ClipboardFile aFile, Point aPoint)
 /**
  * Called to handle an image drop on the editor.
  */
-private void dropImageFile(RMShape aShape, ClipboardFile aFile, Point aPoint)
+private void dropImageFile(RMShape aShape, ClipboardData aFile, Point aPoint)
 {
     // Get image source
     Object imgSrc = aFile.getSourceURL()!=null? aFile.getSourceURL() : aFile.getBytes();
@@ -858,7 +857,7 @@ private void dropImageFile(RMShape aShape, ClipboardFile aFile, Point aPoint)
 /**
  * Called to handle a report file drop on the editor.
  */
-private void dropReportFile(RMShape aShape, ClipboardFile aFile, Point aPoint)
+private void dropReportFile(RMShape aShape, ClipboardData aFile, Point aPoint)
 {
     // Find a parent shape that accepts children
     RMEditor editor = getEditor();
