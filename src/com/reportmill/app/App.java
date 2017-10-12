@@ -24,7 +24,7 @@ public class App {
 /**
  * This is the static main method, called by Java when launching with com.reportmill.App.
  */
-public static void main(String args[])  { SwingUtilities.invokeLater(() -> new App(args)); }
+public static void main(String args[])  { new App(args); }
 
 /**
  * Creates a new app instance.
@@ -36,12 +36,6 @@ public App(String args[])
     
     // Set default preferences
     Prefs.setPrefsDefault(Prefs.getPrefs(com.reportmill.Shell.class));
-    
-    // This prevents Windows boxes from bringing up the Drive A not ready error
-    System.setSecurityManager(null);
-    
-    // Turn on anti aliasing on Windows
-    System.setProperty("swing.aatext", "true");
     
     // Mac specific stuff
     if(SnapUtils.isMac) new AppleAppHandler().init();
