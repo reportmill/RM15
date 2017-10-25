@@ -27,7 +27,7 @@ public class RMTextEditor {
     TextSel             _sel;
     
     // The current text style for the cursor or selection
-    RMTextStyle         _istyle;
+    RMTextStyle         _selStyle;
     
     // Whether the editor is word selecting (double click), paragraph selecting (triple click)
     boolean             _wordSel, _pgraphSel;
@@ -114,7 +114,7 @@ public void setSel(int newStartEnd)  { setSel(newStartEnd, newStartEnd); }
  */
 public void setSel(int aStart, int anEnd)
 {
-    _sel = new TextSel(getTextBox(), aStart, anEnd); _istyle = null;
+    _sel = new TextSel(getTextBox(), aStart, anEnd); _selStyle = null;
 }
 
 /**
@@ -176,9 +176,9 @@ public TextBoxLine getSelStartLine()
 /**
  * Returns the text style applied to any input characters.
  */
-public RMTextStyle getInputStyle()
+public RMTextStyle getSelStyle()
 {
-    return _istyle!=null? _istyle : (_istyle=getXString().getStyleAt(getSelStart()));
+    return _selStyle!=null? _selStyle : (_selStyle=getXString().getStyleAt(getSelStart()));
 }
 
 /**
@@ -186,12 +186,12 @@ public RMTextStyle getInputStyle()
  */
 public void setInputAttribute(String aKey, Object aValue)
 {
-    // If selection is zero length, just modify InputStyle
+    // If selection is zero length, just modify SelStyle
     if(isSelEmpty())
-        _istyle = getInputStyle().copyFor(aKey, aValue);
+        _selStyle = getSelStyle().copyFor(aKey, aValue);
 
-    // If selection is multiple chars, apply attribute to xstring, reset InputStyle and flush undo changes
-    else { getXString().setAttribute(aKey, aValue, getSelStart(), getSelEnd()); _istyle = null; }
+    // If selection is multiple chars, apply attribute to xstring, reset SelStyle and flush undo changes
+    else { getXString().setAttribute(aKey, aValue, getSelStart(), getSelEnd()); _selStyle = null; }
 }
 
 /**
@@ -215,7 +215,7 @@ public String getString()  { return _text.getString(); }
 /**
  * Returns the color of the current selection or cursor.
  */
-public RMColor getColor()  { return getInputStyle().getColor(); }
+public RMColor getColor()  { return getSelStyle().getColor(); }
 
 /**
  * Sets the color of the current selection or cursor.
@@ -225,7 +225,7 @@ public void setColor(RMColor color)  { setInputAttribute(RMTextStyle.COLOR_KEY, 
 /**
  * Returns the font of the current selection or cursor.
  */
-public RMFont getFont()  { return getInputStyle().getFont(); }
+public RMFont getFont()  { return getSelStyle().getFont(); }
 
 /**
  * Sets the font of the current selection or cursor.
@@ -235,7 +235,7 @@ public void setFont(RMFont font)  { setInputAttribute(RMTextStyle.FONT_KEY, font
 /**
  * Returns the format of the current selection or cursor.
  */
-public RMFormat getFormat()  { return getInputStyle().getFormat(); }
+public RMFormat getFormat()  { return getSelStyle().getFormat(); }
 
 /**
  * Sets the format of the current selection or cursor, after trying to expand the selection to encompass currently
@@ -259,7 +259,7 @@ public void setFormat(RMFormat aFormat)
 /**
  * Returns whether current selection is underlined.
  */
-public boolean isUnderlined()  { return getInputStyle().isUnderlined(); }
+public boolean isUnderlined()  { return getSelStyle().isUnderlined(); }
 
 /**
  * Sets whether current selection is underlined.
@@ -269,7 +269,7 @@ public void setUnderlined(boolean aFlag)  { setInputAttribute(RMTextStyle.UNDERL
 /**
  * Returns whether current selection is outlined.
  */
-public Border getTextBorder()  { return getInputStyle().getBorder(); }
+public Border getTextBorder()  { return getSelStyle().getBorder(); }
 
 /**
  * Sets whether current selection is outlined.
@@ -281,7 +281,7 @@ public void setTextBorder(Border aBorder)  { setInputAttribute(RMTextStyle.BORDE
  */
 public void setSuperscript()
 {
-    int state = getInputStyle().getScripting();
+    int state = getSelStyle().getScripting();
     setInputAttribute(RMTextStyle.SCRIPTING_KEY, state==0? 1 : 0);
 }
 
@@ -290,14 +290,14 @@ public void setSuperscript()
  */
 public void setSubscript()
 {
-    int state = getInputStyle().getScripting();
+    int state = getSelStyle().getScripting();
     setInputAttribute(RMTextStyle.SCRIPTING_KEY, state==0? -1 : 0);
 }
 
 /**
  * Returns the character spacing of the current selection or cursor.
  */
-public float getCharSpacing()  { return (float)getInputStyle().getCharSpacing(); }
+public float getCharSpacing()  { return (float)getSelStyle().getCharSpacing(); }
 
 /**
  * Returns the character spacing of the current selection or cursor.
@@ -423,8 +423,8 @@ public void replace(String aString, int aStart, int anEnd, boolean doUpdateSel)
  */
 public void replace(String aString, TextStyle aStyle, int aStart, int anEnd, boolean doUpdateSel)
 {
-    // Do replace in xstring with given string and given InputStyle
-    TextStyle style = aStyle!=null? aStyle : getInputStyle()._style;
+    // Do replace in xstring with given string and given SelStyle
+    TextStyle style = aStyle!=null? aStyle : getSelStyle()._style;
     getText().replaceChars(aString, style, aStart, anEnd);
     
     // Update selection to be at end of new string
