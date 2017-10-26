@@ -627,7 +627,7 @@ protected double computePrefHeight(double aWidth)
 {
     if(_wraps==WRAP_SCALE) return getHeight();
     if(length()==0) return 0; // Zero instead of getMarginTop()+getMarginBottom() so empty texts are hidden
-    double ph = getTextBox().getPrefHeight();
+    double ph = getTextBox().getPrefHeight(getTextBox().getWidth());
     return Math.ceil(getMarginTop() + ph + getMarginBottom());
 }
 

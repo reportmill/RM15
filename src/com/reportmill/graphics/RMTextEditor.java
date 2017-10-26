@@ -590,12 +590,12 @@ public void deleteToLineEnd()
 /**
  * Returns the width needed to display all characters.
  */
-public double getPrefWidth()  { return getTextBox().getPrefWidth(); }
+public double getPrefWidth()  { return getTextBox().getPrefWidth(-1); }
 
 /**
  * Returns the height needed to display all characters.
  */
-public double getPrefHeight()  { return getTextBox().getPrefHeight(); }
+public double getPrefHeight()  { return getTextBox().getPrefHeight(getTextBox().getWidth()); }
 
 /**
  * Handles events.
