@@ -77,7 +77,7 @@ public static class RMImageShapePdfr <T extends RMImageShape> extends RMShapePdf
         // Apply clip if needed
         if(anImageShape.getRadius()>.001) {
             Shape path = anImageShape.getPath();
-            pdfPage.writePath(path); pdfPage.append(" re W n ");
+            pdfPage.writePath(path); pdfPage.append("W n ");
         }
         
         // Get image bounds width and height
