@@ -7,6 +7,7 @@ import com.reportmill.shape.*;
 import java.io.File;
 import snap.util.*;
 import snap.view.*;
+import snap.viewx.FileChooser;
 
 /**
  * Some utility methods for RMEditorPane.
@@ -179,9 +180,7 @@ public static void previewXML(RMEditorPane anEP)
 public static void saveAsPDF(RMEditorPane anEP)
 {
     RMEditor editor = anEP.getEditor();
-    FileChooser fc = editor.getEnv().getFileChooser(); fc.setDesc("PDF file (.pdf)"); fc.setExts(".pdf");
-    String path = fc.showOpenPanel(editor);
-    //String path = FileChooserUtils.showChooser(true, editor, "PDF file (.pdf)", ".pdf"); if(path==null) return;
+    String path = FileChooser.showOpenPanel(editor, "PDF file (.pdf)", "pdf");
     editor.flushEditingChanges();
     editor.getDocument().writePDF(path);
 }

@@ -5,6 +5,7 @@ package com.reportmill.apptools;
 import com.reportmill.graphics.*;
 import com.reportmill.shape.*;
 import snap.view.*;
+import snap.viewx.FileChooser;
 
 /**
  * UI editing for RMImageFill.
@@ -55,8 +56,7 @@ public void respondUI(ViewEvent anEvent)
     
     // Handle ChooseButton
     if(anEvent.equals("ChooseButton")) {
-        FileChooser fc = getEnv().getFileChooser(); fc.setDesc("Image File"); fc.setExts(".png", ".jpg", ".gif");
-        String path = fc.showOpenPanel(getUI());
+        String path = FileChooser.showOpenPanel(getUI(), "Image File", "png", "jpg", "gif");
         if(path!=null)
             fill = new RMImageFill(path, true);
     }

@@ -7,6 +7,7 @@ import com.reportmill.shape.*;
 import java.util.*;
 import snap.data.*;
 import snap.view.*;
+import snap.viewx.FileChooser;
 
 /**
  * This class manages UI display and editing of editor's datasource.
@@ -140,9 +141,7 @@ public void saveAsXML(RMDataSource source)
     Map dset = source.getDataset(); if(dset==null) { beep(); return; }
        
     // Run the save panel (just return if null)
-    FileChooser fc = getEnv().getFileChooser(); fc.setDesc("xml dataset file"); fc.setExts(".xml");
-    String path = fc.showSavePanel(getUI());
-    //String path = FileChooserUtils.showChooser(true, getUI(), "xml dataset file", ".xml");
+    String path = FileChooser.showSavePanel(getUI(), "xml dataset file", "xml");
     if(path==null)
         return;
     

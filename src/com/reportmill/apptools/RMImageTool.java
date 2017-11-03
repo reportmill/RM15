@@ -9,6 +9,7 @@ import java.util.List;
 import snap.gfx.Image;
 import snap.util.*;
 import snap.view.*;
+import snap.viewx.FileChooser;
 
 /**
  * Provides UI for RMImage shape editing.
@@ -108,10 +109,7 @@ public void respondUI(ViewEvent anEvent)
     if(anEvent.equals("SaveButton")) {
         RMImageData idata = image.getImageData(); if(idata==null) return;
         String type = idata.getType(); if(StringUtils.length(type)==0) return;
-        FileChooser fc = getEnv().getFileChooser(); fc.setDesc(type.toUpperCase() + " File"); fc.setExts(type);
-        String path = fc.showOpenPanel(getEditor());
-        //String path = FileChooserUtils.showChooser(true, getEditor(), type.toUpperCase() + " File", "." + type);
-        if(path==null) return;
+        String path = FileChooser.showOpenPanel(getEditor(), type.toUpperCase() + " File", type); if(path==null) return;
         SnapUtils.writeBytes(idata.getBytes(), path);
     }
     

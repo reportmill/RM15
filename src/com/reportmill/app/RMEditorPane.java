@@ -8,6 +8,7 @@ import java.io.File;
 import java.util.*;
 import snap.gfx.*;
 import snap.view.*;
+import snap.viewx.FileChooser;
 import snap.web.*;
 import snap.util.*;
 
@@ -370,8 +371,7 @@ public RMEditorPane newDocument()  { return open(new RMDocument(612, 792)); }
 public RMEditorPane open(View aView)
 {
     // Get path from open panel for supported file extensions
-    FileChooser fc = getEnv().getFileChooser(); fc.setDesc(getFileDescription()); fc.setExts(getFileExtensions());
-    String path = fc.showOpenPanel(aView);
+    String path = FileChooser.showOpenPanel(aView, getFileDescription(), getFileExtensions());
     return open(path);
 }
 
@@ -439,13 +439,12 @@ public void saveAs()
     String exts[] = getFileExtensions();
     if(getSourceURL()!=null && FilePathUtils.getExtension(getSourceURL().getPath())!=null) {
         List ex = new ArrayList(Arrays.asList(exts));
-        ex.add(0, "." + FilePathUtils.getExtension(getSourceURL().getPath()));
+        ex.add(0, FilePathUtils.getExtension(getSourceURL().getPath()));
         exts = (String[])ex.toArray(new String[ex.size()]);
     }
     
     // Run save panel, set Document.Source to path and re-save (or just return if cancelled)
-    FileChooser fc = getEnv().getFileChooser(); fc.setDesc(getFileDescription()); fc.setExts(exts);
-    String path = fc.showSavePanel(getEditor()); if(path==null) return;
+    String path = FileChooser.showSavePanel(getEditor(), getFileDescription(), exts); if(path==null) return;
     getViewerShape().setSourceURL(WebURL.getURL(path));
     save();
 }
