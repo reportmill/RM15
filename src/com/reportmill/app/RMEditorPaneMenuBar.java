@@ -71,7 +71,7 @@ protected void respondUI(ViewEvent anEvent)
     
     // Handle OpenMenuItem, OpenButton: Get new editor pane from open panel and make visible (if created)
     if(anEvent.equals("OpenMenuItem") || anEvent.equals("OpenButton")) {
-        RMEditorPane editorPane = ClassUtils.newInstance(epane).open(getUI());
+        RMEditorPane editorPane = ClassUtils.newInstance(epane).open(epane.getUI());
         if(editorPane!=null)
             editorPane.setWindowVisible(true);
     }

@@ -444,7 +444,7 @@ public void saveAs()
     }
     
     // Run save panel, set Document.Source to path and re-save (or just return if cancelled)
-    String path = FileChooser.showSavePanel(getEditor(), getFileDescription(), exts); if(path==null) return;
+    String path = FileChooser.showSavePanel(getUI(), getFileDescription(), exts); if(path==null) return;
     getViewerShape().setSourceURL(WebURL.getURL(path));
     save();
 }
