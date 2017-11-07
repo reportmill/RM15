@@ -141,7 +141,7 @@ public void open(String aPath)
     RMEditorPane epane = newEditorPane();
     
     // if no pathname, have editor run open panel
-    epane = aPath==null? epane.open(getUI()) : epane.open(aPath);
+    epane = aPath==null? epane.open(getView("OpenButton")) : epane.open(aPath);
     
     // If no document opened, just return
     if(epane==null) return;
