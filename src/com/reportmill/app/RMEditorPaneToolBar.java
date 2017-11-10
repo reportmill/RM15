@@ -43,6 +43,7 @@ protected void initUI()
 {
     // Get/configure FontFaceComboBox
     _fontFaceComboBox = getView("FontFaceComboBox", ComboBox.class);
+    _fontFaceComboBox.getPopupList().setMaxRowCount(20);
     _fontFaceComboBox.setItems((Object[])Font.getFamilyNames());
     
     // Get/configure FontSizeComboBox
