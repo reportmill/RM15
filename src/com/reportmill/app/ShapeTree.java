@@ -24,8 +24,7 @@ protected View createUI()
     if(_shapeTree!=null) return _shapeTree;
     TreeView tview = new TreeView(); tview.setName("ShapeTree"); tview.setGrowHeight(true);
     tview.setResolver(new ShapeTreeResolver()); tview.setBorder(Color.GRAY, 1);
-    ScrollView scroll = new ScrollView(_shapeTree = tview);
-    return scroll;
+    return _shapeTree = tview;
 }
 
 /**
