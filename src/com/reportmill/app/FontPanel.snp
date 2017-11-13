@@ -24,16 +24,12 @@
           <Font name="Arial" size="9" />
         </ToggleButton>
       </HBox>
-      <ScrollView GrowHeight="true">
-        <ListView Name="FamilyList" />
-      </ScrollView>
+      <ListView Name="FamilyList" GrowHeight="true" />
       <ComboBox Name="FamilyComboBox" ShowTextField="true" ShowButton="false" FilterList="true" />
     </VBox>
     <VBox PrefWidth="60" Spacing="2" FillWidth="true">
       <Label text=" Sizes" PrefHeight="14" />
-      <ScrollView GrowHeight="true">
-        <ListView Name="SizesList" />
-      </ScrollView>
+      <ListView Name="SizesList" GrowHeight="true" />
       <TextField Name="SizeText" />
     </VBox>
   </HBox>

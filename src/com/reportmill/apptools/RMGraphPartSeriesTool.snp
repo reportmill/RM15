@@ -6,12 +6,10 @@
   <TextField Name="SeriesText" x="56" y="183" width="180" height="22" />
   <Spinner Name="LabelRollSpinner" x="56" y="211" width="62" height="22" Max="90" />
   <Label x="8" y="211" width="48" height="22" text="Rotation:" />
-  <ScrollView x="8" y="94" width="228" height="80">
+  <ListView Name="LabelPositionsList" x="8" y="94" width="228" height="80">
     <font name="Arial" size="12" />
-    <ListView Name="LabelPositionsList">
-      <binding aspect="SelectedItem" key="SelectedShape.Position" />
-    </ListView>
-  </ScrollView>
+    <binding aspect="SelectedItem" key="SelectedShape.Position" />
+  </ListView>
   <Label x="8" y="71" width="196" height="22" text="Bar/Wedge Labels:" />
   <Separator x="8" y="56" width="244" height="12" />
 </SpringView>

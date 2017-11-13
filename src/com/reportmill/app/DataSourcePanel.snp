@@ -5,12 +5,8 @@
   </Label>
   <Label x="10" y="24" width="130" height="16" text="Entities" />
   <Label x="145" y="24" width="130" height="16" text="Properties" />
-  <ScrollView x="5" y="40" width="130" height="170">
-    <ListView Name="EntitiesList" />
-  </ScrollView>
-  <ScrollView x="140" y="40" width="130" height="170">
-    <ListView Name="PropertiesList" />
-  </ScrollView>
+  <ListView Name="EntitiesList" x="5" y="40" width="130" height="170" />
+  <ListView Name="PropertiesList" x="140" y="40" width="130" height="170" />
   <SwitchView Name="CardPanel" y="210" width="275" height="115">
     <SpringView Name="EntityPanel" width="275" height="115" PrefWidth="275" PrefHeight="115">
       <Label x="5" y="5" width="100" height="15" text="Entity Attributes" />
