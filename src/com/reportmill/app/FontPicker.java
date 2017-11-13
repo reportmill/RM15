@@ -13,7 +13,7 @@ public class FontPicker extends ViewOwner {
     DialogBox  _dbox;
     
     // A box to hold labels
-    VBox       _vbox;
+    ColView       _vbox;
     
     // The currently selected font
     Font       _font;
@@ -37,7 +37,7 @@ public Font showPicker(View aView, Font aFont)
  */
 protected View createUI()
 {
-    _vbox = new VBox(); _vbox.setFillWidth(true);
+    _vbox = new ColView(); _vbox.setFillWidth(true);
     ScrollView scroll = new ScrollView(_vbox); scroll.setPrefSize(720,540); scroll.setGrowHeight(true);
     return scroll;
 }
@@ -93,7 +93,7 @@ public void setSelected(FontSampleView aFSV)
 /**
  * A class to display a Font sample.
  */
-public class FontSampleView extends HBox {
+public class FontSampleView extends RowView {
     
     // The font and the UI elements
     Font   _font; Color _color;
@@ -106,7 +106,7 @@ public class FontSampleView extends HBox {
         _label = new Label(aFont.getFamily() + ":"); _label.setPrefWidth(160);
         _sampleLC = new Label("The quick brown fox jumped over the lazy dog?"); _sampleLC.setFont(aFont);
         _sampleUC = new Label("THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG!"); _sampleUC.setFont(aFont);
-        VBox vbox = new VBox(); vbox.setChildren(_sampleLC, _sampleUC);
+        ColView vbox = new ColView(); vbox.setChildren(_sampleLC, _sampleUC);
         vbox.setGrowWidth(true); vbox.setFillWidth(true);
         setChildren(_label, vbox); setPadding(5,5,5,5); setBorder(aBorder);
     }

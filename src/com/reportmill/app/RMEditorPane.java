@@ -209,7 +209,7 @@ public void setEditing(boolean aFlag)
 protected View createUI()
 {
     BorderView bpane = (BorderView)super.createUI(); //bpane.setGrowWidth(true);
-    VBox vbox = new VBox(); vbox.setFillWidth(true); getAttributesPanel().getUI().setGrowHeight(true);
+    ColView vbox = new ColView(); vbox.setFillWidth(true); getAttributesPanel().getUI().setGrowHeight(true);
     vbox.setChildren(getAttributesPanel().getUI(), getInspectorPanel().getUI());
     vbox.setBorder(Border.createLineBorder(Color.LIGHTGRAY, 1));
     //HBox hbox = new HBox(); hbox.setAlignment(Pos.TOP_LEFT); hbox.setFillHeight(true); hbox.setChildren(bpane, vbox);

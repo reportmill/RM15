@@ -38,7 +38,7 @@ protected View createUI()
     // Otherwise, create normal UI and wrap inbox with edit button and text button
     Button ebtn = new Button(); ebtn.setText("Edit"); ebtn.setName("EditButton"); ebtn.setPrefWidth(100);
     Button tbtn = new Button(); tbtn.setText("Text"); tbtn.setName("TextButton"); tbtn.setPrefWidth(100);
-    HBox hbox = new HBox(); hbox.setAlign(Pos.CENTER_RIGHT); hbox.setPadding(3,3,3,3);
+    RowView hbox = new RowView(); hbox.setAlign(Pos.CENTER_RIGHT); hbox.setPadding(3,3,3,3);
     hbox.setSpacing(5); hbox.addChild(ebtn); hbox.addChild(tbtn);
     View superUI = super.createUI();
     BorderView bpane = new BorderView(); bpane.setTop(hbox); bpane.setCenter(superUI);
