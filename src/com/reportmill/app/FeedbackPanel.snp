@@ -36,7 +36,5 @@
   <Label x="10" y="150" width="40" height="25" text="Title:" />
   <TextField Name="TitleText" x="55" y="150" width="375" height="25" />
   <Label x="10" y="180" width="430" height="25" text="Detailed Description of Problem/Enhancement:" />
-  <ScrollView x="10" y="200" width="425" height="230">
-    <TextView Name="DescriptionText" />
-  </ScrollView>
+  <TextView Name="DescriptionText" x="10" y="200" width="425" height="230" />
 </SpringView>

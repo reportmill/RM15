@@ -5,8 +5,6 @@
   <ListView Name="UndosList" x="5" y="16" width="130" height="110" />
   <ListView Name="RedosList" x="5" y="130" width="130" height="110" />
   <ListView Name="ChangesList" x="145" y="16" width="123" height="224" />
-  <ScrollView x="5" y="259" width="263" height="64">
-    <TextView Name="ChangeText" />
-  </ScrollView>
+  <TextView Name="ChangeText" x="5" y="259" width="263" height="64" />
   <Label x="5" y="241" width="130" height="16" text="Change Details:" />
 </SpringView>

@@ -8,9 +8,7 @@
     <TextField Name="FilterText" x="68" y="32" width="184" height="20" />
     <Label x="4" y="58" width="100" height="18" text="Key(s):" />
     <Label x="104" y="58" width="145" height="18" Align="CENTER_RIGHT" text="(Comma Separated)" />
-    <ScrollView x="4" y="78" width="244" height="60">
-      <TextView Name="KeysText" FireActionOnReturn="true" />
-    </ScrollView>
+    <TextView Name="KeysText" x="4" y="78" width="244" height="60" FireActionOnReturn="true" />
   </SpringView>
   <SpringView width="262" height="284" PrefWidth="262" PrefHeight="284" title="View">
     <ToggleButton Name="GraphTypeBarButton" x="38" y="8" width="30" height="30" Padding="4" ToolTip="Bar Graph" image="Graph_Bar.png" ToggleGroup="gtypebg" />

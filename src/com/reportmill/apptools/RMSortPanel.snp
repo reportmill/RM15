@@ -34,9 +34,7 @@
         </CheckBox>
       </SpringView>
       <SpringView Name="Values" width="264" height="55" PrefWidth="264" PrefHeight="55">
-        <ScrollView x="2" y="2" width="180" height="53" GrowWidth="true" GrowHeight="true">
-          <TextView Name="ValuesText" />
-        </ScrollView>
+        <TextView Name="ValuesText" x="2" y="2" width="180" height="53" GrowWidth="true" GrowHeight="true" />
         <CheckBox Name="SortOnValuesCheckBox" x="184" y="5" width="80" height="22" LeanX="RIGHT" text="Sort" />
         <CheckBox Name="IncludeValuesCheckBox" x="184" y="27" width="80" height="22" LeanX="RIGHT" text="Include" />
       </SpringView>

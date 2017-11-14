@@ -18,8 +18,8 @@ import snap.view.*;
  */
 public class RMTextTool <T extends RMTextShape> extends RMTool <T> implements PropChangeListener {
     
-    // The text area
-    TextShapePane     _textView;
+    // The TextView
+    TextView          _textView;
     
     // The shape hit by text tool on mouse down
     RMShape           _downShape;
@@ -41,8 +41,13 @@ public class RMTextTool <T extends RMTextShape> extends RMTool <T> implements Pr
  */
 protected void initUI()
 {
-    // Get the TextPrea
-    _textView = getView("TextPane", TextShapePane.class);
+    // Get the TextView and register to update selection
+    _textView = getView("TextView", TextView.class);
+    _textView.getTextArea().addPropChangeListener(pce -> {
+        RMEditor ed = getEditor(); TextArea tarea = _textView.getTextArea();
+        RMTextEditor ted = ed.getTextEditor(); if(ted!=null) ted.setSel(tarea.getSelStart(),tarea.getSelEnd());
+        RMTextShape text = getSelectedShape(); if(text!=null) text.repaint();
+    }, TextArea.Selection_Prop);
     
     // Configure the format
     _format.setDecimalSeparatorAlwaysShown(false);
@@ -74,8 +79,7 @@ public void resetUI()
     setViewValue("AlignMiddleButton", text.getAlignmentY()==RMTypes.AlignY.Middle);
     setViewValue("AlignBottomButton", text.getAlignmentY()==RMTypes.AlignY.Bottom); // Update AlignBottomButton
     
-    // Revalidate TextPane for (potentially) updated TextShape
-    //_textPane.relayout(); _textPane.repaint();
+    // Set TextView RichText and selection
     _textView.getTextBox().setText(text.getRichText());
     if(ted!=null) _textView.setSel(ted.getSelStart(),ted.getSelEnd());
 
@@ -919,35 +923,6 @@ private static void setLineHeightMax(RMEditor anEditor, float aHeight)
     for(RMShape shape : anEditor.getSelectedOrSuperSelectedShapes())
         if(shape instanceof RMTextShape)
             ((RMTextShape)shape).setLineHeightMax(aHeight);
-}
-
-/**
- * A TextView subclass to edit current text shape text in text tool.
- */
-public static class TextShapePane extends TextView {
-    
-    /** Returns the TextTool. */
-    RMTextTool tool()  { return getOwner(RMTextTool.class); }
-    
-    /** Returns the current editor. */
-    RMEditor editor()  { return tool().getEditor(); }
-    
-    /** Returns the current text shape. */
-    RMShape shape()  { RMEditor e = editor(); return e!=null? e.getSelectedOrSuperSelectedShape() : null; }
-    
-    /** Returns the current text shape. */
-    RMTextShape text()  { RMShape s = shape(); return s instanceof RMTextShape? (RMTextShape)s : null; }
-    
-    /** Returns the current text editor. */
-    RMTextEditor ted()  { RMEditor e = editor(); return e!=null? e.getTextEditor() : null; }
-    
-    /** Sets the character index of the start and end of the text selection. */
-    public void setSel(int aStart, int aEnd)
-    {
-        super.setSel(aStart, aEnd);
-        RMTextEditor ted = ted(); if(ted!=null) ted.setSel(aStart,aEnd);
-        RMTextShape text = text(); if(text!=null) text.repaint();
-    }
 }
 
 }

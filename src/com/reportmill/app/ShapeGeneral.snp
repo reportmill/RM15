@@ -14,11 +14,9 @@
     </CheckBox>
     <VBox LeanY="BOTTOM">
       <Label text="URL:" />
-      <ScrollView PrefWidth="250" PrefHeight="136">
-        <TextView Name="UrlText" FireActionOnReturn="true" FireActionOnFocusLost="true">
-          <binding aspect="Text" key="SelectedShapes.URL" />
-        </TextView>
-      </ScrollView>
+      <TextView Name="UrlText" PrefWidth="250" PrefHeight="136" FireActionOnReturn="true" FireActionOnFocusLost="true">
+        <binding aspect="Text" key="SelectedShapes.URL" />
+      </TextView>
     </VBox>
   </VBox>
   <VBox Padding="16,8,8,8" Spacing="3" FillWidth="true" title="Bindings">
@@ -31,8 +29,6 @@
       <TableCol PrefWidth="80" />
       <TableCol GrowWidth="true" />
     </TableView>
-    <ScrollView PrefHeight="100">
-      <TextView Name="BindingsText" FireActionOnReturn="true" FireActionOnFocusLost="true" />
-    </ScrollView>
+    <TextView Name="BindingsText" PrefHeight="100" FireActionOnReturn="true" FireActionOnFocusLost="true" />
   </VBox>
 </TabView>

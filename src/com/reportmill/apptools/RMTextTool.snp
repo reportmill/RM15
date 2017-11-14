@@ -8,9 +8,7 @@
     <ToggleButton Name="AlignTopButton" x="143" y="4" width="20" height="20" image="AlignTop.png" ToggleGroup="bg2" />
     <ToggleButton Name="AlignMiddleButton" x="163" y="4" width="20" height="20" image="AlignMiddle.png" ToggleGroup="bg2" />
     <ToggleButton Name="AlignBottomButton" x="183" y="4" width="20" height="20" image="AlignBottom.png" ToggleGroup="bg2" />
-    <ScrollView x="2" y="29" width="250" height="120" GrowWidth="true" GrowHeight="true">
-      <TextView Name="TextPane" Class="com.reportmill.apptools.RMTextTool$TextShapePane" />
-    </ScrollView>
+    <TextView Name="TextView" x="2" y="29" width="250" height="120" GrowWidth="true" GrowHeight="true" />
     <Label x="2" y="199" width="118" height="20" LeanY="BOTTOM" text="Overflow Behavior:" />
     <RadioButton Name="GrowRadio" x="4" y="219" width="130" height="20" LeanY="BOTTOM" text="Grow (if in row)" ToggleGroup="bg3" />
     <RadioButton Name="ShrinkRadio" x="4" y="239" width="130" height="20" LeanY="BOTTOM" text="Shrink Text to Fit" ToggleGroup="bg3" />
