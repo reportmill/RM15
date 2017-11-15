@@ -14,7 +14,7 @@
     </CheckBox>
     <VBox LeanY="BOTTOM">
       <Label text="URL:" />
-      <TextView Name="UrlText" PrefWidth="250" PrefHeight="136" FireActionOnReturn="true" FireActionOnFocusLost="true">
+      <TextView Name="UrlText" PrefWidth="250" PrefHeight="136" FireActionOnEnterKey="true" FireActionOnFocusLost="true">
         <binding aspect="Text" key="SelectedShapes.URL" />
       </TextView>
     </VBox>
@@ -29,6 +29,6 @@
       <TableCol PrefWidth="80" />
       <TableCol GrowWidth="true" />
     </TableView>
-    <TextView Name="BindingsText" PrefHeight="100" FireActionOnReturn="true" FireActionOnFocusLost="true" />
+    <TextView Name="BindingsText" PrefHeight="100" FireActionOnEnterKey="true" FireActionOnFocusLost="true" />
   </VBox>
 </TabView>
