@@ -33,7 +33,7 @@ public RMFillTool()  { super(null); }
 /**
  * Called to reset UI controls.
  */
-public void resetUI()
+protected void resetUI()
 {
     // Get currently selected shape
     RMShape shape = getEditor().getSelectedOrSuperSelectedShape();
@@ -45,7 +45,7 @@ public void resetUI()
 /**
  * Called to respond to UI controls
  */
-public void respondUI(ViewEvent anEvent)
+protected void respondUI(ViewEvent anEvent)
 {
     // Get the current editor and currently selected shape (just return if null)
     RMEditor editor = getEditor(); if(editor==null) return;

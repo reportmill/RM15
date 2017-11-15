@@ -12,21 +12,30 @@ import snap.view.ViewEvent;
  * UI editing for RMGradientFill.
  */
 public class RMGradientFillTool extends RMFillTool {
+    
+/**
+ * Initialize UI.
+ */
+protected void initUI()
+{
+    setViewItems("TypeComboBox", new String[] { "Linear", "Radial" });
+}
 
 /**
  * Updates the UI controls from the currently selected shape.
  */
-public void resetUI()
+protected void resetUI()
 {
     // Get currently selected shape and shape gradient fill (just return if null)
     RMShape shape = getEditor().getSelectedOrSuperSelectedShape(); if(shape==null) return;
     RMGradientFill fill = getDefaultFill(shape);
-    
+    boolean isRadial = fill.isRadial();
+
+    // Update ColorStopPicker
     GradientStopPicker picker = getView("ColorStopPicker", GradientStopPicker.class);
     picker.setStops(fill.getStops());
     
-    // set the type popup and swap in the proper controls
-    boolean isRadial = fill.isRadial();
+    // Update TypeComboBox, RadialPicker and LinearControls
     setViewSelectedIndex("TypeComboBox", isRadial? 1 : 0);
     getView("RadialPicker").setVisible(isRadial);
     getView("LinearControls").setVisible(!isRadial);
@@ -49,7 +58,7 @@ public void resetUI()
 /**
  * Updates the currently selected shape from the UI controls.
  */
-public void respondUI(ViewEvent anEvent)
+protected void respondUI(ViewEvent anEvent)
 {
     // Get currently selected shape and its fill (just return if null)
     RMShape shape = getEditor().getSelectedOrSuperSelectedShape(); if(shape==null) return;

@@ -35,6 +35,18 @@ public void initUI()
 {
     setViewValue("UserText", Prefs.get().get("ExceptionUserName", ""));
     setViewValue("EmailText", Prefs.get().get("ExceptionEmail", ""));
+    
+    // Configure TypeComboBox
+    String types[] = { "Bug Report", "Enhancement Request", "General Comment" };
+    setViewItems("TypeComboBox", types);
+    
+    // Configure SeverityComboBox
+    String severities[] = { "Low", "Medium", "High" };
+    setViewItems("SeverityComboBox", severities);
+    
+    // Configure ModuleComboBox
+    String mods[] = { "General", "Text", "Images", "Drawing", "Tables", "Graphs", "Labels", "API", "Other" };
+    setViewItems("ModuleComboBox", mods);
 }
 
 /**

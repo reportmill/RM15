@@ -18,8 +18,11 @@ public class RMScene3DTool <T extends RMScene3D> extends RMTool <T> {
  */
 protected void initUI()
 {
-    // Get trackball control
+    // Get TrackballControl
     _sceneControl = getView("TrackballControl", RMTrackballControl.class);
+    
+    // Initialize RenderingComboBox
+    setViewItems("RenderingComboBox", new String[] { "Real 3D", "Pseudo 3D" });
 }
 
 /**

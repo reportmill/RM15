@@ -8,31 +8,11 @@
   <Label x="200" y="40" width="35" height="25" text="Email:" />
   <TextField Name="EmailText" x="235" y="40" width="195" height="25" />
   <Label x="10" y="70" width="90" height="25" text="Feedback Type:" />
-  <ComboBox Name="TypeComboBox" x="90" y="70" width="200" height="20">
-    <item text="Bug Report" />
-    <item text="Enhancement Request" />
-    <item text="General Comment" />
-  </ComboBox>
+  <ComboBox Name="TypeComboBox" x="90" y="70" width="200" height="20" />
   <Label x="10" y="95" width="90" height="20" text="Severity:" />
-  <ComboBox Name="SeverityComboBox" x="90" y="95" width="200" height="20">
-    <item text="Low" />
-    <item text="Medium" />
-    <item text="High" />
-  </ComboBox>
+  <ComboBox Name="SeverityComboBox" x="90" y="95" width="200" height="20" />
   <Label x="10" y="120" width="90" height="20" text="Module:" />
-  <ComboBox Name="ModuleComboBox" x="90" y="120" width="200" height="20">
-    <item text="General" />
-    <item text="Text" />
-    <item text="Images" />
-    <item text="Drawing" />
-    <item text="Tables" />
-    <item text="Graphs" />
-    <item text="Labels" />
-    <item text="Animation" />
-    <item text="Runtime" />
-    <item text="API" />
-    <item text="Other" />
-  </ComboBox>
+  <ComboBox Name="ModuleComboBox" x="90" y="120" width="200" height="20" />
   <Label x="10" y="150" width="40" height="25" text="Title:" />
   <TextField Name="TitleText" x="55" y="150" width="375" height="25" />
   <Label x="10" y="180" width="430" height="25" text="Detailed Description of Problem/Enhancement:" />

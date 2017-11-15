@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SpringView width="275" height="325" PrefWidth="275" PrefHeight="325">
   <View Name="ColorStopPicker" y="17" width="254" height="63" Class="com.reportmill.apptools.GradientStopPicker" />
-  <ComboBox Name="TypeComboBox" x="16" y="87" width="95" height="22">
-    <item text="Linear" />
-    <item text="Radial" />
-  </ComboBox>
+  <ComboBox Name="TypeComboBox" x="16" y="87" width="95" height="22" />
   <View Name="RadialPicker" x="133" y="87" width="94" height="94" Class="com.reportmill.apptools.GradientAxisPicker" />
   <SpringView Name="LinearControls" x="133" y="86" width="94" height="94" PrefWidth="94" PrefHeight="94">
     <ThumbWheel Name="AngleThumb" y="56" width="94" height="17" />

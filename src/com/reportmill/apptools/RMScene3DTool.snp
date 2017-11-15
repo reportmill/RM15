@@ -2,10 +2,7 @@
 <SpringView width="275" height="325" PrefWidth="275" PrefHeight="325">
   <HBox x="41" y="11" width="190" height="25" PrefWidth="190" PrefHeight="25" LeanX="CENTER" Spacing="5">
     <Label PrefWidth="60" Align="CENTER_RIGHT" text="Rendering:" />
-    <ComboBox Name="RenderingComboBox" PrefWidth="75" PrefHeight="22">
-      <item text="Real 3D" />
-      <item text="Pseudo 3D" />
-    </ComboBox>
+    <ComboBox Name="RenderingComboBox" PrefWidth="75" PrefHeight="22" />
   </HBox>
   <View Name="TrackballControl" x="35" y="48" width="112" height="112" LeanX="CENTER" Class="com.reportmill.apptools.RMTrackballControl">
     <font name="Arial" size="12" />
