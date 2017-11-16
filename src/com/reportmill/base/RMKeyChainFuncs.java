@@ -10,7 +10,7 @@ import snap.util.*;
 /**
  * This class represents an RM function call (method plus args) and defines a bunch of built-in functions.
  */
-public class RMKeyChainFuncs extends Object {
+public class RMKeyChainFuncs {
 
     // The function method
     Method _method;

@@ -86,9 +86,9 @@ public boolean isSelectedLeaf()
 /**
  * Returns whether selected item is to-many.
  */
-public static boolean isSelectedToMany()
+public boolean isSelectedToMany()
 {
-    KeyNode node = _active!=null? (KeyNode)_active._keysBrowser.getSelectedItem() : null;
+    KeyNode node = (KeyNode)_keysBrowser.getSelectedItem();
     return node!=null && node._isToMany;
 }
 
@@ -182,14 +182,19 @@ public RMShape getSelectedShape()  { return getEditor().getSelectedOrSuperSelect
 public String getWindowTitle()  { return "Keys Panel"; }
 
 /**
- * Returns the current drag key.
+ * Called to configure KeysBrowser cell: Make aggregate keys bold and .
  */
-public static String getDragKey()  { return _active!=null? _active._dragKey : null; }
+public void configureKeysBrowserCell(ListCell <KeyNode> aCell)
+{
+    KeyNode knode = aCell.getItem();
+    if(knode!=null && knode._special) aCell.setFont(_keysBrowser.getFont().getBold());
+    aCell.setToolTip(aCell.getText());
+}
 
 /**
  * Returns the icon of a double right arrow to indicate branch nodes of a "to-many" relationship in a browser.
  */
-public Image getDoubleArrowImage()
+public static Image getDoubleArrowImage()
 {
     // If double arrow icon hasn't been created, create it
     if(_doubleArrowImage!=null) return _doubleArrowImage;
@@ -201,9 +206,9 @@ public Image getDoubleArrowImage()
 }
 
 /**
- * Returns whether selected key path is to-many.
+ * Returns the current drag key.
  */
-//public static boolean isSelectedToMany()  { return _shared!=null && _shared._keysBrowser.isSelectedToMany(); }
+public static String getDragKey()  { return _active!=null? _active._dragKey : null; }
 
 /**
  * Drops a drag key.
@@ -211,10 +216,10 @@ public Image getDoubleArrowImage()
 public static void dropDragKey(RMShape aShape, ViewEvent anEvent)
 {
     // Get editor
-    RMEditor editor = (RMEditor)anEvent.getView(); //getDropTargetContext().getComponent();
+    RMEditor editor = (RMEditor)anEvent.getView();
     
     // Handle KeysPanel to-many drop - run dataset key panel (after delay)
-    if(isSelectedToMany()) {
+    if(_active.isSelectedToMany()) {
         String datasetKey = StringUtils.delete(KeysPanel.getDragKey(), "@");
         editor.getEnv().runLater(() -> RMEditorShapes.runDatasetKeyPanel(editor, datasetKey));
     }
@@ -229,19 +234,9 @@ public static void dropDragKey(RMShape aShape, ViewEvent anEvent)
 }
 
 /**
- * Called to configure KeysBrowser cell: Make aggregate keys bold and .
- */
-public void configureKeysBrowserCell(ListCell <KeyNode> aCell)
-{
-    KeyNode knode = aCell.getItem();
-    if(knode!=null && knode._special) aCell.setFont(_keysBrowser.getFont().getBold());
-    aCell.setToolTip(aCell.getText());
-}
-
-/**
  * An inner class to provide data for keys browser.
  */
-class KeysBrowserResolver extends TreeResolver <KeyNode> {
+static class KeysBrowserResolver extends TreeResolver <KeyNode> {
     
     /** Returns the parent of given item. */
     public KeyNode getParent(KeyNode anItem)  { return anItem._parent; }
@@ -262,7 +257,7 @@ class KeysBrowserResolver extends TreeResolver <KeyNode> {
 /**
  * An inner class for Node of KeysBrowser.
  */
-private class KeyNode extends Object {
+private class KeyNode {
 
     // Node parent
     KeyNode           _parent;
