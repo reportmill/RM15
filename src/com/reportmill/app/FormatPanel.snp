@@ -17,13 +17,11 @@
         <Button Name="DecimalAddButton" LeanX="RIGHT" ToolTip="Add Decimal" image="Format_DecimalAdd.png" />
         <Button Name="DecimalRemoveButton" ToolTip="Remove Decimal" image="Format_DecimalRemove.png" />
       </HBox>
-      <ScrollView GrowHeight="true">
-        <TableView Name="NumberFormatTable">
-          <TableCol PrefWidth="90" GrowWidth="true" Header="Positive" />
-          <TableCol PrefWidth="90" GrowWidth="true" Header="Negative" />
-          <TableCol PrefWidth="70" GrowWidth="true" Header="Format" />
-        </TableView>
-      </ScrollView>
+      <TableView Name="NumberFormatTable" GrowHeight="true">
+        <TableCol PrefWidth="90" GrowWidth="true" Header="Positive" />
+        <TableCol PrefWidth="90" GrowWidth="true" Header="Negative" />
+        <TableCol PrefWidth="70" GrowWidth="true" Header="Format" />
+      </TableView>
       <HBox>
         <Label text=" Format: " />
         <TextField Name="NumberFormatText" GrowWidth="true" />
@@ -35,12 +33,10 @@
       </HBox>
     </VBox>
     <VBox Name="DateFormatPane" Spacing="4" FillWidth="true">
-      <ScrollView GrowHeight="true">
-        <TableView Name="DateFormatTable">
-          <TableCol PrefWidth="140" GrowWidth="true" Header="Date" />
-          <TableCol PrefWidth="110" GrowWidth="true" Header="Format" />
-        </TableView>
-      </ScrollView>
+      <TableView Name="DateFormatTable" GrowHeight="true">
+        <TableCol PrefWidth="140" GrowWidth="true" Header="Date" />
+        <TableCol PrefWidth="110" GrowWidth="true" Header="Format" />
+      </TableView>
       <HBox Spacing="4">
         <Label PrefWidth="70" Align="CENTER_RIGHT" text="Custom:" />
         <TextField Name="DateFormatText" GrowWidth="true" />
