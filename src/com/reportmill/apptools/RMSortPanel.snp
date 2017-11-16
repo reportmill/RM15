@@ -13,12 +13,10 @@
     <ToggleButton Name="ValuesButton" x="144" width="70" height="20" text="Values" ToggleGroup="bgsort" />
     <SwitchView Name="SortPanel" y="21" width="264" height="55" GrowWidth="true" GrowHeight="true">
       <SpringView Name="Sort" width="264" height="55" PrefWidth="264" PrefHeight="55" GrowWidth="true" GrowHeight="true">
-        <ScrollView x="1" width="264" height="55" GrowWidth="true" GrowHeight="true">
-          <TableView Name="SortsTable" ShowHeader="false" RowHeight="20">
-            <TableCol GrowWidth="true" ItemKey="Key" />
-            <TableCol PrefWidth="28" />
-          </TableView>
-        </ScrollView>
+        <TableView Name="SortsTable" x="1" width="264" height="55" GrowWidth="true" GrowHeight="true" ShowHeader="false" RowHeight="20">
+          <TableCol GrowWidth="true" ItemKey="Key" />
+          <TableCol PrefWidth="28" />
+        </TableView>
       </SpringView>
       <SpringView Name="TopN" width="264" height="55" PrefWidth="264" PrefHeight="55">
         <Label x="5" y="5" width="50" height="18" text="Key Path:" />

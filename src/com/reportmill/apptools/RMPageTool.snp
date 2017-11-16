@@ -6,12 +6,10 @@
   <Button Name="AllVisibleButton" x="106" y="30" width="26" height="26" image="LayerVisible.png" />
   <Button Name="AllInvisibleButton" x="132" y="30" width="26" height="26" image="LayerInvisible.png" />
   <Button Name="AllLockedButton" x="158" y="30" width="26" height="26" image="LayerLocked.png" />
-  <ScrollView x="10" y="57" width="174" height="119">
-    <TableView Name="LayersTable" ShowHeader="false">
-      <TableCol GrowWidth="true" ItemKey="Name" />
-      <TableCol PrefWidth="30" />
-    </TableView>
-  </ScrollView>
+  <TableView Name="LayersTable" x="10" y="57" width="174" height="119" ShowHeader="false">
+    <TableCol GrowWidth="true" ItemKey="Name" />
+    <TableCol PrefWidth="30" />
+  </TableView>
   <Button Name="AddButton" x="186" y="57" width="89" height="25" text="Add" />
   <Button Name="RemoveButton" x="186" y="86" width="89" height="25" text="Remove" />
   <Button Name="RenameButton" x="186" y="115" width="89" height="25" text="Rename" />

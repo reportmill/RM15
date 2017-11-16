@@ -11,12 +11,10 @@
     <MenuItem Name="MoveGroupUpMenuItem" text="Move Group Up" />
     <MenuItem Name="MoveGroupDownMenuItem" text="Move Group Down" />
   </MenuButton>
-  <ScrollView x="4" y="72" width="267" height="75">
-    <TableView Name="GroupingTable" ShowHeader="false" RowHeight="20">
-      <TableCol GrowWidth="true" ItemKey="Key" />
-      <TableCol PrefWidth="28" />
-    </TableView>
-  </ScrollView>
+  <TableView Name="GroupingTable" x="4" y="72" width="267" height="75" ShowHeader="false" RowHeight="20">
+    <TableCol GrowWidth="true" ItemKey="Key" />
+    <TableCol PrefWidth="28" />
+  </TableView>
   <CheckBox Name="HeaderCheckBox" x="25" y="150" width="70" height="16" text="Header" />
   <CheckBox Name="DetailsCheckBox" x="100" y="150" width="70" height="16" text="Details" />
   <CheckBox Name="SummaryCheckBox" x="175" y="150" width="94" height="16" text="Summary" />
