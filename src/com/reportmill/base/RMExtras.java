@@ -15,29 +15,18 @@ import snap.web.WebURL;
  */
 public class RMExtras {
     
-    // The Hollywood db URL
-    static WebURL       _hollywoodURL;
-    
-    // The Movies Rpt URL
-    static WebURL       _moviesURL;
-    
 /**
  * Returns the Hollywood db URL.
  */
 public static WebURL getHollywoodURL()
 {
-    if(_hollywoodURL!=null) return _hollywoodURL;
-    return _hollywoodURL = WebURL.getURL(RMExtras.class.getResource("/com/reportmill/examples/HollywoodDB.xml"));
+    return WebURL.getURL(RMExtras.class, "/com/reportmill/examples/HollywoodDB.xml");
 }
 
 /**
  * Returns the Movies Rpt URL.
  */
-public static WebURL getMoviesURL()
-{
-    if(_moviesURL!=null) return _moviesURL;
-    return _moviesURL = WebURL.getURL(RMExtras.class.getResource("/com/reportmill/examples/Movies.rpt"));
-}
+public static WebURL getMoviesURL()  { return WebURL.getURL(RMExtras.class, "/com/reportmill/examples/Movies.rpt"); }
 
 /**
  * Iterates over all document (or shape) text and replaces occurrences of the first string with the second.
