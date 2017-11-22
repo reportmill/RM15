@@ -94,7 +94,7 @@ public static synchronized RMImageData getImageData(Object aSource)
     }
     
     // Get bytes for source
-    byte bytes[] = url!=null && url.getFile()!=null? url.getFile().getBytes() : SnapUtils.getBytes(aSource);
+    byte bytes[] = url!=null? url.getBytes() : SnapUtils.getBytes(aSource);
     
     // Create new ImageData, add to cache (as WeakReference) and return
     RMImageData idata = RMImageDataPDF.canRead(bytes)? new RMImageDataPDF() : new RMImageData();
@@ -116,7 +116,7 @@ protected void setSource(Object aSource, int aPageIndex)
     // Get URL, source, modified time
     WebURL url = null; try { url = WebURL.getURL(aSource); } catch(Exception e) { }
     _source = url!=null? url : aSource;
-    _modTime = url!=null && url.getFile()!=null? url.getFile().getLastModifiedTime() : System.currentTimeMillis();
+    _modTime = url!=null? url.getLastModTime() : System.currentTimeMillis();
 
     // If source is image, set basic info
     if(aSource instanceof Image) {
@@ -131,7 +131,7 @@ protected void setSource(Object aSource, int aPageIndex)
     
     // Otherwise, assume source can provide bytes
     else if(aSource!=null) {
-        _bytes = url!=null && url.getFile()!=null? url.getFile().getBytes() : SnapUtils.getBytes(aSource); // Get bytes
+        _bytes = url!=null? url.getBytes() : SnapUtils.getBytes(aSource); // Get bytes
         _pageIndex = aPageIndex;  // Set PageIndex
         readBasicInfo(); _image = null; // Get reader and clear image
     }
@@ -311,10 +311,10 @@ public boolean isValid()  { return _valid; }
  */
 protected void refresh()
 {
-    WebURL url = getSourceURL(); if(url==null || url.getFile()==null) return;
-    url.getFile().reload();
-    if(url.getFile().getLastModifiedTime()>_modTime)
-        setSource(url, _pageIndex);
+    WebURL url = getSourceURL();
+    long modTime = url!=null? url.getLastModTime() : 0;
+    if(modTime>_modTime) {
+        setSource(url, _pageIndex); System.out.println("Refreshed ImageData"); }
 }
 
 /**
