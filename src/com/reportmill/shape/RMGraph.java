@@ -589,7 +589,7 @@ public RMGraph clone()
     clone._bars = (RMGraphPartBars)_bars.clone();
     clone._pie = (RMGraphPartPie)_pie.clone();
     clone._3d = (RMScene3D)get3D().clone();
-    clone._series = ListUtils.cloneDeep(_series);
+    clone._series = SnapUtils.cloneDeep(_series);
     return clone;
 }
 

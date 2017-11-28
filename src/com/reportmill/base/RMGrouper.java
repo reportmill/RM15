@@ -231,7 +231,7 @@ public RMGrouper clone()
     RMGrouper clone = (RMGrouper)super.clone();
     
     // Clone deep grouping
-    clone._groupings = ListUtils.cloneDeep(_groupings);
+    clone._groupings = SnapUtils.cloneDeep(_groupings);
     
     // Return clone
     return clone;

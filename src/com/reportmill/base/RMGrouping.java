@@ -348,7 +348,7 @@ public RMGrouping clone()
 {
     // Do basic clone, clone sorts, TopNSort and return
     RMGrouping clone = (RMGrouping)super.clone();
-    clone._sorts = ListUtils.cloneDeep(_sorts);
+    clone._sorts = SnapUtils.cloneDeep(_sorts);
     clone._topNSort = SnapUtils.clone(_topNSort);
     return clone;
 }

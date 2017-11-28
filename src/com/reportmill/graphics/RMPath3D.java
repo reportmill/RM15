@@ -3,7 +3,7 @@
  */
 package com.reportmill.graphics;
 import snap.gfx.*;
-import snap.util.ListUtils;
+import snap.util.SnapUtils;
 import java.util.*;
 
 /**
@@ -459,8 +459,8 @@ public double getZMax()  { return getBBox()[1].z; }
 public Object clone()
 {
     RMPath3D clone = new RMPath3D();
-    clone._elements = ListUtils.clone(_elements);
-    clone._points = ListUtils.cloneDeep(_points);
+    clone._elements = SnapUtils.clone(_elements);
+    clone._points = SnapUtils.cloneDeep(_points);
     return clone;
 }
 
