@@ -42,8 +42,8 @@ public class RMShape extends SnapObject implements Cloneable, DeepChangeListener
     // Height of shape
     double         _height = 0;
     
-    // An object to hold optional roll/scale/skew info
-    RMShapeRSS     _rss;
+    // An array to hold optional roll/scale/skew values
+    double         _rss[];
     
     // The stroke for this shape
     RMStroke       _stroke = null;
@@ -67,7 +67,10 @@ public class RMShape extends SnapObject implements Cloneable, DeepChangeListener
     String         _asize; Object _layoutInfoX;
     
     // Map to hold less used attributes (name, url, etc.)
-    RMSharedMap    _attrMap = RMSharedMap.getShared();
+    RMSharedMap    _attrMap = SHARED_MAP;
+    
+    // A shared/root RMSharedMap (cloned to turn on shared flag)
+    static final RMSharedMap SHARED_MAP = new RMSharedMap().clone();
     
 /**
  * Returns raw x location of shape. Developers should use the more common getX, which presents positive x.
@@ -416,7 +419,7 @@ public Rect getBoundsMarkedDeep()
 /**
  * Returns the roll of the shape.
  */
-public double getRoll()  { return _rss==null? 0 : _rss.roll; }
+public double getRoll()  { return _rss==null? 0 : _rss[0]; }
 
 /**
  * Sets the roll of the shape.
@@ -425,13 +428,13 @@ public void setRoll(double aValue)
 {
     if(aValue==getRoll()) return;
     repaint();
-    firePropChange("Roll", getRSS().roll, getRSS().roll = aValue);
+    firePropChange("Roll", getRSS()[0], _rss[0] = aValue);
 }
 
 /**
  * Returns the scale of the X axis of the shape.
  */
-public double getScaleX()  { return _rss==null? 1 : _rss.scaleX; }
+public double getScaleX()  { return _rss==null? 1 : _rss[1]; }
 
 /**
  * Sets the scale of the X axis of the shape.
@@ -440,13 +443,13 @@ public void setScaleX(double aValue)
 {
     if(aValue==getScaleX()) return;
     repaint();
-    firePropChange("ScaleX", getRSS().scaleX, getRSS().scaleX = aValue);
+    firePropChange("ScaleX", getRSS()[1], _rss[1] = aValue);
 }
 
 /**
  * Returns the scale of the Y axis of the shape.
  */
-public double getScaleY()  { return _rss==null? 1 : _rss.scaleY; }
+public double getScaleY()  { return _rss==null? 1 : _rss[2]; }
 
 /**
  * Sets the scale of the Y axis of the shape.
@@ -455,7 +458,7 @@ public void setScaleY(double aValue)
 {
     if(aValue==getScaleY()) return;
     repaint();
-    firePropChange("ScaleY", getRSS().scaleY, getRSS().scaleY = aValue);
+    firePropChange("ScaleY", getRSS()[2], _rss[2] = aValue);
 }
 
 /**
@@ -466,7 +469,7 @@ public void setScaleXY(double sx, double sy)  { setScaleX(sx); setScaleY(sy); }
 /**
  * Returns the skew of the X axis of the shape.
  */
-public double getSkewX()  { return _rss==null? 0 : _rss.skewX; }
+public double getSkewX()  { return _rss==null? 0 : _rss[3]; }
 
 /**
  * Sets the skew of the X axis of the shape.
@@ -475,13 +478,13 @@ public void setSkewX(double aValue)
 {
     if(aValue==getSkewX()) return;
     repaint();
-    firePropChange("SkewX", getRSS().skewX, getRSS().skewX = aValue);
+    firePropChange("SkewX", getRSS()[3], _rss[3] = aValue);
 }
 
 /**
  * Returns the skew of the Y axis of the shape.
  */
-public double getSkewY()  { return _rss==null? 0 : _rss.skewY; }
+public double getSkewY()  { return _rss==null? 0 : _rss[4]; }
 
 /**
  * Sets the skew of the Y axis of the shape.
@@ -490,7 +493,7 @@ public void setSkewY(double aValue)
 {
     if(aValue==getSkewY()) return;
     repaint();
-    firePropChange("SkewY", getRSS().skewY, getRSS().skewY = aValue);
+    firePropChange("SkewY", getRSS()[4], _rss[4] = aValue);
 }
 
 /**
@@ -504,9 +507,9 @@ public void setSkewXY(double skx, double sky)  { setSkewX(skx); setSkewY(sky); }
 public boolean isRSS()  { return _rss!=null; }
 
 /**
- * Returns the roll scale skew object.
+ * Returns the roll scale skew array: [ Roll, ScaleX, ScaleY, SkewX, SkewY ].
  */
-protected RMShapeRSS getRSS()  { return _rss!=null? _rss : (_rss=new RMShapeRSS()); }
+protected double[] getRSS()  { return _rss!=null? _rss : (_rss=new double[] { 0, 1, 1, 0, 0 }); }
 
 /**
  * Returns the stroke for this shape.
@@ -806,8 +809,8 @@ public String getName()  { return (String)get("Name"); }
 public void setName(String aName)
 {
     if(SnapUtils.equals(aName, getName())) return;
-    Object oldValue = put("Name", StringUtils.min(aName)); // Cache old value
-    firePropChange("Name", oldValue, StringUtils.min(aName));
+    Object oldVal = put("Name", StringUtils.min(aName));
+    firePropChange("Name", oldVal, StringUtils.min(aName));
 }
 
 /**
@@ -821,8 +824,8 @@ public String getURL()  { return (String)get("RMShapeURL"); }
 public void setURL(String aURL)
 {
     if(SnapUtils.equals(aURL, getURL())) return;
-    Object oldValue = put("RMShapeURL", StringUtils.min(aURL)); // Cache old value
-    firePropChange("RMShapeURL", oldValue, aURL);
+    Object oldVal = put("RMShapeURL", StringUtils.min(aURL));
+    firePropChange("RMShapeURL", oldVal, aURL);
 }
 
 /**
@@ -836,8 +839,8 @@ public boolean isLocked()  { return SnapUtils.boolValue(get("Locked")); }
 public void setLocked(boolean aValue)
 {
     if(aValue==isLocked()) return;
-    Object oldValue = put("Locked", aValue); // Cache old value
-    firePropChange("Locked", oldValue, aValue);
+    Object oldVal = put("Locked", aValue);
+    firePropChange("Locked", oldVal, aValue);
 }
 
 /**
@@ -849,25 +852,20 @@ public void setLocked(boolean aValue)
 public Object get(String aName)  { return _attrMap.get(aName); }
 
 /**
- * Sets an Object to be associated with the given name for the shape.
+ * Returns the value associated with given key, using the given default if not found.
+ */
+public Object get(String aName, Object aDefault)  { Object val = get(aName); return val!=null? val : aDefault; }
+
+/**
+ * Sets a value to be associated with the given name for the shape.
  */
 public Object put(String aName, Object anObj)
 {
     // If map shared, clone it for real
-    if(_attrMap.isShared())
-        _attrMap = _attrMap.cloneX();
+    if(_attrMap.isShared) _attrMap = _attrMap.cloneReal();
     
     // Put value (or remove if null)
     return anObj!=null? _attrMap.put(aName, anObj) : _attrMap.remove(aName);
-}
-
-/**
- * Returns the object associated with given key, using the given default if not found.
- */
-public Object get(String aName, Object aDefault)
-{
-    Object value = get(aName);
-    return value!=null? value : aDefault;
 }
 
 /**
@@ -1518,9 +1516,8 @@ public Binding getBinding(int anIndex)  { return getBindings(true).get(anIndex);
  */
 protected List <Binding> getBindings(boolean doCreate)
 {
-    List <Binding> bindings = (List)get("RibsBindings");
-    if(bindings==null && doCreate)
-        put("RibsBindings", bindings = new ArrayList());
+    List <Binding> bindings = (List)get("RMBindings");
+    if(bindings==null && doCreate) put("RMBindings", bindings = new ArrayList());
     return bindings;
 }
 
@@ -1577,7 +1574,9 @@ public RMShape clone()
     // Do normal version, clear parent, LayoutInfoX, clone RSS
     RMShape clone = (RMShape)super.clone();
     clone._parent = null; clone._layoutInfoX = null;
-    clone._rss = SnapUtils.clone(_rss);
+    
+    // Clone Rotate/Scale/Skew array
+    if(_rss!=null) clone._rss = Arrays.copyOf(_rss,_rss.length);
     
     // Clone stroke, fill
     clone._stroke = null; clone._fill = null;
@@ -1589,7 +1588,7 @@ public RMShape clone()
     
     // Clone bindings and add to clone (with hack to make sure clone has it's own, non-shared, attr map)
     for(int i=0, iMax=getBindingCount(); i<iMax; i++) {
-        if(i==0) clone.put("RibsBindings", null);
+        if(i==0) clone.put("RMBindings", null);
         clone.addBinding(getBinding(i).clone());
     }
     
@@ -2048,6 +2047,21 @@ public String toString()
     if(getName()!=null) sb.append(getName()).append(' ');
     sb.append(getFrame().toString());
     return sb.toString();
+}
+
+/**
+ * A HashMap subclass to hold uncommon attributes, with Shared flag to indicate whether it has to be copied when modded.
+ */
+private static class RMSharedMap extends HashMap {
+    
+    // Whether this map is being shared
+    boolean isShared = false;
+    
+    /** Overrides hashtable method to just mark hashtable shared and return it. */
+    public RMSharedMap clone()  { isShared = true; return this; }
+
+    /** Provides real clone implementation. */
+    public RMSharedMap cloneReal() { RMSharedMap cln = (RMSharedMap)super.clone(); cln.isShared = false; return cln; }
 }
 
 }
