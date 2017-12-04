@@ -287,15 +287,23 @@ public RMGraphPartSeries getSeries(int anIndex)
 /**
  * Returns the 3d shape.
  */
-public RMScene3D get3D()  { return _3d!=null? _3d : (_3d=create3D()); }
-
-/**
- * Creates a new 3d graph part.
- */
-private RMScene3D create3D()
+public RMScene3D get3D()
 {
+    // If already set, just return
+    if(_3d!=null) return _3d;
+
+    // Create and return
     RMScene3D p3d = new RMScene3D(); p3d.setDepth(100); p3d.setYaw(8); p3d.setPitch(11); p3d.setFocalLength(8*72);
-    p3d.addPropChangeListener(this); return p3d;
+    p3d.addPropChangeListener(pc -> thr3DPropChange(pc));
+    return _3d = p3d;
+}
+
+// Called when 3D changes to sync to graph.
+void thr3DPropChange(PropChange anEvent)
+{
+    repaint();
+    RMScene3D p3d = getChildCount()>0 && getChild(0) instanceof RMScene3D? (RMScene3D)getChild(0) : null;
+    if(p3d!=null) p3d.copy3D(get3D());
 }
 
 /**
@@ -464,20 +472,6 @@ private List getSampleObjects()
     
     // Return objects
     return objects;
-}
-
-/**
- * Overrides normal version to suppress child changes and propagate part changes.
- */
-public void propertyChange(PropChange anEvent)
-{
-    // If source isn't child, forward on
-    if(!ListUtils.containsId(getChildren(), anEvent.getSource()))
-        super.propertyChange(anEvent);
-    
-    // If source is graph part 3d, do sync
-    if(anEvent.getSource()==get3D() && getChildCount()>0 && getChild(0) instanceof RMScene3D)
-        ((RMScene3D)getChild(0)).copy3D(get3D());
 }
 
 /**

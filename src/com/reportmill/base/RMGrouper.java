@@ -8,13 +8,16 @@ import snap.util.*;
 /**
  * This class simply manages a list of groupings and has some nice convenience methods.
  */
-public class RMGrouper extends SnapObject implements PropChangeListener, XMLArchiver.Archivable {
+public class RMGrouper extends SnapObject implements XMLArchiver.Archivable {
     
     // The list of groupings
     List <RMGrouping>  _groupings = new Vector();
 
     // Selected group index (editing only)
     int                _selectedGroupingIndex = 0;
+    
+    // A listener to catch RMGrouping PropChange
+    PropChangeListener  _groupingLsnr = pc -> groupingDidPropChange(pc);
     
 /**
  * Creates an empty grouper.
@@ -50,7 +53,7 @@ public void addGrouping(RMGrouping aGrouping, int anIndex)
     _groupings.add(anIndex, aGrouping);
     
     // Start listening to property change events
-    aGrouping.addPropChangeListener(this);
+    aGrouping.addPropChangeListener(_groupingLsnr);
     
     // Set selected grouping index to new grouping
     _selectedGroupingIndex = anIndex;
@@ -68,7 +71,7 @@ public RMGrouping removeGrouping(int anIndex)
     RMGrouping grouping = _groupings.remove(anIndex);
     
     // Stop listening to property change events
-    grouping.removePropChangeListener(this);
+    grouping.removePropChangeListener(_groupingLsnr);
     
     // Adjust selected grouping index if needed
     _selectedGroupingIndex = Math.min(_selectedGroupingIndex, getGroupingCount() - 1);
@@ -199,7 +202,7 @@ public RMGroup groupObjects(List aList)
 /**
  * Listen for property changes and forward to grouper's property change listeners.
  */
-public void propertyChange(PropChange anEvent)  { firePropChange(anEvent); }
+protected void groupingDidPropChange(PropChange anEvent)  { firePropChange(anEvent); }
 
 /**
  * Standard equals implementation.

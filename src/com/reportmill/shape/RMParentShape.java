@@ -28,6 +28,12 @@ public class RMParentShape extends RMShape {
     // The SourceURL
     WebURL         _sourceURL;
     
+    // A listener to catch child PropChange (for editor undo)
+    PropChangeListener  _childPCL;
+    
+    // A listener to catch child DeepChange (for editor undo)
+    DeepChangeListener  _childDCL;
+    
 /**
  * Returns the number of children associated with this shape.
  */
@@ -66,7 +72,7 @@ public void addChild(RMShape aChild, int anIndex)
     
     // If this shape has PropChangeListeners, start listening to children as well
     if(hasDeepChangeListener()) {
-        aChild.addPropChangeListener(this); aChild.addDeepChangeListener(this); }
+        aChild.addPropChangeListener(getChildPCL()); aChild.addDeepChangeListener(getChildDCL()); }
     
     // Fire property change
     firePropChange("Child", null, aChild, anIndex);
@@ -89,7 +95,7 @@ public RMShape removeChild(int anIndex)
     
     // Notify layout of remove child, stop listening to PropertyChanges, repaint, revalidate and return
     removeLayoutChild(child);
-    child.removePropChangeListener(this); child.removeDeepChangeListener(this);
+    child.removePropChangeListener(getChildPCL()); child.removeDeepChangeListener(getChildDCL());
     relayout(); repaint();
     return child;
 }
@@ -221,6 +227,26 @@ public void setLayout(RMShapeLayout aLayout)
     // If new layout is non-null, set parent to this shape and add children
     if(_layout!=null) { _layout.setParent(this); for(RMShape c : getChildren()) addLayoutChild(c);  }
 }
+
+/**
+ * Adds a deep change listener to shape to listen for shape changes and property changes received by shape.
+ */
+public void addDeepChangeListener(DeepChangeListener aLsnr)
+{
+    boolean first = !hasDeepChangeListener();
+    super.addDeepChangeListener(aLsnr);
+    if(first)   // If first listener, add for children
+        for(int i=0, iMax=getChildCount(); i<iMax; i++) { RMShape child = getChild(i);
+            child.addPropChangeListener(getChildPCL()); child.addDeepChangeListener(getChildDCL()); }
+}
+
+// Return Child PropChangeListener and DeepChangeListener
+PropChangeListener getChildPCL()  { return _childPCL!=null? _childPCL : (_childPCL=pc -> childDidPropChange(pc)); }
+DeepChangeListener getChildDCL()  { return _childDCL!=null? _childDCL : (_childDCL=(l,p) -> childDidDeepChange(l,p)); }
+
+/** Called when child/descendant changes forward changes on to deep listeners. */
+void childDidPropChange(PropChange aPC)  { _pcs.fireDeepChange(this, aPC); }
+void childDidDeepChange(Object aLsnr, PropChange aPC)  { _pcs.fireDeepChange(aLsnr, aPC); }
 
 /**
  * Returns whether Source URL is set.

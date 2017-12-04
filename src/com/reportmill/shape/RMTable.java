@@ -36,6 +36,9 @@ public class RMTable extends RMParentShape {
     // Whether table starts with a page break
     boolean         _startingPageBreak = false;
     
+    // A listener to catch Grouper PropChanges
+    PropChangeListener _grouperLsnr = pc -> grouperChanged();
+    
 /**
  * Creates a plain table.
  */
@@ -113,11 +116,11 @@ public RMGrouper getGrouper()  { if(_grouper==null) setGrouper(new RMGrouper());
 /**
  * Sets the grouper associated with the table.
  */
-public void setGrouper(RMGrouper aGrouper)
+protected void setGrouper(RMGrouper aGrouper)
 {
-    if(_grouper!=null) _grouper.removePropChangeListener(this);
+    if(_grouper!=null) _grouper.removePropChangeListener(_grouperLsnr);
     _grouper = aGrouper;
-    if(_grouper!=null) _grouper.addPropChangeListener(this);
+    _grouper.addPropChangeListener(_grouperLsnr);
 }
 
 /**
@@ -182,20 +185,6 @@ public RMTableRow addDetails(String aKey)
 public RMTableRow addSummary(String aKey)
 {
     getGrouping(aKey, true, 0).setHasSummary(true); return getRow(aKey + " Summary");
-}
-
-/**
- * Override to update rows when grouper changes and revalidate when child height changes.
- */
-public void propertyChange(PropChange anEvent)
-{
-    // Do normal version
-    super.propertyChange(anEvent);
-    
-    // If source is grouper or grouping, update table rows to match grouper
-    Object source = anEvent.getSource();
-    if(source instanceof RMGrouper || source instanceof RMGrouping)
-        grouperChanged();
 }
 
 /**
@@ -580,9 +569,7 @@ protected void fromXMLChildren(XMLArchiver anArchiver, XMLElement anElement)
 
     // Unarchive grouper's groupings
     List groupings = anArchiver.fromXMLList(anElement, "grouping", null, this);
-    RMGrouper grouper = new RMGrouper();
-    grouper.addGroupings(groupings);
-    setGrouper(grouper);
+    getGrouper().addGroupings(groupings);
     
     // Legacy fix for unlikely case that vestigial PageBreak index exists
     if(getPageBreakGroupIndex()>=getGroupingCount()) setPageBreakGroupIndex(-1);

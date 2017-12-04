@@ -58,6 +58,9 @@ public class RMTextShape extends RMRectShape {
     // The default text margin (top=1, left=2, bottom=0, right=2)
     static Insets          _marginDefault = new Insets(1, 2, 0, 2);
     
+    // A listener to handle rich text changes
+    PropChangeListener     _richTextLsnr = pc -> richTextDidPropChange(pc);
+    
     // Constants for overflow behavior during RPG
     public static final byte WRAP_NONE = 0;
     public static final byte WRAP_BASIC = 1;
@@ -85,7 +88,7 @@ public RMXString getXString()
 {
     if(_xstr!=null) return _xstr;
     _xstr = new RMXString();
-    _xstr.getRichText().addPropChangeListener(this);
+    _xstr.getRichText().addPropChangeListener(_richTextLsnr);
     return _xstr;
 }
 
@@ -98,8 +101,8 @@ public void setXString(RMXString xString)
     if(xString==_xstr) return;
     
     // Stop listening to last XString and start listening to new XString
-    if(_xstr!=null) _xstr.getRichText().removePropChangeListener(this);
-    if(xString!=null) xString.getRichText().addPropChangeListener(this);
+    if(_xstr!=null) _xstr.getRichText().removePropChangeListener(_richTextLsnr);
+    if(xString!=null) xString.getRichText().addPropChangeListener(_richTextLsnr);
     
     // Set value and fire property change, and reset cached HeightToFit
     firePropChange("XString", _xstr, _xstr = xString);
@@ -773,10 +776,10 @@ protected void paintTextEditor(Painter aPntr, RMTextEditor aTE)
 /**
  * Override to catch XString and TextEditor changes.
  */
-public void propertyChange(PropChange anEvent)
+protected void richTextDidPropChange(PropChange aPC)
 {
-    super.propertyChange(anEvent);
-    if(anEvent.getSource() instanceof RichText) repaint();
+    _pcs.fireDeepChange(this, aPC);
+    repaint();
 }
 
 /**

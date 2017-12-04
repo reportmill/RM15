@@ -16,7 +16,7 @@ import snap.view.*;
 /**
  * This class provides UI editing for text shapes.
  */
-public class RMTextTool <T extends RMTextShape> extends RMTool <T> implements PropChangeListener {
+public class RMTextTool <T extends RMTextShape> extends RMTool <T> {
     
     // The TextView
     TextView          _textView;
@@ -35,6 +35,9 @@ public class RMTextTool <T extends RMTextShape> extends RMTool <T> implements Pr
 
     // Format used for line height controls
     DecimalFormat     _format = new DecimalFormat("0.##");
+    
+    // A Listener for RichText PropChange
+    PropChangeListener  _richTextLsnr = pc -> richTextDidPropChange(pc);
 
 /**
  * Initialize UI panel.
@@ -489,7 +492,7 @@ public void didBecomeSuperSelected(T aTextShape)
     //if(!isUISet() || !_textArea.hasFocus()) anEditor.requestFocus();
     
     // Start listening to changes to TextShape RichText
-    aTextShape.getRichText().addPropChangeListener(this);
+    aTextShape.getRichText().addPropChangeListener(_richTextLsnr);
     
     // If UI is loaded, install string in text area
     //if(isUISet()) _textArea.getTextEditor().setXString(text.getXString());
@@ -506,7 +509,7 @@ public void willLoseSuperSelected(T aTextShape)
         aTextShape.removeFromParent();
     
     // Stop listening to changes to TextShape RichText
-    aTextShape.getRichText().removePropChangeListener(this);
+    aTextShape.getRichText().removePropChangeListener(_richTextLsnr);
     _updatingSize = false; _updatingMinHeight = 0;
     
     // Set text editor's text shape to null
@@ -514,9 +517,9 @@ public void willLoseSuperSelected(T aTextShape)
 }
 
 /**
- * Handle changes to Selected TextShape 
+ * Handle changes to Selected TextShape.RichText
  */
-public void propertyChange(PropChange aPC)
+protected void richTextDidPropChange(PropChange aPC)
 {
     // If updating size, reset text width & height to accommodate text
     if(_updatingSize) {

@@ -28,7 +28,7 @@ import snap.view.*;
  *   shape.setOpacity(.667f);
  * </pre></blockquote>
  */
-public class RMShape extends SnapObject implements Cloneable, DeepChangeListener, RMTypes, Archivable {
+public class RMShape extends SnapObject implements Cloneable, RMTypes, Archivable {
 
     // X location of shape
     double         _x = 0;
@@ -786,18 +786,6 @@ public void setFormat(RMFormat aFormat)
         getChild(i).setFormat(aFormat);
 }
     
-/**
- * Adds a deep change listener to shape to listen for shape changes and property changes received by shape.
- */
-public void addDeepChangeListener(DeepChangeListener aLsnr)
-{
-    boolean first = !hasDeepChangeListener();
-    super.addDeepChangeListener(aLsnr);
-    if(first)   // If first listener, add for children
-        for(int i=0, iMax=getChildCount(); i<iMax; i++) { RMShape child = getChild(i);
-            child.addPropChangeListener(this); child.addDeepChangeListener(this); }
-}
-
 /**
  * Returns the name for the shape.
  */
