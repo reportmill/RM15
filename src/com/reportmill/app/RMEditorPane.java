@@ -547,7 +547,7 @@ protected void editorClosed()
 /**
  * Catch Editor DeepChanges to register resetUI.
  */
-public void deepChange(PropChangeListener aShape, PropChange anEvent)  { resetLater(); }
+public void deepChange(Object aShape, PropChange anEvent)  { resetLater(); }
 
 /**
  * Called when the app is about to exit to gracefully handle any open documents.

@@ -992,7 +992,7 @@ protected void setUndoSelection(Object aSelection)
 /**
  * Property change.
  */
-public void deepChange(PropChangeListener aShape, PropChange anEvent)
+public void deepChange(Object aShape, PropChange anEvent)
 {
     // If deep change for EditorTextEditor, just return since it registers Undo itself (with better coalesce)
     //if(getTextEditor()!=null && getTextEditor().getTextShape()==aShape &&
