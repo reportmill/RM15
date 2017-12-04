@@ -26,7 +26,7 @@ import snap.web.WebURL;
  *   myFrame.getContentPane().add(new JScrollPane(viewer));
  * </pre></blockquote>
  */
-public class RMViewer extends View implements PropChangeListener {
+public class RMViewer extends View {
 
     // The shape viewer uses to manage real root of shapes
     RMViewerShape            _vshape = createViewerShape();
