@@ -11,7 +11,7 @@ import snap.web.WebURL;
  * This class is a container for a viewer and tool bars. The default tool bars add document controls (save,
  * print, copy), input controls (select, pan, text select, image select), zoom controls and page controls. 
  */
-public class RMViewerPane extends ViewOwner implements PropChangeListener {
+public class RMViewerPane extends ViewOwner {
 
     // The real viewer
     RMViewer          _viewer;
@@ -28,6 +28,9 @@ public class RMViewerPane extends ViewOwner implements PropChangeListener {
     // The controls at the bottom of the document
     ViewOwner         _btmToolBar;
     
+    // Listener for Viewer changes
+    PropChangeListener  _viewLsnr = pc -> viewerDidPropChange(pc);
+    
 /**
  * Returns the viewer for this viewer pane.
  */
@@ -36,7 +39,18 @@ public RMViewer getViewer()  { if(_viewer==null) getUI(); return _viewer; }
 /**
  * Sets the viewer for this viewer pane.
  */
-protected void setViewer(RMViewer aViewer)  { _viewer = aViewer; getScrollView().setContent(_viewer); }
+protected void setViewer(RMViewer aViewer)
+{
+    // Stop listening to PropChanges on old
+    if(_viewer!=null) _viewer.removePropChangeListener(_viewLsnr);
+    
+    // Set Viewer
+    _viewer = aViewer;
+    getScrollView().setContent(_viewer);
+    
+    // Start listening to PropChanges
+    _viewer.addPropChangeListener(_viewLsnr);
+}
 
 /**
  * Creates the real viewer for this viewer plus.
@@ -144,7 +158,7 @@ protected View createUI()
 {
     // Create and configure viewer
     _viewer = createViewer();
-    _viewer.addPropChangeListener(this); // Listen to PropertyChanges
+    _viewer.addPropChangeListener(_viewLsnr); // Listen to PropertyChanges
     _scrollView = new ScrollView(); _scrollView.setFill(new snap.gfx.Color("#c0c0c0"));
 
     _scrollView.setContent(_viewer);
@@ -170,9 +184,9 @@ protected void resetUI()
 }
 
 /**
- * ResetUI on PropertyChange.
+ * ResetUI on Viewer PropertyChange.
  */
-public void propertyChange(PropChange aPC)
+protected void viewerDidPropChange(PropChange aPC)
 {
     String pname = aPC.getPropertyName();
     if(pname==View.Cursor_Prop || pname==View.Width_Prop || pname==View.Height_Prop) return;

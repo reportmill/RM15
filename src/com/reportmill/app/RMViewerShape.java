@@ -5,6 +5,7 @@ package com.reportmill.app;
 import com.reportmill.graphics.RMColor;
 import com.reportmill.shape.*;
 import snap.gfx.*;
+import snap.util.PropChangeListener;
 import snap.util.XMLElement;
 import snap.view.ViewUtils;
 import snap.web.WebURL;
@@ -19,6 +20,9 @@ public class RMViewerShape extends RMParentShape {
 
     // The shape viewer uses to manage real root of shapes
     RMParentShape      _content;
+    
+    // A PropChangeListener to catch Content shape changes (Showing, PageSize, )
+    PropChangeListener _viewerContentLsnr = pc -> _viewer.contentShapeDidPropChange(pc);
     
 /**
  * Creates a new ViewerShape.
@@ -45,8 +49,7 @@ public void setContent(RMParentShape aShape)
     aShape.layout();
     
     // If old document, stop listening to shape changes and notify shapes hidden 
-    if(_content!=null)
-        _content.removePropChangeListener(_viewer); //_content.setShowing(false);
+    if(_content!=null) _content.removePropChangeListener(_viewerContentLsnr);
     
     // Set new document and fire property change
     if(_content!=null) removeChild(_content);
@@ -55,7 +58,7 @@ public void setContent(RMParentShape aShape)
     firePropChange("Content", _content, _content = aShape);
     
     // Start listening to shape changes and notify shapes shown
-    _content.addPropChangeListener(_viewer); //_content.setShowing(isShowing());
+    _content.addPropChangeListener(_viewerContentLsnr);
     
     // If not RMDocument, add some rendering to content
     if(!(_content instanceof RMDocument)) {

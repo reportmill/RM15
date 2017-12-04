@@ -577,9 +577,9 @@ public Rect getRepaintBoundsForShape(RMShape aShape)
 }
 
 /**
- * PropChangeListener method - called by document.
+ * Called when content shape has PropChange.
  */
-public void propertyChange(PropChange anEvent)
+protected void contentShapeDidPropChange(PropChange anEvent)
 {
     // Handle SelectedPageIndex, PageSize, PageLayout
     String pname = anEvent.getPropertyName();

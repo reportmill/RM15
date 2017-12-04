@@ -189,14 +189,10 @@ public void setEditing(boolean aFlag)
         
         // Set new editor
         setViewer(editor);
-        editor.addPropChangeListener(this);
     }
 
     // If turning preview off, restore real editor
-    else {
-        getEditor().removePropChangeListener(this);
-        setViewer(_realEditor);
-    }
+    else setViewer(_realEditor);
     
     // Focus on editor
     requestFocus(getEditor());
