@@ -879,7 +879,7 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
     
     // Unarchive xString
     if(!(this instanceof RMLinkedText))
-        _xstr = getXString().fromXML(anArchiver, anElement);
+        getXString().fromXML(anArchiver, anElement);
     
     // Register for finish call
     anArchiver.getReference(anElement);

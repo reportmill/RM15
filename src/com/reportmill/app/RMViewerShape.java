@@ -2,12 +2,10 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.app;
-import com.reportmill.graphics.RMColor;
 import com.reportmill.shape.*;
 import snap.gfx.*;
 import snap.util.PropChangeListener;
 import snap.util.XMLElement;
-import snap.view.ViewUtils;
 import snap.web.WebURL;
 
 /**
@@ -18,8 +16,8 @@ public class RMViewerShape extends RMParentShape {
     // The viewer
     RMViewer           _viewer;
 
-    // The shape viewer uses to manage real root of shapes
-    RMParentShape      _content;
+    // The document being viewed
+    RMDocument         _content;
     
     // A PropChangeListener to catch Content shape changes (Showing, PageSize, )
     PropChangeListener _viewerContentLsnr = pc -> _viewer.contentShapeDidPropChange(pc);
@@ -35,50 +33,36 @@ public RMViewerShape(RMViewer aViewer)  { _viewer = aViewer; }
 public RMViewer getViewer()  { return _viewer; }
 
 /**
+ * Returns the root shape as RMDocument, if available.
+ */
+public RMDocument getDocument()  { return getContent(); }
+
+/**
  * Returns the root shape that is being viewed in viewer.
  */
-public RMParentShape getContent()  { return _content; }
+public RMDocument getContent()  { return _content; }
 
 /**
  * Sets the root shape that is being viewed in viewer.
  */
-public void setContent(RMParentShape aShape)
+public void setContent(RMDocument aDoc)
 {
     // Resolve page references on document and make sure it has a selected page
-    if(aShape instanceof RMDocument) { RMDocument doc = (RMDocument)aShape; doc.resolvePageReferences(); }
-    aShape.layout();
+    aDoc.resolvePageReferences();
+    aDoc.layout();
     
     // If old document, stop listening to shape changes and notify shapes hidden 
     if(_content!=null) _content.removePropChangeListener(_viewerContentLsnr);
     
     // Set new document and fire property change
     if(_content!=null) removeChild(_content);
-    addChild(aShape, 0);
-    setSize(aShape.getWidth(), aShape.getHeight());
-    firePropChange("Content", _content, _content = aShape);
+    addChild(aDoc, 0);
+    setSize(aDoc.getWidth(), aDoc.getHeight());
+    firePropChange("Content", _content, _content = aDoc);
     
     // Start listening to shape changes and notify shapes shown
     _content.addPropChangeListener(_viewerContentLsnr);
-    
-    // If not RMDocument, add some rendering to content
-    if(!(_content instanceof RMDocument)) {
-        _content.setColor(RMColor.get(ViewUtils.getBackFill()));
-        _content.setEffect(new ShadowEffect());
-    }
 }
-
-/**
- * Returns the root shape that is being viewed in viewer as a specific class.
- */
-public <T extends RMParentShape> T getContent(Class<T> aClass)
-{
-    return aClass.isInstance(_content)? (T)_content : null;
-}
-
-/**
- * Returns the root shape as RMDocument, if available.
- */
-public RMDocument getDocument()  { return getContent(RMDocument.class); }
 
 /**
  * Returns the page count.
@@ -88,18 +72,12 @@ public int getPageCount()  { RMDocument d = getDocument(); return d!=null? d.get
 /**
  * Returns the page at index.
  */
-public RMParentShape getPage(int anIndex)
-{
-    RMDocument d = getDocument(); return d!=null? d.getPage(anIndex) : _content;
-}
+public RMPage getPage(int anIndex)  { RMDocument d = getDocument(); return d!=null? d.getPage(anIndex) : null; }
 
 /**
  * Returns the currently selected page shape.
  */
-public RMParentShape getSelectedPage()
-{
-    RMDocument d = getDocument(); return d!=null? d.getSelectedPage() : _content;
-}
+public RMPage getSelectedPage()  { RMDocument d = getDocument(); return d!=null? d.getSelectedPage() : null; }
 
 /**
  * Returns the index of the current visible document page.
@@ -139,7 +117,7 @@ protected void repaint(RMShape aShape)
 {
     // If painting, complain that someone is calling a repaint during painting
     if(_ptg) // Should never happen, but good to check
-        System.err.println("RMDocument.repaint(): called during painting");
+        System.err.println("RMViewerShape.repaint(): called during painting");
     
     // Send repaint event
     if(aShape==_content) _viewer.repaint();
@@ -166,7 +144,7 @@ public boolean isEditing()  { return _viewer.isEditing(); }
  */
 public WebURL getSourceURL()
 {
-    RMParentShape cs = getContent(); return cs!=null && cs.isSourceURLSet()? cs.getSourceURL() : null;
+    RMDocument cs = getContent(); return cs!=null && cs.isSourceURLSet()? cs.getSourceURL() : null;
 }
 
 /**

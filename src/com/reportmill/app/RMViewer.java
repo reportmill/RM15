@@ -76,21 +76,26 @@ public RMViewerShape getViewerShape()  { return _vshape; }
 protected RMViewerShape createViewerShape()  { return new RMViewerShape(this); }
 
 /**
+ * Returns the RMDocument associated with this viewer.
+ */
+public RMDocument getDocument()  { return getContent(); }
+
+/**
  * Returns the root shape that is the content of this viewer.
  */
-public RMParentShape getContent()  { return _vshape.getContent(); }
+public RMDocument getContent()  { return _vshape.getContent(); }
 
 /**
  * Sets the root shape that is the content of this viewer.
  */
-public void setContent(RMParentShape aShape)
+public void setContent(RMDocument aDoc)
 {
     // If already set, just return
-    if(aShape==getContent()) return;
+    if(aDoc==getContent()) return;
     
     // Set new document and fire property change
-    RMShape shape = getContent(); _vshape.setContent(aShape);
-    firePropChange(Content_Prop, shape, aShape);
+    RMShape shape = getContent(); _vshape.setContent(aDoc);
+    firePropChange(Content_Prop, shape, aDoc);
     
     // Set ZoomToFitFactor and relayout/repaint (for possible size change)
     setZoomToFitFactor();
@@ -100,12 +105,7 @@ public void setContent(RMParentShape aShape)
 /**
  * Sets the content from any source.
  */
-public void setContent(Object aSource)  { setContent(new RMArchiver().getParentShape(aSource)); }
-
-/**
- * Returns the RMDocument associated with this viewer.
- */
-public RMDocument getDocument()  { return _vshape.getContent(RMDocument.class); }
+public void setContent(Object aSource)  { setContent(new RMArchiver().getDoc(aSource)); }
 
 /**
  * Returns the source URL.
@@ -130,7 +130,7 @@ public int getPageCount()  { return _vshape.getPageCount(); }
 /**
  * Returns the currently selected page shape.
  */
-public RMParentShape getSelectedPage()  { return _vshape.getSelectedPage(); }
+public RMPage getSelectedPage()  { return _vshape.getSelectedPage(); }
 
 /**
  * Returns the index of the current visible document page.

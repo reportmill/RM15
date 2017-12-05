@@ -569,7 +569,9 @@ protected void fromXMLChildren(XMLArchiver anArchiver, XMLElement anElement)
 
     // Unarchive grouper's groupings
     List groupings = anArchiver.fromXMLList(anElement, "grouping", null, this);
-    getGrouper().addGroupings(groupings);
+    RMGrouper grouper = new RMGrouper();
+    grouper.addGroupings(groupings);
+    setGrouper(grouper);
     
     // Legacy fix for unlikely case that vestigial PageBreak index exists
     if(getPageBreakGroupIndex()>=getGroupingCount()) setPageBreakGroupIndex(-1);

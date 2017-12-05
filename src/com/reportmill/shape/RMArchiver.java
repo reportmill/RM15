@@ -16,44 +16,32 @@ public class RMArchiver extends XMLArchiver {
 /**
  * Returns a parent shape for source.
  */
-public RMParentShape getParentShape(Object aSource)  { return (RMParentShape)getShape(aSource, null); }
+public RMDocument getDoc(Object aSource)  { return getDoc(aSource, null); }
 
 /**
  * Creates a document.
  */
-public RMShape getShape(Object aSource, Archivable aRootObj)
+public RMDocument getDoc(Object aSource, RMDocument aBaseDoc)
 {
     // If source is a document, just return it
     if(aSource instanceof RMDocument) return (RMDocument)aSource;
     
     // Get URL and/or bytes (complain if not found)
     WebURL url = null; try { url = WebURL.getURL(aSource); } catch(Exception e) { }
-    byte bytes[] = url!=null? (url.getFile()!=null? url.getFile().getBytes() : null) : SnapUtils.getBytes(aSource);
+    byte bytes[] = url!=null? url.getBytes() : SnapUtils.getBytes(aSource);
     if(bytes==null)
         throw new RuntimeException("RMArchiver.getShape: Cannot read source: " + (url!=null? url : aSource));
     
     // If PDF, return PDF Doc
     if(bytes!=null && RMImageDataPDF.canRead(bytes))
-        return getDocPDF(url!=null? url : bytes, aRootObj instanceof RMDocument? (RMDocument)aRootObj : null);
+        return getDocPDF(url!=null? url : bytes, aBaseDoc);
 
     // Create archiver, read, set source and return
-    setRootObject(aRootObj);
-    RMShape shape = (RMShape)readObject(url!=null? url : bytes);
-    if(shape instanceof RMParentShape) { RMParentShape pshp = (RMParentShape)shape;
-        pshp.setSourceURL(url);
-        pshp.layout();
-    }
-    return shape;
-}
-
-/**
- * Creates a document.
- */
-public RMDocument getDoc(Object aSource, Archivable aBaseDoc)
-{
-    RMShape shape = getShape(aSource, aBaseDoc);
-    RMDocument doc = shape instanceof RMDocument? (RMDocument)shape : null;
-    if(doc==null) { doc = new RMDocument(shape.getWidth(), shape.getHeight()); doc.getPage(0).addChild(shape); }
+    setRootObject(aBaseDoc);
+    
+    RMDocument doc = (RMDocument)readObject(url!=null? url : bytes);
+    
+    // Set Source URL and return
     doc.setSourceURL(getSourceURL());
     return doc;
 }

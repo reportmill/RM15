@@ -33,10 +33,10 @@ public RMEditor getEditor()  { return _editor; }
 /**
  * Override to do stuff for editor shape.
  */
-public void setContent(RMParentShape aShape)
+public void setContent(RMDocument aDoc)
 {
     // Do normal version
-    super.setContent(aShape);
+    super.setContent(aDoc);
     
     // Make sure current document page is super-selected
     if(_editor._selectedShapes!=null) _editor.setSuperSelectedShape(getSelectedPage());

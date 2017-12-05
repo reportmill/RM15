@@ -391,7 +391,7 @@ public RMEditorPane open(Object aSource)
     }
     
     // Load document
-    RMParentShape shape = null; try { shape = (RMParentShape)new RMArchiver().getShape(aSource, null); }
+    RMDocument doc = null; try { doc = new RMArchiver().getDoc(aSource, null); }
     
     // If there was an XML parse error loading aSource, show error dialog
     catch(Exception e) {
@@ -403,10 +403,10 @@ public RMEditorPane open(Object aSource)
     }
     
     // If no document, just return null
-    if(shape==null) return null;
+    if(doc==null) return null;
 
     // If old version, warn user that saving document will make it unreadable by RM7
-    if(shape instanceof RMDocument && ((RMDocument)shape).getVersion()<7.0) {
+    if(doc.getVersion()<7.0) {
         String msg = "This document has been upgraded from an older version.\n" +
             "If saved, it will not open in earlier versions.";
         DialogBox dbox = new DialogBox("Warning: Document Upgrade"); dbox.setWarningMessage(msg);
@@ -414,7 +414,7 @@ public RMEditorPane open(Object aSource)
     }
     
     // Set document
-    getViewer().setContent(shape);
+    getViewer().setContent(doc);
     
     // If source is string, add to recent files menu
     if(url!=null) RecentFilesPanel.addRecentFile(url.getString());
