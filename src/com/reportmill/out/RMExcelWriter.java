@@ -5,12 +5,13 @@ package com.reportmill.out;
 import com.reportmill.base.*;
 import com.reportmill.shape.*;
 import com.reportmill.graphics.*;
+import java.awt.color.ColorSpace;
 import java.io.*;
 import java.util.*;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.*;
 import org.apache.poi.ss.util.CellRangeAddress;
-import snap.gfx.Rect;
+import snap.gfx.*;
 import snap.util.*;
 
 /**
@@ -660,18 +661,18 @@ class WorkbookFont {
  * The custom palette crap doesn't work (http://issues.apache.org/bugzilla/show_bug.cgi?id=24519)
  * So this does a brute-force lookup through the fixed palette.  It just finds the closest color in Lab space.
  */
-public short getWorkbookColorIndex(RMColor c)
+public short getWorkbookColorIndex(RMColor aColor)
 {
     Map cols = HSSFColor.getIndexHash();
     float minDistance = Float.MAX_VALUE;
-    float target_lab[] = c.toLab();
+    float target_lab[] = toLab(aColor);
     short cindex = 0;
 
     // Iterate over HSSFColors
     for(Map.Entry ent : (Set <Map.Entry>)cols.entrySet()) {
         HSSFColor xc = (HSSFColor)ent.getValue();
         short rgb[] = xc.getTriplet();
-        float lab[] = RMColor.rgbToLab(((float)rgb[0])/255, ((float)rgb[1])/255, ((float)rgb[2])/255);
+        float lab[] = rgbToLab(rgb[0]/255d, rgb[1]/255d, rgb[2]/255d);
          
         // Get squared distance
         float squaredDistance = (target_lab[0]-lab[0])*(target_lab[0]-lab[0]) +
@@ -730,5 +731,36 @@ private String getExcelDatePattern(String javaPattern)
 
 // A map to hold encountered errors
 private static Set  _foundErrors = new HashSet();
+
+/**
+ * Converts this color to a CIELab triplet
+ */
+private float[] toLab(Color c)  { return rgbToLab(c.getRed(), c.getGreen(), c.getBlue()); }
+
+/**
+ * Converts an RGB triplet to a CIELab triplet 
+ */
+private static float[] rgbToLab(double r, double g, double b)
+{
+    // Get the standard rgb space and convert from RGB to XYZ conversion space
+    ColorSpace rgbSpace = ColorSpace.getInstance(ColorSpace.CS_sRGB);
+    float xyz[] = rgbSpace.toCIEXYZ(new float[] { (float)r, (float)g, (float)b});
+    
+    // This is the D50 whitepoint as defined by awt
+    double d50[] = { .9642, 1.0, .8249 };
+    
+    // Convert from XYZ to LAB
+    double fy = LABTransformFn(xyz[1]/d50[1]);
+    float lab[] = new float[3];
+    lab[0] = (float)(116 * fy - 16);
+    lab[1] = (float)(500 * (LABTransformFn(xyz[0]/d50[0]) - fy));
+    lab[2] = (float)(200 * (fy - LABTransformFn(xyz[2]/d50[2])));
+    return lab;
+}
+
+/**
+ * Private function used by RGB->LAB conversions
+ */
+private static double LABTransformFn(double t)  { return t>0.008856 ? Math.pow(t, 1d/3) : 7.787*t+16d/16; }
 
 }
