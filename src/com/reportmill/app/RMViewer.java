@@ -3,17 +3,15 @@
  */
 package com.reportmill.app;
 import com.reportmill.shape.*;
-import java.awt.print.*;
 import java.util.*;
-import javax.print.*;
 import snap.gfx.*;
 import snap.util.*;
 import snap.view.*;
-import snap.swing.J2DPainter;
+import snap.viewx.Printer;
 import snap.web.WebURL;
 
 /**
- * The RMViewer class is a JComponent subclass that can be used in Java client applications to display and/or print an
+ * The RMViewer class is a SnapKit View that can be used in Java client applications to display and/or print an
  * RMDocument.
  *
  * You might use it like this to simply print a document:
@@ -22,8 +20,9 @@ import snap.web.WebURL;
  * </pre></blockquote><p>
  * Or you might want to allocate one and add it to a Swing component hierarchy:
  * <p><blockquote><pre>
- *   RMViewer viewer = new RMViewer(); viewer.setContent(new RMDocument(aSource));
- *   myFrame.getContentPane().add(new JScrollPane(viewer));
+ *   RMViewerPane viewer = new RMViewerPane(); viewer.getViewer().setContent(new RMDocument(aSource));
+ *   JComponent vcomp = viewer.getRootView().getNative(JComponent.class);
+ *   myFrame.setContentPane(viewer);
  * </pre></blockquote>
  */
 public class RMViewer extends View {
@@ -612,98 +611,33 @@ public void print()  { print(null, true); }
  * This method tells the RMViewer to print to the printer with the given printer name (use null for default printer). It
  * also offers an option to run the printer dialog.
  */
-public void print(String aPrinterName, boolean runPanel)
+public void print(String aPrinterName, boolean showPanel)
 {
-    // Get first page, book and printer job for book
-    RMShape page = _vshape.getPage(0);
-    Book book = getBook();
-    PrinterJob job = PrinterJob.getPrinterJob(); job.setPageable(book);
-    
-    // If a printerName was provided, try to find service with that name
-    if(aPrinterName!=null) {
-        PrintService services[] = PrinterJob.lookupPrintServices(), service = null;
-        for(int i=0; i<services.length; i++)
-            if(aPrinterName.equals(services[i].getName()))
-                service = services[i];
-        if(service!=null)
-            try { job.setPrintService(service); }
-            catch(Exception e) { e.printStackTrace(); service = null; }
-        if(service==null) {
-            System.err.println("RMViewer:Print: Couldn't find printer named " + aPrinterName);
-            System.err.println("Available Services:");
-            for(int i=0; i<services.length; i++)
-                System.err.println("\t- " + services[i].getName());
-            return;
-        }
-    }
-    
-    // Flip the orientation if printer has funny definition of portrait/landscape
-    int orient = page.getHeight()>=page.getWidth()? PageFormat.PORTRAIT : PageFormat.LANDSCAPE;
-    PageFormat pf = job.defaultPage();
-    if(pf.getOrientation()==PageFormat.PORTRAIT && pf.getWidth()>pf.getHeight() ||
-        pf.getOrientation()==PageFormat.LANDSCAPE && pf.getHeight()>pf.getWidth()) {
-        orient = orient==PageFormat.PORTRAIT? PageFormat.LANDSCAPE : PageFormat.PORTRAIT;
-        book.getPageFormat(0).setOrientation(orient);
-    }
-    
-    // Run printDialog, and if successful, execute print
-    boolean shouldPrint = !runPanel || job.printDialog();
-    try { if(shouldPrint) job.print(); }
-    catch(Exception e) { e.printStackTrace(); }
+    Printer.Printable printable = new RMVPrintable();
+    Printer.print(printable, aPrinterName, showPanel);
 }
 
 /**
- * Returns a java.awt.print.Book, suitable for AWT printing.
+ * A Printable implmentation for RMViewer.
  */
-public Book getBook()
-{
-    // Get document, generic viewer printable and book
-    Printable printable = new RMVPrintable();
-    Book book = new Book();
+private class RMVPrintable implements Printer.Printable {
     
-    // Iterate over pages and add to book
-    for(int i=0, iMax=_vshape.getPageCount(); i<iMax; i++) { RMShape page = _vshape.getPage(i);
+    /** Returns a print page count for given printer. */
+    public int getPageCount(Printer aPrinter)  { return _vshape.getPageCount(); }
     
-	    // Get doc width, height and orientation
-	    double width = page.getWidth(), height = page.getHeight();
-	    int orientation = PageFormat.PORTRAIT;
-	    if(width>height) {
-	        orientation = PageFormat.LANDSCAPE; width = height; height = page.getWidth(); }
-	    
-	    // Get paper and configure with appropriate paper size and imageable area
-	    Paper paper = new Paper();
-	    paper.setSize(width, height);
-	    paper.setImageableArea(0, 0, width, height);
-	
-	    // Get pageFormat and configure with appropriate orientation and paper
-	    PageFormat pageFormat = new PageFormat();
-	    pageFormat.setOrientation(orientation);
-	    pageFormat.setPaper(paper);
-	    
-	    // Appends page to book
-	    book.append(printable, pageFormat);
-    }
-
-    // Return book
-    return book;
-}
-
-/**
- * This inner class simply paints a reqested page to a given Graphics object.
- */
-protected class RMVPrintable implements Printable {
-
-    /** Print method. */
-    public int print(java.awt.Graphics aGr, PageFormat pageFormat, int pageIndex)
+    /** Returns the page size for given page index. */
+    public Size getPageSize(Printer aPrinter, int anIndex)
     {
-        // If bogus range, bail
-        if(pageIndex>=_vshape.getPageCount()) return Printable.NO_SUCH_PAGE;
-        
-        // Get page at index, get/configure shape painter, paint shape, return success
-        RMShape page = _vshape.getPage(pageIndex);
-        Painter pntr = new J2DPainter(aGr); pntr.setPrinting(true);
+        RMShape page = _vshape.getPage(anIndex);
+        return page.getSize();
+    }
+    
+    /** Executes a print for given printer and page index. */
+    public void print(Printer aPrinter, int anIndex)
+    {
+        RMShape page = _vshape.getPage(anIndex);
+        Painter pntr = aPrinter.getPainter();
         RMShapeUtils.paintShape(pntr, page, null, 1);
-        return Printable.PAGE_EXISTS; // Return success
     }
 }
 

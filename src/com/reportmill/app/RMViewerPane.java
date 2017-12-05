@@ -10,6 +10,13 @@ import snap.web.WebURL;
 /**
  * This class is a container for a viewer and tool bars. The default tool bars add document controls (save,
  * print, copy), input controls (select, pan, text select, image select), zoom controls and page controls. 
+ * 
+ * You might use it like this to view in a Swing component hierarchy:
+ * <p><blockquote><pre>
+ *   RMViewerPane viewer = new RMViewerPane(); viewer.getViewer().setContent(new RMDocument(aSource));
+ *   JComponent vcomp = viewer.getRootView().getNative(JComponent.class);
+ *   myFrame.setContentPane(viewer);
+ * </pre></blockquote>
  */
 public class RMViewerPane extends ViewOwner {
 
