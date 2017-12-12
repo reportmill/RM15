@@ -5,7 +5,6 @@ package com.reportmill.out;
 import com.reportmill.base.*;
 import com.reportmill.shape.*;
 import com.reportmill.graphics.*;
-import java.awt.color.ColorSpace;
 import java.io.*;
 import java.util.*;
 import org.apache.poi.hssf.usermodel.*;
