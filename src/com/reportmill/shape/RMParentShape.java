@@ -190,22 +190,25 @@ public <T> T getChildWithClass(Class<T> aClass)
  */
 public <T extends RMShape> List<T> getChildrenWithClass(Class<T> aClass)
 {
-    return getChildrenWithClass(new ArrayList(), aClass);
+    return getChildrenWithClass(aClass, new ArrayList());
 }
 
 /**
  * Adds all the shapes in the shape hierarchy of a particular class to the list.
  * Returns the list as a convenience.
  */
-public <T extends RMShape> List<T> getChildrenWithClass(List aList, Class<T> aClass)
+public <T extends RMShape> List<T> getChildrenWithClass(Class<T> aClass, List aList)
 {
-    // If this shape is instance of given class, add this shape to list
-    if(aClass.isInstance(this)) aList.add(this);
-    
     // Iterate over children and add children with class 
     for(int i=0, iMax=getChildCount(); i<iMax; i++) {  RMShape child = getChild(i);
-        if(child instanceof RMParentShape) ((RMParentShape)child).getChildrenWithClass(aList, aClass); }
-    return aList; // Return list
+        if(aClass.isInstance(child))
+            aList.add(child);
+        else if(child instanceof RMParentShape)
+            ((RMParentShape)child).getChildrenWithClass(aClass, aList);
+    }
+            
+    // Return list
+    return aList;
 }
 
 /**

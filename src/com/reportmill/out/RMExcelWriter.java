@@ -142,7 +142,7 @@ public boolean getShowsGridlines(int aPage)  { return _showsAllGridlines; }
  * Returns true if this shape should become a fixed spreadsheet cell.
  * Also returns true if all of the shape's children will be spreadsheet cells.
  */
-public boolean isSheetShape(RMShape aShape)  { return aShape instanceof RMTableRow || aShape instanceof RMCrossTab; }
+public boolean isSheetShape(RMShape aShape)  { return aShape instanceof RMTableRowRPG || aShape instanceof RMCrossTab; }
 
 /**
  * Searches through the hierarchy for tables & cells which will define the 
@@ -152,7 +152,7 @@ private void getSheetShapes(RMShape aShape, List aList)
 {
     // Save away all RMTexts inside a sheetshape (note that RMCells are RMText subclasses)
     if(isSheetShape(aShape))
-        ((RMParentShape)aShape).getChildrenWithClass(aList, RMTextShape.class);
+        ((RMParentShape)aShape).getChildrenWithClass(RMTextShape.class, aList);
     
     // Recurse for every child    
     else for(int i=0, n=aShape.getChildCount(); i<n; ++i)
@@ -283,7 +283,7 @@ private void append(RMExcelSheet rmSheet, HSSFShapeContainer aParent, RMShape aS
     
     // Handle rectangle
     else if(aShape instanceof RMRectShape)
-      newShape = rmSheet.addRect(aShape, aParent);
+        newShape = rmSheet.addRect(aShape, aParent);
     
     // If shape isn't a table row, just recurse into children
     else for(int i=0, iMax=aShape.getChildCount(); i<iMax; i++)
