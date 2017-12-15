@@ -1038,10 +1038,10 @@ public List <RMShape> getShapesToShape(RMShape aShape)
 /**
  * Returns the transform to this shape from its parent.
  */
-public RMTransform getTransform()
+public Transform getTransform()
 {
     // Create transform (if not rotated/scaled/skewed, just translate and return)
-    RMTransform t = new RMTransform(); if(!isRSS()) { t.translate(getX(),getY()); return t; }
+    Transform t = new Transform(); if(!isRSS()) { t.translate(getX(),getY()); return t; }
     
     // Get location, size, point of rotation, rotation, scale, skew
     double x = getX(), y = getY(), w = getWidth(), h = getHeight(), prx = w/2, pry = h/2;
@@ -1058,16 +1058,16 @@ public RMTransform getTransform()
 /**
  * Returns the transform from this shape to it's parent.
  */
-public RMTransform getTransformInverse()  { RMTransform t = getTransform(); t.invert(); return t; }
+public Transform getTransformInverse()  { Transform t = getTransform(); t.invert(); return t; }
 
 /**
  * Returns the transform from this shape to the given shape.
  */
-public RMTransform getTransformToShape(RMShape aShape)
+public Transform getTransformToShape(RMShape aShape)
 {
     // If transforming out of shape hierarchy, concat recursive transformToShape call to parents
     if(aShape==null) {
-        RMTransform trans = getTransform(); if(getParent()!=null) trans.multiply(getParent().getTransformToShape(null));
+        Transform trans = getTransform(); if(getParent()!=null) trans.multiply(getParent().getTransformToShape(null));
         return trans;
     }
 
@@ -1077,14 +1077,14 @@ public RMTransform getTransformToShape(RMShape aShape)
     if(this==aShape.getParent())
         return aShape.getTransformInverse();
     if(aShape==this)
-        return new RMTransform();
+        return new Transform();
 
     // If not one of simple cases above, concat successive transforms from last shape to self (inverse if going up)
-    List <RMShape> shapes = getShapesToShape(aShape); if(shapes==null) return RMTransform.identity;
-    RMTransform transform = RMTransform.identity;
+    List <RMShape> shapes = getShapesToShape(aShape); if(shapes==null) return Transform.IDENTITY;
+    Transform transform = Transform.IDENTITY;
     for(int i=shapes.size()-1; i>0; i--) {
         RMShape cs = shapes.get(i), ns = shapes.get(i-1);
-        RMTransform t2 = ns==cs.getParent()? cs.getTransformInverse() : ns.getTransform();
+        Transform t2 = ns==cs.getParent()? cs.getTransformInverse() : ns.getTransform();
         t2.multiply(transform); transform = t2;
     }
     
@@ -1095,7 +1095,7 @@ public RMTransform getTransformToShape(RMShape aShape)
 /**
  * Returns the transform from the given shape to this shape.
  */
-public RMTransform getTransformFromShape(RMShape aShape)
+public Transform getTransformFromShape(RMShape aShape)
 {
     // The transform from parent is just our inverse transform, transform from child is just child's transform
     if(aShape==getParent())
@@ -1104,7 +1104,7 @@ public RMTransform getTransformFromShape(RMShape aShape)
         return aShape.getTransform();
 
     // Return the inverse of transform to shape
-    RMTransform t = getTransformToShape(aShape); t.invert(); return t;
+    Transform t = getTransformToShape(aShape); t.invert(); return t;
 }
 
 /**
@@ -1196,7 +1196,7 @@ public Rect getConvertedRectFromShape(Rect aRect, RMShape aShape)
  */
 public Shape getConvertedToShape(Shape aPath, RMShape aShape)
 {
-    RMTransform trans = getTransformToShape(aShape); if(trans.isIdentity()) return aPath;
+    Transform trans = getTransformToShape(aShape); if(trans.isIdentity()) return aPath;
     return aPath.copyFor(trans);
 }
 
@@ -1205,7 +1205,7 @@ public Shape getConvertedToShape(Shape aPath, RMShape aShape)
  */
 public Shape getConvertedFromShape(Shape aPath, RMShape aShape)
 {
-    RMTransform trans = getTransformFromShape(aShape); if(trans.isIdentity()) return aPath;
+    Transform trans = getTransformFromShape(aShape); if(trans.isIdentity()) return aPath;
     return aPath.copyFor(trans);
 }
 

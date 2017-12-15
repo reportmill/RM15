@@ -139,7 +139,7 @@ public static void writeGradientFill(RMShape aShape, RMGradientFill aFill, RMPDF
     // page's coordinate system, and doesn't get affected by changes to the ctm. Since the RMGradient returns
     // points in the shape's coordinate system, we have to transform them into pattern space (page space).
     RMShape page = aShape.getPageShape();
-    RMTransform patternSpaceTransform = aShape.getTransformToShape(page);
+    Transform patternSpaceTransform = aShape.getTransformToShape(page);
     patternSpaceTransform.transform(startPt);
     patternSpaceTransform.transform(endPt);
     
@@ -235,7 +235,7 @@ public static void writeImageFill(RMImageFill anImageFill, Shape aPath, Rect bou
         double height = bounds.getHeight();
 
         // Get transform with translate to shape center, scale, and translate back
-        RMTransform t = new RMTransform(); t.translate(-width/2, -height/2);
+        Transform t = new Transform(); t.translate(-width/2, -height/2);
         t.scale(anImageFill.getScaleX(), anImageFill.getScaleY());
         t.translate(width/2, height/2);
         
@@ -247,7 +247,7 @@ public static void writeImageFill(RMImageFill anImageFill, Shape aPath, Rect bou
         
         // If not STYLE_TILE, scale enclosing bounds by image fill scale
         if(!anImageFill.isTiled()) {
-            RMTransform t2 = new RMTransform(); t2.translate(-width/2, -height/2);
+            Transform t2 = new Transform(); t2.translate(-width/2, -height/2);
             t2.scale(anImageFill.getScaleX(), anImageFill.getScaleY());
             t2.translate(width/2, height/2);
             t2.transform(bounds);

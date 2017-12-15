@@ -44,7 +44,7 @@ public void setPath(RMPath aPath)  { _path = aPath; }
 public void resetPath(RMPath newPath)
 {
     // Get the transform to parent shape coords
-    RMTransform toParentXF = getTransform();  
+    Transform toParentXF = getTransform();  
 
     // Set the new path and new size
     setPath(newPath);

@@ -166,14 +166,14 @@ public static class ArrowHead extends RMPolygonShape {
     public boolean notRSS()  { return false; }
     
     /** Overridden from RMShape to change the center of rotation to the arrowhead origin. */
-    public RMTransform getTransform()
+    public Transform getTransform()
     {
         // Get location, size, point of rotation, rotation, scale, skew
         double x = getX(), y = getY(), prx = _origin.x, pry = _origin.y;
         double roll = getRoll(), sx = getScaleX(), sy = getScaleY();
         
         // Transform about point of rotation and return
-        RMTransform t = new RMTransform(); t.translate(-prx, -pry);
+        Transform t = new Transform(); t.translate(-prx, -pry);
         if(sx!=1 || sy!=1) t.scale(sx, sy);
         if(roll!=0) t.rotate(roll);
         t.translate(prx + x, pry + y); return t;
@@ -200,7 +200,7 @@ public static class ArrowHead extends RMPolygonShape {
         Rect prect = _path.getBounds(), srect = getBoundsInside();
         double sx = srect.getWidth()/prect.getWidth(), sy = srect.getHeight()/prect.getHeight();
         double tx = -prect.getX()*sx, ty = -prect.getY()*sy;
-        new RMTransform(sx,0,0,sy,tx,ty).transform(_origin);
+        new Transform(sx,0,0,sy,tx,ty).transform(_origin);
     }
 }
 
