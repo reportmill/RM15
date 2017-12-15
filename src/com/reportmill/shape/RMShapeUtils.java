@@ -2,7 +2,6 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.shape;
-import com.reportmill.base.*;
 import java.util.*;
 import snap.gfx.*;
 
@@ -31,38 +30,6 @@ public static Rect getBoundsOfChildren(RMShape aShape, List <? extends RMShape> 
     
     // Return frame
     return rect;
-}
-
-/**
- * Adds the subset of children in given list into a given group shape, which is then added back to receiver.
- */
-public static RMParentShape groupShapes(List <? extends RMShape> theShapes, RMParentShape groupShape)
-{
-    // Get copy of shapes, sorted by their original index in parent
-    List <? extends RMShape> shapes = RMSort.sortedList(theShapes, "indexOf");
-    
-    // Get parent
-    RMParentShape parent = shapes.get(0).getParent();
-    
-    // If no group shape, create one
-    if(groupShape==null) {
-        groupShape = new RMSpringShape();
-        groupShape.setBounds(getBoundsOfChildren(parent, shapes));
-    }
-
-    // Add groupShape to the current parent (with no transform)
-    parent.addChild(groupShape);
-
-    // Remove children from current parent and add to groupShape
-    for(RMShape child : shapes) {
-        child.convertToShape(null);
-        parent.removeChild(child);
-        groupShape.addChild(child);
-        child.convertFromShape(null);
-    }
-
-    // Return group shape
-    return groupShape;
 }
 
 /**

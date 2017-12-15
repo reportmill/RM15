@@ -1210,48 +1210,6 @@ public Shape getConvertedFromShape(Shape aPath, RMShape aShape)
 }
 
 /**
- * Transforms the given shape to this shape's coords.
- */
-public void convertToShape(RMShape aShape)
-{
-    // Get center point in shape coords
-    Point cp = new Point(getWidth()/2, getHeight()/2); convertPointToShape(cp, aShape);
-    
-    // Coalesce transforms up the parent chain
-    for(RMShape s=_parent; s!=aShape; s=s._parent) {
-        setRoll(getRoll() + s.getRoll());
-        setScaleX(getScaleX() * s.getScaleX()); setScaleY(getScaleY() * s.getScaleY());
-        setSkewX(getSkewX() + s.getSkewX()); setSkewY(getSkewY() + s.getSkewY());
-    }
-    
-    // Convert center point back from _parent, calc vector to old center from new center (in parent coords) & translate
-    convertPointFromShape(cp, _parent);
-    Size v = new Size(cp.getX() - getWidth()/2, cp.getY() - getHeight()/2); convertVectorToShape(v, _parent);
-    offsetXY(v.getWidth(), v.getHeight());
-}
-
-/**
- * Transforms the given shape from this shape's coords.
- */
-public void convertFromShape(RMShape aShape)
-{
-    // Get center point in parent coords
-    Point cp = new Point(getWidth()/2, getHeight()/2); convertPointToShape(cp, _parent);
-
-    // Coalesce transforms down the shape chain
-    for(RMShape s=_parent; s!=aShape; s=s._parent) {
-        setRoll(getRoll() - s.getRoll());
-        setScaleX(getScaleX()/s.getScaleX()); setScaleY(getScaleY()/s.getScaleY());
-        setSkewX(getSkewX() - s.getSkewX()); setSkewY(getSkewY() - s.getSkewY());
-    }
-
-    // Convert center point back from aShape, calc vector to old center from new center (in parent coords) & translate
-    convertPointFromShape(cp, aShape);
-    Size v = new Size(cp.getX() - getWidth()/2, cp.getY() - getHeight()/2); convertVectorToShape(v, _parent);
-    offsetXY(v.getWidth(), v.getHeight());
-}
-
-/**
  * Returns whether shape minimum width is set.
  */
 public boolean isMinWidthSet()  { return get("MinWidth")!=null; }

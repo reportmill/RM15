@@ -50,8 +50,28 @@ public static void groupShapes(RMEditor anEditor, List <? extends RMShape> theSh
     // Set undo title
     anEditor.undoerSetUndoTitle("Group");
 
-    // Group shapes
-    aGroupShape = RMShapeUtils.groupShapes(theShapes, aGroupShape);
+    // Get copy of shapes, sorted by their original index in parent
+    List <? extends RMShape> shapes = RMSort.sortedList(theShapes, "indexOf");
+    
+    // Get parent
+    RMParentShape parent = shapes.get(0).getParent();
+    
+    // If no group shape, create one
+    if(aGroupShape==null) {
+        aGroupShape = new RMSpringShape();
+        aGroupShape.setBounds(RMShapeUtils.getBoundsOfChildren(parent, shapes));
+    }
+
+    // Add groupShape to the current parent (with no transform)
+    parent.addChild(aGroupShape);
+
+    // Remove children from current parent and add to groupShape
+    for(RMShape child : shapes) {
+        convertToWorld(child);
+        parent.removeChild(child);
+        aGroupShape.addChild(child);
+        convertFromWorld(child);
+    }
     
     // Select group shape
     anEditor.setSelectedShape(aGroupShape);
@@ -80,7 +100,7 @@ public static void ungroupShapes(RMEditor anEditor)
         for(RMShape child : groupShape.getChildArray()) {
             
             // Convert child to world coords
-            child.convertToShape(null);
+            convertToWorld(child);
             
             // Remove from group shape & add to group shape parent
             groupShape.removeChild(child);
@@ -88,7 +108,7 @@ public static void ungroupShapes(RMEditor anEditor)
             ungroupedShapes.add(child);
             
             // Convert back from world coords
-            child.convertFromShape(null);
+            convertFromWorld(child);
         }
 
         // Remove groupShape from parent
@@ -101,6 +121,50 @@ public static void ungroupShapes(RMEditor anEditor)
 
     // If no ungroupedShapes, beep at silly user
     else anEditor.beep();
+}
+
+/**
+ * Transforms given shape to world coords.
+ */
+private static void convertToWorld(RMShape child)
+{
+    // Get center point in shape coords
+    double width = child.getWidth(), height = child.getHeight(); RMShape parent = child.getParent();
+    Point cp = new Point(width/2, height/2); child.convertPointToShape(cp, null);
+    
+    // Coalesce transforms up the parent chain
+    for(RMShape s=parent; s!=null; s=s.getParent()) {
+        child.setRoll(child.getRoll() + s.getRoll());
+        child.setScaleX(child.getScaleX() * s.getScaleX()); child.setScaleY(child.getScaleY() * s.getScaleY());
+        child.setSkewX(child.getSkewX() + s.getSkewX()); child.setSkewY(child.getSkewY() + s.getSkewY());
+    }
+    
+    // Convert center point back from _parent, calc vector to old center from new center (in parent coords) & translate
+    child.convertPointFromShape(cp, parent);
+    Size v = new Size(cp.x - width/2, cp.y - height/2); child.convertVectorToShape(v, parent);
+    child.offsetXY(v.width, v.height);
+}
+
+/**
+ * Transforms given shape from world coords.
+ */
+private static void convertFromWorld(RMShape child)
+{
+    // Get center point in parent coords
+    double width = child.getWidth(), height = child.getHeight(); RMShape parent = child.getParent();
+    Point cp = new Point(width/2, height/2); child.convertPointToShape(cp, parent);
+
+    // Coalesce transforms down the shape chain
+    for(RMShape s=parent; s!=null; s=s.getParent()) {
+        child.setRoll(child.getRoll() - s.getRoll());
+        child.setScaleX(child.getScaleX()/s.getScaleX()); child.setScaleY(child.getScaleY()/s.getScaleY());
+        child.setSkewX(child.getSkewX() - s.getSkewX()); child.setSkewY(child.getSkewY() - s.getSkewY());
+    }
+
+    // Convert center point back from aShape, calc vector to old center from new center (in parent coords) & translate
+    child.convertPointFromShape(cp, null);
+    Size v = new Size(cp.x - width/2, cp.y - height/2); child.convertVectorToShape(v, parent);
+    child.offsetXY(v.width, v.height);
 }
 
 /**
