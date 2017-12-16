@@ -297,8 +297,9 @@ public void setFrameSize(double aWidth, double aHeight)
     }
     
     // Convert X & Y axis to parent coords
-    Size x_axis = new Size(_width, 0); convertVectorToShape(x_axis, _parent);
-    Size y_axis = new Size(0, _height); convertVectorToShape(y_axis, _parent);
+    Transform toParent = getTransformToShape(_parent);
+    Size x_axis = new Size(_width, 0); toParent.transformVector(x_axis);
+    Size y_axis = new Size(0, _height); toParent.transformVector(y_axis);
 
     // Scale widths of X & Y axes in parent coords by ratio of NewWidth/OldWidth
     double sizeByRatio1 = Math.abs(aWidth)/(Math.abs(x_axis.width) + Math.abs(y_axis.width));
@@ -313,8 +314,9 @@ public void setFrameSize(double aWidth, double aHeight)
     
     // Reset current Skew and convert X & Y axis from parent coords
     setSkewXY(0, 0);
-    convertVectorFromShape(x_axis, _parent);
-    convertVectorFromShape(y_axis, _parent);
+    Transform fromParent = getTransformFromShape(_parent);
+    fromParent.transformVector(x_axis);
+    fromParent.transformVector(y_axis);
 
     // Set the size to compensate for the skew
     setSize(x_axis.width, y_axis.height);
@@ -1123,22 +1125,6 @@ public void convertPointFromShape(Point point, RMShape shape)
 {
     if(shape==_parent && !isRSS()) point.offset(-getX(), -getY());
     else getTransformFromShape(shape).transform(point);
-}
-
-/**
- * Converts the given size (as a vector) to the given shape's coords (returns it for convenience).
- */
-public void convertVectorToShape(Size size, RMShape shape)
-{
-    if(!(shape==_parent && !isRSS())) getTransformToShape(shape).transformVector(size);
-}
-
-/**
- * Converts the given size (as a vector) from the given shape's coords (returns it for convenience).
- */
-public void convertVectorFromShape(Size size, RMShape shape)
-{
-    if(!(shape==_parent && !isRSS())) getTransformFromShape(shape).transformVector(size);
 }
 
 /**
