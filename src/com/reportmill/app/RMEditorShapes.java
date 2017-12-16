@@ -65,16 +65,37 @@ public static void groupShapes(RMEditor anEditor, List <? extends RMShape> theSh
     // Add groupShape to the current parent (with no transform)
     parent.addChild(aGroupShape);
 
-    // Remove children from current parent and add to groupShape
-    for(RMShape child : shapes) {
-        convertToWorld(child);
-        parent.removeChild(child);
-        aGroupShape.addChild(child);
-        convertFromWorld(child);
-    }
+    // Iterate over children and group to GroupShape
+    for(RMShape child : shapes)
+        groupShape(child, aGroupShape);
     
     // Select group shape
     anEditor.setSelectedShape(aGroupShape);
+}
+
+/**
+ * Adds child shape to group shape.
+ */
+private static void groupShape(RMShape child, RMParentShape gshape)
+{
+    // Get center point in parent coords and store as child x/y
+    RMParentShape parent = child.getParent();
+    Point cp = new Point(child.getWidth()/2, child.getHeight()/2); child.convertPointToShape(cp, parent);
+    child.setXY(cp.x, cp.y);
+    
+    // Move child to GroupShape
+    parent.removeChild(child);
+    gshape.addChild(child);
+        
+    // Undo transforms of group shape
+    child.setRoll(child.getRoll() - gshape.getRoll());
+    child.setScaleX(child.getScaleX()/gshape.getScaleX()); child.setScaleY(child.getScaleY()/gshape.getScaleY());
+    child.setSkewX(child.getSkewX() - gshape.getSkewX()); child.setSkewY(child.getSkewY() - gshape.getSkewY());
+    
+    // Reset center point: Get old center point in GroupShape coords and offset child by new center in GroupShape coords
+    gshape.convertPointFromShape(cp, parent);
+    Point cp2 = new Point(child.getWidth()/2, child.getHeight()/2); child.convertPointToShape(cp2, gshape);
+    child.offsetXY(cp.x - cp2.x, cp.y - cp2.y);
 }
 
 /**
@@ -96,19 +117,10 @@ public static void ungroupShapes(RMEditor anEditor)
         RMParentShape groupShape = (RMParentShape)shape;
         RMParentShape parent = groupShape.getParent();
             
-        // Iterate over children, remove from groupShape, add to groupShape parent and add to ungroupedShapes list
+        // Iterate over children and ungroup from GroupShape
         for(RMShape child : groupShape.getChildArray()) {
-            
-            // Convert child to world coords
-            convertToWorld(child);
-            
-            // Remove from group shape & add to group shape parent
-            groupShape.removeChild(child);
-            parent.addChild(child);
+            ungroupShape(child);
             ungroupedShapes.add(child);
-            
-            // Convert back from world coords
-            convertFromWorld(child);
         }
 
         // Remove groupShape from parent
@@ -126,35 +138,23 @@ public static void ungroupShapes(RMEditor anEditor)
 /**
  * Transforms given shape to world coords.
  */
-private static void convertToWorld(RMShape child)
+private static void ungroupShape(RMShape child)
 {
-    // Get center point in world coords and store as child x/y
-    Point cp = new Point(child.getWidth()/2, child.getHeight()/2); child.convertPointToShape(cp, null);
+    // Get center point in parent coords and store as child x/y
+    RMParentShape gshape = child.getParent(), parent = gshape.getParent();
+    Point cp = new Point(child.getWidth()/2, child.getHeight()/2); child.convertPointToShape(cp, parent);
     child.setXY(cp.x, cp.y);
     
     // Coalesce transforms up the parent chain
-    for(RMShape s=child.getParent(); s!=null; s=s.getParent()) {
-        child.setRoll(child.getRoll() + s.getRoll());
-        child.setScaleX(child.getScaleX() * s.getScaleX()); child.setScaleY(child.getScaleY() * s.getScaleY());
-        child.setSkewX(child.getSkewX() + s.getSkewX()); child.setSkewY(child.getSkewY() + s.getSkewY());
-    }
-}
+    child.setRoll(child.getRoll() + gshape.getRoll());
+    child.setScaleX(child.getScaleX() * gshape.getScaleX()); child.setScaleY(child.getScaleY() * gshape.getScaleY());
+    child.setSkewX(child.getSkewX() + gshape.getSkewX()); child.setSkewY(child.getSkewY() + gshape.getSkewY());
 
-/**
- * Transforms given shape from world coords.
- */
-private static void convertFromWorld(RMShape child)
-{
-    // Coalesce transforms down the shape chain
-    RMShape parent = child.getParent();
-    for(RMShape s=parent; s!=null; s=s.getParent()) {
-        child.setRoll(child.getRoll() - s.getRoll());
-        child.setScaleX(child.getScaleX()/s.getScaleX()); child.setScaleY(child.getScaleY()/s.getScaleY());
-        child.setSkewX(child.getSkewX() - s.getSkewX()); child.setSkewY(child.getSkewY() - s.getSkewY());
-    }
+    // Remove from group shape & add to group shape parent
+    gshape.removeChild(child);
+    parent.addChild(child);
     
-    // Reset center point: Get old center point in parent coords and offset child by new center in parent coords
-    Point cp = new Point(child.getX(), child.getY()); parent.convertPointFromShape(cp, null);
+    // Reset center point: Get new center in parent coords and offset child by change
     Point cp2 = new Point(child.getWidth()/2, child.getHeight()/2); child.convertPointToShape(cp2, parent);
     child.offsetXY(cp.x - cp2.x, cp.y - cp2.y);
 }
