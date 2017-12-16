@@ -128,21 +128,16 @@ public static void ungroupShapes(RMEditor anEditor)
  */
 private static void convertToWorld(RMShape child)
 {
-    // Get center point in shape coords
-    double width = child.getWidth(), height = child.getHeight(); RMShape parent = child.getParent();
-    Point cp = new Point(width/2, height/2); child.convertPointToShape(cp, null);
+    // Get center point in world coords and store as child x/y
+    Point cp = new Point(child.getWidth()/2, child.getHeight()/2); child.convertPointToShape(cp, null);
+    child.setXY(cp.x, cp.y);
     
     // Coalesce transforms up the parent chain
-    for(RMShape s=parent; s!=null; s=s.getParent()) {
+    for(RMShape s=child.getParent(); s!=null; s=s.getParent()) {
         child.setRoll(child.getRoll() + s.getRoll());
         child.setScaleX(child.getScaleX() * s.getScaleX()); child.setScaleY(child.getScaleY() * s.getScaleY());
         child.setSkewX(child.getSkewX() + s.getSkewX()); child.setSkewY(child.getSkewY() + s.getSkewY());
     }
-    
-    // Convert center point back from _parent, calc vector to old center from new center (in parent coords) & translate
-    child.convertPointFromShape(cp, parent);
-    Size v = new Size(cp.x - width/2, cp.y - height/2); child.convertVectorToShape(v, parent);
-    child.offsetXY(v.width, v.height);
 }
 
 /**
@@ -150,21 +145,18 @@ private static void convertToWorld(RMShape child)
  */
 private static void convertFromWorld(RMShape child)
 {
-    // Get center point in parent coords
-    double width = child.getWidth(), height = child.getHeight(); RMShape parent = child.getParent();
-    Point cp = new Point(width/2, height/2); child.convertPointToShape(cp, parent);
-
     // Coalesce transforms down the shape chain
+    RMShape parent = child.getParent();
     for(RMShape s=parent; s!=null; s=s.getParent()) {
         child.setRoll(child.getRoll() - s.getRoll());
         child.setScaleX(child.getScaleX()/s.getScaleX()); child.setScaleY(child.getScaleY()/s.getScaleY());
         child.setSkewX(child.getSkewX() - s.getSkewX()); child.setSkewY(child.getSkewY() - s.getSkewY());
     }
-
-    // Convert center point back from aShape, calc vector to old center from new center (in parent coords) & translate
-    child.convertPointFromShape(cp, null);
-    Size v = new Size(cp.x - width/2, cp.y - height/2); child.convertVectorToShape(v, parent);
-    child.offsetXY(v.width, v.height);
+    
+    // Reset center point: Get old center point in parent coords and offset child by new center in parent coords
+    Point cp = new Point(child.getX(), child.getY()); parent.convertPointFromShape(cp, null);
+    Point cp2 = new Point(child.getWidth()/2, child.getHeight()/2); child.convertPointToShape(cp2, parent);
+    child.offsetXY(cp.x - cp2.x, cp.y - cp2.y);
 }
 
 /**
