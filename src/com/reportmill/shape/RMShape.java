@@ -1069,14 +1069,15 @@ public Transform getTransformToShape(RMShape aShape)
 {
     // If transforming out of shape hierarchy, concat recursive transformToShape call to parents
     if(aShape==null) {
-        Transform trans = getTransform(); if(getParent()!=null) trans.multiply(getParent().getTransformToShape(null));
+        Transform trans = getTransform();
+        if(_parent!=null) trans.multiply(_parent.getTransformToShape(null));
         return trans;
     }
 
     // The transform to parent is just our transform, transform to child is just child's inverse transform
-    if(aShape==getParent())
+    if(aShape==_parent)
         return getTransform();
-    if(this==aShape.getParent())
+    if(this==aShape._parent)
         return aShape.getTransformInverse();
     if(aShape==this)
         return new Transform();
@@ -1086,7 +1087,7 @@ public Transform getTransformToShape(RMShape aShape)
     Transform transform = Transform.IDENTITY;
     for(int i=shapes.size()-1; i>0; i--) {
         RMShape cs = shapes.get(i), ns = shapes.get(i-1);
-        Transform t2 = ns==cs.getParent()? cs.getTransformInverse() : ns.getTransform();
+        Transform t2 = ns==cs._parent? cs.getTransformInverse() : ns.getTransform();
         t2.multiply(transform); transform = t2;
     }
     
@@ -1099,13 +1100,6 @@ public Transform getTransformToShape(RMShape aShape)
  */
 public Transform getTransformFromShape(RMShape aShape)
 {
-    // The transform from parent is just our inverse transform, transform from child is just child's transform
-    if(aShape==getParent())
-        return getTransformInverse();
-    if(aShape!=null && this==aShape.getParent())
-        return aShape.getTransform();
-
-    // Return the inverse of transform to shape
     Transform t = getTransformToShape(aShape); t.invert(); return t;
 }
 
