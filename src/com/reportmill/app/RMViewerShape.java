@@ -35,7 +35,12 @@ public RMViewer getViewer()  { return _viewer; }
 /**
  * Returns the root shape as RMDocument, if available.
  */
-public RMDocument getDocument()  { return getContent(); }
+public RMDocument getDoc()  { return _content; }
+
+/**
+ * Returns the root shape as RMDocument, if available.
+ */
+public RMDocument getDocument()  { return _content; }
 
 /**
  * Returns the root shape that is being viewed in viewer.
@@ -57,7 +62,6 @@ public void setContent(RMDocument aDoc)
     // Set new document and fire property change
     if(_content!=null) removeChild(_content);
     addChild(aDoc, 0);
-    setSize(aDoc.getWidth(), aDoc.getHeight());
     firePropChange("Content", _content, _content = aDoc);
     
     // Start listening to shape changes and notify shapes shown
@@ -67,48 +71,57 @@ public void setContent(RMDocument aDoc)
 /**
  * Returns the page count.
  */
-public int getPageCount()  { RMDocument d = getDocument(); return d!=null? d.getPageCount() : 1; }
+public int getPageCount()  { RMDocument d = getDoc(); return d!=null? d.getPageCount() : 1; }
 
 /**
  * Returns the page at index.
  */
-public RMPage getPage(int anIndex)  { RMDocument d = getDocument(); return d!=null? d.getPage(anIndex) : null; }
+public RMPage getPage(int anIndex)  { RMDocument d = getDoc(); return d!=null? d.getPage(anIndex) : null; }
 
 /**
  * Returns the currently selected page shape.
  */
-public RMPage getSelectedPage()  { RMDocument d = getDocument(); return d!=null? d.getSelectedPage() : null; }
+public RMPage getSelectedPage()  { RMDocument d = getDoc(); return d!=null? d.getSelectedPage() : null; }
 
 /**
  * Returns the index of the current visible document page.
  */
-public int getSelectedPageIndex()  { RMDocument d = getDocument(); return d!=null? d.getSelectedIndex() : 0; }
+public int getSelectedPageIndex()  { RMDocument d = getDoc(); return d!=null? d.getSelectedIndex() : 0; }
 
 /**
  * Sets the page of viewer's document that is visible (by index).
  */
 public void setSelectedPageIndex(int anIndex)
 {
-    RMDocument doc = getDocument(); if(doc!=null) doc.setSelectedIndex(anIndex);
+    RMDocument doc = getDoc(); if(doc!=null) doc.setSelectedIndex(anIndex);
 }
+
+/**
+ * Override to return content preferred width.
+ */
+protected double computePrefWidth(double aHeight)  { RMDocument d = getDoc(); return d!=null? d.getPrefWidth() : 0; }
+
+/**
+ * Override to return content preferred height.
+ */
+protected double computePrefHeight(double aWidth)  { RMDocument d = getDoc(); return d!=null? d.getPrefHeight() : 0; }
 
 /**
  * This is bogus, but we want to make sure that ViewerShape is always the same size as the content.
  */
 protected void layoutChildren()
 {
-    setSize(getContent().getWidth(), getContent().getHeight());
+    // Get Doc, parent Width/Height and doc bounds in center of ViewerShape
+    RMDocument doc = getDoc();
+    double pw = getWidth(), ph = getHeight();
+    double dw = doc.getWidth(), dh = doc.getHeight();
+    double dx = pw>dw? Math.floor((pw-dw)/2) : 0, dy = ph>dh? Math.floor((ph-dh)/2) : 0;
+
+    // Set doc location and scale for zoom factor
+    doc.setXY(dx,dy);
+    if(doc.getScaleX()!=_viewer.getZoomFactor()) { double sc = _viewer.getZoomFactor();
+        doc.setScaleXY(sc, sc); }
 }
-
-/**
- * Override to return content preferred width.
- */
-protected double computePrefWidth(double aHeight)  { RMShape c = getContent(); return c!=null? c.getPrefWidth() : 0; }
-
-/**
- * Override to return content preferred height.
- */
-protected double computePrefHeight(double aWidth)  { RMShape c = getContent(); return c!=null? c.getPrefHeight() : 0; }
 
 /**
  * This is a notification call for impending visual shape attribute changes.

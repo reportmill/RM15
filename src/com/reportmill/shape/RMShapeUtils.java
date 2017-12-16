@@ -147,9 +147,6 @@ public static Image createImage(RMShape aShape, Color aColor)
     if(aColor!=null) {
         pntr.setColor(aColor); pntr.fillRect(0,0,w,h); }
 
-    // Create shape painter and configure
-    //RMShapePainter sp = new RMShapePainter(pntr); sp.setBounds(0,0,w,h); sp.setPrinting(true); sp.paintShape(aShape);
-    
     // Paint shape and return image
     paintShape(pntr, aShape, new Rect(0,0,w,h), 1);
     pntr.flush();
@@ -164,20 +161,20 @@ public static void paintShape(Painter aPntr, RMShape aShape, Rect aBounds, doubl
     // Validate shape
     if(aShape instanceof RMParentShape) ((RMParentShape)aShape).layout();
     
-    // Get shape marked bounds
-    Rect shapeBounds = aShape.getBoundsMarked();
-    double shapeWidth = shapeBounds.getWidth();
-    double shapeHeight = shapeBounds.getHeight();
-    
     // Cache gstate
     aPntr.save();
     
     // If bounds are present, set transform to position content
     if(aBounds!=null) {
         
+        // Get shape marked bounds
+        Rect sbnds = aShape.getBoundsMarked();
+        double sw = sbnds.getWidth();
+        double sh = sbnds.getHeight();
+    
         // Get the discrepancy of bounds size and shape scaled size
-        double dw = aBounds.getWidth() - shapeWidth*aScale;
-        double dh = aBounds.getHeight() - shapeHeight*aScale;
+        double dw = aBounds.getWidth() - sw*aScale;
+        double dh = aBounds.getHeight() - sh*aScale;
         
         // Constrain alignment to bounds (maybe this should be an option)
         if(dw<0) dw = 0; if(dh<0) dh = 0;

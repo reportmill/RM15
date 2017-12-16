@@ -726,9 +726,10 @@ protected void layoutChildren()
  */
 protected double computePrefWidth(double aHeight)
 {
-    double width = getPageSize().width;
-    switch(getPageLayout()) { case Double: case Facing: width *= 2; break; }
-    return width;
+    double pw = getPageSize().width;
+    switch(getPageLayout()) { case Double: case Facing: pw *= 2; break; }
+    if(getPageLayout()!=RMDocument.PageLayout.Single) pw += 8;
+    return pw;
 }
 
 /**
@@ -736,10 +737,11 @@ protected double computePrefWidth(double aHeight)
  */
 protected double computePrefHeight(double aWidth)
 {
-    double height = getPageSize().height;
+    double ph = getPageSize().height;
     if(getPageLayout()==PageLayout.Continuous && getPageCount()>0) {
-        height *= getPageCount(); height += (getPageCount()-1)*10; }
-    return height;
+        ph *= getPageCount(); ph += (getPageCount()-1)*10; }
+    if(getPageLayout()!=RMDocument.PageLayout.Single) ph += 8;
+    return ph;
 }
 
 /**

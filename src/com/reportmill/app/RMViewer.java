@@ -25,7 +25,7 @@ import snap.web.WebURL;
  *   myFrame.setContentPane(viewer);
  * </pre></blockquote>
  */
-public class RMViewer extends View {
+public class RMViewer extends ParentView {
 
     // The shape viewer uses to manage real root of shapes
     RMViewerShape            _vshape = createViewerShape();
@@ -270,7 +270,7 @@ public double getZoomFactor(ZoomMode aMode)
     if(aMode==ZoomMode.ZoomToFactor) return getZoomFactor();
     
     // Get ideal size and current size (if size is zero, return 1)
-    double pw = getPrefWidthBase(), ph = getPrefHeightBase();
+    double pw = _vshape.getPrefWidth(), ph = _vshape.getPrefHeight();
     double width = getWidth(), height = getHeight(); if(width==0 || height==0) return 1;
     
     // If ZoomAsNeeded and IdealSize is less than size, return
@@ -313,35 +313,12 @@ public void setWidth(double aValue)  { super.setWidth(aValue); setZoomToFitFacto
 public void setHeight(double aValue)  { super.setHeight(aValue); setZoomToFitFactor(); }
 
 /**
- * Returns the content shape's X location in viewer.
- */
-public int getContentX()
-{
-    float align = .5f; //RMShapeUtils.getAutosizeAlignmentX(getContent());
-    return (int)Math.round(Math.max((getWidth()-getContent().getWidth()*getZoomFactor())*align, 0));
-}
-
-/**
- * Returns the content shape's Y location in viewer.
- */
-public int getContentY()
-{
-    float align = .5f; //RMShapeUtils.getAutosizeAlignmentY(getContent());
-    return (int)Math.round(Math.max((getHeight()-getContent().getHeight()*getZoomFactor())*align, 0));
-}
-
-/**
  * Returns a point converted from the coordinate space of the given shape to viewer coords.
  */
 public Point convertFromShape(double aX, double aY, RMShape aShape)
 {
-    // If given shape, transform point from shape to doc
-    Point point = new Point(aX,aY); if(aShape!=null) point = aShape.convertedPointToShape(point, null);
-    
-    // Multiply point for zoom, and transdate for doc centering
-    double x = point.getX()*getZoomFactor() + getContentX();
-    double y = point.getY()*getZoomFactor() + getContentY();
-    return new Point(x,y);
+    Point point = new Point(aX,aY);
+    return aShape!=null? aShape.convertedPointToShape(point, null) : point;
 }
 
 /**
@@ -349,13 +326,8 @@ public Point convertFromShape(double aX, double aY, RMShape aShape)
  */
 public Point convertToShape(double aX, double aY, RMShape aShape)
 {
-    // Correct for zoom
-    double x = aX - getContentX(), y = aY - getContentY();
-    
-    // Get point unzoomed, convert to shape and return
-    Point point = new Point(x/getZoomFactor(), y/getZoomFactor());
-    if(aShape!=null) aShape.convertPointFromShape(point, null);
-    return point;
+    Point point = new Point(aX,aY);
+    return aShape!=null? aShape.convertedPointFromShape(point, null) : point;
 }
 
 /**
@@ -363,8 +335,8 @@ public Point convertToShape(double aX, double aY, RMShape aShape)
  */
 public Shape convertFromShape(Shape aShp, RMShape aShape)
 {
-    Transform tfm = getTransformFromShape(aShape);
-    return aShp.copyFor(tfm);
+    Transform t = aShape!=null? aShape.getTransformToShape(null) : Transform.IDENTITY;
+    return aShp.copyFor(t);
 }
 
 /**
@@ -372,28 +344,8 @@ public Shape convertFromShape(Shape aShp, RMShape aShape)
  */
 public Shape convertToShape(Shape aShp, RMShape aShape)
 {
-    Transform tfm = getTransformToShape(aShape);
-    return aShp.copyFor(tfm);
-}
-
-/**
- * Returns the transform from given shape to viewer.
- */
-public Transform getTransformFromShape(RMShape aShape)
-{
-    // Get transform from shape to doc, scale for zoom factor, translate for content x/y
-    Transform trans = aShape!=null? aShape.getTransformToShape(null) : new Transform();
-    if(getZoomFactor()!=1) trans.scale(getZoomFactor(), getZoomFactor());
-    trans.translate(getContentX(), getContentY());
-    return trans;
-}
-
-/**
- * Returns the transform from viewer to given shape.
- */
-public Transform getTransformToShape(RMShape aShape)
-{
-    Transform tfm = getTransformFromShape(aShape); tfm.invert(); return tfm;
+    Transform t = aShape!=null? aShape.getTransformFromShape(null) : Transform.IDENTITY;
+    return aShp.copyFor(t);
 }
 
 /**
@@ -406,10 +358,9 @@ protected RMShapePaintProps createShapePaintProps()  { return null; }
  */
 public void paintFront(Painter aPntr)
 {
-    Rect bnds = new Rect(0, 0, getWidth(), getHeight()); double scale = getZoomFactor();
     RMShapePaintProps props = createShapePaintProps(); if(props!=null) aPntr.setProps(props);
-    RMShapeUtils.paintShape(aPntr, _vshape, bnds, scale);
-    if(props!=null) aPntr.setProps(null); //RMShapePainter spntr = getShapePainter(aPntr); spntr.paintShape(_vshape);
+    RMShapeUtils.paintShape(aPntr, _vshape, null, 1); //getZoomFactor();
+    if(props!=null) aPntr.setProps(null);
     getEvents().paint(aPntr); // Have event helper paint above
 }
 
@@ -437,18 +388,9 @@ protected void processEvent(ViewEvent anEvent)
  */
 protected double getPrefWidthImpl(double aH)
 {
-    double w = getPrefWidthBase(); if(isZoomToFactor()) w *= getZoomFactor(); return w;
-}
-
-/**
- * Returns the preferred size of the viewer (ignores Zoom).
- */
-protected double getPrefWidthBase()
-{
-    // Get doc width, add gutter if not PageLayout.Single and return
-    double w = _vshape.getPrefWidth();
-    if(getDocument()==null || getDocument().getPageLayout()!=RMDocument.PageLayout.Single) w += 8;
-    return w;
+    double pw = _vshape.getPrefWidth();
+    if(isZoomToFactor()) pw *= getZoomFactor();
+    return pw;
 }
 
 /**
@@ -456,18 +398,19 @@ protected double getPrefWidthBase()
  */
 protected double getPrefHeightImpl(double aW)
 {
-    double h = getPrefHeightBase(); if(isZoomToFactor()) h *= getZoomFactor(); return h;
+    double ph = _vshape.getPrefHeight();
+    if(isZoomToFactor()) ph *= getZoomFactor();
+    return ph;
 }
 
 /**
- * Returns the preferred size of the viewer (ignores Zoom).
+ * Override to reposition ViewerShape.
  */
-protected double getPrefHeightBase()
+protected void layoutImpl()
 {
-    // Get doc height, add gutter if not PageLayout.Single and return
-    double h = _vshape.getPrefHeight();
-    if(getDocument()==null || getDocument().getPageLayout()!=RMDocument.PageLayout.Single) h += 8;
-    return h;
+    setZoomToFitFactor();
+    _vshape.setBounds(0,0,getWidth(),getHeight());
+    _vshape.layout();
 }
 
 /**
