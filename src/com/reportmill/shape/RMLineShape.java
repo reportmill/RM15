@@ -173,10 +173,10 @@ public static class ArrowHead extends RMPolygonShape {
         double roll = getRoll(), sx = getScaleX(), sy = getScaleY();
         
         // Transform about point of rotation and return
-        Transform t = new Transform(); t.translate(-prx, -pry);
+        Transform t = new Transform(x + prx, y + pry);
         if(sx!=1 || sy!=1) t.scale(sx, sy);
         if(roll!=0) t.rotate(roll);
-        t.translate(prx + x, pry + y); return t;
+        t.translate(-prx, -pry); return t;
     }
     
     /** XML archival. */

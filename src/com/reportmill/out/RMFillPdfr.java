@@ -235,9 +235,9 @@ public static void writeImageFill(RMImageFill anImageFill, Shape aPath, Rect bou
         double height = bounds.getHeight();
 
         // Get transform with translate to shape center, scale, and translate back
-        Transform t = new Transform(); t.translate(-width/2, -height/2);
+        Transform t = new Transform(); t.translate(width/2, height/2);
         t.scale(anImageFill.getScaleX(), anImageFill.getScaleY());
-        t.translate(width/2, height/2);
+        t.translate(-width/2, -height/2);
         
         // Apply transform
         pdfPage.writeTransform(t);
@@ -247,9 +247,9 @@ public static void writeImageFill(RMImageFill anImageFill, Shape aPath, Rect bou
         
         // If not STYLE_TILE, scale enclosing bounds by image fill scale
         if(!anImageFill.isTiled()) {
-            Transform t2 = new Transform(); t2.translate(-width/2, -height/2);
+            Transform t2 = new Transform(); t2.translate(width/2, height/2);
             t2.scale(anImageFill.getScaleX(), anImageFill.getScaleY());
-            t2.translate(width/2, height/2);
+            t2.translate(-width/2, -height/2);
             t2.transform(bounds);
         }
     }

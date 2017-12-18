@@ -1043,18 +1043,18 @@ public List <RMShape> getShapesToShape(RMShape aShape)
 public Transform getTransform()
 {
     // Create transform (if not rotated/scaled/skewed, just translate and return)
-    Transform t = new Transform(); if(!isRSS()) { t.translate(getX(),getY()); return t; }
+    Transform t = new Transform(getX(),getY()); if(!isRSS()) return t;
     
     // Get location, size, point of rotation, rotation, scale, skew
-    double x = getX(), y = getY(), w = getWidth(), h = getHeight(), prx = w/2, pry = h/2;
+    double w = getWidth(), h = getHeight(), prx = w/2, pry = h/2;
     double roll = getRoll(), sx = getScaleX(), sy = getScaleY(), skx = getSkewX(), sky = getSkewY();
     
     // Transform about point of rotation and return
-    t.translate(-prx, -pry);
-    if(skx!=0 || sky!=0) t.skew(skx, sky);
-    if(sx!=1 || sy!=1) t.scale(sx, sy);
+    t.translate(prx, pry);
     if(roll!=0) t.rotate(roll);
-    t.translate(prx + x, pry + y); return t;
+    if(sx!=1 || sy!=1) t.scale(sx, sy);
+    if(skx!=0 || sky!=0) t.skew(skx, sky);
+    t.translate(-prx, -pry); return t;
 }
 
 /**

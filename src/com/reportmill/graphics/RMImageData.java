@@ -353,7 +353,7 @@ public void paint(Painter aPntr, double x, double y, double w, double h)
     // If image is non-null, draw it
     if(image!=null) {
         double sx = w/image.getPixWidth(), sy = h/image.getPixHeight();
-        Transform transform = Transform.get(sx, 0, 0, sy, x, y);
+        Transform transform = new Transform(sx, 0, 0, sy, x, y);
         aPntr.drawImage(image, transform);
     }
 }

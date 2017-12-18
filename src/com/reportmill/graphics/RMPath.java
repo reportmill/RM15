@@ -108,7 +108,7 @@ public RMPath getPathInRect(Rect aRect)
     double ty = aRect.getY() - bounds.getY()*sy;
     
     // Get transform from current bounds to new bounds and return transformed path
-    Transform trans = Transform.get(sx, 0, 0, sy, tx, ty);
+    Transform trans = new Transform(sx, 0, 0, sy, tx, ty);
     RMPath clone = clone(); clone.transformBy(trans); return clone;
 }
 
