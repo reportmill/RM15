@@ -773,6 +773,7 @@ protected XMLElement toXMLShape(XMLArchiver anArchiver)
     // Remove questionable document/shape attributes
     e.removeAttribute("x"); e.removeAttribute("y");
     e.removeAttribute("width"); e.removeAttribute("height");
+    e.removeAttribute("scalex"); e.removeAttribute("scaley");
     
     // Archive Version
     e.add("version", ReportMill.getVersion());
