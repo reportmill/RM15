@@ -61,7 +61,8 @@ public RMShape rpgAll()
     
     // If paginating, get pref height and reset height
     if(_prefHeight>0) {
-        double height = _prefHeight; _prefHeight = getChildLast().getFrameMaxY();
+        double height = _prefHeight;
+        if(getChildCount()>0) _prefHeight = getChildLast().getFrameMaxY();
         setHeight(height);
     }
     
