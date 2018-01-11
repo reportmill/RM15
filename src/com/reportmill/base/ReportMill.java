@@ -259,11 +259,11 @@ public static float getVersion()  { return 15; }
 public static String getBuildInfo()
 {
     // If already set, just return
-    if(_buildInfo!=null) return _buildInfo; SnapUtils.getBuildInfo();
+    if(_buildInfo!=null) return _buildInfo;
     
     // If build info file hasn't been loaded, load it
-    try { _buildInfo = SnapUtils.getText(SnapUtils.class.getResourceAsStream("/com/reportmill/BuildInfo.txt")).trim(); }
-    catch(Exception e) { System.err.println("ReportMill.getBuildInfo: " + e); _buildInfo = ""; }
+    try { _buildInfo = SnapUtils.getText(SnapUtils.class, "/com/reportmill/BuildInfo.txt").trim(); }
+    catch(Exception e) { System.err.println("ReportMill.getBuildInfo: " + e); _buildInfo = "BuildInfo not found"; }
     return _buildInfo;
 }
 
@@ -281,8 +281,8 @@ public static void init()
     // Print initialization message
     String bdate = getBuildInfo(), jver = System.getProperty("java.version");
     String user = System.getProperty("user.name"); double rver = getVersion();
-    System.err.printf("Initializing ReportMill (Build Date: %s, Version %.1f, JVM %s, User %s)\n",
-        bdate, rver, jver, user);
+    String info = String.format("Build Date: %s, Version %.1f, JVM %s, User %s", bdate, rver, jver, user);
+    System.err.println("Initializing ReportMill (" + info + ")");
 
     // Set headless
     GFXUtils.setHeadless();

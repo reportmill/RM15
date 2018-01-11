@@ -6,6 +6,7 @@ import com.reportmill.base.ReportMill;
 import java.io.File;
 import java.util.List;
 import snap.view.*;
+import snap.web.WebURL;
 
 /**
  * This class provides the welcome panel for RM. 
@@ -75,7 +76,8 @@ public void close()  { getWindow().setVisible(false); }
 protected void initUI()
 {
     // Install WelcomeAnim.Viewer
-    RMViewer viewer = new RMViewer(); viewer.setContent(getClass().getResource("WelcomeAnim.rpt"));
+    WebURL url = WebURL.getURL(getClass(), "WelcomeAnim.rpt");
+    RMViewer viewer = new RMViewer(); viewer.setContent(url);
     View wlabel = getView("WelcomeAnimLabel");
     viewer.setSize(wlabel.getWidth(), wlabel.getHeight());
     getUI(ChildView.class).addChild(viewer, 1);

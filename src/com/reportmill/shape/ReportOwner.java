@@ -5,6 +5,7 @@ package com.reportmill.shape;
 import com.reportmill.base.*;
 import java.util.*;
 import snap.util.*;
+import snap.web.WebURL;
 
 /**
  * A base class that loads and runs reports.
@@ -42,7 +43,8 @@ public RMDocument getTemplate()  { return _template!=null? _template : (_templat
  */
 protected RMDocument createTemplate()
 {
-    return RMDocument.getDoc(getClass().getResource(getClass().getSimpleName() + ".rpt"));
+    WebURL url = WebURL.getURL(getClass(), getClass().getSimpleName() + ".rpt");
+    return RMDocument.getDoc(url);
 }
 
 /**
@@ -267,7 +269,7 @@ private Object getRMKey(String key)
     if(key.equals("RMHTML")) return "<html><b>Howdy Doody</b></html>";
     if(key.equals("RMJapanese"))
         return new String("\u3053\u3093\u306b\u3061\u306f\u3001\u4e16\u754c\u306e\u4eba\u3005\uff01");
-    if(key.equals("RMFlowers")) return getClass().getResource("/snap/viewx/pkg.images/tulips.jpg");
+    if(key.equals("RMFlowers")) return WebURL.getURL(getClass(), "/snap/viewx/pkg.images/tulips.jpg");
     return null;
 }
 

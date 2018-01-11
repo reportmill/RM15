@@ -7,6 +7,7 @@ import java.util.List;
 import snap.gfx.*;
 import snap.util.SnapUtils;
 import snap.view.*;
+import snap.web.WebURL;
 
 /**
  * This class handles creation of lines.
@@ -101,7 +102,8 @@ public void moveShapeHandle(T aShape, int aHandle, Point aPoint)
 public List <RMLineShape> getArrows()
 {
     if(_arrowShapes!=null) return _arrowShapes;
-    RMDocument doc = new RMDocument(getClass().getResource("RMLineShapeToolArrowHeads.rpt"));
+    WebURL url = WebURL.getURL(getClass(), "RMLineShapeToolArrowHeads.rpt");
+    RMDocument doc = new RMDocument(url);
     return _arrowShapes = doc.getChildrenWithClass(getShapeClass());
 }
 

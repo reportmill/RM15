@@ -7,6 +7,7 @@ import com.reportmill.base.RMGrouping;
 import com.reportmill.shape.*;
 import java.io.*;
 import java.util.*;
+import snap.util.SnapUtils;
 import snap.util.StringUtils;
 import snap.view.*;
 
@@ -182,43 +183,35 @@ public List getLabelFormats()
     // If formats list has already been loaded, just return it
     if(_labelFormats!=null) return _labelFormats;
     
-    // Create new list
-    _labelFormats = new Vector();
-    
-    // Add a dummy "custom" format first
+    // Create new list with dummy "custom" format first
+    _labelFormats = new ArrayList();
     _labelFormats.add(new LabelFormat("Custom",0,0,0,0,0,0,0,0,0,0,0,0));
     
     // Load formats from avery-formats text file
-    try {
-        InputStream istream = getClass().getResourceAsStream("RMLabelsToolAveryFormats.txt");
-        InputStreamReader ireader = new InputStreamReader(istream);
-        BufferedReader breader = new BufferedReader(ireader);
-        String line = breader.readLine();
-        while (line != null) {
-            List lineParts = StringUtils.separate(line, ",");
-            String name = (String)lineParts.get(0);
-            float width = StringUtils.floatValue((String)lineParts.get(1));
-            float height = StringUtils.floatValue((String)lineParts.get(2));
-            float spaceWidth = StringUtils.floatValue((String)lineParts.get(3));
-            float spaceHeight = StringUtils.floatValue((String)lineParts.get(4));
-            int rows = Integer.parseInt((String)lineParts.get(5));
-            int cols = Integer.parseInt((String)lineParts.get(6));
-            float pageWidth = StringUtils.floatValue((String)lineParts.get(7));
-            float pageHeight = StringUtils.floatValue((String)lineParts.get(8));
-            float topMargin = StringUtils.floatValue((String)lineParts.get(9));
-            float leftMargin = StringUtils.floatValue((String)lineParts.get(10));
-            float bottomMargin = StringUtils.floatValue((String)lineParts.get(11));
-            float rightMargin = StringUtils.floatValue((String)lineParts.get(12));
-            LabelFormat newFormat = new LabelFormat(name, width, height, spaceWidth, spaceHeight, rows, cols, 
-                pageWidth, pageHeight, topMargin, leftMargin, bottomMargin, rightMargin);
-            _labelFormats.add(newFormat);
-            line = breader.readLine();
-        }
-    }
+    String text = SnapUtils.getText(getClass(), "RMLabelsToolAveryFormats.txt");
+    if(text==null) { System.err.println("RMLabelsTool: Couldn't read Formats.txt"); return _labelFormats; }
+    String lines[] = text.split("\n");
     
-    // Catch IOException and other exceptions
-    catch(IOException e) { System.err.println("Error reading from resource RMLabelsToolAveryFormats.txt"); }
-    catch(Exception e) { e.printStackTrace(); }
+    // Iterate over lines
+    for(String line : lines) {
+        List lineParts = StringUtils.separate(line, ",");
+        String name = (String)lineParts.get(0);
+        float width = StringUtils.floatValue((String)lineParts.get(1));
+        float height = StringUtils.floatValue((String)lineParts.get(2));
+        float spaceWidth = StringUtils.floatValue((String)lineParts.get(3));
+        float spaceHeight = StringUtils.floatValue((String)lineParts.get(4));
+        int rows = Integer.parseInt((String)lineParts.get(5));
+        int cols = Integer.parseInt((String)lineParts.get(6));
+        float pageWidth = StringUtils.floatValue((String)lineParts.get(7));
+        float pageHeight = StringUtils.floatValue((String)lineParts.get(8));
+        float topMargin = StringUtils.floatValue((String)lineParts.get(9));
+        float leftMargin = StringUtils.floatValue((String)lineParts.get(10));
+        float bottomMargin = StringUtils.floatValue((String)lineParts.get(11));
+        float rightMargin = StringUtils.floatValue((String)lineParts.get(12));
+        LabelFormat newFormat = new LabelFormat(name, width, height, spaceWidth, spaceHeight, rows, cols, 
+            pageWidth, pageHeight, topMargin, leftMargin, bottomMargin, rightMargin);
+        _labelFormats.add(newFormat);
+    }
     
     // Return label formats list
     return _labelFormats;

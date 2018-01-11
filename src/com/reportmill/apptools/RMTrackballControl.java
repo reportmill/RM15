@@ -41,9 +41,9 @@ public class RMTrackballControl extends RMViewer {
     double           _lastRollAngle;
 
     // The trackball image, highlight image and knob image
-    RMImageShape     _tball = new RMImageShape(getClass().getResource("pkg.images/Trackball.png"));
-    RMImageShape     _tball_lit = new RMImageShape(getClass().getResource("pkg.images/Trackball_lit.png"));
-    RMImageShape     _knob = new RMImageShape(getClass().getResource("pkg.images/Trackball_knob.png"));
+    RMImageShape     _tball = new RMImageShape(Image.get(getClass(), "pkg.images/Trackball.png"));
+    RMImageShape     _tball_lit = new RMImageShape(Image.get(getClass(), "pkg.images/Trackball_lit.png"));
+    RMImageShape     _knob = new RMImageShape(Image.get(getClass(), "pkg.images/Trackball_knob.png"));
    
     // Location of the important parts of the control image
     static final float LEFT_EDGE = 2;

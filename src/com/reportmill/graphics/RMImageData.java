@@ -66,7 +66,7 @@ public class RMImageData implements Cloneable {
     static List <WeakReference<RMImageData>>  _cache = new ArrayList();
     
     // A shared empty ImageData
-    public static RMImageData EMPTY = getImageData(RMImageData.class.getResourceAsStream("DefaultImage.png"));
+    public static RMImageData EMPTY = getImageData(Image.get(RMImageData.class, "DefaultImage.png"));
     
 /**
  * Returns an image data loaded from aSource. If image type supports multiple pages, page index can be specified.
