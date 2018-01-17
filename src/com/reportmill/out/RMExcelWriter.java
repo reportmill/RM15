@@ -303,17 +303,18 @@ public void appendCrossTab(RMExcelSheet aSheet, HSSFShapeContainer aParent, RMSh
     HSSFSheet sheet = aSheet.getSheet();
     
     // First, set all the column widths (overrides existing values)
-    for(int colIndex=0, colMax=aCrossTab.getColumnCount(); colIndex<colMax; ++colIndex) {
-        RMShapeTable.STCol column = aCrossTab.getColumn(colIndex);
-        short colWidth = getColumnWidthFromPoints(column.getWidth());
-        sheet.setColumnWidth(colIndex, colWidth);
+    for(int colIndex=0, colMax=aCrossTab.getColCount(); colIndex<colMax; ++colIndex) {
+        double cwidth = aCrossTab.getColWidth(colIndex);
+        short cwidthXL = getColumnWidthFromPoints(cwidth);
+        sheet.setColumnWidth(colIndex, cwidthXL);
     }
     
     // Create the rows and set their heights
     for(int rowIndex=0, rowMax=aCrossTab.getRowCount(); rowIndex<rowMax; ++rowIndex) {
         HSSFRow row = sheet.createRow(rowIndex);
-        row.setHeightInPoints((float)aCrossTab.getRow(rowIndex).getHeight());
-        for(int colIndex=0, colMax=aCrossTab.getColumnCount(); colIndex<colMax; ++colIndex)
+        float rheight = (float)aCrossTab.getRowHeight(rowIndex);
+        row.setHeightInPoints(rheight);
+        for(int colIndex=0, colMax=aCrossTab.getColCount(); colIndex<colMax; ++colIndex)
             row.createCell(colIndex);
     }
     
@@ -324,10 +325,10 @@ public void appendCrossTab(RMExcelSheet aSheet, HSSFShapeContainer aParent, RMSh
         HSSFRow row = sheet.getRow(rowIndex);
         
         // Iterate over columns
-        for(int colIndex=0, colMax=aCrossTab.getColumnCount(); colIndex<colMax; ++colIndex) {
+        for(int colIndex=0, colMax=aCrossTab.getColCount(); colIndex<colMax; ++colIndex) {
             
             // Get column
-            RMShapeTable.STCell rmcell = aCrossTab.getCell(rowIndex, colIndex);
+            RMShapeTable.Cell rmcell = aCrossTab.getCell(rowIndex, colIndex);
             
             // If a cell spans multiple rows or columns, getCell(row,col) returns the same cell instance
             // for each row,col this cell covers. Only take the first one.
@@ -750,11 +751,10 @@ private static float[] rgbToLab(double r, double g, double b)
     
     // Convert from XYZ to LAB
     double fy = LABTransformFn(xyz[1]/d50[1]);
-    float lab[] = new float[3];
-    lab[0] = (float)(116 * fy - 16);
-    lab[1] = (float)(500 * (LABTransformFn(xyz[0]/d50[0]) - fy));
-    lab[2] = (float)(200 * (fy - LABTransformFn(xyz[2]/d50[2])));
-    return lab;
+    float lab0 = (float)(116 * fy - 16);
+    float lab1 = (float)(500 * (LABTransformFn(xyz[0]/d50[0]) - fy));
+    float lab2 = (float)(200 * (fy - LABTransformFn(xyz[2]/d50[2])));
+    return new float[] { lab0, lab1, lab2 };
 }
 
 /**

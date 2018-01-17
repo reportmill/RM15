@@ -225,9 +225,9 @@ public void appendRTF(RMShape aShape, PrintStream ps)
     else {
         
         // If shape is crosstab cell with cell shape, swap in ell shape
-        if(aShape instanceof RMShapeTable.STCell &&
-            ((RMShapeTable.STCell)aShape).getCellShape()!=null) 
-            aShape = ((RMShapeTable.STCell)aShape).getCellShape();
+        if(aShape instanceof RMShapeTable.Cell &&
+            ((RMShapeTable.Cell)aShape).getCellShape()!=null) 
+            aShape = ((RMShapeTable.Cell)aShape).getCellShape();
         
         // Append text or image for shape
         if(aShape instanceof RMTextShape) appendText(((RMTextShape)aShape).getXString(), ps);
@@ -248,11 +248,11 @@ public void appendTable(RMShapeTable table, PrintStream ps)
     _tableLevel++;
     
     // Get ColumnCount
-    int columnCount = table.getColumnCount();
+    int columnCount = table.getColCount();
     
     // TextEdit just sets the cellx values as if all cells were the same and the row always total to 6".  Bizarre.  
     int cellx = twip(72*6)/columnCount;
-    int cellws[] = new int[columnCount]; for(int c=0;c<columnCount;c++) cellws[c] = twip(table.getColumn(c).getWidth());
+    int cellws[] = new int[columnCount]; for(int c=0;c<columnCount;c++) cellws[c] = twip(table.getColWidth(c));
     int pads = 0, border = 0; // cell padding and border weight
     
     // Iterate over table rows
@@ -262,10 +262,10 @@ public void appendTable(RMShapeTable table, PrintStream ps)
         ps.print("\\itap" + _tableLevel + "\\trowd "); // nest level - and table row defaults
         ps.println("\\trbrdrt\\brdrnil\\trbrdrl\\brdrnil\\trbrdrr\\brdrnil"); // no borders anywhere
         ps.println("\\trgaph0\\trleft0"); // table shouldn't add any spaces itself, so set all the coords to 0
-        ps.println("\\trrh" + twip(table.getRow(r).getHeight())); // set the (minimum) height of the row
+        ps.println("\\trrh" + twip(table.getRowHeight(r))); // set the (minimum) height of the row
 
         // Iterate over columns and add the cells definitions for the row
-        for(int c=0; c<columnCount; ++c) { RMShapeTable.STCell rmcell = table.getCell(r,c);
+        for(int c=0; c<columnCount; ++c) { RMShapeTable.Cell rmcell = table.getCell(r,c);
             int rowspan = rmcell.getRowSpan();
             int colspan = rmcell.getColumnSpan();
             
@@ -312,7 +312,7 @@ public void appendTable(RMShapeTable table, PrintStream ps)
         }
         
         // Iterate over cells in row again and output the actual cell data, possibly recursing for nested tables
-        for(int c=0; c<columnCount; ++c) { RMShapeTable.STCell rmcell = table.getCell(r, c);
+        for(int c=0; c<columnCount; ++c) { RMShapeTable.Cell rmcell = table.getCell(r, c);
             
             // Add the rtf for the text (or shapes) inside the cell, otherwise empty paragraph for merged cell
             if((rmcell.getRow()==r) && (rmcell.getColumn()==c))
