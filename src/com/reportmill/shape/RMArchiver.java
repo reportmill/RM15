@@ -30,7 +30,7 @@ public RMDocument getDoc(Object aSource, RMDocument aBaseDoc)
     WebURL url = null; try { url = WebURL.getURL(aSource); } catch(Exception e) { }
     byte bytes[] = url!=null? url.getBytes() : SnapUtils.getBytes(aSource);
     if(bytes==null)
-        throw new RuntimeException("RMArchiver.getShape: Cannot read source: " + (url!=null? url : aSource));
+        throw new RuntimeException("RMArchiver.getDoc: Cannot read source: " + (url!=null? url : aSource));
     
     // If PDF, return PDF Doc
     if(bytes!=null && RMImageDataPDF.canRead(bytes))

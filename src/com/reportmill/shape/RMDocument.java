@@ -113,7 +113,7 @@ public RMDocument(Object aSource)  { new RMArchiver().getDoc(aSource, this); }
 /**
  * Creates a new document from aSource using RMArchiver.
  */
-public static RMDocument getDoc(Object aSource)  { return new RMArchiver().getDoc(aSource, null); }
+public static RMDocument getDoc(Object aSource)  { return new RMArchiver().getDoc(aSource); }
 
 /**
  * Returns the filename associated with this document, if available.
