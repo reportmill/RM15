@@ -4,7 +4,6 @@
 package com.reportmill.app;
 import com.reportmill.base.*;
 import com.reportmill.shape.*;
-import java.io.File;
 import java.util.*;
 import snap.gfx.*;
 import snap.view.*;
@@ -248,9 +247,7 @@ protected void resetUI()
         WindowView win = getWindow();
         if(!SnapUtils.equals(title, win.getTitle())) {
             win.setTitle(title);
-            WebFile dfile = getSourceURL()!=null? getSourceURL().getFile() : null;
-            File file = dfile!=null? dfile.getStandardFile() : null;
-            if(file!=null && file.exists()) win.setDocFile(file);
+            win.setDocURL(getSourceURL());
         }
     }
     
