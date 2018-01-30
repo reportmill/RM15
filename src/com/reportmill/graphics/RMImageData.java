@@ -77,6 +77,10 @@ public static synchronized RMImageData getImageData(Object aSource)
     if(aSource==null) return EMPTY;
     if(aSource instanceof RMImageData) return (RMImageData)aSource;
     
+    // Handle Image
+    if(aSource instanceof Image) {
+        RMImageData idata = new RMImageData(); idata.setSource(aSource, 0); return idata; }
+    
     // Get source url
     WebURL url = null; try { url = WebURL.getURL(aSource); } catch(Exception e) { }
     
@@ -95,6 +99,8 @@ public static synchronized RMImageData getImageData(Object aSource)
     
     // Get bytes for source
     byte bytes[] = url!=null? url.getBytes() : SnapUtils.getBytes(aSource);
+    if(bytes==null)
+        return null;
     
     // Create new ImageData, add to cache (as WeakReference) and return
     RMImageData idata = RMImageDataPDF.canRead(bytes)? new RMImageDataPDF() : new RMImageData();
