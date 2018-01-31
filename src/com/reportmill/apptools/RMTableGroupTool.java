@@ -20,7 +20,7 @@ protected void initUI()
 {
     // Get TableTree and configure
     TreeView tablesTree = getView("TablesTree", TreeView.class); tablesTree.setShowRoot(false);
-    enableEvents(tablesTree, DragEvents); enableEvents(tablesTree, MousePress);
+    enableEvents(tablesTree, DragEvents); enableEvents(tablesTree, MouseRelease);
     //renderer.setClosedIcon(null); renderer.setOpenIcon(null); renderer.setLeafIcon(null);
     enableEvents("DatasetKeyText", DragDrop); enableEvents("MainTableNameText", DragDrop);
 }
@@ -115,8 +115,8 @@ public void respondUI(ViewEvent anEvent)
     // Handle TableTree
     if(anEvent.equals("TablesTree")) {
         
-        // Handle MousePressed
-        if(anEvent.isMousePress()) {
+        // Handle MouseRelease
+        if(anEvent.isMouseRelease()) {
             if(anEvent.getClickCount()==2) {
                 RMTable table = (RMTable)anEvent.getSelectedItem();
                 getEditor().setSuperSelectedShape(table);

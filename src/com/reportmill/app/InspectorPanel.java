@@ -193,7 +193,7 @@ public void setVisible(int anIndex)
 public boolean isResetWithEditor()
 {
     if(!isVisible()) return false;
-    if(!ViewUtils.isMouseDown()) return true;
+    if(!ViewUtils.isMouseDrag()) return true;
     return getInspector()==_shapePlacement;
 }
 

@@ -39,6 +39,13 @@ public RMTableGroupRPG(ReportOwner anRptOwner, RMTableGroup aTableGroup, RMTable
  */
 public RMShape rpgAll()
 {
+    // If paginate, grow show
+    if(!_rptOwner.getPaginate()) {
+        _prefHeight = getHeight();
+        setHeight(Float.MAX_VALUE);
+        setAutosizing("--~,-~-");
+    }
+    
     // Initialize ChildTables/Groups
     _childTables = new HashMap(); _groups = new HashMap();
     
