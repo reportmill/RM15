@@ -14,23 +14,20 @@ import snap.web.*;
  */
 public class RMDataSource implements XMLArchiver.Archivable {
     
-    // The source of the data
-    String         _source;
-    
     // The source URL of the data
-    WebURL         _sourceURL;
+    WebURL        _url;
     
     // The datasource schema (a list of database entities)
-    Schema          _schema;
+    Schema        _schema;
     
     // A dataset represented by this datasource
-    Map             _dataset;
+    Map           _dataset;
     
     // Whether this datasource has a customized schema
-    boolean         _customSchema;
+    boolean       _customSchema;
 
-    // The source URL of the document this DataSource belongs to
-    WebURL         _docSourceURL;
+    // The URL of the document this DataSource belongs to
+    WebURL        _docURL;
 
 /**
  * Creates a plain datasource.
@@ -40,66 +37,49 @@ public RMDataSource()  { }
 /**
  * Creates a datasource from a given source with a given name (can be null).
  */
-public RMDataSource(WebURL aURL)  { _sourceURL = aURL; }
+public RMDataSource(WebURL aURL)  { _url = aURL; }
 
 /**
- * Returns the source for this data source.
+ * Returns the URL for this data source.
  */
-public Object getSource()  { return _source; }
-
-/**
- * Returns the source for this data source.
- */
-public WebURL getSourceURL()
-{
-    if(_sourceURL!=null) return _sourceURL;
-    try { return _sourceURL = WebURL.getURL(_source); }
-    catch(Exception e) { System.err.println("RMDataSource.getSourceURL: Invalid source: " + _source); return null; }
-}
+public WebURL getURL()  { return _url; }
 
 /**
  * Returns the name for this data source.
  */
-public String getName()  { return getSourceURL()!=null? getSourceURL().getPathNameSimple() : null; }
+public String getName()  { return getURL()!=null? getURL().getPathNameSimple() : null; }
 
 /**
  * Returns the schema of represented datasource as a hierarchy of Entity and Property objects.
  */
-public Schema getSchema()  { return _schema!=null? _schema : (_schema=createSchema()); }
-
-/**
- * Creates the schema.
- */
-protected Schema createSchema()  { getDataset(); return _schema; }
+public Schema getSchema()  { getDataset(); return _schema; }
 
 /**
  * Returns a sample dataset of objects associated with the datasource.
  */
-public Map getDataset()  { return _dataset!=null || getSourceURL()==null? _dataset : (_dataset=createDataset()); }
-
-/**
- * Returns a sample dataset of objects associated with the datasource.
- */
-protected Map createDataset()
+public Map getDataset()
 {
+    // If already set, just return
+    if(_dataset!=null || getURL()==null) return _dataset;
+
     // Get source file
-    WebURL surl = getSourceURL();
-    WebFile sfile = surl.getFile();
+    WebURL url = getURL();
+    WebFile file = url.getFile();
     
     // If file not found, see if it is in same directory as Document.SourceURL
-    if(sfile==null && _docSourceURL!=null) {
-        WebFile file = _docSourceURL.getFile(), dir = file.getParent();
-        sfile = dir.getFile(surl.getPathName());
-        if(sfile==null) sfile = dir.getFile("Dataset.xml");
-        if(sfile!=null) _sourceURL = sfile.getURL();
+    if(file==null && _docURL!=null) {
+        WebFile dfile = _docURL.getFile(), dir = dfile.getParent();
+        file = dir.getFile(url.getPathName());
+        if(file==null) file = dir.getFile("Dataset.xml");
+        if(file!=null) _url = file.getURL();
     }
     
     // Get bytes (if null, set stuff and bail)
-    if(sfile!=null) sfile.reload();
-    byte bytes[] = sfile!=null? sfile.getBytes() : null;
+    if(file!=null) file.reload();
+    byte bytes[] = file!=null? file.getBytes() : null;
     if(bytes==null) {
         _schema = new Schema("root"); _schema.addEntity(new Entity("root"));
-        _dataset = new HashMap(); return _dataset;
+        return _dataset = new HashMap();
     }
     
     // Create XML reader and read dataset
@@ -134,7 +114,7 @@ public XMLElement toXML(XMLArchiver anArchiver)
     XMLElement e = new XMLElement("datasource");
     
     // Archive SourceURL
-    String surl = getSourceURL()!=null? getSourceURL().getString() : null;
+    String surl = getURL()!=null? getURL().getString() : null;
     if(surl!=null && surl.endsWith("HollywoodDB.xml")) surl = "Jar:/com/reportmill/examples/HollywoodDB.xml";
     if(surl!=null) e.add("source", surl);
         
@@ -154,8 +134,9 @@ public XMLElement toXML(XMLArchiver anArchiver)
  */
 public RMDataSource fromXML(XMLArchiver anArchiver, XMLElement anElement)
 {
-    // Unarchive SourceURL
-    _source = anElement.getAttributeValue("source");
+    // Unarchive URL for xml file
+    String urls = anElement.getAttributeValue("source");
+    _url = WebURL.getURL(urls);
 
     // If custom schema element present, unarchive schema
     XMLElement schema = anElement.get("custom-schema");
@@ -165,7 +146,7 @@ public RMDataSource fromXML(XMLArchiver anArchiver, XMLElement anElement)
     }
     
     // Cache document archiver SourceURL and return this datasource
-    _docSourceURL = anArchiver.getSourceURL();
+    _docURL = anArchiver.getSourceURL();
     return this;
 }
 
