@@ -27,7 +27,7 @@ public RMDocument getDoc(Object aSource, RMDocument aBaseDoc)
     if(aSource instanceof RMDocument) return (RMDocument)aSource;
     
     // Get URL and/or bytes (complain if not found)
-    WebURL url = null; try { url = WebURL.getURL(aSource); } catch(Exception e) { }
+    WebURL url = WebURL.getURL(aSource);
     byte bytes[] = url!=null? url.getBytes() : SnapUtils.getBytes(aSource);
     if(bytes==null)
         throw new RuntimeException("RMArchiver.getDoc: Cannot read source: " + (url!=null? url : aSource));

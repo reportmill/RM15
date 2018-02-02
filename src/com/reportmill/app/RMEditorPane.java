@@ -377,7 +377,7 @@ public RMEditorPane open(Object aSource)
     if(aSource==null) return null;
     
     // Get Source URL
-    WebURL url = null; try { url = WebURL.getURL(aSource); } catch(Exception e) { }
+    WebURL url = WebURL.getURL(aSource);
     
     // If source is already opened, return editor pane
     if(!SnapUtils.equals(url, getSourceURL())) {

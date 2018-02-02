@@ -6,10 +6,10 @@ import com.reportmill.app.*;
 import com.reportmill.graphics.*;
 import com.reportmill.shape.*;
 import java.util.*;
-import snap.gfx.Image;
 import snap.util.*;
 import snap.view.*;
 import snap.viewx.ColorWell;
+import snap.web.WebURL;
 
 /**
  * Provides a tool for editing RMFills.
@@ -23,7 +23,7 @@ public class RMFillTool extends RMEditorPane.SupportPane {
     static RMStroke     _strokes[] = { new RMStroke(), new RMBorderStroke() };
     
     // List of known fills
-    static RMImageFill  _imageFill = new RMImageFill(Image.get(RMFillTool.class, "pkg.images/Clouds.jpg"), true);
+    static RMImageFill  _imageFill = new RMImageFill(WebURL.getURL(RMFillTool.class, "pkg.images/Clouds.jpg"), true);
     static RMFill       _fills[] = { new RMFill(), new RMGradientFill(), _imageFill };
 
 /**

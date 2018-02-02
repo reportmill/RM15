@@ -66,7 +66,7 @@ public class RMImageData implements Cloneable {
     static List <WeakReference<RMImageData>>  _cache = new ArrayList();
     
     // A shared empty ImageData
-    public static RMImageData EMPTY = getImageData(Image.get(RMImageData.class, "DefaultImage.png"));
+    public static RMImageData EMPTY = getImageData(WebURL.getURL(RMImageData.class, "DefaultImage.png"));
     
 /**
  * Returns an image data loaded from aSource. If image type supports multiple pages, page index can be specified.
@@ -77,12 +77,12 @@ public static synchronized RMImageData getImageData(Object aSource)
     if(aSource==null) return EMPTY;
     if(aSource instanceof RMImageData) return (RMImageData)aSource;
     
-    // Handle Image
+    // Handle Image (only happens from RMEffectPdfr?)
     if(aSource instanceof Image) {
         RMImageData idata = new RMImageData(); idata.setSource(aSource, 0); return idata; }
     
     // Get source url
-    WebURL url = null; try { url = WebURL.getURL(aSource); } catch(Exception e) { }
+    WebURL url = WebURL.getURL(aSource);
     
     // Iterate over image list and see if any match source
     for(int i=_cache.size()-1; i>0; i--) { RMImageData idata = _cache.get(i).get();
@@ -104,7 +104,7 @@ public static synchronized RMImageData getImageData(Object aSource)
     
     // Create new ImageData, add to cache (as WeakReference) and return
     RMImageData idata = RMImageDataPDF.canRead(bytes)? new RMImageDataPDF() : new RMImageData();
-    idata.setSource(url!=null? url : bytes!=null? bytes : aSource, 0);
+    idata.setSource(url!=null? url : bytes, 0);
     _cache.add(new WeakReference(idata));
     return idata;
 }
@@ -120,19 +120,15 @@ public Object getSource()  { return _source; }
 protected void setSource(Object aSource, int aPageIndex)
 {
     // Get URL, source, modified time
-    WebURL url = null; try { url = WebURL.getURL(aSource); } catch(Exception e) { }
+    WebURL url = WebURL.getURL(aSource);
     _source = url!=null? url : aSource;
     _modTime = url!=null? url.getLastModTime() : System.currentTimeMillis();
 
-    // If source is image, set basic info
+    // Handle Image (only happens from RMEffectPdfr?)
     if(aSource instanceof Image) {
-        _image = (Image)aSource;
-        _type = _image.hasAlpha()? "png" : "jpg";
+        _image = (Image)aSource; _type = _image.hasAlpha()? "png" : "jpg";
         _width = (int)_image.getWidth(); _height = (int)_image.getHeight();
-        _hasAlpha = _image.hasAlpha();
-        _spp = _hasAlpha? 4 : 3;
-        _bps = 8;
-        _bytes = null;
+        _hasAlpha = _image.hasAlpha(); _spp = _hasAlpha? 4 : 3; _bps = 8;  _bytes = null;
     }
     
     // Otherwise, assume source can provide bytes

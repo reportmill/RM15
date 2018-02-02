@@ -9,6 +9,7 @@ import com.reportmill.shape.*;
 import java.util.Random;
 import snap.gfx.*;
 import snap.view.*;
+import snap.web.WebURL;
 
 /**
  * This class implements the trackball widget.  It is an optional replacement for the Scene3DControl.
@@ -41,9 +42,9 @@ public class RMTrackballControl extends RMViewer {
     double           _lastRollAngle;
 
     // The trackball image, highlight image and knob image
-    RMImageShape     _tball = new RMImageShape(Image.get(getClass(), "pkg.images/Trackball.png"));
-    RMImageShape     _tball_lit = new RMImageShape(Image.get(getClass(), "pkg.images/Trackball_lit.png"));
-    RMImageShape     _knob = new RMImageShape(Image.get(getClass(), "pkg.images/Trackball_knob.png"));
+    RMImageShape     _tball = new RMImageShape(WebURL.getURL(getClass(), "pkg.images/Trackball.png"));
+    RMImageShape     _tball_lit = new RMImageShape(WebURL.getURL(getClass(), "pkg.images/Trackball_lit.png"));
+    RMImageShape     _knob = new RMImageShape(WebURL.getURL(getClass(), "pkg.images/Trackball_knob.png"));
    
     // Location of the important parts of the control image
     static final float LEFT_EDGE = 2;
