@@ -12,7 +12,7 @@
     <MenuItem Name="MoveOutMenuItem" text="Move Out" />
   </MenuButton>
   <Button Name="KeysButton" x="210" y="5" width="60" height="20" text="Keys..." />
-  <TreeView Name="TablesTree" x="5" y="30" width="265" height="215" RootVisible="false" ShowRootHandles="false" />
+  <TreeView Name="TablesTree" x="5" y="30" width="265" height="215" />
   <Label x="5" y="275" width="40" height="20" text="Key:" />
   <TextField Name="DatasetKeyText" x="45" y="275" width="225" height="20">
     <binding aspect="Text" key="MainTable.DatasetKey" />

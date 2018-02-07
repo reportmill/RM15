@@ -19,7 +19,7 @@ public class RMTableGroupTool <T extends RMTableGroup> extends RMParentShapeTool
 protected void initUI()
 {
     // Get TableTree and configure
-    TreeView tablesTree = getView("TablesTree", TreeView.class); tablesTree.setShowRoot(false);
+    TreeView tablesTree = getView("TablesTree", TreeView.class);
     enableEvents(tablesTree, DragEvents); enableEvents(tablesTree, MouseRelease);
     //renderer.setClosedIcon(null); renderer.setOpenIcon(null); renderer.setLeafIcon(null);
     enableEvents("DatasetKeyText", DragDrop); enableEvents("MainTableNameText", DragDrop);
