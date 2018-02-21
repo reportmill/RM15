@@ -6,6 +6,7 @@ import com.reportmill.apptools.RMTableRowTool;
 import com.reportmill.graphics.*;
 import snap.util.*;
 import snap.view.*;
+import snap.viewx.RecentFiles;
 
 /**
  * Menu bar for RMEditor pane.
@@ -77,7 +78,10 @@ protected void respondUI(ViewEvent anEvent)
     }
     
     // Handle OpenRecentMenuItem
-    if(anEvent.equals("OpenRecentMenuItem")) new RecentFilesPanel().showPanel();
+    if(anEvent.equals("OpenRecentMenuItem")) {
+        String path = RecentFiles.showPathsPanel(epane.getUI(), "RecentDocuments"); if(path==null) return;
+        com.reportmill.app.Welcome.getShared().open(path); //file.getAbsolutePath());
+    }
 
     // Handle CloseMenuItem
     if(anEvent.equals("CloseMenuItem")) epane.close();

@@ -7,8 +7,7 @@ import com.reportmill.shape.*;
 import java.util.*;
 import snap.gfx.*;
 import snap.view.*;
-import snap.viewx.DialogBox;
-import snap.viewx.FileChooser;
+import snap.viewx.*;
 import snap.web.*;
 import snap.util.*;
 
@@ -365,7 +364,7 @@ public RMEditorPane newDocument()  { return open(new RMDocument(612, 792)); }
 public RMEditorPane open(View aView)
 {
     // Get path from open panel for supported file extensions
-    String path = FileChooser.showOpenPanel(aView, getFileDescription(), getFileExtensions());
+    String path = FilePanel.showOpenPanel(aView, getFileDescription(), getFileExtensions());
     return open(path);
 }
 
@@ -415,7 +414,7 @@ public RMEditorPane open(Object aSource)
     getViewer().setContent(doc);
     
     // If source is string, add to recent files menu
-    if(url!=null) RecentFilesPanel.addRecentFile(url.getString());
+    if(url!=null) RecentFiles.addPath("RecentDocuments", url.getPath(), 10);
     
     // Return the editor
     return this;
@@ -438,7 +437,7 @@ public void saveAs()
     }
     
     // Run save panel, set Document.Source to path and re-save (or just return if cancelled)
-    String path = FileChooser.showSavePanel(getUI(), getFileDescription(), exts); if(path==null) return;
+    String path = FilePanel.showSavePanel(getUI(), getFileDescription(), exts); if(path==null) return;
     getViewerShape().setSourceURL(WebURL.getURL(path));
     save();
 }
@@ -449,7 +448,7 @@ public void saveAs()
 public void save()
 {
     // If can't save to current source, do SaveAs instead
-    if(getSourceURL()==null) { saveAs(); return; }
+    WebURL url = getSourceURL(); if(url==null) { saveAs(); return; }
     
     // Make sure editor isn't previewing
     setEditing(true);
@@ -458,14 +457,14 @@ public void save()
     try { saveImpl(); }
     catch(Throwable e) {
         e.printStackTrace();
-        String msg = "The file " + getSourceURL().getPath() + " could not be saved (" + e + ").";
+        String msg = "The file " + url.getPath() + " could not be saved (" + e + ").";
         DialogBox dbox = new DialogBox("Error on Save"); dbox.setErrorMessage(msg);
         dbox.showMessageDialog(getUI());
         return;
     }
     
     // Add URL.String to RecentFilesMenu, clear undoer and reset UI
-    if(getSourceURL()!=null) RecentFilesPanel.addRecentFile(getSourceURL().getString());
+    RecentFiles.addPath("RecentDocuments", url.getPath(), 10);
     getViewerShape().getUndoer().reset();
     resetLater();
 }

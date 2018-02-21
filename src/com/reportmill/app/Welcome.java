@@ -3,10 +3,8 @@
  */
 package com.reportmill.app;
 import com.reportmill.base.ReportMill;
-import java.io.File;
-import java.util.List;
 import snap.view.*;
-import snap.viewx.DialogBox;
+import snap.viewx.*;
 import snap.web.WebURL;
 
 /**
@@ -51,14 +49,6 @@ public void runWelcome()
     // Set enabled, since we were run explicitly
     setEnabled(true);
     
-    // Configure RecentFilesMenuButton with recent files
-    MenuButton recentFilesButton = getView("RecentFilesMenuButton", MenuButton.class);
-    recentFilesButton.setItems(null);
-    List <File> files = RecentFilesPanel.getRecentFiles();
-    for(File file : files) {
-        MenuItem mi = new MenuItem(); mi.setName("RecentFilesMenuItem"); mi.setText(file.getName());
-        mi.setProp("File", file); mi.setOwner(this); recentFilesButton.addItem(mi); }
-
     // Make welcome panel visible
     getWindow().setVisible(true);
     
@@ -88,6 +78,9 @@ protected void initUI()
     setViewText("BuildLabel", "Build: " + ReportMill.getBuildInfo());
     setViewText("JavaLabel", "Java: " + System.getProperty("java.runtime.version"));
     setViewText("LicenseLabel", lstring);
+    
+    // 
+    getView("RecentFilesButton", Button.class).setImage(ComboBox.getArrowImage());
         
     // Configure Window: Image, Add WindowListener to indicate app should exit when close button clicked
     getWindow().setType(WindowView.TYPE_UTILITY); //getWindow().setImage(RMEditorPane.getFrameIcon());
@@ -124,11 +117,9 @@ public void respondUI(ViewEvent anEvent)
         open(path);
     }
     
-    // Handle RecentFilesMenuItem
-    if(anEvent.equals("RecentFilesMenuItem")) {
-        File file = (File)anEvent.getView().getProp("File");
-        open(file.getAbsolutePath());
-    }
+    // Handle RecentFilesButton
+    if(anEvent.equals("RecentFilesButton"))
+        RecentFiles.showPathsMenu(anEvent.getView(), "RecentDocuments", str -> open(str));
     
     // Handle FinishButton
     if(anEvent.equals("QuitButton") || anEvent.isWinClose())

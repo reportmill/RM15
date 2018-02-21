@@ -21,7 +21,4 @@
       <CheckBox Name="PrivateCheckBox" x="55" y="90" width="150" height="20" text="Private" />
     </SpringView>
   </SwitchView>
-  <MenuButton x="251" y="4" width="19" height="19">
-    <MenuItem Name="SaveDatasetMenuItem" text="Save As XML..." />
-  </MenuButton>
 </SpringView>

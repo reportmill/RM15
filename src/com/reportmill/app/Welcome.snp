@@ -14,7 +14,5 @@
   <Button Name="NewButton" x="51" y="225" width="90" height="29" text="New" />
   <Button Name="OpenButton" x="174" y="225" width="90" height="29" text="Open" />
   <Button Name="QuitButton" x="297" y="225" width="90" height="29" text="Quit" />
-  <MenuButton Name="RecentFilesMenuButton" x="264" y="241" width="12" height="14" LeanY="BOTTOM" ShowBorder="false">
-    <font name="Arial" size="11" />
-  </MenuButton>
+  <Button Name="RecentFilesButton" x="264" y="241" width="12" height="14" LeanY="BOTTOM" ShowBorder="false" />
 </SpringView>
