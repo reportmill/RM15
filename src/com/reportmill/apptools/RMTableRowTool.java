@@ -8,6 +8,7 @@ import java.util.*;
 import snap.gfx.Point;
 import snap.util.StringUtils;
 import snap.view.*;
+import snap.viewx.DialogBox;
 
 /**
  * This class provides UI editing for table rows.

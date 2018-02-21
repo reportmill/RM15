@@ -5,6 +5,7 @@ package com.reportmill.app;
 import com.reportmill.base.ReportMill;
 import snap.util.*;
 import snap.view.*;
+import snap.viewx.DialogBox;
 
 /**
  * This class provides a Preferences panel UI window.

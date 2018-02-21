@@ -6,6 +6,7 @@ import com.reportmill.base.ReportMill;
 import java.io.File;
 import java.util.List;
 import snap.view.*;
+import snap.viewx.DialogBox;
 import snap.web.WebURL;
 
 /**

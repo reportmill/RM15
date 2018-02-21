@@ -5,6 +5,7 @@ package com.reportmill.apptools;
 import com.reportmill.shape.*;
 import snap.util.ClassUtils;
 import snap.view.*;
+import snap.viewx.DialogBox;
 
 /**
  * Provides UI inspection for GraphPartBars.

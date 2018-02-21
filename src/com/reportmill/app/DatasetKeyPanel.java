@@ -3,6 +3,7 @@
  */
 package com.reportmill.app;
 import snap.view.*;
+import snap.viewx.DialogBox;
 
 /**
  * Runs a simple panel letting the user choose a dataset key element, like table, graph, crosstab or labels.

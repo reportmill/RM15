@@ -5,7 +5,6 @@ package com.reportmill.apptools;
 import com.reportmill.app.RMEditor;
 import com.reportmill.base.RMGrouping;
 import com.reportmill.shape.*;
-import java.io.*;
 import java.util.*;
 import snap.util.SnapUtils;
 import snap.util.StringUtils;

@@ -8,6 +8,7 @@ import com.reportmill.shape.*;
 import snap.gfx.Image;
 import snap.util.StringUtils;
 import snap.view.*;
+import snap.viewx.DialogBox;
 
 /**
  * Provides UI for configuring a grouping for a tool.

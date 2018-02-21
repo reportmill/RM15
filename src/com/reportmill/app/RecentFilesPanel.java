@@ -6,6 +6,7 @@ import java.io.File;
 import java.util.*;
 import snap.util.*;
 import snap.view.*;
+import snap.viewx.DialogBox;
 
 /**
  * A custom class.

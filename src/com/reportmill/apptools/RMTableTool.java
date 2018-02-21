@@ -9,6 +9,7 @@ import com.reportmill.shape.*;
 import snap.gfx.*;
 import snap.util.*;
 import snap.view.*;
+import snap.viewx.DialogBox;
 
 /**
  * This class provides UI editing for Tables.

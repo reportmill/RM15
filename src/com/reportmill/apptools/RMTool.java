@@ -10,6 +10,7 @@ import snap.data.Entity;
 import snap.gfx.*;
 import snap.util.*;
 import snap.view.*;
+import snap.viewx.DialogBox;
 
 /**
  * This is the base class for tools in RM - the objects that provide GUI editing for RM shapes.

@@ -7,6 +7,7 @@ import com.reportmill.shape.*;
 import java.util.*;
 import snap.gfx.*;
 import snap.view.*;
+import snap.viewx.DialogBox;
 import snap.viewx.FileChooser;
 import snap.web.*;
 import snap.util.*;

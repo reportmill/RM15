@@ -5,6 +5,7 @@ package com.reportmill.app;
 import com.reportmill.base.*;
 import snap.util.*;
 import snap.view.*;
+import snap.viewx.DialogBox;
 import java.util.*;
 
 /**

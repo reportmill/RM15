@@ -7,8 +7,8 @@ import com.apple.eawt.AppEvent.*;
 import com.reportmill.base.ReportMill;
 import javax.swing.SwingUtilities;
 import snap.util.*;
-import snap.view.DialogBox;
 import snap.view.WindowView;
+import snap.viewx.DialogBox;
 import snap.viewx.ExceptionReporter;
 
 /************************************* - All files should be 120 chars wide - *****************************************/

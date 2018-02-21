@@ -5,6 +5,7 @@ package com.reportmill.apptools;
 import com.reportmill.shape.*;
 import snap.gfx.Image;
 import snap.view.*;
+import snap.viewx.DialogBox;
 
 /**
  * This class provides UI editing for RMPage shapes.

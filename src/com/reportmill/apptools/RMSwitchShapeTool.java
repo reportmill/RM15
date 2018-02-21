@@ -6,6 +6,7 @@ import com.reportmill.shape.*;
 import java.util.*;
 import snap.util.ListUtils;
 import snap.view.*;
+import snap.viewx.DialogBox;
 
 /**
  * Tool for Switch shape.

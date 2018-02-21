@@ -3,6 +3,7 @@ import snap.gfx.Border;
 import snap.gfx.Color;
 import snap.gfx.Font;
 import snap.view.*;
+import snap.viewx.DialogBox;
 
 /**
  * A panel to help users pick a font by preview.
