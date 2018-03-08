@@ -101,14 +101,14 @@ protected void layoutChildren()
     // Use width() instead of getWidth(), because we need the sign
     double w = width(), h = height();
     double angle = Math.atan2(h, w)*180/Math.PI;
-    double x = w<0 ? 0 : w;
-    double y = h<0 ? 0 : h;
+    double x = w<0? 0 : w;
+    double y = h<0? 0 : h;
     
     // Reset head location
     head.setRoll(angle);
     head.setXY(0,0);
-    Point originInParent = head.convertedPointToShape(head.getOrigin(), this);
-    head.setXY(x - originInParent.getX(), y - originInParent.getY());
+    Point originInParent = head.getOriginInParent();
+    head.setXY(x - originInParent.x, y - originInParent.y);
 }
 
 /**
@@ -138,53 +138,29 @@ protected XMLElement toXMLShape(XMLArchiver anArchiver)
 }
 
 /**
- * A line segment arrow head.
+ * A shape for RMLineShape arrow head.
  */
 public static class ArrowHead extends RMPolygonShape {
 
     // Point, in path coords, that gets attached to end (for arrowheads) or start (for arrow tails) of the line 
-    Point     _origin = new Point();
+    Point     _originInPath, _originInShape;
 
-    /** Creates a new arrow head. */
-    public ArrowHead() { }
-    
-    /** Creates a new arrow head of type. */
-    public ArrowHead(int aType) 
-    {
-        RMPath p = new RMPath();
-        p.moveTo(0,0); p.lineTo(-2.828, 2.828); p.lineTo(-2.121, 3.535);
-        p.lineTo(1.4142, 0); p.lineTo(-2.121, -3.535); p.lineTo(-2.828, -2.828); p.close();
-        Rect r = p.getBounds();
-        setSize(r.getWidth(), r.getHeight());
-        setPath(p);
-    }
-    
     /** Returns the point, in the shape's coordinate system, of the origin (attachment point). */
-    public Point getOrigin()  { return _origin; }
+    public Point getOrigin()  { return _originInPath; }
     
-    /** Overridden to indicate arrow head is always funky. */
-    public boolean notRSS()  { return false; }
+    /** Returns the line origin in parent. */
+    public Point getOriginInParent()  { return convertedPointToShape(_originInShape, getParent()); }
     
-    /** Overridden from RMShape to change the center of rotation to the arrowhead origin. */
-    public Transform getTransform()
-    {
-        // Get location, size, point of rotation, rotation, scale, skew
-        double x = getX(), y = getY(), prx = _origin.x, pry = _origin.y;
-        double roll = getRoll(), sx = getScaleX(), sy = getScaleY();
-        
-        // Transform about point of rotation and return
-        Transform t = new Transform(x + prx, y + pry);
-        if(sx!=1 || sy!=1) t.scale(sx, sy);
-        if(roll!=0) t.rotate(roll);
-        t.translate(-prx, -pry); return t;
-    }
+    /** Override to trigger line relayout. */
+    public void setScaleX(double aVal)  { super.setScaleX(aVal); if(getParent()!=null) getParent().relayout(); }
+    public void setScaleY(double aVal)  { super.setScaleY(aVal); if(getParent()!=null) getParent().relayout(); }
     
     /** XML archival. */
     public XMLElement toXMLShape(XMLArchiver anArchiver)
     {
         XMLElement e = super.toXMLShape(anArchiver); e.setName("arrow-head");
-        if(_origin.getX() != 0) e.add("xorigin", _origin.getX());
-        if(_origin.getY() != 0) e.add("yorigin", _origin.getY());
+        if(_originInPath.x != 0) e.add("xorigin", _originInPath.x);
+        if(_originInPath.y != 0) e.add("yorigin", _originInPath.y);
         return e;
     }
     
@@ -194,13 +170,10 @@ public static class ArrowHead extends RMPolygonShape {
         super.fromXMLShape(anArchiver, anElement);
         float x = anElement.getAttributeFloatValue("xorigin", 0);
         float y = anElement.getAttributeFloatValue("yorigin", 0);
-        _origin = new Point(x,y);
+        _originInPath = new Point(x,y);
         
-        // Origin is relative to path bounds instead of shape bounds - need to fix now that path always in shape bounds
-        Rect prect = _path.getBounds(), srect = getBoundsInside();
-        double sx = srect.getWidth()/prect.getWidth(), sy = srect.getHeight()/prect.getHeight();
-        double tx = -prect.getX()*sx, ty = -prect.getY()*sy;
-        new Transform(sx,0,0,sy,tx,ty).transform(_origin);
+        // Get origin in shape coords from origin in path coords
+        _originInShape = Transform.getTrans(_path.getBounds(), getBoundsInside()).transform(x, y);
     }
 }
 

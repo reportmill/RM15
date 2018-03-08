@@ -259,18 +259,12 @@ public void willLoseSuperSelected(T aShape)
 }
 
 /**
- * Draws the polygon tool's path durring path creation.
+ * Draws the polygon tool's path during path creation.
  */
 public void paintTool(Painter aPntr)
 {
-    if(_path!=null) {
-        Rect pbounds = getEditor().getPageBounds();
-        aPntr.translate(pbounds.getX(), pbounds.getY());
-        aPntr.scale(getEditor().getZoomFactor(), getEditor().getZoomFactor());
-        aPntr.setColor(Color.BLACK); aPntr.setStroke(Stroke.Stroke1); aPntr.draw(_path);
-        aPntr.scale(1/getEditor().getZoomFactor(), 1/getEditor().getZoomFactor());
-        aPntr.translate(-pbounds.getX(), -pbounds.getY());
-    }
+    if(_path==null) return;
+    aPntr.setColor(Color.BLACK); aPntr.setStroke(Stroke.Stroke1); aPntr.draw(_path);
 }
 
 /**

@@ -428,7 +428,7 @@ public double getRoll()  { return _rss==null? 0 : _rss[0]; }
  */
 public void setRoll(double aValue)
 {
-    if(aValue==getRoll()) return;
+    aValue = Math.round(aValue*100)/100d; if(aValue==getRoll()) return;
     repaint();
     firePropChange("Roll", getRSS()[0], _rss[0] = aValue);
 }
@@ -443,7 +443,7 @@ public double getScaleX()  { return _rss==null? 1 : _rss[1]; }
  */
 public void setScaleX(double aValue)
 {
-    if(aValue==getScaleX()) return;
+    aValue = Math.round(aValue*100)/100d; if(aValue==getScaleX()) return;
     repaint();
     firePropChange("ScaleX", getRSS()[1], _rss[1] = aValue);
 }
@@ -458,7 +458,7 @@ public double getScaleY()  { return _rss==null? 1 : _rss[2]; }
  */
 public void setScaleY(double aValue)
 {
-    if(aValue==getScaleY()) return;
+    aValue = Math.round(aValue*100)/100d; if(aValue==getScaleY()) return;
     repaint();
     firePropChange("ScaleY", getRSS()[2], _rss[2] = aValue);
 }
@@ -478,7 +478,7 @@ public double getSkewX()  { return _rss==null? 0 : _rss[3]; }
  */
 public void setSkewX(double aValue)
 {
-    if(aValue==getSkewX()) return;
+    aValue = Math.round(aValue*100)/100d; if(aValue==getSkewX()) return;
     repaint();
     firePropChange("SkewX", getRSS()[3], _rss[3] = aValue);
 }
@@ -493,7 +493,7 @@ public double getSkewY()  { return _rss==null? 0 : _rss[4]; }
  */
 public void setSkewY(double aValue)
 {
-    if(aValue==getSkewY()) return;
+    aValue = Math.round(aValue*100)/100d; if(aValue==getSkewY()) return;
     repaint();
     firePropChange("SkewY", getRSS()[4], _rss[4] = aValue);
 }

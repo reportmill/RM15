@@ -3,7 +3,7 @@
  */
 package com.reportmill.apptools;
 import com.reportmill.shape.*;
-import java.util.List;
+import java.util.*;
 import snap.gfx.*;
 import snap.util.SnapUtils;
 import snap.view.*;
@@ -15,10 +15,10 @@ import snap.web.WebURL;
 public class RMLineShapeTool <T extends RMLineShape> extends RMTool <T> {
     
     // Indicates whether line should try to be strictly horizontal or vertical
-    boolean               _hysteresis = false;
+    boolean             _hysteresis = false;
     
     // The list of arrow head shapes
-    List <RMLineShape>    _arrowShapes;
+    static RMShape      _arrowHeads[];
 
     // Constants for line segment points
     public static final byte HandleStartPoint = 0;
@@ -99,12 +99,19 @@ public void moveShapeHandle(T aShape, int aHandle, Point aPoint)
 /**
  * Loads the list of arrow shapes from a .rpt file.
  */
-public List <RMLineShape> getArrows()
+private RMShape[] getArrowHeads()
 {
-    if(_arrowShapes!=null) return _arrowShapes;
-    WebURL url = WebURL.getURL(getClass(), "RMLineShapeToolArrowHeads.rpt");
+    // If already set, just return
+    if(_arrowHeads!=null) return _arrowHeads;
+    
+    // Load document with defined arrow heads
+    WebURL url = WebURL.getURL(RMLineShapeTool.class, "RMLineShapeToolArrowHeads.rpt");
     RMDocument doc = new RMDocument(url);
-    return _arrowShapes = doc.getChildrenWithClass(getShapeClass());
+    
+    // Extract lines and heads and return array of heads
+    List <RMLineShape> lines = doc.getChildrenWithClass(RMLineShape.class);
+    List <RMShape> heads = new ArrayList(lines.size()); for(RMLineShape ln : lines) heads.add(ln.getArrowHead());
+    return _arrowHeads = heads.toArray(new RMShape[lines.size()]);
 }
 
 /**
@@ -116,16 +123,16 @@ protected void initUI()
     MenuButton menuButton = getView("ArrowsMenuButton", MenuButton.class);
         
     // Add arrows menu button
-    for(int i=0; i<getArrows().size(); i++) { RMLineShape line = getArrows().get(i);
-        Image image = RMShapeUtils.createImage(line.getArrowHead(), null);
-        MenuItem mitem = new MenuItem(); mitem.setImage(image);
-        mitem.setName("ArrowsMenuButtonMenuItem" + i);
-        menuButton.addItem(mitem);
+    RMShape arrowHeads[] = getArrowHeads();
+    for(int i=0; i<arrowHeads.length; i++) { RMShape ahead = arrowHeads[i];
+        Image image = RMShapeUtils.createImage(ahead, null);
+        MenuItem mi = new MenuItem(); mi.setImage(image); mi.setName("ArrowsMenuButtonMenuItem" + i);
+        menuButton.addItem(mi);
     }
     
     // Add "None" menu item
-    MenuItem mitem = new MenuItem(); mitem.setText("None"); mitem.setName("ArrowsMenuButtonMenuItem 999");
-    menuButton.addItem(mitem);
+    MenuItem mi = new MenuItem(); mi.setText("None"); mi.setName("ArrowsMenuButtonMenuItem 999");
+    menuButton.addItem(mi);
 }
 
 /**
@@ -163,8 +170,8 @@ public void respondUI(ViewEvent anEvent)
 
     // Handle ArrowsMenuButtonMenuItem
     if(anEvent.getName().startsWith("ArrowsMenuButtonMenuItem")) {
-        int index = SnapUtils.intValue(anEvent.getName());
-        RMLineShape.ArrowHead ahead = index<getArrows().size()? getArrows().get(index).getArrowHead() : null;
+        int ind = SnapUtils.intValue(anEvent.getName());
+        RMShape ahead = ind<getArrowHeads().length? getArrowHeads()[ind] : null;
         line.setArrowHead(ahead!=null? (RMLineShape.ArrowHead)ahead.clone() : null);
     }
 }
