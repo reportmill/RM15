@@ -6,8 +6,8 @@ import com.reportmill.graphics.*;
 import com.reportmill.shape.RMShape;
 import java.util.*;
 import snap.gfx.*;
-import snap.pdf.*;
-import snap.pdf.write.PDFPageWriter;
+import snappdf.*;
+import snappdf.write.PDFPageWriter;
 
 /**
  * This RMObjectPdfr subclass writes PDF for RMFill.

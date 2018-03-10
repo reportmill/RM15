@@ -13,10 +13,10 @@ jar cf ReportMill15.jar \
     -C ../../RM15/bin com/reportmill/graphics \
     -C ../../RM15/bin com/reportmill/out \
     -C ../../RM15/bin com/reportmill/shape \
+    -C ../../SnapPDF/bin snappdf \
     -C ../../SnapKit/bin snap/data \
     -C ../../SnapKit/bin snap/gfx \
     -C ../../SnapKit/bin snap/parse \
-    -C ../../SnapKit/bin snap/pdf \
     -C ../../SnapKit/bin snap/swing \
     -C ../../SnapKit/bin snap/util \
     -C ../../SnapKit/bin snap/view \
@@ -31,7 +31,7 @@ echo "Permissions: all-permissions" >> MANIFEST.MF
 echo "Codebase: *" >> MANIFEST.MF
 
 echo "Creating RMStudio15.jar"
-jar cmf MANIFEST.MF RMStudio15.jar com -C ../../SnapKit/bin snap
+jar cmf MANIFEST.MF RMStudio15.jar com -C ../../SnapKit/bin snap -C ../../SnapPDF/bin snappdf
 
 #echo "Creating RMStudio15.jar.pack.gz"
 #pack200 RMStudio15.jar.pack.gz RMStudio15.jar

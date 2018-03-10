@@ -5,7 +5,7 @@ package com.reportmill.out;
 import com.reportmill.graphics.*;
 import com.reportmill.shape.*;
 import snap.gfx.Rect;
-import snap.pdf.write.*;
+import snappdf.write.*;
 
 /**
  * This RMObjectPdfr subclass writes PDF for RMShape.

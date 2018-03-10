@@ -7,8 +7,8 @@ import com.reportmill.graphics.*;
 import com.reportmill.shape.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import snap.pdf.*;
-import snap.pdf.write.*;
+import snappdf.*;
+import snappdf.write.*;
 
 /**
  * PDF Writer.

@@ -5,8 +5,8 @@ package com.reportmill.out;
 import com.reportmill.graphics.*;
 import com.reportmill.shape.*;
 import snap.gfx.*;
-import snap.pdf.PDFPage;
-import snap.pdf.write.*;
+import snappdf.PDFPage;
+import snappdf.write.*;
 
 /**
  * A custom class.

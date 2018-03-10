@@ -7,4 +7,5 @@
   <classpathentry kind="lib" path="lib/eawt.jar" />
   <classpathentry combineaccessrules="false" kind="src" path="/SnapKit" />
   <classpathentry kind="output" path="bin" />
+  <classpathentry kind="src" path="/SnapPDF" />
 </classpath>

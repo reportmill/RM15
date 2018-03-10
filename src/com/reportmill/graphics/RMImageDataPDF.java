@@ -3,7 +3,7 @@
  */
 package com.reportmill.graphics;
 import snap.util.MathUtils;
-import snap.pdf.*;
+import snappdf.*;
 import snap.gfx.*;
 
 /**
