@@ -5,7 +5,6 @@ package com.reportmill.app;
 import com.reportmill.base.*;
 import com.reportmill.shape.*;
 import java.util.*;
-import snap.data.*;
 import snap.view.*;
 
 /**

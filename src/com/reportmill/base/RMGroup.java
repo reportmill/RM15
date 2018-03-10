@@ -3,7 +3,6 @@
  */
 package com.reportmill.base;
 import java.util.*;
-import snap.data.*;
 import snap.util.ListUtils;
 
 /**

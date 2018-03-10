@@ -3,10 +3,10 @@
  */
 package com.reportmill.apptools;
 import com.reportmill.app.*;
+import com.reportmill.base.Entity;
 import com.reportmill.shape.*;
 import com.reportmill.graphics.*;
 import java.util.*;
-import snap.data.Entity;
 import snap.gfx.*;
 import snap.util.*;
 import snap.view.*;

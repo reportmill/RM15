@@ -7,7 +7,6 @@ import com.reportmill.graphics.*;
 import com.reportmill.out.*;
 import java.util.*;
 import java.io.File;
-import snap.data.*;
 import snap.gfx.*;
 import snap.util.*;
 

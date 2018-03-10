@@ -4,7 +4,6 @@
 package com.reportmill.base;
 import java.lang.reflect.*;
 import java.util.*;
-import snap.data.*;
 import snap.util.*;
 
 /**
