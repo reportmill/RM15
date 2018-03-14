@@ -228,10 +228,10 @@ protected boolean addRows(RMGroup aGroup, RMTableRowRPG aParentRPG, RMTableRowRP
 
         // Check for PageBreak: If we're at PageBreakGroupIndex or DetailsRow.PageBreakKey evals true, set DoPageBreak
         int pbreakGroupIndex = _table.getPageBreakGroupIndex();
-        if(pbreakGroupIndex>=0 && pbreakGroupIndex>=aGroup.getParentCount()) _doPageBreak = true;
+        if(pbreakGroupIndex>=0 && pbreakGroupIndex>=aGroup.getParentCount() && i+1<iMax) _doPageBreak = true;
         String pbreakKey = detailsRow!=null? detailsRow.getPageBreakKey() : null;
-        if(pbreakKey!=null && RMKeyChain.getBoolValue(childGroup, pbreakKey)) _doPageBreak = true;
-        if(_doPageBreak && i+1<iMax) {
+        if(pbreakKey!=null && RMKeyChain.getBoolValue(childGroup, pbreakKey) && i+1<iMax) _doPageBreak = true;
+        if(_doPageBreak) {
             _lastRow = new RMTableRowRPG(); _lastRow._group = aGroup.getGroup(i+1); added++; break; }
     }
     
