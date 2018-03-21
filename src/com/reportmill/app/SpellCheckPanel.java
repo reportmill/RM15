@@ -62,7 +62,7 @@ public void resetUI()
     // Reset WordText
     setViewValue("WordText", _word==null? "" : _word.getString());
     
-    // Reset SuggestionList Items and SelectedIndex
+    // Reset SuggestionList Items and SelIndex
     Object items[] = _word!=null? _word.getSuggestions().toArray() : new Object[0];
     setViewItems("SuggestionList", items);
     if(items.length>0) setViewSelIndex("SuggestionList", 0);

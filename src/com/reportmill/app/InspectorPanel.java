@@ -262,19 +262,19 @@ public void resetSelectionPathMatrix()
 /**
  * Changes the selection path selection to the level of the string index in the action event.
  */
-public void popSelection(int selectedIndex) 
+public void popSelection(int selIndex) 
 {
     // Get main editor (just return if editor or deepest shape is null)
     RMEditor editor = getEditor(); if(editor==null || _deepestShape==null) return;
     
     // If user selected descendant of current selected shape, select on down to it
-    if(selectedIndex > editor.getSelectedOrSuperSelectedShape().getAncestorCount()-1) {
+    if(selIndex > editor.getSelectedOrSuperSelectedShape().getAncestorCount()-1) {
         
         // Get current deepest shape
         RMShape shape = _deepestShape;
 
         // Find shape that was clicked on
-        while(selectedIndex != shape.getAncestorCount()-1)
+        while(selIndex != shape.getAncestorCount()-1)
             shape = shape.getParent();
 
         // If shape parent's childrenSuperSelectImmediately, superSelect shape
@@ -286,7 +286,7 @@ public void popSelection(int selectedIndex)
     }
 
     // If user selected ancestor of current shape, pop selection up to it
-    else while(selectedIndex != editor.getSelectedOrSuperSelectedShape().getAncestorCount()-1)
+    else while(selIndex != editor.getSelectedOrSuperSelectedShape().getAncestorCount()-1)
         editor.popSelection();
 
     // Set selected shape to new editor selected shape

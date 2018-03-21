@@ -173,7 +173,7 @@ public void respondUI(ViewEvent anEvent)
     // Handle ColorDock
     if(anEvent.equals("ColorDock")) {
         ColorDock cdock = getView("ColorDock", ColorDock.class);
-        int index = 0; //cdock.getSelectedIndex(); // Get the selected index
+        int index = 0; //cdock.getSelIndex(); // Get the selected index
         List <RMColor> colors = new ArrayList(graph.getColors()); // Get copy of graph colors
         while(colors.size()<index+1) colors.add(RMColor.white); // Make sure they are at least as long as selected index
         colors.set(index, RMColor.get(cdock.getColor(index))); // Set color of selected index, remove trailing whites

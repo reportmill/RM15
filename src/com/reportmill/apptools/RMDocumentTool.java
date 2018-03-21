@@ -67,7 +67,7 @@ public void resetUI()
     setViewValue("PageWidthText", StringUtils.toString(getUnitsFromPoints(page.getWidth())));
     setViewValue("PageHeightText", StringUtils.toString(getUnitsFromPoints(page.getHeight())));
     
-    // Update PaperSizeComboBox: Get index of PaperName for Page.Size and set SelectedIndex
+    // Update PaperSizeComboBox: Get index of PaperName for Page.Size and set SelIndex
     int sindex = 0; for(int i=1; i<_paperSizeNames.length && sindex==0; i++) { Size size = _paperSizes[i];
         if(size.equals(page.getSize()) || size.equals(page.getHeight(), page.getWidth())) sindex = i; }
     setViewSelIndex("PaperSizeComboBox", sindex); // default to "custom"

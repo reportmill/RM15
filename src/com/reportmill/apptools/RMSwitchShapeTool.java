@@ -41,7 +41,7 @@ public void resetUI()
     RMSwitchShape shape = getSelectedShape(); if(shape==null) return;
     List <String> versions = getVersionNames(); if(versions==null) return;
     
-    // Update SwitchList Items and SelectedItem
+    // Update SwitchList Items and SelItem
     setViewItems("SwitchList", versions);
     setViewSelItem("SwitchList", shape.getVersion());
     
