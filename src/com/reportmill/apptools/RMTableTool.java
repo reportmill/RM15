@@ -74,7 +74,7 @@ public void resetUI()
     
     // Update GroupingTable
     _groupingTable.setItems(grouper.getGroupings());
-    _groupingTable.setSelectedIndex(grouper.getSelectedGroupingIndex());
+    _groupingTable.setSelIndex(grouper.getSelectedGroupingIndex());
     
     // Update TableGroupButton text
     String buttonText = table.getParent() instanceof RMTableGroup? "Ungroup TableGroup" : "Make TableGroup";

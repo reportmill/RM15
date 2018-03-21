@@ -34,18 +34,18 @@ public void resetUI()
     for(int i=0, iMax=undos.size(); i<iMax; i++) titles[i] = undos.get(iMax-1-i).getFullUndoTitle();
     
     // Reload data, preserving selection
-    int index = getViewSelectedIndex("UndosList");
+    int index = getViewSelIndex("UndosList");
     setViewItems("UndosList", titles);
-    if(index<undos.size()) setViewSelectedIndex("UndosList", index);
+    if(index<undos.size()) setViewSelIndex("UndosList", index);
 
     // Replace with titles
     titles = new String[redos.size()];
     for(int i=0, iMax=redos.size(); i<iMax; i++) titles[i] = redos.get(iMax-1-i).getFullRedoTitle();
     
     // Reload data, preserving selection
-    index = getViewSelectedIndex("RedosList");
+    index = getViewSelIndex("RedosList");
     setViewItems("RedosList", titles);
-    if(index<redos.size()) setViewSelectedIndex("RedosList", index);
+    if(index<redos.size()) setViewSelIndex("RedosList", index);
 }
 
 /**
@@ -58,7 +58,7 @@ public void respondUI(ViewEvent anEvent)
         
         // Get selected index (just return if null)
         
-        int index = getViewItems("UndosList").size() - 1 - getViewSelectedIndex("UndosList"); if(index<0) return;
+        int index = getViewItems("UndosList").size() - 1 - getViewSelIndex("UndosList"); if(index<0) return;
         
         // Get undoer and undo event
         Undoer undoer = getEditor().getUndoer();
@@ -68,7 +68,7 @@ public void respondUI(ViewEvent anEvent)
         setViewItems("ChangesList", undoEvent.getChanges().toArray());
 
         // Clear redo selection
-        setViewSelectedIndex("RedosList", -1);
+        setViewSelIndex("RedosList", -1);
         setViewValue("ChangeText", "");
     }
 
@@ -76,7 +76,7 @@ public void respondUI(ViewEvent anEvent)
     if(anEvent.equals("RedosList")) {
 
         // Get selected index (just return if null)
-        int index = getViewItems("RedosList").size() - 1 - getViewSelectedIndex("UndosList"); if(index<0) return;
+        int index = getViewItems("RedosList").size() - 1 - getViewSelIndex("UndosList"); if(index<0) return;
         
         // Get all redos
         List <UndoSet> redos = getEditor().getUndoer().getRedoSets();
@@ -88,13 +88,13 @@ public void respondUI(ViewEvent anEvent)
         setViewItems("ChangesList", undoEvent.getChanges().toArray());
         
         // Clear undo selection
-        setViewSelectedIndex("UndosList", -1);
+        setViewSelIndex("UndosList", -1);
         setViewValue("ChangeText", "");
     }
     
     // Handle ChangeList
     if(anEvent.equals("ChangesList")) {
-        PropChange e = (PropChange)getViewSelectedItem("ChangesList");
+        PropChange e = (PropChange)getViewSelItem("ChangesList");
         int index = e.getIndex();
         setViewValue("ChangeText", e.getSource().getClass().getSimpleName() + "(" + getId(e.getSource()) + ") " +
             e.getPropertyName() + " " + e.getOldValue() + " " + e.getNewValue() + " " +

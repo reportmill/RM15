@@ -34,7 +34,7 @@ public void resetUI()
     RMScene3D scene = getSelectedShape(); if(scene==null) return;
     
     // Reset Rendering radio buttons
-    setViewSelectedIndex("RenderingComboBox", scene.isPseudo3D()? 1 : 0);
+    setViewSelIndex("RenderingComboBox", scene.isPseudo3D()? 1 : 0);
     
     // Reset YawSpinner, PitchSpinner, RollSpinner
     setViewValue("YawSpinner", Math.round(scene.getYaw()));
@@ -63,7 +63,7 @@ public void respondUI(ViewEvent anEvent)
     
     // Handle RenderingComboBox
     if(anEvent.equals("RenderingComboBox")) {
-        scene.setPseudo3D(anEvent.getSelectedIndex()==1);
+        scene.setPseudo3D(anEvent.getSelIndex()==1);
         scene.setDefaultViewSettings();
     }
     

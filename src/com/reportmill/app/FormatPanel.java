@@ -75,7 +75,7 @@ public void resetUI()
     if(format instanceof RMNumberFormat) { RMNumberFormat nformat = (RMNumberFormat)format;
         
         // Install number panel if absent
-        setViewSelectedIndex("PickerPanel", 1);
+        setViewSelIndex("PickerPanel", 1);
         setViewValue("NumberFormatButton", true);
         
         // Update MoneyButton, PercentButton, CommaButton
@@ -84,7 +84,7 @@ public void resetUI()
         setViewValue("CommaButton", nformat.isGroupingUsed());
 
         // Have the table select current format if present
-        setViewSelectedIndex("NumberFormatTable", _numberFormats.indexOf(format));
+        setViewSelIndex("NumberFormatTable", _numberFormats.indexOf(format));
         
         // Update NumberFormatText, NegativeInRedCheckBox, NumberNullStringText
         setViewValue("NumberFormatText", nformat.getPattern());
@@ -96,11 +96,11 @@ public void resetUI()
     else if(format instanceof RMDateFormat) { RMDateFormat dformat = (RMDateFormat)format;
         
         // Install date panel if absent
-        setViewSelectedIndex("PickerPanel", 2);
+        setViewSelIndex("PickerPanel", 2);
         setViewValue("DateFormatButton", true);
 
         // Have the table select current format if present
-        setViewSelectedIndex("DateFormatTable", getDateFormatIndex(dformat.getPattern()));
+        setViewSelIndex("DateFormatTable", getDateFormatIndex(dformat.getPattern()));
         
         // Update DateFormatText, DateNullStringText
         setViewValue("DateFormatText", dformat.getPattern());
@@ -109,7 +109,7 @@ public void resetUI()
     
     // Handle NoFormatPanel
     else {
-        setViewSelectedIndex("PickerPanel", 0);
+        setViewSelIndex("PickerPanel", 0);
         setViewValue("NoFormatButton", true);
     }
 }
@@ -139,7 +139,7 @@ public void respondUI(ViewEvent anEvent)
         
     // Handle NumberFormatTable
     if(anEvent.equals("NumberFormatTable")) {
-        int row = anEvent.getSelectedIndex();
+        int row = anEvent.getSelIndex();
         if(row > -1) 
             RMEditorShapes.setFormat(editor, getNumberFormat(row).clone());
     }
@@ -212,8 +212,8 @@ public void respondUI(ViewEvent anEvent)
         numFormat.setNullString(anEvent.getStringValue());
 
     // Handle DateFormatTable
-    if(anEvent.equals("DateFormatTable") && anEvent.getSelectedIndex()>=0) {
-        int row = anEvent.getSelectedIndex();
+    if(anEvent.equals("DateFormatTable") && anEvent.getSelIndex()>=0) {
+        int row = anEvent.getSelIndex();
         RMDateFormat df = getDateFormat(row).clone();
         RMEditorShapes.setFormat(editor, df);
     }

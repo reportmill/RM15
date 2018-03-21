@@ -40,11 +40,11 @@ public void resetUI()
 
     // Reset table model shape
     _bindingsTable.setItems(shape.getPropNames());
-    if(_bindingsTable.getSelectedIndex()<0) _bindingsTable.setSelectedIndex(0);
+    if(_bindingsTable.getSelIndex()<0) _bindingsTable.setSelIndex(0);
     _bindingsTable.updateItems();
     
     // Reset BindingsText
-    String pname = _bindingsTable.getSelectedItem();
+    String pname = _bindingsTable.getSelItem();
     Binding binding = shape.getBinding(pname);
     setViewValue("BindingsText", binding!=null? binding.getKey() : null);
 }
@@ -84,7 +84,7 @@ public void respondUI(ViewEvent anEvent)
     if(anEvent.equals("BindingsText")) {
         
         // Get selected PropertyName and Key
-        String pname = _bindingsTable.getSelectedItem(); if(pname==null) return;
+        String pname = _bindingsTable.getSelItem(); if(pname==null) return;
         String key = getViewStringValue("BindingsText"); if(key!=null && key.length()==0) key = null;
         
         // Remove previous binding and add new one (if valid)

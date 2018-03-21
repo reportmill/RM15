@@ -79,7 +79,7 @@ public String getKeyPath()
  */
 public boolean isSelectedLeaf()
 {
-    KeyNode node = (KeyNode)_keysBrowser.getSelectedItem();
+    KeyNode node = (KeyNode)_keysBrowser.getSelItem();
     return node!=null && !node.isParent();
 }
 
@@ -88,7 +88,7 @@ public boolean isSelectedLeaf()
  */
 public boolean isSelectedToMany()
 {
-    KeyNode node = (KeyNode)_keysBrowser.getSelectedItem();
+    KeyNode node = (KeyNode)_keysBrowser.getSelItem();
     return node!=null && node._isToMany;
 }
 

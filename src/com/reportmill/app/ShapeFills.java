@@ -58,7 +58,7 @@ public void resetUI()
 {
     // Get currently selected shape
     RMShape shape = getEditor().getSelectedOrSuperSelectedShape();
-    int tabViewIndex = getViewSelectedIndex("TabView");
+    int tabViewIndex = getViewSelIndex("TabView");
     
     // If Stroke tab is showing, ensure proper inspector is showing and forward on
     if(tabViewIndex==0) {
@@ -123,7 +123,7 @@ public void respondUI(ViewEvent anEvent)
     RMEditor editor = getEditor(); if(editor==null) return;
     RMShape shape = editor.getSelectedOrSuperSelectedShape(); if(shape==null) return;
     List <RMShape> shapes = editor.getSelectedOrSuperSelectedShapes();
-    int tabViewIndex = getViewSelectedIndex("TabView");
+    int tabViewIndex = getViewSelIndex("TabView");
     
     // If Stroke tab is showing, handle basic StrokePane stuff
     if(tabViewIndex==0) {
@@ -139,7 +139,7 @@ public void respondUI(ViewEvent anEvent)
         
         // Handle StrokeComboBox: Get selected stroke instance and iterate over shapes and add stroke if not there
         if(anEvent.equals("StrokeComboBox")) {
-            RMStroke newStroke = _fillTool.getStroke(anEvent.getSelectedIndex());
+            RMStroke newStroke = _fillTool.getStroke(anEvent.getSelIndex());
             for(RMShape s : shapes) s.setStroke(newStroke.clone());
         }
     }
@@ -158,7 +158,7 @@ public void respondUI(ViewEvent anEvent)
         
         // Handle FillComboBox: Get selected fill instance and iterate over shapes and add fill if not there
         if(anEvent.equals("FillComboBox")) {
-            RMFill newFill = _fillTool.getFill(anEvent.getSelectedIndex());
+            RMFill newFill = _fillTool.getFill(anEvent.getSelIndex());
             for(RMShape s : shapes) s.setFill(newFill.deriveFill(s.getFill()));
         }
     }
@@ -177,7 +177,7 @@ public void respondUI(ViewEvent anEvent)
         
         // Handle EffectComboBox: Get selected effect instance and iterate over shapes and add effect if not there
         if(anEvent.equals("EffectComboBox")) {
-            Effect eff = _effectTool.getEffect(anEvent.getSelectedIndex());
+            Effect eff = _effectTool.getEffect(anEvent.getSelIndex());
             for(RMShape s : shapes) s.setEffect(eff);
         }
     }

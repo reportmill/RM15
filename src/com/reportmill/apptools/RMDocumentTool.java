@@ -53,7 +53,7 @@ public void resetUI()
     RMPage page = doc.getSelectedPage();
     
     // Make sure appropriate panel is set
-    setViewSelectedIndex(getUI(), _advanced? 1 : 0);
+    setViewSelIndex(getUI(), _advanced? 1 : 0);
     
     // Handle Advanced controls
     if(_advanced) {
@@ -70,7 +70,7 @@ public void resetUI()
     // Update PaperSizeComboBox: Get index of PaperName for Page.Size and set SelectedIndex
     int sindex = 0; for(int i=1; i<_paperSizeNames.length && sindex==0; i++) { Size size = _paperSizes[i];
         if(size.equals(page.getSize()) || size.equals(page.getHeight(), page.getWidth())) sindex = i; }
-    setViewSelectedIndex("PaperSizeComboBox", sindex); // default to "custom"
+    setViewSelIndex("PaperSizeComboBox", sindex); // default to "custom"
     
     // Reset Units and orientation controls
     setViewValue("UnitComboBox", doc.getUnit());

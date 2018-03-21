@@ -38,7 +38,7 @@ public void resetUI()
     tablesTree.setResolver(new TGTreeResolver(tableGroup));
     tablesTree.setItems(tableGroup.getChildTables());
     tablesTree.expandAll();
-    tablesTree.setSelectedItem(getMainTable());
+    tablesTree.setSelItem(getMainTable());
 }
 
 /**
@@ -118,7 +118,7 @@ public void respondUI(ViewEvent anEvent)
         // Handle MouseRelease
         if(anEvent.isMouseRelease()) {
             if(anEvent.getClickCount()==2) {
-                RMTable table = (RMTable)anEvent.getSelectedItem();
+                RMTable table = (RMTable)anEvent.getSelItem();
                 getEditor().setSuperSelectedShape(table);
             }
         }
@@ -141,7 +141,7 @@ public void respondUI(ViewEvent anEvent)
         
         // Handle TableTree selection event: Get selected table node and set table for node
         else {
-            RMTable table = (RMTable)anEvent.getSelectedItem();
+            RMTable table = (RMTable)anEvent.getSelItem();
             tableGroup.setMainTable(table);
         }
     }

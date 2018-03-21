@@ -73,14 +73,14 @@ public void resetUI()
     else getUI().setEnabled(true);
     
     // Update SortButton, TopNButton, ValuesButton
-    int sp_index = getViewSelectedIndex("SortPanel");
+    int sp_index = getViewSelIndex("SortPanel");
     setViewValue("SortButton", sp_index==0);
     setViewValue("TopNButton", sp_index==1);
     setViewValue("ValuesButton", sp_index==2);
     
     // Update SortingTable
     _sortsTable.setItems(grouping.getSorts());
-    _sortsTable.setSelectedIndex(grouping.getSelectedSortIndex()); //_sortsTable.repaint();
+    _sortsTable.setSelIndex(grouping.getSelectedSortIndex()); //_sortsTable.repaint();
     
     // Update TopNKeyText, TopNCountText, TopNInclCheckBox, TopNPadCheckBox
     setViewValue("TopNKeyText", grouping.getTopNSort().getKey());
@@ -113,9 +113,9 @@ public void respondUI(ViewEvent anEvent)
     RMGrouping grouping = _owner.getGrouping(); if(grouping==null) return;
     
     // Handle SortButton, TopNButton, ValuesButton
-    if(anEvent.equals("SortButton")) setViewSelectedIndex("SortPanel", 0);
-    if(anEvent.equals("TopNButton")) setViewSelectedIndex("SortPanel", 1);
-    if(anEvent.equals("ValuesButton")) setViewSelectedIndex("SortPanel", 2);
+    if(anEvent.equals("SortButton")) setViewSelIndex("SortPanel", 0);
+    if(anEvent.equals("TopNButton")) setViewSelIndex("SortPanel", 1);
+    if(anEvent.equals("ValuesButton")) setViewSelIndex("SortPanel", 2);
     
     // Handle SortingTable
     if(anEvent.equals("SortsTable")) {

@@ -84,7 +84,7 @@ protected void resetUI()
         toolButton.setSelected(true);
         
     // Reset FontFaceComboBox, FontSizeComboBox
-    _fontFaceComboBox.setSelectedItem(font.getFamily());
+    _fontFaceComboBox.setSelItem(font.getFamily());
     _fontSizeComboBox.setText(StringUtils.toString(font.getSize()) + " pt");
         
     // Reset BoldButton, ItalicButton, UnderlineButton

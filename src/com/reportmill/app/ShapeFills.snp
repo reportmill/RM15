@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SpringView width="275" height="325" PrefWidth="275" PrefHeight="325">
-  <TabView Name="TabView" width="275" height="275" SelectedIndex="1">
+  <TabView Name="TabView" width="275" height="275" SelIndex="1">
     <SpringView x="11" y="30" width="254" height="232" PrefWidth="254" PrefHeight="232" title="Stroke">
       <CheckBox Name="StrokeCheckBox" x="2" y="2" width="72" height="20" text="Stroke" />
       <ComboBox Name="StrokeComboBox" x="61" y="27" width="135" height="23" />

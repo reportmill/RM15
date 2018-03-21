@@ -31,7 +31,7 @@ protected void initUI()
 {
     // Set model for LabelFormatsComboBox
     setViewItems("LabelFormatsComboBox", getLabelFormats());
-    setViewSelectedIndex("LabelFormatsComboBox", 0); // Shouldn't need this, but I do
+    setViewSelIndex("LabelFormatsComboBox", 0); // Shouldn't need this, but I do
     
     // Get SortPanel, configure and install
     _sortPanel = new RMSortPanel(this);
@@ -60,7 +60,7 @@ public void resetUI()
     setViewValue("SpacingHeightText", getUnitsFromPoints(labels.getSpacingHeight()));
     
     // Update LabelFormatsComboBox selection
-    setViewSelectedIndex("LabelFormatsComboBox", Math.max(0, getLabelFormats().indexOf(_selectedLabelFormat)));
+    setViewSelIndex("LabelFormatsComboBox", Math.max(0, getLabelFormats().indexOf(_selectedLabelFormat)));
 
     // Update SortPanel
     _sortPanel.resetUI();
@@ -103,7 +103,7 @@ public void respondUI(ViewEvent anEvent)
     if(anEvent.equals("LabelFormatsComboBox")) {
         
         // If "Custom" is select, just return
-        if(anEvent.getSelectedIndex()==0) { _selectedLabelFormat = null; return; }
+        if(anEvent.getSelIndex()==0) { _selectedLabelFormat = null; return; }
         
         // Get selected label format and set number of rows/cols, width/height, spacing x/y
         _selectedLabelFormat = (LabelFormat)anEvent.getValue();

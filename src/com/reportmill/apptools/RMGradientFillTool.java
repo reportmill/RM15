@@ -36,7 +36,7 @@ protected void resetUI()
     picker.setStops(fill.getStops());
     
     // Update TypeComboBox, RadialPicker and LinearControls
-    setViewSelectedIndex("TypeComboBox", isRadial? 1 : 0);
+    setViewSelIndex("TypeComboBox", isRadial? 1 : 0);
     getView("RadialPicker").setVisible(isRadial);
     getView("LinearControls").setVisible(!isRadial);
         
@@ -82,7 +82,7 @@ protected void respondUI(ViewEvent anEvent)
     
     // Handle linear/radial popup
     else if(anEvent.equals("TypeComboBox")) {
-        GradientPaint.Type t = anEvent.getSelectedIndex()==1? GradientPaint.Type.RADIAL : GradientPaint.Type.LINEAR;
+        GradientPaint.Type t = anEvent.getSelIndex()==1? GradientPaint.Type.RADIAL : GradientPaint.Type.LINEAR;
         newFill = oldfill.copyForType(t);
     }
 

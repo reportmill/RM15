@@ -43,7 +43,7 @@ public void resetUI()
     
     // Update SwitchList Items and SelectedItem
     setViewItems("SwitchList", versions);
-    setViewSelectedItem("SwitchList", shape.getVersion());
+    setViewSelItem("SwitchList", shape.getVersion());
     
     // Update VersionKeyText
     setViewValue("VersionKeyText", shape.getVersionKey());

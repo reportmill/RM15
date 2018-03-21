@@ -49,16 +49,16 @@ public void resetUI()
     // Update EntitiesList items and selected index
     Schema schema = getSchema();
     setViewItems("EntitiesList", schema!=null? schema.getEntities() : null);
-    setViewSelectedIndex("EntitiesList", _selectedEntityIndex);
+    setViewSelIndex("EntitiesList", _selectedEntityIndex);
     
     // Update PropertiesList items and selected index
     Entity entity = getSelEntity();
     setViewItems("PropertiesList", entity!=null? entity.getProperties() : null);
-    setViewSelectedIndex("PropertiesList", _selectedPropertyIndex);
+    setViewSelIndex("PropertiesList", _selectedPropertyIndex);
     
     // Make property panel invisible/visible
     Property prop = getSelProperty();
-    setViewSelectedIndex("CardPanel", prop==null? 0 : 1);
+    setViewSelIndex("CardPanel", prop==null? 0 : 1);
 
     // Update TypeComboBox, SubtypeComboBox, PrimaryCheckBox, PrivateCheckBox
     if(prop!=null) {
@@ -72,7 +72,7 @@ public void resetUI()
     List <String> subtypes = new ArrayList(); subtypes.add("None");
     if(schema!=null) for(Entity e : schema.getEntities()) subtypes.add(e.getName());
     setViewItems("SubtypeComboBox", subtypes);
-    setViewSelectedItem("SubtypeComboBox", prop!=null? prop.getRelationEntityName() : null);
+    setViewSelItem("SubtypeComboBox", prop!=null? prop.getRelationEntityName() : null);
 }
 
 /**
@@ -85,10 +85,10 @@ public void respondUI(ViewEvent anEvent)
 
     // Handle EntitiesList: Reset SelectedEntityIndex and SelectedPropertyIndex
     if(anEvent.equals("EntitiesList")) {
-        _selectedEntityIndex = anEvent.getSelectedIndex(); _selectedPropertyIndex = -1; }
+        _selectedEntityIndex = anEvent.getSelIndex(); _selectedPropertyIndex = -1; }
     
     // Handle PropertiesList, TypeComboBox, SubtypeComboBox
-    if(anEvent.equals("PropertiesList")) _selectedPropertyIndex = anEvent.getSelectedIndex();
+    if(anEvent.equals("PropertiesList")) _selectedPropertyIndex = anEvent.getSelIndex();
     if(anEvent.equals("TypeComboBox")) {
         getSelProperty().setType(unprettyType(anEvent.getStringValue())); ds.setCustomSchema(true); }
     if(anEvent.equals("SubtypeComboBox")) {

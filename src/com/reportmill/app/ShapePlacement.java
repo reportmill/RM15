@@ -45,7 +45,7 @@ protected View createUI()
  */
 public void resetUI()
 {
-    switch(_tabView.getSelectedIndex()) {
+    switch(_tabView.getSelIndex()) {
         case 0: _locationSize.resetLater(); break;
         case 1: _rollScaleSkew.resetLater(); break;
         case 2: _layout.resetLater(); break;

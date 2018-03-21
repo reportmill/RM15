@@ -99,7 +99,7 @@ public void resetUI()
     double size = font.getSize();
     
     // Reset FamilyList, SizesList, SizeText, SizeThumb, and Bold, Italic, Underline and Outline buttons
-    setViewSelectedItem("FamilyList", familyName);
+    setViewSelItem("FamilyList", familyName);
     setViewValue("SizesList", (int)size);
     setViewValue("SizeText", StringUtils.toString(size) + " pt");
     setViewValue("BoldButton", font.isBold());
@@ -114,7 +114,7 @@ public void resetUI()
     
     // Reset FontNameComboBox Items, SelectedItem and Enabled
     setViewItems("FontNameComboBox", familyNames);
-    String fn = font.getFontFile().getNativeName(); setViewSelectedItem("FontNameComboBox", fn);
+    String fn = font.getFontFile().getNativeName(); setViewSelItem("FontNameComboBox", fn);
     setViewEnabled("FontNameComboBox", familyNames.length>1);
 }
 

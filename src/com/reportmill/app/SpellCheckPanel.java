@@ -65,7 +65,7 @@ public void resetUI()
     // Reset SuggestionList Items and SelectedIndex
     Object items[] = _word!=null? _word.getSuggestions().toArray() : new Object[0];
     setViewItems("SuggestionList", items);
-    if(items.length>0) setViewSelectedIndex("SuggestionList", 0);
+    if(items.length>0) setViewSelIndex("SuggestionList", 0);
 }
 
 /**

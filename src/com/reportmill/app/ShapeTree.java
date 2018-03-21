@@ -42,7 +42,7 @@ protected void resetUI()
 {
     _shapeTree.setItems(getEditor().getContent());
     _shapeTree.expandAll();
-    _shapeTree.setSelectedItem(getEditor().getSelectedOrSuperSelectedShape());
+    _shapeTree.setSelItem(getEditor().getSelectedOrSuperSelectedShape());
 }
 
 /**
@@ -52,11 +52,11 @@ protected void respondUI(ViewEvent anEvent)
 {
     // Handle ShapeTree
     if(anEvent.equals("ShapeTree") && anEvent.isActionEvent())
-        getEditor().setSelectedShape((RMShape)anEvent.getSelectedItem());
+        getEditor().setSelectedShape((RMShape)anEvent.getSelItem());
         
     // Handle MouseClick
     if(anEvent.isMouseClick() && anEvent.getClickCount()==2)
-        getEditor().setSuperSelectedShape((RMShape)anEvent.getSelectedItem());
+        getEditor().setSuperSelectedShape((RMShape)anEvent.getSelItem());
 }
 
 /**

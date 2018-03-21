@@ -80,7 +80,7 @@ public void setVisible(boolean aValue)
 /**
  * Returns the index of the currently visible tab (or -1 if attributes panel not visible).
  */
-public int getVisible()  { return isVisible()? _tabView.getSelectedIndex() : -1; }
+public int getVisible()  { return isVisible()? _tabView.getSelIndex() : -1; }
 
 /**
  * Sets the attributes panel visible, specifying a specific tab by the given index.
@@ -91,7 +91,7 @@ public void setVisible(int anIndex)
     getUI();
     
     // Set TabView to tab at given index
-    _tabView.setSelectedIndex(anIndex);
+    _tabView.setSelIndex(anIndex);
     
     // ResetUI
     resetLater();
@@ -150,11 +150,11 @@ protected View createUI()
 public void resetUI()
 {
     // Get inspector component from TabView
-    ViewOwner inspector = getInspectors()[_tabView.getSelectedIndex()];
+    ViewOwner inspector = getInspectors()[_tabView.getSelIndex()];
 
     // If inspector panel is JLabel, swap in real inspector UI
     if(_tabView.getContent() instanceof Label)
-        _tabView.setTabContent(inspector.getUI(), _tabView.getSelectedIndex());
+        _tabView.setTabContent(inspector.getUI(), _tabView.getSelIndex());
     
     // Set window title and reset inspector
     //getWindow().setTitle(Key.getStringValue(inspector, "getWindowTitle"));
