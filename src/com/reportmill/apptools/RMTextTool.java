@@ -313,11 +313,9 @@ public void mouseDragged(ViewEvent anEvent)
     // Set shape to repaint
     _shape.repaint();
     
-    // Get event point in shape coords
+    // Get event point in shape parent coords
     Point point = getEditorEvents().getEventPointInShape(true);
-    
-    // Convert point to parent
-    _shape.convertPointToShape(point, _shape.getParent());
+    point = _shape.localToParent(point);
     
     // Get new bounds rect from down point and drag point
     Rect rect = Rect.get(point, _downPoint);
@@ -340,11 +338,9 @@ public void mouseDragged(ViewEvent anEvent)
  */
 public void mouseReleased(ViewEvent e)
 {
-    // Get event point in shape coords
+    // Get event point in shape parent coords
     Point upPoint = getEditorEvents().getEventPointInShape(true);
-    
-    // Convert point to parent
-    _shape.convertPointToShape(upPoint, _shape.getParent());
+    upPoint = _shape.localToParent(upPoint);
     
     // If upRect is really small, see if the user meant to conver a shape to text instead
     if(Math.abs(_downPoint.getX() - upPoint.getX())<=3 && Math.abs(_downPoint.getY() - upPoint.getY())<=3) {
@@ -734,7 +730,7 @@ public Rect getHandleRect(T aTextShape, int handle, boolean isSuperSelected)
         
         // Get handle point in text bounds, convert to table row bounds
         Point cp = getHandlePoint(aTextShape, handle, true);
-        aTextShape.convertPointToShape(cp, aTextShape.getParent());
+        cp = aTextShape.localToParent(cp);
         
         // If point outside of parent, return bogus rect
         if(cp.getX()<0 || cp.getX()>aTextShape.getParent().getWidth())

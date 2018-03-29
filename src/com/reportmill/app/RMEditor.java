@@ -422,7 +422,7 @@ public RMShape getShapeAtPoint(Point aPoint)
     
     // If no superSelectedShape child hit by point, find first superSelectedShape that is hit & set to shapeAtPoint
     while(superSelShape!=getContent() && shapeAtPoint==null) {
-        superSelShape.convertPointToShape(point, superSelShape.getParent());
+        point = superSelShape.localToParent(point);
         superSelShape = superSelShape.getParent();
         shapeAtPoint = getChildShapeAtPoint(superSelShape, point);
     }

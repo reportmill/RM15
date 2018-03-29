@@ -347,7 +347,7 @@ public double getFrameMaxY()  { return isRSS()? getFrame().getMaxY() : getMaxY()
 /**
  * Returns the origin point of the shape in parent's coords.
  */
-public Point getXYP()  { Point p = new Point(); convertPointToShape(p, _parent); return p; }
+public Point getXYP()  { return localToParent(0,0); }
 
 /**
  * Sets the origin point of the shape to the given X and Y in parent's coords.
@@ -1110,15 +1110,6 @@ public Transform getTransformToShape(RMShape aShape)
     Transform t0 = getLocalToParent(null), t1 = aShape.getParentToLocal(null);
     t0.multiply(t1); System.out.println("Full Transform");
     return t0;
-}
-
-/**
- * Converts the given point to the given shape's coords (returns it for convenience).
- */
-public void convertPointToShape(Point point, RMShape shape)
-{
-    if(shape==_parent && !isRSS()) point.offset(getX(), getY());
-    else getTransformToShape(shape).transform(point);
 }
 
 /**

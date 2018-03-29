@@ -419,7 +419,7 @@ private void addValueAxisLabels()
         
         // Get point on label perimeter that we want to sync to (in label parent coords)
         Point point1 = label.getBoundsInside().getPerimeterPointForRadial(angle, true);
-        label.convertPointToShape(point1, label.getParent());
+        point1 = label.localToParent(point1);
 
         // Offset label location from its current location to graph location
         label.offsetXY(point2.getX() - point1.getX(), point2.getY() - point1.getY());
@@ -475,7 +475,7 @@ private void addLabelAxisLabel(Rect aRect, RMGroup aGroup)
     
     // Get point on label perimeter that we want to sync to (in label parent coords)
     Point point1 = label.getBoundsInside().getPerimeterPointForRadial(angle, true);
-    label.convertPointToShape(point1, label.getParent());
+    point1 = label.localToParent(point1);
 
     // Offset label location from its current location to graph location
     label.offsetXY(point2.getX() - point1.getX(), point2.getY() - point1.getY());
@@ -574,16 +574,14 @@ public void addLabel(RMTextShape aLabel, RMGraphPartSeries.LabelPos aPosition, R
             
             // Vertical: Align left (+roll) or right (-roll) edge to bar midX, maxY+3
             if(isVertical()) {
-                Point p = new Point(label.getRoll()>0? 0 : label.getWidth(), label.getHeight()/2);
-                label.convertPointToShape(p, label.getParent());
+                Point p = label.localToParent(label.getRoll()>0? 0 : label.getWidth(), label.getHeight()/2);
                 labelX = labelX - (p.x - barRect.getMidX());
                 labelY = labelY - (p.y - barRect.getMaxY()) + label.getHeight()/2*MathUtils.cos(label.getRoll()) + 3;
             }
             
             // Horizontal: Align right edge to bar minX-3, midY
             else {
-                Point p = new Point(label.getWidth(), label.getHeight()/2);
-                label.convertPointToShape(p, label.getParent());
+                Point p = label.localToParent(label.getWidth(), label.getHeight()/2);
                 labelX = labelX - (p.x - barRect.x) - 3;
                 labelY = labelY - (p.y - barRect.getMidY());
             }

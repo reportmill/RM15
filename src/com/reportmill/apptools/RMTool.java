@@ -599,7 +599,7 @@ public void moveShapeHandle(T aShape, int aHandle, Point toPoint)
 
     // Set new width and height, but calc new X & Y such that opposing handle is at same location w.r.t. parent
     Point op = getHandlePoint(aShape, getHandleOpposing(aHandle), false);
-    aShape.convertPointToShape(op, aShape.getParent());
+    op = aShape.localToParent(op);
     
     // Make sure new width and height are not too small
     if(Math.abs(nw)<.1) nw = MathUtils.sign(nw)*.1f;
@@ -610,7 +610,7 @@ public void moveShapeHandle(T aShape, int aHandle, Point toPoint)
     
     // Get point
     Point p = getHandlePoint(aShape, getHandleOpposing(aHandle), false);
-    aShape.convertPointToShape(p, aShape.getParent());
+    p = aShape.localToParent(p);
     
     // Set frame
     aShape.setFrameXY(aShape.getFrameX() + op.getX() - p.getX(), aShape.getFrameY() + op.getY() - p.getY());
