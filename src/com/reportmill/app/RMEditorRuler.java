@@ -177,7 +177,7 @@ private Rect getShapeBounds()
 {
     RMShape shape = _editor.getSelectedOrSuperSelectedShape();
     if(shape==null || shape instanceof RMDocument || shape instanceof RMPage) return null;
-    Rect sbnds = shape.getBoundsInside(); shape.convertRectToShape(sbnds, null); return sbnds;
+    return shape.localToParent(shape.getBoundsInside(), null).getBounds();
 }
 
 }

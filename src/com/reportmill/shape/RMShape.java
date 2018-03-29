@@ -220,7 +220,7 @@ public void setBounds(double anX, double aY, double aW, double aH) { setX(anX); 
  */
 public Rect getFrame()
 {
-    if(isRSS()) { Rect rect = getBoundsInside(); convertRectToShape(rect, _parent); return rect; }
+    if(isRSS()) return localToParent(getBoundsInside()).getBounds();
     return getBounds();
 }
 
@@ -388,7 +388,7 @@ public Rect getBoundsStrokedDeep()
     Rect bounds = getBoundsStroked();
     for(int i=0, iMax=getChildCount(); i<iMax; i++) { RMShape child = getChild(i); if(!child.isVisible()) continue;
         Rect cbounds = child.getBoundsStrokedDeep();
-        child.convertRectToShape(cbounds, this);
+        cbounds = child.localToParent(cbounds).getBounds();
         bounds.unionEvenIfEmpty(cbounds); }
     return bounds;
 }
@@ -412,7 +412,7 @@ public Rect getBoundsMarkedDeep()
     Rect bounds = getBoundsMarked();
     for(int i=0, iMax=getChildCount(); i<iMax; i++) { RMShape child = getChild(i); if(!child.isVisible()) continue;
         Rect cbounds = child.getBoundsMarkedDeep();
-        child.convertRectToShape(cbounds, this);
+        cbounds = child.localToParent(cbounds).getBounds();
         bounds.unionEvenIfEmpty(cbounds); }
     return bounds;
 }
@@ -1093,32 +1093,6 @@ public Transform getTransform()
     if(sx!=1 || sy!=1) t.scale(sx, sy);
     if(skx!=0 || sky!=0) t.skew(skx, sky);
     t.translate(-prx, -pry); return t;
-}
-
-/**
- * Returns the transform from this shape to the given shape.
- */
-public Transform getTransformToShape(RMShape aShape)
-{
-    // Handle simple cases
-    if(aShape==null) return getLocalToParent(null);
-    if(aShape==_parent) return getLocalToParent();
-    if(this==aShape._parent) return aShape.getParentToLocal();
-    if(aShape==this) return new Transform();
-    
-    // Otherwise, multiply transform to world by given shape's transform from world
-    Transform t0 = getLocalToParent(null), t1 = aShape.getParentToLocal(null);
-    t0.multiply(t1); System.out.println("Full Transform");
-    return t0;
-}
-
-/**
- * Converts the given rect to the given shape's coords (returns it for convenience).
- */
-public void convertRectToShape(Rect rect, RMShape shape)
-{
-    if(shape==_parent && !isRSS()) rect.offset(getX(), getY());
-    else getTransformToShape(shape).transform(rect);
 }
 
 /**

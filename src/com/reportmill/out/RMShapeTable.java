@@ -68,9 +68,9 @@ public static RMShapeTable createTable(List <RMShape> theShapes, RMShape topLeve
     for(int i=0; i<shapeCount; i++) { RMShape shape = theShapes.get(i);
         
         // Get shape bounds
-        if(shape instanceof RMTextShape) {
-            bounds = shape.getFrame(); shape.getParent().convertRectToShape(bounds, topLevel); }
-        else { bounds = shape.getBoundsMarked(); shape.convertRectToShape(bounds, topLevel); }
+        if(shape instanceof RMTextShape)
+            bounds = shape.localToParent(shape.getBoundsInside(),topLevel).getBounds();
+        else bounds = shape.localToParent(shape.getBoundsMarked(), topLevel).getBounds();
 
         // Toss away cells whose size is less than the alignment tolerance.
         if(bounds.getWidth()<=CELL_ALIGNMENT_TOLERANCE || bounds.getHeight()<=CELL_ALIGNMENT_TOLERANCE) {

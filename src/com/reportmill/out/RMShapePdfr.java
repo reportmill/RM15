@@ -114,7 +114,7 @@ protected void writeShapeAfter(T aShape, RMPDFWriter aWriter)
 
     // Add link, if it's there (What happens with rotated or skewed shapes?)
     if(aShape.getURL() != null) {
-        Rect frame = aShape.getBoundsInside(); aShape.convertRectToShape(frame, null);
+        Rect frame = aShape.localToParent(aShape.getBoundsInside(), null).getBounds();
         frame.setY(aShape.getPageShape().getHeight() - frame.getMaxY());
         PDFAnnotation link = new PDFAnnotation.Link(frame, aShape.getURL());
         pwriter.addAnnotation(link);
