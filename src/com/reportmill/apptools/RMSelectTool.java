@@ -364,21 +364,21 @@ private List <RMShape> getHitShapes()
     RMParentShape superShape = editor.getSuperSelectedParentShape(); if(superShape==null)return Collections.emptyList();
     Point curPoint = getEditorEvents().getEventPointInDoc();
     Rect selRect = Rect.get(curPoint, _downPoint);
-    Shape path = superShape.getConvertedFromShape(selRect, null);
+    Shape path = superShape.parentToLocal(selRect, null);
 
     // If selection rect is outside super selected shape, move up shape hierarchy
     while(superShape!=editor.getContent() &&
         !path.getBounds().intersectsEvenIfEmpty(editor.getTool(superShape).getBoundsSuperSelected(superShape))) {
         RMParentShape parent = superShape.getParent();
         editor.setSuperSelectedShape(parent);
-        path = superShape.getConvertedToShape(path, parent);
+        path = superShape.localToParent(path);
         superShape = parent;
     }
 
     // Make sure page is worst case
     if(superShape == editor.getDocument()) {
         superShape = editor.getSelectedPage();
-        path = superShape.getConvertedFromShape(selRect, null);
+        path = superShape.parentToLocal(selRect, null);
         editor.setSuperSelectedShape(superShape);
     }
 

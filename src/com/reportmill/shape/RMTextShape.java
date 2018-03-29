@@ -494,7 +494,7 @@ public Shape getPath()
     
     // Get the path minus the neighbors, convert back to this shape, reset bounds to this shape
     Shape path = RMShapeUtils.getSubtractedPath(peersWhoCauseWrap, -3);  // INSET NAILED TO -3
-    path = getConvertedFromShape(path, getParent());
+    path = parentToLocal(path);
     path = path.copyFor(getBounds());
     return path;
 }

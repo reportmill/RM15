@@ -370,7 +370,7 @@ private void findTextShapes(RMParentShape aParent, Shape aPath, List aList)
         
         // Otherwise if shape has children, recurse (with path converted to shape coords)
         else if(shape instanceof RMParentShape) { RMParentShape parent = (RMParentShape)shape;
-            Shape path = parent.getConvertedFromShape(aPath, aParent);
+            Shape path = parent.parentToLocal(aPath);
             findTextShapes(parent, path, aList);
         }
     }

@@ -988,6 +988,16 @@ public Point localToParent(double aX, double aY, RMShape aPar)
 }
 
 /**
+ * Converts a point from local to parent.
+ */
+public Point localToParent(Point aPoint)  { return localToParent(aPoint.x, aPoint.y); }
+
+/**
+ * Converts a point from local to given parent.
+ */
+public Point localToParent(Point aPoint, RMShape aPar)  { return localToParent(aPoint.x, aPoint.y, aPar); }
+
+/**
  * Converts a shape from local to parent.
  */
 public Shape localToParent(Shape aShape)  { return aShape.copyFor(getLocalToParent()); }
@@ -1010,6 +1020,16 @@ public Point parentToLocal(double aX, double aY)
  * Converts a point from given parent to local.
  */
 public Point parentToLocal(double aX, double aY, RMShape aPar)  { return getParentToLocal(aPar).transform(aX,aY); }
+
+/**
+ * Converts a point from parent to local.
+ */
+public Point parentToLocal(Point aPoint)  { return parentToLocal(aPoint.x, aPoint.y); }
+
+/**
+ * Converts a point from given parent to local.
+ */
+public Point parentToLocal(Point aPoint, RMShape aPar)  { return parentToLocal(aPoint.x, aPoint.y, aPar); }
 
 /**
  * Converts a shape from parent to local.
@@ -1153,32 +1173,6 @@ public Point convertedPointToShape(Point aPnt, RMShape aShp)
 public Point convertedPointFromShape(Point aPoint, RMShape aShape)
 {
     Point p = new Point(aPoint); convertPointFromShape(p, aShape); return p;
-}
-
-/**
- * Returns the rect encompassing the given rect converted from the given shape's coords.
- */
-public Rect getConvertedRectFromShape(Rect aRect, RMShape aShape)
-{
-    Rect r = aRect.clone(); convertRectFromShape(r, aShape); return r;
-}
-
-/**
- * Returns the given path converted to the given shape's coords.
- */
-public Shape getConvertedToShape(Shape aPath, RMShape aShape)
-{
-    Transform trans = getTransformToShape(aShape); if(trans.isIdentity()) return aPath;
-    return aPath.copyFor(trans);
-}
-
-/**
- * Returns the given path converted from the given shape's coords.
- */
-public Shape getConvertedFromShape(Shape aPath, RMShape aShape)
-{
-    Transform trans = getTransformFromShape(aShape); if(trans.isIdentity()) return aPath;
-    return aPath.copyFor(trans);
 }
 
 /**

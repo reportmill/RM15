@@ -106,14 +106,13 @@ private static List <Shape> getPathsFromShapes(List <RMShape> theShapes, int anI
 {
     // Get first shape and parent
     RMShape shape0 = theShapes.get(0);
-    RMShape parent = shape0.getParent(); // Should probably get common ancestor
 
     // Iterate over shapes, get bounds of each (inset), path of each (in parent coords) and add to list
     List paths = new ArrayList(theShapes.size());
     for(int i=0, iMax=theShapes.size(); i<iMax; i++) { RMShape shape = theShapes.get(i);
         Rect bounds = shape.getBoundsInside(); if(anInset!=0 && i>0) bounds.inset(anInset);
         Shape path = shape.getPath().copyFor(bounds);
-        path = shape.getConvertedToShape(path, parent);
+        path = shape.localToParent(path);
         paths.add(path);
     }
     

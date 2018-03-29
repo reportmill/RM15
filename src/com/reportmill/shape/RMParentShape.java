@@ -370,19 +370,17 @@ public List <RMShape> getChildrenIntersecting(Shape aPath)
     List hit = new ArrayList();
 
     // Iterate over children
-    for(int i=0, iMax=getChildCount(); i<iMax; i++) {
+    for(int i=0, iMax=getChildCount(); i<iMax; i++) { RMShape child = getChild(i);
         
-        // Get current loop child
-        RMShape child = getChild(i);
-        if(!child.isHittable())
-            continue;
+        // If not hittable, continue
+        if(!child.isHittable()) continue;
         
         // If child frame doesn't intersect path, just continue
         if(!child.getFrame().intersectsEvenIfEmpty(aPath.getBounds()))
             continue;
         
         // Get path converted to child and if child intersects path, add child to hit list
-        Shape path = getConvertedToShape(aPath, child);
+        Shape path = child.parentToLocal(aPath);
         if(child.intersects(path))
             hit.add(child);
     }

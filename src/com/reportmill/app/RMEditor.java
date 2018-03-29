@@ -475,11 +475,10 @@ public RMShape getChildShapeAtPoint(RMShape aShape, Point aPoint)
         if(!child.isHittable()) continue;
         
         // Get given point in child shape coords
-        Point point = child.convertedPointFromShape(aPoint, aShape);
+        Point point = child.parentToLocal(aPoint);
 
         // If child is super selected and point is in child super selected bounds, return child
-        if(isSuperSelected(child) &&
-            getTool(child).getBoundsSuperSelected(child).contains(point.getX(), point.getY()))
+        if(isSuperSelected(child) && getTool(child).getBoundsSuperSelected(child).contains(point))
             return child;
         
         // If child isn't super selected and contains point, return child
@@ -523,11 +522,11 @@ public RMShape firstSuperSelectedShapeThatAcceptsChildrenAtPoint(Point aPoint)
 
     // Iterate up shape hierarchy until we find a shape that is hit and accepts children
     while(!getTool(parent).getAcceptsChildren(parent) ||
-        !parent.contains(parent.convertedPointFromShape(aPoint, null))) {
+        !parent.contains(parent.parentToLocal(aPoint, null))) {
 
         // If shape childrenSuperSelImmd and shape hitByPt, see if any shape children qualify (otherwise use parent)
-        if(parent.childrenSuperSelectImmediately() && parent.contains(parent.convertedPointFromShape(aPoint, null))) {
-            RMShape childShape = parent.getChildContaining(parent.convertedPointFromShape(aPoint, null));
+        if(parent.childrenSuperSelectImmediately() && parent.contains(parent.parentToLocal(aPoint, null))) {
+            RMShape childShape = parent.getChildContaining(parent.parentToLocal(aPoint, null));
             if(childShape!=null && getTool(childShape).getAcceptsChildren(childShape))
                 parent = (RMParentShape)childShape;
             else parent = parent.getParent();

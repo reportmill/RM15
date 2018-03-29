@@ -467,7 +467,7 @@ public void paintShape(Painter aPntr)
                 if(child.isStructured())
                     for(int j=0, jMax=child.getChildCount(); j<jMax; j++) { RMShape trChild = child.getChild(j);
                         if(props.isSuperSelectedShape(trChild)) {
-                            Rect colRect = getConvertedRectFromShape(trChild.getBounds().getInsetRect(-1), child);
+                            Rect colRect = child.localToParent(trChild.getBounds().getInsetRect(-1)).getBounds();
                             aPntr.setColor(Color.RED); aPntr.draw(colRect); break;
                         }
                     }

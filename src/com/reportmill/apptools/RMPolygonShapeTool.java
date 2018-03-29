@@ -248,7 +248,7 @@ private void createPoly()
 {
     if(_path!=null && _path.getPointCount()>2) {
         RMPolygonShape poly = new RMPolygonShape();
-        Rect polyFrame = getEditor().getSuperSelectedShape().getConvertedRectFromShape(_path.getBounds(), null);
+        Rect polyFrame = getEditor().getSuperSelectedShape().parentToLocal(_path.getBounds(), null).getBounds();
         poly.setFrame(polyFrame);
         poly.setStroke(new RMStroke());
         poly.setPath(_path);
