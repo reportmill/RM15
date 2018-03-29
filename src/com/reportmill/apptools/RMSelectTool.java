@@ -198,13 +198,13 @@ public void mouseDragged(ViewEvent anEvent)
                         
             // Get event point snapped to grid & edges, since SnapEdges will now be valid
             Point pointSnapped = getEditorEvents().getEventPointInShape(shouldSnap, shouldSnap);
-            Point pointSnappedDoc = parent.convertedPointToShape(pointSnapped, null);
+            Point pointSnappedDoc = parent.localToParent(pointSnapped, null);
             
             // Move shapes again to snapped point
             moveShapes(point, pointSnapped);
             
             // Get PointSnapped in (potentially) new bounds and break
-            _lastMousePoint = parent.convertedPointFromShape(pointSnappedDoc, null);
+            _lastMousePoint = parent.parentToLocal(pointSnappedDoc, null);
             break;
             
         // Handle Rotate

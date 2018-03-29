@@ -104,9 +104,6 @@ public static Shape getSubtractedPath(List <RMShape> theShapes, int anInset)
  */
 private static List <Shape> getPathsFromShapes(List <RMShape> theShapes, int anInset)
 {
-    // Get first shape and parent
-    RMShape shape0 = theShapes.get(0);
-
     // Iterate over shapes, get bounds of each (inset), path of each (in parent coords) and add to list
     List paths = new ArrayList(theShapes.size());
     for(int i=0, iMax=theShapes.size(); i<iMax; i++) { RMShape shape = theShapes.get(i);

@@ -577,7 +577,7 @@ public void moveShapeHandle(T aShape, int aHandle, Point toPoint)
 {
     // Get handle point in shape coords and shape parent coords
     Point p1 = getHandlePoint(aShape, aHandle, false);
-    Point p2 = aShape.convertedPointFromShape(toPoint, aShape.getParent());
+    Point p2 = aShape.parentToLocal(toPoint);
     
     // If middle handle is used, set delta and p2 of that component to 0
     boolean minX = false, maxX = false, minY = false, maxY = false;

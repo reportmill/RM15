@@ -352,7 +352,7 @@ public RMShape getChildContaining(Point aPoint)
     // Iterate over children
     for(int i=getChildCount()-1; i>=0; i--) { RMShape child = getChild(i);
         if(!child.isHittable()) continue; // Get current loop child
-        Point point = convertedPointToShape(aPoint, child); // Get point converted to child
+        Point point = child.parentToLocal(aPoint); // Get point converted to child
         if(child.contains(point)) // If child contains point, return child
             return child;
     }

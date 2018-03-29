@@ -180,7 +180,7 @@ private Rect getBoundsOfExcelChildren(RMShape aShape)
         // empty cell the size of the table for tables whose rows don't fill the available space.
         else if (child.getChildCount()>0) {
             childBounds = getBoundsOfExcelChildren(child);
-            aShape.convertRectFromShape(childBounds, child);
+            childBounds = child.localToParent(childBounds).getBounds();
         }
 
         // If child bounds, coalesce 

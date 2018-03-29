@@ -448,7 +448,7 @@ public RMShape getShapeAtPoint(Point aPoint)
             
             // Update loop shape/point variables
             ssShape = ssShape.getParent();
-            pnt = ssShape.convertedPointToShape(pnt, ssShape.getParent());
+            pnt = ssShape.localToParent(pnt);
         }
     }
 

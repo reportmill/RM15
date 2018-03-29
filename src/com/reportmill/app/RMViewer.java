@@ -182,7 +182,7 @@ public RMShape getShapeAtPoint(Point aPoint, boolean goDeep)
     // Iterate over children to find shape hit by point
     RMShape shape = null; Point point2 = null;
     for(int i=parent.getChildCount(); i>0 && shape==null; i--) { RMShape child = parent.getChild(i-1);
-        point2 = child.convertedPointFromShape(point, parent);
+        point2 = child.parentToLocal(point);
         if(child.contains(point2))
             shape = child;
     }
@@ -190,7 +190,7 @@ public RMShape getShapeAtPoint(Point aPoint, boolean goDeep)
     // If we need to goDeep (and there was a top level hit shape), recurse until shape is found
     while(goDeep && shape instanceof RMParentShape) { parent = (RMParentShape)shape;
         RMShape shp = parent.getChildContaining(point2);
-        if(shp!=null) { shape = shp; shape.convertPointFromShape(point2, parent); }
+        if(shp!=null) { shape = shp; point2 = shape.parentToLocal(point2); }
         else break;
     }
     
@@ -317,8 +317,7 @@ public void setHeight(double aValue)  { super.setHeight(aValue); setZoomToFitFac
  */
 public Point convertFromShape(double aX, double aY, RMShape aShape)
 {
-    Point point = new Point(aX,aY);
-    return aShape!=null? aShape.convertedPointToShape(point, null) : point;
+    return aShape!=null? aShape.localToParent(aX, aY, null) : new Point(aX,aY);
 }
 
 /**
@@ -326,8 +325,7 @@ public Point convertFromShape(double aX, double aY, RMShape aShape)
  */
 public Point convertToShape(double aX, double aY, RMShape aShape)
 {
-    Point point = new Point(aX,aY);
-    return aShape!=null? aShape.convertedPointFromShape(point, null) : point;
+    return aShape!=null? aShape.parentToLocal(aX, aY, null) : new Point(aX,aY);
 }
 
 /**
@@ -335,8 +333,7 @@ public Point convertToShape(double aX, double aY, RMShape aShape)
  */
 public Shape convertFromShape(Shape aShp, RMShape aShape)
 {
-    Transform t = aShape!=null? aShape.getTransformToShape(null) : Transform.IDENTITY;
-    return aShp.copyFor(t);
+    return aShape!=null? aShape.localToParent(aShp, null) : new Path(aShp);
 }
 
 /**
@@ -344,8 +341,7 @@ public Shape convertFromShape(Shape aShp, RMShape aShape)
  */
 public Shape convertToShape(Shape aShp, RMShape aShape)
 {
-    Transform t = aShape!=null? aShape.getTransformFromShape(null) : Transform.IDENTITY;
-    return aShp.copyFor(t);
+    return aShape!=null? aShape.parentToLocal(aShp, null) : new Path(aShp);
 }
 
 /**

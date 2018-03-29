@@ -581,7 +581,7 @@ public void moveShapeHandle(T aShape, int aHandle, Point toPoint)
     
     // Get handle point in shape coords and shape parent coords
     Point p1 = getHandlePoint(aShape, aHandle, false);
-    Point p2 = toPoint; aShape.convertPointFromShape(p2, aShape.getParent());
+    Point p2 = aShape.parentToLocal(toPoint);
     
     // Get whether left handle and width change
     boolean left = aHandle==HandleW || aHandle==HandleNW || aHandle==HandleSW;

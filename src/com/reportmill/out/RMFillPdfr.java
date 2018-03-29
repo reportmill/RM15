@@ -139,7 +139,7 @@ public static void writeGradientFill(RMShape aShape, RMGradientFill aFill, RMPDF
     // page's coordinate system, and doesn't get affected by changes to the ctm. Since the RMGradient returns
     // points in the shape's coordinate system, we have to transform them into pattern space (page space).
     RMShape page = aShape.getPageShape();
-    Transform patternSpaceTransform = aShape.getTransformToShape(page);
+    Transform patternSpaceTransform = aShape.getLocalToParent(page);
     patternSpaceTransform.transform(startPt);
     patternSpaceTransform.transform(endPt);
     

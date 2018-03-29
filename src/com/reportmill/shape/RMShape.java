@@ -296,7 +296,7 @@ public void setFrameSize(double aWidth, double aHeight)
     }
     
     // Convert X & Y axis to parent coords
-    Transform toParent = getTransformToShape(_parent);
+    Transform toParent = getLocalToParent();
     Size x_axis = new Size(_width, 0); toParent.transformVector(x_axis);
     Size y_axis = new Size(0, _height); toParent.transformVector(y_axis);
 
@@ -313,7 +313,7 @@ public void setFrameSize(double aWidth, double aHeight)
     
     // Reset current Skew and convert X & Y axis from parent coords
     setSkewXY(0, 0);
-    Transform fromParent = getTransformFromShape(_parent);
+    Transform fromParent = getParentToLocal();
     fromParent.transformVector(x_axis);
     fromParent.transformVector(y_axis);
 
@@ -663,9 +663,6 @@ public void setAutosizing(String aValue)
  * Returns the autosizing default.
  */
 public String getAutosizingDefault()  { return "--~,--~"; }
-
-/** Returns whether this shape is visible in its parent. */
-//public boolean isShowing()  { return isVisible() && _parent!=null && _parent.isShowing(); }
 
 /**
  * Returns whether this shape is hittable in its parent.
@@ -1116,14 +1113,6 @@ public Transform getTransformToShape(RMShape aShape)
 }
 
 /**
- * Returns the transform from the given shape to this shape.
- */
-public Transform getTransformFromShape(RMShape aShape)
-{
-    Transform t = getTransformToShape(aShape); t.invert(); return t;
-}
-
-/**
  * Converts the given point to the given shape's coords (returns it for convenience).
  */
 public void convertPointToShape(Point point, RMShape shape)
@@ -1133,46 +1122,12 @@ public void convertPointToShape(Point point, RMShape shape)
 }
 
 /**
- * Converts the given point to the given shape's coords (returns it for convenience).
- */
-public void convertPointFromShape(Point point, RMShape shape)
-{
-    if(shape==_parent && !isRSS()) point.offset(-getX(), -getY());
-    else getTransformFromShape(shape).transform(point);
-}
-
-/**
  * Converts the given rect to the given shape's coords (returns it for convenience).
  */
 public void convertRectToShape(Rect rect, RMShape shape)
 {
     if(shape==_parent && !isRSS()) rect.offset(getX(), getY());
     else getTransformToShape(shape).transform(rect);
-}
-
-/**
- * Converts the given rect from the given shape's coords (returns it for convenience).
- */
-public void convertRectFromShape(Rect rect, RMShape shape)
-{
-    if(shape==_parent && !isRSS()) rect.offset(-getX(), -getY());
-    else getTransformFromShape(shape).transform(rect);
-}
-
-/**
- * Returns the given point converted to the given shape's coords.
- */
-public Point convertedPointToShape(Point aPnt, RMShape aShp)
-{
-    Point p = new Point(aPnt); convertPointToShape(p, aShp); return p;
-}
-
-/**
- * Returns the given point converted from the given shape's coords.
- */
-public Point convertedPointFromShape(Point aPoint, RMShape aShape)
-{
-    Point p = new Point(aPoint); convertPointFromShape(p, aShape); return p;
 }
 
 /**

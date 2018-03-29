@@ -300,7 +300,7 @@ public Point getEventPointInShape(boolean snapToGrid, boolean snapEdges)
         point = pointSnapped(point, snapEdges);
     
     // Return point converted to super selected point
-    return getEditor().getSuperSelectedShape().convertedPointFromShape(point, null);
+    return getEditor().getSuperSelectedShape().parentToLocal(point, null);
 }
 
 /**

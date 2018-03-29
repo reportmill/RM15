@@ -149,7 +149,7 @@ public static class ArrowHead extends RMPolygonShape {
     public Point getOrigin()  { return _originInPath; }
     
     /** Returns the line origin in parent. */
-    public Point getOriginInParent()  { return convertedPointToShape(_originInShape, getParent()); }
+    public Point getOriginInParent()  { return localToParent(_originInShape); }
     
     /** Override to trigger line relayout. */
     public void setScaleX(double aVal)  { super.setScaleX(aVal); if(getParent()!=null) getParent().relayout(); }

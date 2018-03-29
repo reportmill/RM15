@@ -308,7 +308,10 @@ public static Point pointSnappedToProximityGuides(RMEditor anEditor, Point aPoin
         bounds = RMShapeUtils.getBoundsOfChildren(parent, selectedShapes);
     
     // If mode is resize, set bounds to just snap a handle
-    else { bounds = new Rect(aPoint.getX(), aPoint.getY(), 0, 0); parent.convertRectFromShape(bounds, null); }
+    else {
+        bounds = new Rect(aPoint.getX(), aPoint.getY(), 0, 0);
+        bounds = parent.parentToLocal(bounds, null).getBounds();
+    }
 
     // Declare variables for minDX, maxDX, minDY and maxDY
     double minDX = 9999;
