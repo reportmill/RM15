@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ColView PrefWidth="275" PrefHeight="325" Padding="0">
+  <Label Padding="5" text="Path" />
+  <BoxView Padding="0,8,5,5" GrowWidth="true" Spacing="4">
+    <TextView Name="PathText" MinWidth="120" MinHeight="60" PrefHeight="150" GrowWidth="true" />
+  </BoxView>
+</ColView>

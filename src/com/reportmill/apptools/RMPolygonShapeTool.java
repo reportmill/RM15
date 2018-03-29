@@ -28,15 +28,41 @@ public class RMPolygonShapeTool <T extends RMPolygonShape> extends RMTool <T> {
     Point        _newPoint;
 
 /**
- * Override to return empty panel.
+ * Initialize UI.
  */
-protected View createUI()  { return new Label(); }
+protected void initUI()
+{
+    getView("PathText", TextView.class).setFireActionOnFocusLost(true);
+}
+
+/**
+ * Reset UI.
+ */
+protected void resetUI()
+{
+    // Get current PathView and path
+    RMPolygonShape pshape = getSelectedShape();
+    Path path = pshape.getPath();
+    
+    // Update PathText
+    setViewText("PathText", path.getString());
+}
 
 /**
  * Handles the pop-up menu
  */
 public void respondUI(ViewEvent anEvent)
 {
+    // Get current PathView and path
+    RMPolygonShape pshape = getSelectedShape();
+    
+    // Handle PathText
+    if(anEvent.equals("PathText")) {
+        String str = anEvent.getStringValue();
+        Path path = Path.getPathFromSVG(str); if(path==null) return;
+        pshape.resetPath(new RMPath(path));
+    }
+    
     // Handle DeletePointMenuItem
     if(anEvent.equals("DeletePointMenuItem"))
         deleteSelectedPoint();
