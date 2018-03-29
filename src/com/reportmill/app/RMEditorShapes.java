@@ -80,7 +80,7 @@ private static void groupShape(RMShape child, RMParentShape gshape)
 {
     // Get center point in parent coords and store as child x/y
     RMParentShape parent = child.getParent();
-    Point cp = new Point(child.getWidth()/2, child.getHeight()/2); child.convertPointToShape(cp, parent);
+    Point cp = child.localToParent(child.getWidth()/2, child.getHeight()/2);
     child.setXY(cp.x, cp.y);
     
     // Move child to GroupShape
@@ -93,8 +93,8 @@ private static void groupShape(RMShape child, RMParentShape gshape)
     child.setSkewX(child.getSkewX() - gshape.getSkewX()); child.setSkewY(child.getSkewY() - gshape.getSkewY());
     
     // Reset center point: Get old center point in GroupShape coords and offset child by new center in GroupShape coords
-    gshape.convertPointFromShape(cp, parent);
-    Point cp2 = new Point(child.getWidth()/2, child.getHeight()/2); child.convertPointToShape(cp2, gshape);
+    cp = gshape.parentToLocal(cp.x, cp.y);
+    Point cp2 = child.localToParent(child.getWidth()/2, child.getHeight()/2);
     child.offsetXY(cp.x - cp2.x, cp.y - cp2.y);
 }
 
@@ -142,7 +142,7 @@ private static void ungroupShape(RMShape child)
 {
     // Get center point in parent coords and store as child x/y
     RMParentShape gshape = child.getParent(), parent = gshape.getParent();
-    Point cp = new Point(child.getWidth()/2, child.getHeight()/2); child.convertPointToShape(cp, parent);
+    Point cp = child.localToParent(child.getWidth()/2, child.getHeight()/2, parent);
     child.setXY(cp.x, cp.y);
     
     // Coalesce transforms up the parent chain
@@ -155,7 +155,7 @@ private static void ungroupShape(RMShape child)
     parent.addChild(child);
     
     // Reset center point: Get new center in parent coords and offset child by change
-    Point cp2 = new Point(child.getWidth()/2, child.getHeight()/2); child.convertPointToShape(cp2, parent);
+    Point cp2 = child.localToParent(child.getWidth()/2, child.getHeight()/2);
     child.offsetXY(cp.x - cp2.x, cp.y - cp2.y);
 }
 

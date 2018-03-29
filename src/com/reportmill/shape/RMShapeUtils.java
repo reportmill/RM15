@@ -190,7 +190,7 @@ public static void paintShape(Painter aPntr, RMShape aShape, Rect aBounds, doubl
         aPntr.scale(aScale, aScale);
     
     // Apply inverse shape transform to negate effects of shape paint applying transform
-    aPntr.transform(aShape.getTransformInverse());
+    aPntr.transform(aShape.getParentToLocal());
 
     // Paint shape and restore gstate
     aShape.paint(aPntr);

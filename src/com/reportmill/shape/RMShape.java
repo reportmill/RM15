@@ -967,74 +967,96 @@ public boolean isAncestor(RMShape aShape)  { return aShape==_parent || (_parent!
 public boolean isDescendant(RMShape aShape)  { return aShape!=null && aShape.isAncestor(this); }
 
 /**
- * Returns first ancestor that the given shape and this shape have in common.
+ * Converts a point from local to parent.
  */
-public RMShape getAncestorInCommon(RMShape aShape)
+public Point localToParent(double aX, double aY)
 {
-    // If shape is our descendant, return this shape
-    if(isDescendant(aShape))
-        return this;
-    
-    // Iterate up shape's ancestors until one has this shape as descendant
-    for(RMShape shape=aShape; shape!=null; shape=shape.getParent())
-        if(shape.isDescendant(this))
-            return shape;
-    
-    // Return null since common ancestor not found
-    return null;
+    if(isTransformSimple()) return new Point(aX+getX(),aY+getY());
+    return getLocalToParent().transform(aX, aY);
 }
 
 /**
- * Returns a list of shapes from this shape to a given ancestor, inclusive.
+ * Converts a point from local to given parent.
  */
-public List <RMShape> getShapesToAncestor(RMShape aShape)
+public Point localToParent(double aX, double aY, RMShape aPar)
 {
-    // Iterate and add up this shape and parents until given ancestor is added (or we run out)
-    List ancestors = new ArrayList();
-    for(RMShape shape=this; shape!=null; shape=shape.getParent()) {
-        ancestors.add(shape);
-        if(shape==aShape)
-            break;
+    Point point = new Point(aX,aY);
+    for(RMShape n=this;n!=aPar&&n!=null;n=n.getParent()) {
+        if(n.isTransformSimple()) point.offset(n.getX(),n.getY());
+        else point = n.localToParent(point.x,point.y); }
+    return point;
+}
+
+/**
+ * Converts a shape from local to parent.
+ */
+public Shape localToParent(Shape aShape)  { return aShape.copyFor(getLocalToParent()); }
+
+/**
+ * Converts a point from local to given parent.
+ */
+public Shape localToParent(Shape aShape, RMShape aPar)  { return aShape.copyFor(getLocalToParent(aPar)); }
+
+/**
+ * Converts a point from parent to local.
+ */
+public Point parentToLocal(double aX, double aY)
+{
+    if(isTransformSimple()) return new Point(aX-getX(),aY-getY());
+    return getParentToLocal().transform(aX, aY);
+}
+
+/**
+ * Converts a point from given parent to local.
+ */
+public Point parentToLocal(double aX, double aY, RMShape aPar)  { return getParentToLocal(aPar).transform(aX,aY); }
+
+/**
+ * Converts a shape from parent to local.
+ */
+public Shape parentToLocal(Shape aShape)  { return aShape.copyFor(getParentToLocal()); }
+
+/**
+ * Converts a shape from parent to local.
+ */
+public Shape parentToLocal(Shape aShape, RMShape aPar)  { return aShape.copyFor(getParentToLocal(aPar)); }
+
+/**
+ * Returns the transform.
+ */
+public Transform getLocalToParent()  { return getTransform(); }
+
+/**
+ * Returns the transform.
+ */
+public Transform getLocalToParent(RMShape aPar)
+{
+    Transform tfm = getLocalToParent();
+    for(RMShape shp=getParent(); shp!=aPar && shp!=null; shp=shp.getParent()) {
+        if(shp.isTransformSimple()) tfm.preTranslate(shp.getX(),shp.getY());
+        else tfm.multiply(shp.getLocalToParent());
     }
-    
-    // Return ancestors
-    return ancestors;
+    return tfm;
 }
 
 /**
- * Returns a list of shape's from this shape to given descendant, inclusive.
+ * Returns the transform from parent to local coords.
  */
-public List <RMShape> getShapesToDescendant(RMShape aShape)
+public Transform getParentToLocal()
 {
-    List list = aShape.getShapesToAncestor(this); Collections.reverse(list); return list;
+    if(isTransformSimple()) return new Transform(-getX(), -getY());
+    Transform tfm = getLocalToParent(); tfm.invert(); return tfm;
 }
 
 /**
- * Returns a list of shapes from this shape to given shape.
+ * Returns the transform from parent to local coords.
  */
-public List <RMShape> getShapesToShape(RMShape aShape)
-{
-    // If shape is null or ancestor, return shapes to ancestor
-    if(aShape==null || isAncestor(aShape))
-        return getShapesToAncestor(aShape);
-    
-    // If shape is a descendant, return shapes to descendant
-    if(isDescendant(aShape))
-        return getShapesToDescendant(aShape);
+public Transform getParentToLocal(RMShape aPar)  { Transform tfm = getLocalToParent(aPar); tfm.invert(); return tfm; }
 
-    // Get common ancestor (if none, just return null)
-    RMShape commonAncestor = getAncestorInCommon(aShape);
-    if(commonAncestor==null)
-        return null;
-    
-    // Get shapes to common ancestor, without ancestor, and add shapes from common ancestor to given shape
-    List shapes = getShapesToAncestor(commonAncestor);
-    shapes.remove(shapes.size()-1);
-    shapes.addAll(commonAncestor.getShapesToDescendant(aShape));
-
-    // Return shapes
-    return shapes;
-}
+/**
+ * Returns whether transform to parent is simple (contains no rotate, scale, skew).
+ */
+public boolean isTransformSimple()  { return !isRSS(); }
 
 /**
  * Returns the transform to this shape from its parent.
@@ -1057,41 +1079,20 @@ public Transform getTransform()
 }
 
 /**
- * Returns the transform from this shape to it's parent.
- */
-public Transform getTransformInverse()  { Transform t = getTransform(); t.invert(); return t; }
-
-/**
  * Returns the transform from this shape to the given shape.
  */
 public Transform getTransformToShape(RMShape aShape)
 {
-    // If transforming out of shape hierarchy, concat recursive transformToShape call to parents
-    if(aShape==null) {
-        Transform trans = getTransform();
-        if(_parent!=null) trans.multiply(_parent.getTransformToShape(null));
-        return trans;
-    }
-
-    // The transform to parent is just our transform, transform to child is just child's inverse transform
-    if(aShape==_parent)
-        return getTransform();
-    if(this==aShape._parent)
-        return aShape.getTransformInverse();
-    if(aShape==this)
-        return new Transform();
-
-    // If not one of simple cases above, concat successive transforms from last shape to self (inverse if going up)
-    List <RMShape> shapes = getShapesToShape(aShape); if(shapes==null) return Transform.IDENTITY;
-    Transform transform = Transform.IDENTITY;
-    for(int i=shapes.size()-1; i>0; i--) {
-        RMShape cs = shapes.get(i), ns = shapes.get(i-1);
-        Transform t2 = ns==cs._parent? cs.getTransformInverse() : ns.getTransform();
-        t2.multiply(transform); transform = t2;
-    }
+    // Handle simple cases
+    if(aShape==null) return getLocalToParent(null);
+    if(aShape==_parent) return getLocalToParent();
+    if(this==aShape._parent) return aShape.getParentToLocal();
+    if(aShape==this) return new Transform();
     
-    // Return transform
-    return transform;
+    // Otherwise, multiply transform to world by given shape's transform from world
+    Transform t0 = getLocalToParent(null), t1 = aShape.getParentToLocal(null);
+    t0.multiply(t1); System.out.println("Full Transform");
+    return t0;
 }
 
 /**
@@ -1152,14 +1153,6 @@ public Point convertedPointToShape(Point aPnt, RMShape aShp)
 public Point convertedPointFromShape(Point aPoint, RMShape aShape)
 {
     Point p = new Point(aPoint); convertPointFromShape(p, aShape); return p;
-}
-
-/**
- * Returns the rect encompassing the given rect converted to the given shape's coords.
- */
-public Rect getConvertedRectToShape(Rect aRect, RMShape aShape)
-{
-    Rect r = aRect.clone(); convertRectToShape(r, aShape); return r;
 }
 
 /**
