@@ -27,11 +27,6 @@ public RMLine()  { }
 public RMLine(double x1, double y1, double x2, double y2)  { _spx = x1; _spy = y1; _epx = x2; _epy = y2; }
 
 /**
- * Creates a new line for the given start point and end point.
- */
-public RMLine(Point sp, Point ep)  { _spx = sp.getX(); _spy = sp.getY(); _epx = ep.getX(); _epy = ep.getY(); }
-
-/**
  * Returns the start point x.
  */
 public double getSPx()  { return _spx; }
@@ -78,79 +73,6 @@ public Point getPoint(double t, Point aPoint)
 }
 
 /**
- * Returns the point count of segment.
- */
-public int getPointCount()  { return 2; }
-
-/**
- * Returns the x of point at given index.
- */
-public double getPointX(int anIndex)  { return anIndex==0? _spx : _epx; }
-
-/**
- * Returns the y of point at given index.
- */
-public double getPointY(int anIndex)  { return anIndex==0? _spy : _epy; }
-
-/**
- * Returns the last x.
- */
-public double getLastX()  { return getPointX(getPointCount()-1); }
-
-/**
- * Returns the last y.
- */
-public double getLastY()  { return getPointY(getPointCount()-1); }
-
-/**
- * Returns the minimum distance from the given point to this segment.
- */
-public double getDistance(double aX, double aY)  { return getDistanceLine(aX, aY); }
-
-/**
- * Returns the minimum distance from the given point to this line.
- */
-public double getDistanceLine(double aX, double aY)  { return Math.sqrt(getDistanceLineSquared(aX, aY)); }
-
-/**
- * Returns the minimum distance from the given point to this line, squared.
- */
-public double getDistanceLineSquared(double anX, double aY)
-{
-    return getDistanceLineSquared(anX, aY, _spx, _spy, _epx, _epy);
-}
-
-/**
- * Returns the distance from the given point components (p0) to the given line components (p1->p2).
- */
-public static double getDistanceLineSquared(double p0x, double p0y, double p1x, double p1y, double p2x, double p2y)
-{
-    // Declare vars for closest point
-    double x = p1x;
-    double y = p1y;
-
-    // If line end points differ, find closest point
-    if(p1x!=p2x || p1y!=p2y) {
-        
-        // Get parametric location of closest point
-        double width = p2x - p1x;
-        double height = p2y - p1y;
-        double lengthSquared = width*width + height*height;
-        double r = ((p0x - p1x)*width + (p0y - p1y)*height)/lengthSquared;
-        
-        // Clamp r to line bounds (0-1) and get actual location of closest point from parametric location
-        r = r>=1? 1 : r<0? 0 : r;
-        x = p1x + r*(p2x - p1x);
-        y = p1y + r*(p2y - p1y);
-    }
-
-    // Return distance squared to point
-    double dx = p0x - x;
-    double dy = p0y - y;
-    return dx*dx + dy*dy;
-}
-
-/**
  * Returns the min x point of this line.
  */
 public double getMinX()  { return Math.min(_spx, _epx); }
@@ -169,30 +91,6 @@ public double getMaxX()  { return Math.max(_spx, _epx); }
  * Returns the max y point of this line.
  */
 public double getMaxY()  { return Math.max(_spy, _epy); }
-
-/**
- * Returns the bounds of the line.
- */
-public final Rect getBounds()  { Rect rect = new Rect(); getBounds(rect); return rect; }
-
-/**
- * Get bounds of line in given rect.
- */
-public void getBounds(Rect aRect)
-{
-    double x = getMinX(), y = getMinY();
-    aRect.setRect(x, y, getMaxX()-x, getMaxY()-y);
-}
-
-/**
- * Returns a new line from this line's start point to given parametric location t (defined from 0-1) on this line.
- */
-public RMLine getHead(double t)  { Point p = getPoint(t); return new RMLine(_spx, _spy, p.getX(), p.getY()); }
-
-/**
- * Returns a new line from given parametric location t (defined from 0-1) on this line to this line's end point.
- */
-public RMLine getTail(double t)  { Point p = getPoint(t); return new RMLine(p.getX(), p.getY(), _epx, _epy); }
 
 /** 
  * Reset this curve's end point to the given parametric location (0-1).
@@ -244,6 +142,21 @@ public RMHitInfo getHitInfo(RMBezier aBezier)  { return RMBezierLineHit.getHitIn
  * Returns a string representation of this line.
  */
 public String toString()  { return "Line: [" + _spx + " " + _spy + "], [" + _epx + " " + _epy + "]"; }
+
+/**
+ * Returns the point count of segment.
+ */
+public int getPointCount()  { return 2; }
+
+/**
+ * Returns the x of point at given index.
+ */
+public double getPointX(int anIndex)  { return anIndex==0? _spx : _epx; }
+
+/**
+ * Returns the y of point at given index.
+ */
+public double getPointY(int anIndex)  { return anIndex==0? _spy : _epy; }
 
 /**
  * Returns the angle at given parametric point (in degrees).

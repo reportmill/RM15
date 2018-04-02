@@ -2,8 +2,7 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.graphics;
-import snap.gfx.Point;
-import snap.gfx.Rect;
+import snap.gfx.*;
 
 /**
  * This class models a simple bezier curve, providing methods for extracting points, distance calculation, bisection,
@@ -18,15 +17,6 @@ public class RMBezier extends RMQuadratic {
  * Creates a new bezier.
  */
 public RMBezier()  { }
-
-/**
- * Creates a new bezier from the given start point, control points and end point.
- */
-public RMBezier(Point startPoint, Point cp1, Point cp2, Point endPoint)
-{
-    super(startPoint, cp1, endPoint);
-    _cp2x = cp2.getX(); _cp2y = cp2.getY();
-}
 
 /**
  * Creates a new bezier from the given start point, control points and end point.
@@ -90,31 +80,6 @@ public double getPointX(int anIndex)  { return anIndex==0? _spx : anIndex==1? _c
 public double getPointY(int anIndex)  { return anIndex==0? _spy : anIndex==1? _cp1y : anIndex==2? _cp2y : _epy; }
 
 /**
- * Returns the minimum distance from the given point to this segment.
- */
-public double getDistance(double aX, double aY)  { return getDistanceBezier(aX, aY); }
-
-/**
- * Returns the minimum distance from the given point to the curve.
- */
-public double getDistanceBezier(double aX, double aY)
-{
-    // If control points almost on end points line, return distance to line
-    double dist1 = getDistanceLine(_cp1x, _cp1y);
-    double dist2 = getDistanceLine(_cp2x, _cp2y);
-    if(dist1<.25 && dist2<.25)
-        return getDistanceLine(aX, aY);
-
-    // Split the curve and recurse
-    RMBezier c1 = new RMBezier();
-    RMBezier c2 = new RMBezier();
-    subdivide(c1, c2, .5f);
-    dist1 = c1.getDistanceBezier(aX, aY);
-    dist2 = c2.getDistanceBezier(aX, aY);
-    return Math.min(dist1, dist2);
-}
-
-/**
  * Returns the min x point of this bezier.
  */
 public double getMinX()  { return Math.min(super.getMinX(), _cp2x); }
@@ -135,109 +100,6 @@ public double getMaxX()  { return Math.max(super.getMaxX(), _cp2x); }
 public double getMaxY()  { return Math.max(super.getMaxY(), _cp2y); }
 
 /**
- * Returns the bounds.
- */
-public void getBounds(Rect aRect)  { getBounds(_spx, _spy, _cp1x, _cp1y, _cp2x, _cp2y, _epx, _epy, aRect); }
-
-/**
- * Returns the bounds of the bezier.
- */
-public static void getBounds(double x0, double y0, double x1, double y1, double x2, double y2, double x3, double y3, Rect aRect)
-{
-    // Declare coords for min/max points
-    double p1x = x0;
-    double p1y = y0;
-    double p2x = x0;
-    double p2y = y0;
-
-    // Get coeficients of b-curve parametric equations (1-t)^3*x0 + 3*t*(1-t)^2*x1 + 3*t^2*(1-t)*x2 + t^3*x3
-    // Take derivative of above function and solve for t where derivative equation = 0 (I used Mathematica).
-    //   Since derivative of bezier cubic is quadradic, solution is of form (-b +- sqrt(b^2-4ac))/2a.
-    // Get the part in the sqrt for x & y.
-    double aX = -x0 + 3*x1 - 3*x2 + x3;
-    double aY = -y0 + 3*y1 - 3*y2 + y3;
-    double bX = 2*x0 - 4*x1 + 2*x2;
-    double bY = 2*y0 - 4*y1 + 2*y2;
-    double cX = -x0 + x1;
-    double cY = -y0 + y1;
-    double bSquaredMinus4acForX = bX*bX - 4*aX*cX;
-    double bSquaredMinus4acForY = bY*bY - 4*aY*cY;
-        
-    // If square root part x is at least zero, there is a local max & min on bezier curve for x.
-    if(bSquaredMinus4acForX >= 0) {
-        
-        // Declare variables for the two solutions
-        double t1 = -1, t2 = -1;
-        
-        // If A is zero, the eqn reduces to a simple linear equation (Using the quadratic here would give NaNs)
-        if(aX==0)
-            t1 = bX==0? 0 : -cX/bX;
-        
-        // Otherwise, solve for tMax(-b + sqrt(b^2-4ac)/2a) and tMin(-b - sqrt(b^2-4ac)/2a)        
-        else {
-            t1 = (-bX - Math.sqrt(bSquaredMinus4acForX))/(2*aX);
-            t2 = (-bX + Math.sqrt(bSquaredMinus4acForX))/(2*aX);
-        }
-
-        // If t1 is in valid range (0 to 1), solve for x value and use it to expand bounds
-        if(t1>=0 && t1<=1) {
-            double x = Math.pow(1-t1, 3)*x0 + 3*t1*Math.pow(1-t1, 2)*x1 + 3*Math.pow(t1, 2)*(1-t1)*x2 + Math.pow(t1,3)*x3;
-            p1x = Math.min(p1x, x);
-            p2x = Math.max(p2x, x);
-        }
-
-        // If t2 is in valid range (0 to 1), solve for x value and use it to expand bounds
-        if(t2>=0 && t2<=1) {
-            double x = Math.pow(1-t2, 3)*x0 + 3*t2*Math.pow(1-t2, 2)*x1 + 3*Math.pow(t2, 2)*(1-t2)*x2 + Math.pow(t2,3)*x3;
-            p1x = Math.min(p1x, x);
-            p2x = Math.max(p2x, x);
-        }
-    }
-
-    // If square root part y is at least zero, there is a local max & min on bezier curve for y.
-    if(bSquaredMinus4acForY >= 0) {
-        
-        // Declare variables for the two solutions
-        double t1 = -1, t2 = -1;
-        
-        // If A is zero, the eqn reduces to a linear. (or possibly a point if B is zero)
-        if(aY==0)
-            t1 = (bY==0) ? 0 : -cY/bY;
-        
-        // Otherwise, solve for tMax(-b + sqrt(b^2-4ac)/2a) and tMin(-b - sqrt(b^2-4ac)/2a)        
-        else {
-            t1 = (-bY - Math.sqrt(bSquaredMinus4acForY))/(2*aY);
-            t2 = (-bY + Math.sqrt(bSquaredMinus4acForY))/(2*aY);
-        }
-        
-        // If tMin is in valid range (0 to 1), solve for x value and use it to expand bounds
-        if((t1 >=0) && (t1 <= 1)) {
-            double y = Math.pow(1-t1, 3)*y0 + 3*t1*Math.pow(1-t1, 2)*y1 + 3*Math.pow(t1, 2)*(1-t1)*y2 +
-                Math.pow(t1,3)*y3;
-            p1y = Math.min(p1y, y);
-            p2y = Math.max(p2y, y);
-        }
-
-        // If tMax is in valid range (0 to 1), solve for x value and use it to expand bounds
-        if((t2 >=0) && (t2 <= 1)) {
-            double y = Math.pow(1-t2, 3)*y0 + 3*t2*Math.pow(1-t2, 2)*y1 + 3*Math.pow(t2, 2)*(1-t2)*y2 +
-                Math.pow(t2,3)*y3;
-            p1y = Math.min(p1y, y);
-            p2y = Math.max(p2y, y);
-        }
-    }
-
-    // Evaluate bounds expansion for curve endpoint
-    p1x = Math.min(p1x, x3);
-    p1y = Math.min(p1y, y3);
-    p2x = Math.max(p2x, x3);
-    p2y = Math.max(p2y, y3);
-    
-    // Set rect
-    aRect.setRect(p1x, p1y, p2x - p1x, p2y - p1y);
-}
-
-/**
  * Returns the hit info for this bezier and a given line.
  */
 public RMHitInfo getHitInfo(RMLine aLine)  { return RMBezierLineHit.getHitInfo(this, aLine, 0); }
@@ -248,8 +110,8 @@ public RMHitInfo getHitInfo(RMLine aLine)  { return RMBezierLineHit.getHitInfo(t
 public RMHitInfo getHitInfo(RMBezier aBezier)
 {
     // If control points almost on end ponts line, return hit info for line
-    double dist1 = getDistanceLine(_cp1x, _cp1y);
-    double dist2 = getDistanceLine(_cp2x, _cp2y);
+    double dist1 = Line.getDistance(_spx, _spy, _epx, _epy, _cp1x, _cp1y); //getDistanceLine(_cp1x, _cp1y);
+    double dist2 = Line.getDistance(_spx, _spy, _epx, _epy, _cp2x, _cp2y); //getDistanceLine(_cp2x, _cp2y);
     if(dist1<.25 && dist2<.25)
         return super.getHitInfo(aBezier);
 
@@ -273,16 +135,6 @@ public RMHitInfo getHitInfo(RMBezier aBezier)
     // Return hit info
     return hitInfo;
 }
-
-/**
- * Returns a new line from this line's start point to given parametric location t (defined from 0-1) on this line.
- */
-public RMLine getHead(double t)  { RMBezier b = new RMBezier(); subdivide(b, null, t); return b; }
-
-/**
- * Returns a new line from given parametric location t (defined from 0-1) on this line to this line's end point.
- */
-public RMLine getTail(double t)  { RMBezier b = new RMBezier(); subdivide(null, b, t); return b; }
 
 /**
  * Returns a bezier curve from this curve's start point to the given parametric location (0-1).
