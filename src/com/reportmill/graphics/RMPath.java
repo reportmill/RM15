@@ -61,11 +61,6 @@ public void moveTo(Point p) { moveTo(p.getX(), p.getY()); }
 public void lineTo(Point p) { lineTo(p.getX(), p.getY()); }
 
 /**
- * Returns a PathIter for RMPath.
- */
-public RMPathIter getPathIter(Transform aTrans)  { return new RMPathIter(super.getPathIter(aTrans)); }
-
-/**
  * Returns whether path has any open subpaths.
  */
 public boolean isClosed()
@@ -183,25 +178,25 @@ public boolean intersects(RMPath aPath, float lineWidth)
 public RMHitInfo getHitInfo(RMLine aLine, boolean findFirstHit)
 {
     // Iterate over path segments
-    RMPathIter piter = getPathIter(null); RMHitInfo hitInfo = null;
-    Point pts[] = new Point[3], lastPoint = new Point(), lastMoveToPoint = new Point();
+    PathIter piter = getPathIter(null); RMHitInfo hitInfo = null;
+    double pts[] = new double[6], lastX = 0, lastY = 0, lastMoveToX = 0, lastMoveToY = 0;
     for(int i=0; piter.hasNext(); i++) switch(piter.getNext(pts)) {
 
         // Handle MoveTo: Update last point & last move-to point and break
-        case MoveTo: lastPoint = lastMoveToPoint = pts[0]; break;
+        case MoveTo: lastX = lastMoveToX = pts[0]; lastY = lastMoveToY = pts[1]; break;
 
         // Handle Close:  If last point is same as last move-to point, just break
-        case Close: if(lastPoint.equals(lastMoveToPoint))
+        case Close: if(Point.equals(lastX, lastY, lastMoveToX, lastMoveToY))
                break;
             
             // Otherwise, update current segment point and fall through to LINE_TO
-            pts[0] = lastMoveToPoint;
+            pts[0] = lastMoveToX; pts[1] = lastMoveToY;
 
         // Handle LineTo
         case LineTo: {
             
             // Get RMLine for last point and current point and do RMLine hit detection
-            RMLine line = new RMLine(lastPoint, pts[0]);
+            RMLine line = new RMLine(lastX, lastY, pts[0], pts[1]);
             RMHitInfo newHitInfo = aLine.getHitInfo(line);
 
             // If hit, see if we need to findFirstHit or just return hitInfo
@@ -218,21 +213,20 @@ public RMHitInfo getHitInfo(RMLine aLine, boolean findFirstHit)
             }
 
             // Cache last point and break
-            lastPoint = pts[0];
-            break;
+            lastX = pts[0]; lastY = pts[1]; break;
         }
             
         // If QuadTo, calculate control points for equivalent cubic and fall through
         case QuadTo: 
-            pts[2] = pts[1]; 
-            pts[1] = new Point((2*pts[0].x+pts[1].x)/3, (2*pts[0].y+pts[1].y)/3);
-            pts[0] = new Point((2*pts[0].x+lastPoint.x)/3, (2*pts[0].y+lastPoint.y)/3); // fall through
+            pts[4] = pts[2]; pts[5] = pts[3];
+            pts[2] = (2*pts[0]+pts[2])/3; pts[3] = (2*pts[1]+pts[3])/3;
+            pts[0] = (2*pts[0]+lastX)/3; pts[1] = (2*pts[1]+lastY)/3; // fall through
 
         // If CubicTo, get simple RMBezier and do line/bezier hit detection
         case CubicTo: {
             
             // Get simple RMBezier for current segment and do line-bezier hit detection
-            RMBezier bezier = new RMBezier(lastPoint, pts[0], pts[1], pts[2]);
+            RMBezier bezier = new RMBezier(lastX, lastY, pts[0], pts[1], pts[2], pts[3], pts[4], pts[5]);
             RMHitInfo newHitInfo = aLine.getHitInfo(bezier);
 
             // If hit, see if we need to findFirstHit or just return hitInfo
@@ -249,7 +243,7 @@ public RMHitInfo getHitInfo(RMLine aLine, boolean findFirstHit)
             }
 
             // Cache last point and break
-            lastPoint = pts[2]; break;
+            lastX = pts[4]; lastY = pts[5]; break;
         }
     }
 
@@ -263,12 +257,12 @@ public RMHitInfo getHitInfo(RMLine aLine, boolean findFirstHit)
 public List <List <? extends RMLine>> getSubpathsSegments() 
 {
     // Iterate over elements
-    RMPathIter piter = getPathIter(null); List subpaths = new ArrayList(), segments = new ArrayList();
-    Point pts[] = new Point[3], lastPoint = new Point(), lastMoveToPoint = lastPoint;
+    PathIter piter = getPathIter(null); List subpaths = new ArrayList(), segments = new ArrayList();
+    double pts[] = new double[6], lastX = 0, lastY = 0, lastMoveToX = 0, lastMoveToY = 0;
     while(piter.hasNext()) switch(piter.getNext(pts)) {
         
         // Handle MoveTo
-        case MoveTo: lastPoint = lastMoveToPoint = pts[0];
+        case MoveTo: lastX = lastMoveToX = pts[0]; lastY = lastMoveToY = pts[1];
             if(!segments.isEmpty()) {
                 subpaths.add(segments);
                 segments = new ArrayList();
@@ -276,17 +270,18 @@ public List <List <? extends RMLine>> getSubpathsSegments()
             break;
 
         // Handle Close: set points to last MoveTo and fall through to LineTo
-        case Close: pts[0] = lastMoveToPoint;
+        case Close: pts[0] = lastMoveToX; pts[1] = lastMoveToY;
 
         // Handle LineTo
-        case LineTo: if(!lastPoint.equals(pts[0]))
-                segments.add(new RMLine(lastPoint, lastPoint = pts[0])); break;
+        case LineTo: if(!Point.equals(lastX, pts[0], lastY, pts[1]))
+                segments.add(new RMLine(lastX, lastY, lastX = pts[0], lastY = pts[1])); break;
             
         // Handle QuadTo
-        case QuadTo: segments.add(new RMQuadratic(lastPoint, pts[0], lastPoint = pts[1])); break;
+        case QuadTo: segments.add(new RMQuadratic(lastX, lastY, pts[0], pts[1], lastX = pts[2], lastY = pts[3])); break;
         
         // Handle CubicTo
-        case CubicTo: segments.add(new RMBezier(lastPoint, pts[0], pts[1], lastPoint = pts[2])); break;
+        case CubicTo: segments.add(new RMBezier(lastX, lastY, pts[0], pts[1], pts[2], pts[3],
+            lastX=pts[4], lastY=pts[5])); break;
     }
     
     // Add the last subpath
@@ -398,28 +393,28 @@ public XMLElement toXML(XMLArchiver anArchiver)
     XMLElement e = new XMLElement("path");
     
     // Archive individual elements/points
-    RMPathIter piter = getPathIter(null); Point pts[] = new Point[3];
+    PathIter piter = getPathIter(null); double pts[] = new double[6];
     while(piter.hasNext()) switch(piter.getNext(pts)) {
         
         // Handle MoveTo
         case MoveTo: XMLElement move = new XMLElement("mv");
-            move.add("x", pts[0].x); move.add("y", pts[0].y); e.add(move); break;
+            move.add("x", pts[0]); move.add("y", pts[1]); e.add(move); break;
         
         // Handle LineTo
         case LineTo: XMLElement line = new XMLElement("ln");
-            line.add("x", pts[0].x); line.add("y", pts[0].y); e.add(line); break;
+            line.add("x", pts[0]); line.add("y", pts[1]); e.add(line); break;
             
         // Handle QuadTo
         case QuadTo: XMLElement quad = new XMLElement("qd");
-            quad.add("cx", pts[0].x); quad.add("cy", pts[0].y);
-            quad.add("x", pts[1].x); quad.add("y", pts[1].y);
+            quad.add("cx", pts[0]); quad.add("cy", pts[1]);
+            quad.add("x", pts[2]); quad.add("y", pts[3]);
             e.add(quad); break;
 
         // Handle CubicTo
         case CubicTo: XMLElement curve = new XMLElement("cv");
-            curve.add("cp1x", pts[0].x); curve.add("cp1y", pts[0].y);
-            curve.add("cp2x", pts[1].x); curve.add("cp2y", pts[1].y);
-            curve.add("x", pts[2].x); curve.add("y", pts[2].y);
+            curve.add("cp1x", pts[0]); curve.add("cp1y", pts[1]);
+            curve.add("cp2x", pts[2]); curve.add("cp2y", pts[3]);
+            curve.add("x", pts[4]); curve.add("y", pts[5]);
             e.add(curve); break;
 
         // Handle Close
@@ -453,29 +448,6 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
     
     // Return this path
     return this;
-}
-
-/**
- * A PathIter for Path.
- */
-public static class RMPathIter extends PathIter {
-    
-    /** Creates a new PathPathIter for Path. */
-    RMPathIter(PathIter aPI)  { _piter = aPI; } PathIter _piter; double _pts[] = new double[6];
-    
-    /** Returns whether PathIter has another segement. */
-    public boolean hasNext()  { return _piter.hasNext(); }
-    
-    /** Returns the next segment. */
-    public Seg getNext(double coords[])  { return _piter.getNext(coords); }
-    
-    /** Returns the next segment (Point coords). Not very efficient. */
-    public Seg getNext(Point pts[])
-    {
-        Seg seg = getNext(_pts);
-        for(int i=0;i<seg.getCount();i++) pts[i] = new Point(_pts[i*2], _pts[i*2+1]);
-        return seg;
-    }
 }
 
 }

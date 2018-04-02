@@ -149,14 +149,13 @@ public void close()  { _elements.add(new Byte(CLOSE)); }
 public void addPath(RMPath aPath, double aDepth)
 {
     // Iterate over elements in given path
-    RMPath.RMPathIter piter = aPath.getPathIter(null); Point pts[] = new Point[3];
+    PathIter piter = aPath.getPathIter(null); double pts[] = new double[6];
     for(int i=0; piter.hasNext(); i++) switch(piter.getNext(pts)) {
         case MoveTo: if(i+1<aPath.getSegCount() && aPath.getSeg(i+1)!=PathIter.Seg.MoveTo)
-                moveTo(pts[0].x, pts[0].y, aDepth); break;
-        case LineTo: lineTo(pts[0].x, pts[0].y, aDepth); break;
-        case QuadTo: quadTo(pts[0].x, pts[0].y, aDepth, pts[1].x, pts[1].y, aDepth); break;
-        case CubicTo: curveTo(pts[0].x, pts[0].y, aDepth, pts[1].x, pts[1].y, aDepth,
-                    pts[2].x, pts[2].y, aDepth); break;
+                moveTo(pts[0], pts[1], aDepth); break;
+        case LineTo: lineTo(pts[0], pts[1], aDepth); break;
+        case QuadTo: quadTo(pts[0], pts[1], aDepth, pts[2], pts[3], aDepth); break;
+        case CubicTo: curveTo(pts[0], pts[1], aDepth, pts[2], pts[3], aDepth, pts[4], pts[5], aDepth); break;
         case Close: close(); break;
     }
 }

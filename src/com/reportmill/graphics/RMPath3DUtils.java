@@ -3,8 +3,7 @@
  */
 package com.reportmill.graphics;
 import java.util.*;
-import snap.gfx.Point;
-import snap.util.MathUtils;
+import snap.gfx.*;
 
 /**
  * Helper methods for the RMPath3D class.
@@ -54,28 +53,28 @@ public static List <RMPath3D> getPaths(RMPath aPath, double z1, double z2, doubl
     z2 -= strokeWidth;
     
     // Iterate over path elements
-    RMPath.RMPathIter piter = aPath.getPathIter(null);
-    Point pts[] = new Point[3]; double lastX = 0, lastY = 0, lastMoveX = 0, lastMoveY = 0;
+    PathIter piter = aPath.getPathIter(null);
+    double pts[] = new double[6], lastX = 0, lastY = 0, lastMoveX = 0, lastMoveY = 0;
     while(piter.hasNext()) switch(piter.getNext(pts)) {
 
         // MoveTo
-        case MoveTo: lastX = lastMoveX = pts[0].x; lastY = lastMoveY = pts[0].y; break;
+        case MoveTo: lastX = lastMoveX = pts[0]; lastY = lastMoveY = pts[1]; break;
         
         // LineTo
         case LineTo: {
-            //skip over points (NB: Point.equals() does a fp ==)
-            if(!(MathUtils.equals(lastX,pts[0].x) && MathUtils.equals(lastY,pts[0].y))) {
+            //skip over points
+            if(!Point.equals(lastX,lastY,pts[0],pts[1])) {
                 RMPath3D path = new RMPath3D();
                 path.moveTo(lastX, lastY, z1);
-                path.lineTo(pts[0].x, pts[0].y, z1);
-                path.lineTo(pts[0].x, pts[0].y, z2);
+                path.lineTo(pts[0], pts[1], z1);
+                path.lineTo(pts[0], pts[1], z2);
                 path.lineTo(lastX, lastY, z2);
                 path.close();
-                double x = lastX + (pts[0].x - lastX)/2;
-                double y = lastY + (pts[0].y - lastY)/2;
+                double x = lastX + (pts[0] - lastX)/2;
+                double y = lastY + (pts[1] - lastY)/2;
                 path.setCenter(new RMPoint3D(x, y, z2/2));
                 paths.add(path);
-                lastX = pts[0].x; lastY = pts[0].y;
+                lastX = pts[0]; lastY = pts[1];
             }
         } break;
             
@@ -83,30 +82,30 @@ public static List <RMPath3D> getPaths(RMPath aPath, double z1, double z2, doubl
         case QuadTo: {
             RMPath3D path = new RMPath3D();
             path.moveTo(lastX, lastY, z1);
-            path.quadTo(pts[0].x, pts[0].y, z1, pts[1].x, pts[1].y, z1);
-            path.lineTo(pts[2].x, pts[2].y, z2);
-            path.quadTo(pts[0].x, pts[0].y, z2, lastX, lastY, z2);
+            path.quadTo(pts[0], pts[1], z1, pts[2], pts[3], z1);
+            path.lineTo(pts[4], pts[5], z2);
+            path.quadTo(pts[0], pts[1], z2, lastX, lastY, z2);
             path.close();
-            double x = lastX + (pts[1].x - lastX)/2;
-            double y = lastY + (pts[1].y - lastY)/2;
+            double x = lastX + (pts[2] - lastX)/2;
+            double y = lastY + (pts[3] - lastY)/2;
             path.setCenter(new RMPoint3D(x, y, z2/2));
             paths.add(path);
-            lastX = pts[1].x; lastY = pts[1].y;
+            lastX = pts[2]; lastY = pts[3];
         } break;
             
         // CubicTo
         case CubicTo: {
             RMPath3D path = new RMPath3D();
             path.moveTo(lastX, lastY, z1);
-            path.curveTo(pts[0].x, pts[0].y, z1, pts[1].x, pts[1].y, z1, pts[2].x, pts[2].y, z1);
-            path.lineTo(pts[2].x, pts[2].y, z2);
-            path.curveTo(pts[1].x, pts[1].y, z2, pts[0].x, pts[0].y, z2, lastX, lastY, z2);
+            path.curveTo(pts[0], pts[1], z1, pts[2], pts[3], z1, pts[4], pts[5], z1);
+            path.lineTo(pts[4], pts[5], z2);
+            path.curveTo(pts[2], pts[3], z2, pts[0], pts[1], z2, lastX, lastY, z2);
             path.close();
-            double x = lastX + (pts[2].x - lastX)/2;
-            double y = lastY + (pts[2].y - lastY)/2;
+            double x = lastX + (pts[4] - lastX)/2;
+            double y = lastY + (pts[5] - lastY)/2;
             path.setCenter(new RMPoint3D(x, y, z2/2));
             paths.add(path);
-            lastX = pts[2].x; lastY = pts[2].y;
+            lastX = pts[4]; lastY = pts[5];
         } break;
         
         // Close
