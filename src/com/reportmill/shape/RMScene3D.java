@@ -448,7 +448,7 @@ protected RMShape3D addChild3D(RMShape aShape, double z1, double z2, boolean fix
     else {
         
 	    // Get front, back and side faces for extruded path
-        List <RMPath3D> paths = RMPath3DUtils.getPaths(shapePath, z1, z2, fixEdges ? .001f : 0f);
+        List <RMPath3D> paths = RMPath3D.getPaths(shapePath, z1, z2, fixEdges ? .001f : 0f);
 	
         // Save away original size, to identify the front face
         int frontface = paths.size()-1;

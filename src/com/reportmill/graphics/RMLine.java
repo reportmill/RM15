@@ -236,48 +236,6 @@ public RMHitInfo getHitInfo(RMLine aLine)
 }
 
 /**
- * Returns a hit info object for this line and the given bezier curve.
- * HitInfo._index is overloaded to contain number of hits.
- */
-public RMHitInfo getHitInfo(RMQuadratic aCurve)
-{
-    // If line is completely above/below/right/left of bezier, return false 
-    if(getMinX()>aCurve.getMaxX() || getMaxX()<aCurve.getMinX() ||
-        getMinY()>aCurve.getMaxY() || getMaxY()<aCurve.getMinY())
-        return null;
-
-    // If control point almost on end ponts line, return hit info for line
-    double dist = aCurve.getDistanceLine(aCurve.getCP1x(), aCurve.getCP1y());
-    if(dist<.25)
-        return getHitInfo((RMLine)aCurve);
-    
-    // Get bezier and hit info for head and tail of aBezier
-    RMQuadratic c1 = new RMQuadratic();
-    RMQuadratic c2 = new RMQuadratic();
-    aCurve.subdivide(c1, c2);
-    RMHitInfo c1HitInfo = getHitInfo(c1);
-    RMHitInfo c2HitInfo = getHitInfo(c2);
-    
-    // Get the hit info that hit closest to the base of this line
-    RMHitInfo hitInfo = c1HitInfo;
-    if(hitInfo==null || (c2HitInfo!=null && c2HitInfo._r<hitInfo._r))
-        hitInfo = c2HitInfo;
-    
-    // If neither hit info hit line, return null
-    if(hitInfo==null)
-        return null;
-
-    // Adjust parametric location of intersection for bezier
-    hitInfo._s = hitInfo._s*.5f + (hitInfo==c1HitInfo? 0 : .5f);
-
-    // Adjust intersections count
-    hitInfo._hitCount = (c1HitInfo==null? 0 : c1HitInfo.getHitCount()) + (c2HitInfo==null? 0 : c2HitInfo.getHitCount());
-    
-    // Return hit info
-    return hitInfo;
-}
-
-/**
  * Returns a hit info object for this line and the given bezier.
  */
 public RMHitInfo getHitInfo(RMBezier aBezier)  { return RMBezierLineHit.getHitInfo(aBezier, this, 1); }

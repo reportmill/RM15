@@ -61,34 +61,6 @@ public void moveTo(Point p) { moveTo(p.getX(), p.getY()); }
 public void lineTo(Point p) { lineTo(p.getX(), p.getY()); }
 
 /**
- * Returns whether path has any open subpaths.
- */
-public boolean isClosed()
-{
-    // Iterate over path
-    PathIter piter = getPathIter(null);
-    double pnts[] = new double[6], m0x = 0, m0y = 0, m1x = 0, m1y = 0; boolean inPath = false;
-    while(piter.hasNext()) switch(piter.getNext(pnts)) {
-        
-        // Handle MoveTo: If we were in a path, and last move-to isn't equal, return false
-        case MoveTo: if(inPath && !(MathUtils.equals(m1x,m0x) && MathUtils.equals(m1y,m0y)))
-                return false;
-            m0x = pnts[0]; m0y = pnts[1]; inPath = false; break; // Set last move-to point, set not in path and break
-            
-        // Handle LineTo
-        case LineTo: m1x = pnts[0]; m1y = pnts[1]; inPath = true; break;
-        case QuadTo: m1x = pnts[2]; m1y = pnts[3]; inPath = true; break;
-        case CubicTo: m1x = pnts[4]; m1y = pnts[5]; inPath = true; break;
-            
-        // Handle Close
-        case Close: inPath = false; break;
-    }
-    
-    // Return false if we're still in path
-    return !inPath;
-}
-
-/**
  * Returns a copy of the path scaled to exactly fit in the given rect.
  */
 public RMPath getPathInRect(Rect aRect)
@@ -138,7 +110,7 @@ public boolean intersects(RMPath aPath, float lineWidth)
         case MoveTo: lastX = lastMoveX = pnts[0]; lastY = lastMoveY = pnts[1]; break;
 
         // Handle Close: If last point is last move-to point, just break
-        case Close: if(MathUtils.equals(lastX,lastMoveX) && MathUtils.equals(lastY,lastMoveY))
+        case Close: if(Point.equals(lastX,lastY,lastMoveX,lastMoveY))
                 break;
             
             // Otherwise, set current segment point to last move-to point and fall through to LINE_TO
@@ -148,7 +120,7 @@ public boolean intersects(RMPath aPath, float lineWidth)
         case LineTo:
             
             // If last point is same as last move-to, just see if point hits path
-            if(MathUtils.equals(lastX,lastMoveX) && MathUtils.equals(lastY,lastMoveY))
+            if(Point.equals(lastX,lastY,lastMoveX,lastMoveY))
                 if(intersects(lastX, lastY, lineWidth))
                     return true;
             
@@ -335,39 +307,18 @@ public void addSegment(RMLine aSegment)
 public RMPath getPathFlattened()
 {
     // Get a new path and point-array for path segment iteration and iterate over path segments
-    PathIter piter = getPathIter(null);
-    RMPath path = new RMPath(); double pnts[] = new double[6], lastx = 0, lasty = 0;
-    while(piter.hasNext()) switch(piter.getNext(pnts)) {
-        case MoveTo: path.moveTo(pnts[0], pnts[1]); lastx = pnts[0]; lasty = pnts[1]; break;
-        case LineTo: path.lineTo(pnts[0], pnts[1]); lastx = pnts[0]; lasty = pnts[1]; break;
+    RMPath path = new RMPath();
+    PathIter piter = getPathIter(null); double pts[] = new double[6];
+    while(piter.hasNext()) switch(piter.getNext(pts)) {
+        case MoveTo: path.moveTo(pts[0], pts[1]); break;
+        case LineTo: path.lineTo(pts[0], pts[1]); break;
+        case QuadTo: path.quadToFlat(pts[0], pts[1], pts[2], pts[3]); break;
+        case CubicTo: path.curveToFlat(pts[0], pts[1], pts[2], pts[3], pts[4], pts[5]); break;
         case Close: path.close(); break;
-        case QuadTo: pnts[4] = pnts[0]; pnts[5] = pnts[1]; pnts[2] = (2*pnts[0]+pnts[2])/3;
-            pnts[3] = (2*pnts[1]+pnts[3])/3; pnts[0] = (2*pnts[0]+lastx)/3; pnts[1] = (2*pnts[1]+lasty)/3;
-        case CubicTo:
-            path.addCubicFlat(new RMBezier(lastx, lasty, pnts[0], pnts[1], pnts[2], pnts[3], pnts[4], pnts[5]));
-            lastx = pnts[4]; lasty = pnts[5]; break;
     }
     
     // Return new path
     return path;
-}
-
-/**
- * Adds a bezier to the path as a series of approximated line segments.
- */
-private void addCubicFlat(RMBezier aBezier)
-{
-    // Get simple line between bezier start/end points and if control points almost on line, return hit info for line
-    RMLine bezierLine = new RMLine(aBezier.getSP(), aBezier.getEP());
-    double dist1 = bezierLine.getDistanceLine(aBezier.getCP1x(), aBezier.getCP1y());
-    double dist2 = bezierLine.getDistanceLine(aBezier.getCP2x(), aBezier.getCP2y());
-    if(dist1<.25 && dist2<.25) {
-        lineTo(bezierLine.getEP()); return; }
-    
-    // Subdivide bezier and add pieces
-    RMBezier b1 = new RMBezier(), b2 = new RMBezier();
-    aBezier.subdivide(b1, b2, .5);
-    addCubicFlat(b1); addCubicFlat(b2);
 }
 
 /**
