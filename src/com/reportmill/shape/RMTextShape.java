@@ -621,7 +621,7 @@ protected double computePrefWidth(double aHeight)
     if(length()==0) return 0; // Zero instead of getMarginLeft() + getMarginRight() so empty texts are hidden
     
     // Get text box width (from first visible char) and return that plus margin
-    double pw = getRichText().getWidth(getVisibleStart());
+    double pw = getRichText().getPrefWidth(getVisibleStart());
     return Math.ceil(getMarginLeft() + pw + getMarginRight());
 }
 
