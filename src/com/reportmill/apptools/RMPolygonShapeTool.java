@@ -120,7 +120,7 @@ public void mouseDragged(ViewEvent anEvent)
     Rect rect = _path.getBounds();
 
     if(_smoothPathOnMouseUp || _path.getPointCount()==1) _path.lineTo(point);
-    else _path.setPoint(_path.getPointCount()-1, point.getX(), point.getY());
+    else _path.setPoint(_path.getPointCount()-1, point.x, point.y);
 
     rect.union(_path.getBounds()); rect.inset(-10, -10);
     rect = getEditor().convertFromShape(rect, null).getBounds();
@@ -180,11 +180,8 @@ public void mouseMoved(T aPolygon, ViewEvent anEvent)
     Point point = getEditor().convertToShape(anEvent.getX(), anEvent.getY(), aPolygon);
     
     // If control point is hit, change cursor to move
-    RMPath path = aPolygon.getPath(); Size size = new Size(9,9);
-    if(handleAtPointForBounds(path, point, aPolygon.getBoundsInside(), RMPolygonShape._selectedPointIndex, size)>=0) {
-        getEditor().setCursor(Cursor.MOVE);
-        anEvent.consume();
-    }
+    if(handleAtPoint(aPolygon.getPath(), point, RMPolygonShape._selectedPointIndex)>=0) {
+        getEditor().setCursor(Cursor.MOVE); anEvent.consume(); }
     
     // Otherwise, do normal mouse moved
     else super.mouseMoved(aPolygon, anEvent);
@@ -212,7 +209,7 @@ public void mousePressed(T aPolygon, ViewEvent anEvent)
     else {
         Size handles = new Size(9,9);
         int oldSelectedPt = RMPolygonShape._selectedPointIndex;
-        int hp = handleAtPointForBounds(aPolygon.getPath(), point, aPolygon.getBoundsInside(), oldSelectedPt, handles);
+        int hp = handleAtPoint(aPolygon.getPath(), point, oldSelectedPt);
         RMPolygonShape._selectedPointIndex = hp;
     
         if(anEvent.isPopupTrigger())
@@ -228,17 +225,15 @@ public void mousePressed(T aPolygon, ViewEvent anEvent)
  */
 public void mouseDragged(T aPolygon, ViewEvent anEvent)
 {
+    // If not dragging a point, just return
+    if(RMPolygonShape._selectedPointIndex<0) return;
+    
+    // Repaint, create path with moved point and set new path
     aPolygon.repaint();
-    if(RMPolygonShape._selectedPointIndex>=0) {
-        Point point = getEditorEvents().getEventPointInShape(true);
-        RMPath path = aPolygon.getPath();
-        point = pointInPathCoordsFromPoint(path, point, aPolygon.getBoundsInside());
-        
-        // Clone path, move control point & do all the other path funny business, reset path
-        RMPath newPath = path.clone();
-        setPointStructured(newPath, RMPolygonShape._selectedPointIndex, point);
-        aPolygon.resetPath(newPath);
-    } 
+    Point point = getEditorEvents().getEventPointInShape(true);
+    RMPath path = aPolygon.getPath(), newPath = path.clone();
+    setPointStructured(newPath, RMPolygonShape._selectedPointIndex, point);
+    aPolygon.resetPath(newPath);
 }
 
 /**
@@ -298,42 +293,24 @@ public void paintTool(Painter aPntr)
  */
 public Rect getBoundsSuperSelected(T aShape) 
 {
-    // Get shape bounds and shape path bounds
-    Rect bounds = aShape.getBoundsInside();
-    Rect pathBounds = aShape.getPath().getBounds();
-
-    // Get 
-    double mx1 = pathBounds.getMidX(), my1 = pathBounds.getMidY();
-    double mx2 = bounds.getMidX(), my2 = bounds.getMidY();
-    double sx = pathBounds.width==0? 1f : bounds.width/pathBounds.width;
-    double sy = pathBounds.height==0? 1f : bounds.height/pathBounds.height;
-
-    // Scale pathSSBounds.origin by sx and sy and translate it to the bounding rect's origin
-    Rect pathSSBounds = getControlPointBounds(aShape.getPath());
-    double x = (pathSSBounds.x-mx1)*sx + mx2;
-    double y = (pathSSBounds.y-my1)*sy + my2;
-    double w = bounds.width*pathSSBounds.width/pathBounds.width;
-    double h = bounds.height*pathSSBounds.height/pathBounds.height;
-    
-    // Get super selected bounds, outset a bit and return
-    Rect ssbounds = new Rect(x,y,w,h); ssbounds.inset(-3, -3); return ssbounds;
+    Rect bnds = getControlPointBounds(aShape.getPath()); bnds.inset(-3, -3); return bnds;
 }
 
 /**
  * Returns the bounds for all the control points.
  */
-private Rect getControlPointBounds(RMPath path)
+private Rect getControlPointBounds(Path aPath)
 {
     // Get segment index for selected control point handle
-    int mouseDownIndex = path.getSegIndexForPointIndex(RMPolygonShape._selectedPointIndex);
-    if(mouseDownIndex>=0 && path.getSeg(mouseDownIndex)==Seg.CubicTo &&
-        (path.getSegPointIndex(mouseDownIndex) == RMPolygonShape._selectedPointIndex))
+    int mouseDownIndex = aPath.getSegIndexForPointIndex(RMPolygonShape._selectedPointIndex);
+    if(mouseDownIndex>=0 && aPath.getSeg(mouseDownIndex)==Seg.CubicTo &&
+        (aPath.getSegPointIndex(mouseDownIndex) == RMPolygonShape._selectedPointIndex))
         mouseDownIndex--;
 
     // Iterate over path elements
-    Point p0 = path.getPointCount()>0? new Point(path.getPoint(0)) : new Point();
+    Point p0 = aPath.getPointCount()>0? new Point(aPath.getPoint(0)) : new Point();
     double p1x = p0.x, p1y = p0.y, p2x = p1x, p2y = p1y;
-    PathIter piter = path.getPathIter(null); double pts[] = new double[6];
+    PathIter piter = aPath.getPathIter(null); double pts[] = new double[6];
     for(int i=0; piter.hasNext(); i++) switch(piter.getNext(pts)) {
         
         // Handle MoveTo
@@ -364,8 +341,8 @@ private Rect getControlPointBounds(RMPath path)
     }
     
     // Create control point bounds rect, union with path bounds and return
-    Rect cpbounds = new Rect(p1x, p1y, Math.max(1, p2x - p1x), Math.max(1, p2y - p1y));
-    cpbounds.union(path.getBounds()); return cpbounds;
+    Rect cpbnds = new Rect(p1x, p1y, Math.max(1, p2x - p1x), Math.max(1, p2y - p1y));
+    cpbnds.union(aPath.getBounds()); return cpbnds;
 }
 
 /**
@@ -390,7 +367,7 @@ public void runContextMenu(RMPolygonShape aPolyShape, ViewEvent anEvent)
         _newPoint = getEditor().convertToShape(anEvent.getX(), anEvent.getY(), aPolyShape);
         
         // linewidth is probably in shape coords, and might need to get transformed to path coords here
-        if(path.intersects(_newPoint.getX(), _newPoint.getY(), Math.max(aPolyShape.getStrokeWidth(),8))) {
+        if(path.intersects(_newPoint.x, _newPoint.y, Math.max(aPolyShape.getStrokeWidth(),8))) {
             mtitle = "Add Anchor Point"; mname = "AddPointMenuItem"; }
     }
     
@@ -448,8 +425,8 @@ public void addNewPoint()
     List <List<RMLine>> subpaths = (List)polygon.getPath().getSubpathsSegments();
     
     // Find hitInfo of segment by intersecting with either horizontal or vertial line segment
-    RMLine hor = new RMLine(_newPoint.getX()-2, _newPoint.getY(), _newPoint.getX()+2, _newPoint.getY());
-    RMLine vert = new RMLine(_newPoint.getX(), _newPoint.getY()-2, _newPoint.getX(), _newPoint.getY()+2);
+    RMLine hor = new RMLine(_newPoint.x-2, _newPoint.y, _newPoint.x+2, _newPoint.y);
+    RMLine vert = new RMLine(_newPoint.x, _newPoint.y-2, _newPoint.x, _newPoint.y+2);
     
     // Iterate over subpaths
     for(int i=0, iMax=subpaths.size(); i<iMax; i++) { List <RMLine> subpath = subpaths.get(i);
@@ -507,11 +484,11 @@ private static void setPointStructured(Path aPath, int index, Point point)
                 Point endPoint = aPath.getPoint(index-1), cntrlPnt2 = aPath.getPoint(index-2);
                 // endpoint==point winds up putting a NaN in the path 
                 if (!endPoint.equals(point)) {
-                    Size size = new Size(point.getX() - endPoint.getX(), point.getY() - endPoint.getY());
+                    Size size = new Size(point.x - endPoint.x, point.y - endPoint.y);
                     size.normalize(); size.negate();
-                    Size size2 = new Size(cntrlPnt2.getX() - endPoint.getX(), cntrlPnt2.getY() - endPoint.getY());
+                    Size size2 = new Size(cntrlPnt2.x - endPoint.x, cntrlPnt2.y - endPoint.y);
                     double mag = size2.getMagnitude();
-                    aPath.setPoint(index-2, endPoint.getX() + size.getWidth()*mag, endPoint.getY() + size.getHeight()*mag);
+                    aPath.setPoint(index-2, endPoint.x + size.getWidth()*mag, endPoint.y + size.getHeight()*mag);
                 }
                 else {
                     // Illustrator pops the otherControlPoint here to what it was at the 
@@ -526,7 +503,7 @@ private static void setPointStructured(Path aPath, int index, Point point)
                 Point endPoint = aPath.getPoint(index+1), otherControlPoint = aPath.getPoint(index+2);
                 // don't normalize a point
                 if (!endPoint.equals(point)) {
-                    Size size = new Size(point.getX() - endPoint.x, point.getY() - endPoint.y);
+                    Size size = new Size(point.x - endPoint.x, point.y - endPoint.y);
                     size.normalize(); size.negate();
                     Size size2 = new Size(otherControlPoint.x - endPoint.x, otherControlPoint.y - endPoint.y);
                     double mag = size2.getMagnitude();
@@ -540,11 +517,11 @@ private static void setPointStructured(Path aPath, int index, Point point)
         else if(index - pointIndexForElementIndex == 2) {
             Point p1 = new Point(point); p1.subtract(aPath.getPoint(index));
             Point p2 = new Point(aPath.getPoint(index-1)); p2.add(p1);
-            aPath.setPoint(index-1, p2.getX(), p2.getY());
+            aPath.setPoint(index-1, p2.x, p2.y);
             if(elmtIndex+1<aPath.getSegCount() && aPath.getSeg(elmtIndex+1)==Seg.CubicTo) {
                 p1 = new Point(point); p1.subtract(aPath.getPoint(index));
                 p2 = new Point(aPath.getPoint(index+1)); p2.add(p1);
-                aPath.setPoint(index+1, p2.getX(), p2.getY());
+                aPath.setPoint(index+1, p2.x, p2.y);
             }
         }
     }
@@ -553,23 +530,19 @@ private static void setPointStructured(Path aPath, int index, Point point)
     else if(elmtIndex+1<aPath.getSegCount() && aPath.getSeg(elmtIndex+1)==Seg.CubicTo) {
         Point p1 = new Point(point); p1.subtract(aPath.getPoint(index));
         Point p2 = new Point(aPath.getPoint(index+1)); p2.add(p1);
-        aPath.setPoint(index+1, p2.getX(), p2.getY());
+        aPath.setPoint(index+1, p2.x, p2.y);
     }
 
     // Set point at index to requested point
-    aPath.setPoint(index, point.getX(), point.getY());
+    aPath.setPoint(index, point.x, point.y);
 }
 
 /**
- * Returns the handle index for a given point against this path scaled to the given rect.
- * Only returns points that are on the path, except for the control points of
- * selectedPoint (if not -1)
+ * Returns the handle index for a given point for given path. Only returns points that are on the path,
+ * except for the control points of selectedPoint (if not -1)
  */
-private static int handleAtPointForBounds(Path aPath, Point aPoint, Rect aRect, int selectedPoint, Size handleSize)
+private static int handleAtPoint(Path aPath, Point aPoint, int selectedPoint)
 {
-    // convert point from shape coords to path coords
-    Point point = pointInPathCoordsFromPoint(aPath, aPoint, aRect);
-
     // Check against off-path control points of selected path first, otherwise you might never be able to select one
     if(selectedPoint != -1) {
         int offPathPoints[]=new int[2];
@@ -607,13 +580,13 @@ private static int handleAtPointForBounds(Path aPath, Point aPoint, Rect aRect, 
         
         // hit test any selected off-path handles
         for(int i=0; i<noffPathPoints; ++i)
-            if(hitHandle(aPath, point, offPathPoints[i], handleSize))
+            if(hitHandle(aPath, aPoint, offPathPoints[i]))
                 return offPathPoints[i];
     }
     
     // Check the rest of the points, but only ones that are actually on the path
     for(int i=0, iMax=aPath.getPointCount(); i<iMax; i++)
-        if(hitHandle(aPath, point, i, handleSize) && pointOnPath(aPath, i))
+        if(hitHandle(aPath, aPoint, i) && pointOnPath(aPath, i))
             return i;
 
     // nothing hit
@@ -623,24 +596,11 @@ private static int handleAtPointForBounds(Path aPath, Point aPoint, Rect aRect, 
 /**
  * Hit test the point (in path coords) against a given path point.
  */
-private static boolean hitHandle(Path aPath, Point aPoint, int ptIndex, Size handleSize)
+private static boolean hitHandle(Path aPath, Point aPoint, int ptIndex)
 {
-    Point p = aPath.getPoint(ptIndex);
-    Rect br = new Rect(p.x-handleSize.width/2, p.y-handleSize.height/2, handleSize.width, handleSize.height);
-    return br.contains(aPoint.getX(), aPoint.getY());
-}
-
-/**
- * Returns the given point converted to path coords for given path bounds.
- */
-private static Point pointInPathCoordsFromPoint(Path aPath, Point aPoint, Rect aRect)
-{
-    Rect bounds = aPath.getBounds();
-    double sx = bounds.getWidth()/aRect.getWidth();
-    double sy = bounds.getHeight()/aRect.getHeight();
-    double x = (aPoint.getX()-aRect.getMidX())*sx + bounds.getMidX();
-    double y = (aPoint.getY()-aRect.getMidY())*sy + bounds.getMidY();
-    return new Point(x,y);
+    Point p = aPath.getPoint(ptIndex); double handleSize = 9;
+    Rect br = new Rect(p.x-handleSize/2, p.y-handleSize/2, handleSize, handleSize);
+    return br.contains(aPoint.x, aPoint.y);
 }
 
 /**
