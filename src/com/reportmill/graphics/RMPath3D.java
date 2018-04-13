@@ -151,7 +151,7 @@ public void addPath(Path aPath, double aDepth)
     // Iterate over elements in given path
     PathIter piter = aPath.getPathIter(null); double pts[] = new double[6];
     for(int i=0; piter.hasNext(); i++) switch(piter.getNext(pts)) {
-        case MoveTo: if(i+1<aPath.getSegCount() && aPath.getSeg(i+1)!=PathIter.Seg.MoveTo)
+        case MoveTo: if(i+1<aPath.getSegCount() && aPath.getSeg(i+1)!=Seg.MoveTo)
                 moveTo(pts[0], pts[1], aDepth); break;
         case LineTo: lineTo(pts[0], pts[1], aDepth); break;
         case QuadTo: quadTo(pts[0], pts[1], aDepth, pts[2], pts[3], aDepth); break;

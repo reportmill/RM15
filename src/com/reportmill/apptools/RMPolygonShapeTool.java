@@ -5,9 +5,7 @@ package com.reportmill.apptools;
 import com.reportmill.app.RMEditor;
 import com.reportmill.graphics.*;
 import com.reportmill.shape.*;
-import java.util.List;
 import snap.gfx.*;
-import snap.gfx.PathIter.Seg;
 import snap.view.*;
 
 /**
