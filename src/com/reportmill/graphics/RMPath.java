@@ -2,8 +2,6 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.graphics;
-import java.util.List;
-import java.util.*;
 import snap.gfx.*;
 import snap.util.*;
 
@@ -49,16 +47,6 @@ public RMPath(Shape aShape)  { super(aShape); }
  * Creates a path for the given path iterator.
  */
 public RMPath(PathIter aPI)  { super(aPI); }
-
-/**
- * Adds a MoveTo element to the path for the given point.
- */
-public void moveTo(Point p) { moveTo(p.getX(), p.getY()); }
-
-/**
- * Adds a LineTo element to the path for the given point.
- */
-public void lineTo(Point p) { lineTo(p.getX(), p.getY()); }
 
 /**
  * Returns a copy of the path scaled to exactly fit in the given rect.
@@ -221,84 +209,6 @@ public RMHitInfo getHitInfo(RMLine aLine, boolean findFirstHit)
 
     // Return hit info
     return hitInfo;
-}
-
-/**
- * Converts a path into a list subpath lists of RMLine/RMQuadratic/RMBezier.
- */
-public List <List <? extends RMLine>> getSubpathsSegments() 
-{
-    // Iterate over elements
-    PathIter piter = getPathIter(null); List subpaths = new ArrayList(), segments = new ArrayList();
-    double pts[] = new double[6], lastX = 0, lastY = 0, lastMoveToX = 0, lastMoveToY = 0;
-    while(piter.hasNext()) switch(piter.getNext(pts)) {
-        
-        // Handle MoveTo
-        case MoveTo: lastX = lastMoveToX = pts[0]; lastY = lastMoveToY = pts[1];
-            if(!segments.isEmpty()) {
-                subpaths.add(segments);
-                segments = new ArrayList();
-            }
-            break;
-
-        // Handle Close: set points to last MoveTo and fall through to LineTo
-        case Close: pts[0] = lastMoveToX; pts[1] = lastMoveToY;
-
-        // Handle LineTo
-        case LineTo: if(!Point.equals(lastX, pts[0], lastY, pts[1]))
-                segments.add(new RMLine(lastX, lastY, lastX = pts[0], lastY = pts[1])); break;
-            
-        // Handle QuadTo
-        case QuadTo: segments.add(new RMQuadratic(lastX, lastY, pts[0], pts[1], lastX = pts[2], lastY = pts[3])); break;
-        
-        // Handle CubicTo
-        case CubicTo: segments.add(new RMBezier(lastX, lastY, pts[0], pts[1], pts[2], pts[3],
-            lastX=pts[4], lastY=pts[5])); break;
-    }
-    
-    // Add the last subpath
-    if(!segments.isEmpty())
-        subpaths.add(segments);
-    
-    // Return the subpaths
-    return subpaths;
-}
-
-/**
- * Adds the list of segments to the path, starting with a moveto.
- */
-public void addSegments(List <? extends RMLine> theSegments)
-{
-    // Just return if empty
-    if(theSegments.size()==0) return;
-    
-    // Get first segment start point and do MoveTo
-    Point startPoint = theSegments.get(0).getSP();
-    moveTo(startPoint);
-        
-    // Iterate over segments
-    for(int i=0, iMax=theSegments.size(); i<iMax; i++) { RMLine segment = theSegments.get(i);
-        if(segment.getClass()==RMLine.class && segment.getEP().equals(startPoint))
-            close();
-        else addSegment(segment);
-    }
-}
-
-/**
- * Adds the list of segments to the path, starting with a moveto.
- */
-public void addSegment(RMLine aSegment)
-{
-    // Handle Bezier
-    if(aSegment instanceof RMBezier) { RMBezier b = (RMBezier)aSegment;
-        curveTo(b.getCP1x(), b.getCP1y(), b.getCP2x(), b.getCP2y(), b.getEPx(), b.getEPy()); }
-   
-    // Handle Quadratic
-    else if(aSegment instanceof RMQuadratic) { RMQuadratic q = (RMQuadratic)aSegment;
-        quadTo(q.getCP1x(), q.getCP1y(), q.getEPx(), q.getEPy()); }
-   
-    // Handle basic Line
-    else lineTo(aSegment.getEP());
 }
 
 /**

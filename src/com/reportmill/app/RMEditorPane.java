@@ -272,7 +272,7 @@ protected void respondUI(ViewEvent anEvent)
     super.respondUI(anEvent);
     
     // Handle PopupTrigger
-    if(anEvent.isPopupTrigger())
+    if(anEvent.isPopupTrigger() && !anEvent.isConsumed())
         runPopupMenu(anEvent);
     
     // If Editor.MouseClick and DataSource is set and we're editing and DataSource icon clicked, show DS Inspector
