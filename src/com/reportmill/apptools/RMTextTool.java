@@ -83,16 +83,14 @@ public void resetUI()
     setViewValue("AlignBottomButton", text.getAlignmentY()==RMTypes.AlignY.Bottom); // Update AlignBottomButton
     
     // Set TextView RichText and selection
-    _textView.getTextBox().setText(text.getRichText());
+    _textView.getTextBox().setText(text.getRichText()); //if(!_textArea.isFocusOwner())?
     if(ted!=null) _textView.setSel(ted.getSelStart(),ted.getSelEnd());
 
     // Get text's background color and set in TextArea if found
-    //Color color = null; for(RMShape shape=text; color==null && shape!=null;) {
-    //    if(shape.getFill()==null) shape = shape.getParent(); else color = shape.getFill().getColor(); }
-    //_textArea.setBackground(color==null? Color.white : color);
-    // Set the xstring in text inspector
-    //RMXString xstring = text.getXString();
-    //if(!_textArea.isFocusOwner()) _textArea.setXString(xstring);
+    Color color = null; for(RMShape shape=text; color==null && shape!=null;) {
+        if(shape.getFill()==null) shape = shape.getParent(); else color = shape.getFill().getColor(); }
+    _textView.getTextArea().setFill(color==null? Color.WHITE : color);
+    
     // Get xstring font size and scale up to 12pt if any string run is smaller
     //double fsize = 12;
     //for(int i=0,iMax=xstring.getRunCount();i<iMax;i++) fsize = Math.min(fsize, xstring.getRun(i).getFont().getSize());
