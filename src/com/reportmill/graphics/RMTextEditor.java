@@ -158,7 +158,7 @@ public TextBoxLine getLine(int anIndex)  { return getTextBox().getLine(anIndex);
 /**
  * Returns the line index for the given character index.
  */
-public TextBoxLine getLineForChar(int anIndex)
+public TextBoxLine getLineAt(int anIndex)
 {
     TextBox tbox = getTextBox();
     return tbox.getLineAt(anIndex - tbox.getStart());
@@ -766,16 +766,16 @@ public Shape getSpellingPath()
         word=SpellCheck.getMisspelledWord(string, word.getEnd())) {
         
         // Get word bounds
-        int start = word.getStart(); if(start>tbox.getStart() + tbox.length()) break;
-        int end = word.getEnd(); if(end>tbox.getStart() + tbox.length()) end = tbox.getStart() + tbox.length();
+        int start = word.getStart(); if(start>=tbox.getEnd()) break;
+        int end = word.getEnd(); if(end>tbox.getEnd()) end = tbox.getEnd();
         
         // If text editor selection starts in word bounds, just continue - they are still working on this word
         if(start<=getSelStart() && getSelStart()<=end)
             continue;
         
         // Get the selection's start line index and end line index
-        int startLineIndex = getLineForChar(start).getIndex();
-        int endLineIndex = getLineForChar(end).getIndex();
+        int startLineIndex = getLineAt(start).getIndex();
+        int endLineIndex = getLineAt(end).getIndex();
         
         // Iterate over selected lines
         for(int i=startLineIndex; i<=endLineIndex; i++) { TextBoxLine line = getLine(i);
