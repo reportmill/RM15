@@ -99,6 +99,7 @@ public void resetUI()
     double size = font.getSize();
     
     // Reset FamilyList, SizesList, SizeText, SizeThumb, and Bold, Italic, Underline and Outline buttons
+    setViewItems("FamilyList", getFamilyNames());
     setViewSelItem("FamilyList", familyName);
     setViewValue("SizesList", (int)size);
     setViewValue("SizeText", StringUtils.toString(size) + " pt");
