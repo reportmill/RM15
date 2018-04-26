@@ -108,7 +108,7 @@ public void respondUI(ViewEvent anEvent)
         page.selectLayer(layer);
         
         // If column one was selected, cycle through layer states
-        int col = _layersTable.getSelectedCol();
+        int col = _layersTable.getSelCol();
         if(anEvent.isMouseClick() && col==1) {
             int state = layer.getLayerState();
             if(state==RMPageLayer.StateVisible) layer.setLayerState(RMPageLayer.StateInvisible);

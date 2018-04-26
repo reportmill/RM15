@@ -134,8 +134,8 @@ public void respondUI(ViewEvent anEvent)
         else {
             
             // Update grouper SelectedGroupingIndex
-            int row = _groupingTable.getSelectedRow();
-            int col = _groupingTable.getSelectedCol();
+            int row = _groupingTable.getSelRow();
+            int col = _groupingTable.getSelCol();
             grouper.setSelectedGroupingIndex(row);
             
             // If MouseClick, set or reset PageBreakGroupIndex
@@ -147,14 +147,14 @@ public void respondUI(ViewEvent anEvent)
     
     // Handle MoveGroupUpMenuItem
     if(anEvent.equals("MoveGroupUpMenuItem")) {
-        int loc = _groupingTable.getSelectedRow();
+        int loc = _groupingTable.getSelRow();
         if(loc>0)
             table.moveGrouping(loc, loc - 1);
     }
     
     // Handle MoveGroupDownMenuItem
     if(anEvent.equals("MoveGroupDownMenuItem")) {
-        int loc = _groupingTable.getSelectedRow();
+        int loc = _groupingTable.getSelRow();
         if(loc<_groupingTable.getRowCount() - 1)
             table.moveGrouping(loc, loc + 1);
     }
