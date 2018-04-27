@@ -509,9 +509,9 @@ public boolean close()
     
     // If unsaved changes, run panel to request save
     if(getEditor().undoerHasUndos()) {
-        String filename = getSourceURL()==null? "untitled document" : getSourceURL().getPathName();
-        DialogBox dbox = new DialogBox("Unsaved Changes");
-        dbox.setWarningMessage("Save changes to " + filename + "?"); dbox.setOptions("Save", "Don't Save", "Cancel");
+        String fname = getSourceURL()==null? "untitled document" : getSourceURL().getPathName();
+        String msg = "Save changes to " + fname + "?", options[] = { "Save", "Don't Save", "Cancel" };
+        DialogBox dbox = new DialogBox("Unsaved Changes"); dbox.setWarningMessage(msg); dbox.setOptions(options);
         switch(dbox.showOptionDialog(getUI(), "Save")) {
             case 0: save();
             case 1: break;
@@ -519,13 +519,18 @@ public boolean close()
         }
     }
     
-    // Deactive current tool, so it doesn't reference this editor
-    getEditor().getCurrentTool().deactivateTool();
-    
-    // Close window, called EditorClosed and return true to indicate we closed the window
+    // Close for real after delay (otherwise it leaves window in zombie state on MacOS/Java8 if Dialog shown above)
+    runLater(() -> closeImmediately());
+    return true;
+}
+
+/**
+ * Closes the editor pane.
+ */
+protected void closeImmediately()
+{
     getWindow().hide();
     editorClosed();
-    return true;
 }
 
 /**
