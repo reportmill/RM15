@@ -8,13 +8,10 @@ import snap.util.*;
 /**
  * This class describes the structure of a data source by managing a list of entities.
  */
-public class Schema extends SnapObject implements JSONArchiver.GetKeys, XMLArchiver.Archivable {
+public class Schema extends SnapObject implements XMLArchiver.Archivable {
 
     // The schema name
     String           _name;
-
-    // The data site for this schema (if it has one)
-    //DataSite         _site;
 
     // The list of entities
     List <Entity>    _entities = new ArrayList();
@@ -47,16 +44,6 @@ public void setName(String aName)
 }
 
 /**
- * Returns the WebSite the schema works for.
- */
-//public DataSite getSite()  { return _site; }
-
-/**
- * Sets the WebSite the schema works for.
- */
-//public void setSite(DataSite aSite)  { _site = aSite; }
-
-/**
  * Returns the number of entities in this schema.
  */
 public int getEntityCount()  { return getEntities().size(); }
@@ -70,15 +57,6 @@ public Entity getEntity(int anIndex)  { return getEntities().get(anIndex); }
  * Returns the list of entities.
  */
 public List <Entity> getEntities()  { return _entities; }
-
-/**
- * Sets a list of entities.
- */
-public void setEntities(List <Entity> theEntities)
-{
-    while(getEntityCount()>0) removeEntity(0);
-    for(Entity entity : theEntities) addEntity(entity);
-}
 
 /**
  * Adds an entity to the list.
@@ -136,8 +114,8 @@ public Entity getEntity(String aName)
         if(entity.getName().equalsIgnoreCase(aName))
             return entity;
     
-    // Try to load from WebSite or return null
-    return null; //getSite()!=null? getSite().getEntity(aName) : null;
+    // Return null
+    return null;
 }
 
 /**
@@ -250,11 +228,6 @@ public Schema fromXML(XMLArchiver anArchiver, XMLElement anElement)
     // Return this schema
     return this;
 }
-
-/**
- * Returns keys for JSON archival.
- */
-public List <String> getJSONKeys()  { return Arrays.asList("Name", "Entities"); }
 
 /**
  * Returns schema name.

@@ -92,29 +92,29 @@ private void read(XMLElement anElement, Map aMap, String anEntityName)
         System.err.println("RMXMLReader: Couldn't find entity named " + anEntityName); return; }
     
     // Iterate over entity properties
-    for(int i=0, iMax=entity.getPropertyCount(); i<iMax; i++) { Property property = entity.getProperty(i);
+    for(int i=0, iMax=entity.getPropertyCount(); i<iMax; i++) { Property prop = entity.getProperty(i);
         
         // If property is plain attribute, get string for property, convertToType and put in Map
-        if(property.isAttribute()) {
+        if(prop.isAttribute()) {
             
             // Get property name and value string
-            String propertyName = property.getName();
-            String valueStr = anElement.getAttributeValue(propertyName);
+            String propName = prop.getName();
+            String valueStr = anElement.getAttributeValue(propName);
             
             // If null, see if there is a child xml element
             if(valueStr==null) {
-                XMLElement valueEle = anElement.get(propertyName);
+                XMLElement valueEle = anElement.get(propName);
                 valueStr = valueEle==null? null : valueEle.getValue();
             }
             
             // Get property value for string and add to map
-            Object value = property.convertValue(valueStr);
+            Object value = prop.convertValue(valueStr);
             if(value!=null)
-                aMap.put(propertyName, value);
+                aMap.put(propName, value);
         }
         
         // Handle Relations
-        else readRelation(anElement, aMap, property);        
+        else readRelation(anElement, aMap, prop);        
     }
 }
 

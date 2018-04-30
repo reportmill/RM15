@@ -4,13 +4,12 @@
 package com.reportmill.base;
 import java.util.*;
 import snap.util.*;
-import snap.web.WebFile;
 
 /**
  * This class represents an entity for a data source. It has a list of properties, some of which are simple
  * attributes and some of which are relationships.
  */
-public class Entity extends SnapObject implements JSONArchiver.GetKeys, XMLArchiver.Archivable {
+public class Entity extends SnapObject implements XMLArchiver.Archivable {
     
     // The schema that owns this entity
     Schema             _schema;
@@ -18,30 +17,20 @@ public class Entity extends SnapObject implements JSONArchiver.GetKeys, XMLArchi
     // Entity name
     String             _name;
     
-    // Whether entity exists in data source
-    boolean            _exists;
-    
     // Entity properties
     List <Property>    _props = new ArrayList();
     
     // The class that this entity represents
     Class              _class;
     
-    // The key/key-chain to the property(s) that returns best string description of an entity instance
-    String             _descKey;
-    
     // Cached lists of properties that are attributes (simple properties), relations, primaries, etc.
     List <Property>    _attrs, _relations, _primaries, _attrsSorted, _relationsSorted;
-    
-    // The source file
-    WebFile            _source;
     
     // A Listener to catch child Property PropChanges
     PropChangeListener _propLsnr = pc -> propertyDidPropChange(pc);
     
     // Constants for properties
     final public static String Name_Prop = "Name";
-    final public static String Exists_Prop = "Exists";
 
 /**
  * Creates an empty entity.
@@ -81,20 +70,6 @@ public void setName(String aName)
     String name = aName!=null? aName.trim().replace(" ", "") : null;
     if(SnapUtils.equals(name, _name)) return;
     firePropChange(Name_Prop, _name, _name = name);
-}
-
-/**
- * Returns whether entity exists in data source (has been saved and, if so, not deleted).
- */
-public boolean getExists()  { return _exists; }
-
-/**
- * Sets whether entity exists in data source (has been saved and, if so, not deleted).
- */
-public void setExists(boolean aFlag)
-{
-    if(aFlag==_exists) return;
-    firePropChange(Exists_Prop, _exists, _exists = aFlag);
 }
 
 /**
@@ -206,16 +181,15 @@ public Property getAttribute(int anIndex)  { return getAttributes().get(anIndex)
 /**
  * Returns the list of attributes.
  */
-private List <Property> getAttributes()  { return _attrs!=null? _attrs : (_attrs=createAttributes()); }
-
-/**
- * Creates the list of attributes.
- */
-private List <Property> createAttributes()
+private List <Property> getAttributes()
 {
+    // If already set, just return
+    if(_attrs!=null) return _attrs;
+
+    // Create and return
     List <Property> attrs = new ArrayList();
     for(int i=0, iMax=getPropertyCount(); i<iMax; i++) if(getProperty(i).isAttribute()) attrs.add(getProperty(i));
-    return attrs;
+    return _attrs = attrs;
 }
 
 /**
@@ -243,16 +217,15 @@ public Property getRelation(int anIndex)  { return getRelations().get(anIndex); 
 /**
  * Returns the list of relations in the entity.
  */
-public List <Property> getRelations()  { return _relations!=null? _relations : (_relations=createRelations()); }
-
-/**
- * Creates the list of relations in the entity.
- */
-private List <Property> createRelations()
+public List <Property> getRelations()
 {
+    // If already set, just return
+    if(_relations!=null) return _relations;
+
+    // Create and return
     List <Property> rels = new ArrayList();
     for(Property property : getProperties()) if(property.isRelation()) rels.add(property);
-    return rels;
+    return _relations = rels;
 }
 
 /**
@@ -302,14 +275,13 @@ public Property getPrimary()  { List <Property> p = getPrimaries(); return p.siz
  */
 public List <Property> getPrimaries()
 {
-    // If primaries not loaded, load them
-    if(_primaries==null) {
-        _primaries = new ArrayList();
-        for(Property property : getProperties()) if(property.isPrimary()) _primaries.add(property);
-    }
-
-    // Return primaries list
-    return _primaries;
+    // If already set, just return
+    if(_primaries!=null) return _primaries;
+    
+    // Create and return
+    List <Property> primes = new ArrayList();
+    for(Property prop : getProperties()) if(prop.isPrimary()) primes.add(prop);
+    return _primaries = primes;
 }
 
 /**
@@ -334,51 +306,10 @@ public Property getKeyPathProperty(String aKeyPath)
     return prop;
 }
 
-/** RMKey.Get implementation to return Property for key. */
-//public Object getKeyValue(String k){ Property p = getProperty(k); return p!=null? p : RMKey.getValueImpl(this, k);}
-
-/**
- * Returns the key/key-chain to the property(s) that returns best string description of an entity instance.
- */
-public String getDescriptorKey()  { return _descKey; }
-
-/**
- * Sets the key/key-chain to the property(s) that returns best string description of an entity instance.
- */
-public void setDescriptorKey(String aValue)
-{
-    if(SnapUtils.equals(aValue, getDescriptorKey())) return;  // If already set, just return
-    firePropChange("DescriptorKey", _descKey, _descKey = aValue);
-}
-
-/**
- * Returns a guess of descriptor key (or the actual one, if set).
- */
-public String getDescriptorKeyGuess()
-{
-    // If actual descriptor key exists or "Name" property exists, return it
-    if(getDescriptorKey()!=null) return getDescriptorKey();
-    Property prop = getProperty("Name"); if(prop!=null) return prop.getName();
-    
-    // Return first String property or first property
-    for(Property p : getProperties()) if(p.getType()==Property.Type.String) return p.getName();
-    return getPropertyCount()>0? getProperty(0).getName() : null;
-}
-
 /**
  * PropChangeListener implementation to forward Property property changes to entity property change listener.
  */
 protected void propertyDidPropChange(PropChange anEvent)  { firePropChange(anEvent); }
-
-/**
- * Returns the source file.
- */
-public WebFile getSourceFile()  { return _source; }
-
-/**
- * Sets the source file.
- */
-public void setSourceFile(WebFile aSource)  { _source = aSource; }
 
 /**
  * Standard equals method.
@@ -437,39 +368,6 @@ public Entity fromXML(XMLArchiver anArchiver, XMLElement anElement)
     // Return this entity
     return this;
 }
-
-/**
- * Returns bytes for this entity.
- */
-public byte[] toBytes()
-{
-    String json = new JSONArchiver().writeObject(this).toString();
-    return StringUtils.getBytes(json);
-}
-
-/**
- * Returns entity from bytes.
- */
-public Entity fromBytes(byte theBytes[])
-{
-    String string = StringUtils.getString(theBytes);
-    return (Entity)new JSONArchiver().setRootObject(this).readString(string);
-}
-
-/**
- * Saves the entity to its source.
- */
-//public void save() throws Exception  { getSchema().getSite().saveEntity(this); }
-
-/**
- * Saves this entity from its source.
- */
-//public void delete() throws Exception  { getSchema().getSite().deleteEntity(this); }
-
-/**
- * Returns keys to archive JSON.
- */
-public List <String> getJSONKeys() { return Arrays.asList("Name", "Properties"); }
 
 /**
  * Returns a string representation of entity (its name).

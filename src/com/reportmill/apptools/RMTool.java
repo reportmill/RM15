@@ -768,7 +768,7 @@ private Point dropFile(RMShape aShape, ClipboardData aFile, Point aPoint)
     String ext = aFile.getExtension(); if(ext==null) return aPoint; ext = ext.toLowerCase();
 
     // If xml file, pass it to setDataSource()
-    if(ext.equals("xml") || ext.equals("json"))
+    if(ext.equals("xml"))
         getEditorPane().setDataSource(aFile.getSourceURL(), aPoint.getX(), aPoint.getY());
 
     // If image file, add image shape

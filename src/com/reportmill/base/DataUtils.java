@@ -69,7 +69,7 @@ public static Object convertValue(Object aValue, Property.Type aType, Property.N
 /**
  * Returns a string for a number according to given NumberType.
  */
-public static String toString(Number aNumber, Property.NumberType aNumberType)
+public static String toString(Number aNumber)
 {
     return SnapUtils.stringValue(aNumber);
 }
@@ -77,15 +77,8 @@ public static String toString(Number aNumber, Property.NumberType aNumberType)
 /**
  * Returns a string for a date according to given DateType.
  */
-public static String toString(Date aDate, Property.DateType aDateType)
-{
-    // Return date string based on type
-    switch(aDateType) {
-        case DateOnly: return new SimpleDateFormat("yyyy-MM-dd").format(aDate);
-        case DateTime: return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(aDate);
-        default: throw new UnsupportedOperationException("DataUtils.toString: Unknown DateType: " + aDateType);
-    }
-}
+public static String toString(Date aDate)  { return _dfmt.format(aDate); }
+static SimpleDateFormat _dfmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 /**
  * Returns a property type for a given object/class.

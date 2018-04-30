@@ -60,12 +60,11 @@ public void resetUI()
     Property prop = getSelProperty();
     setViewSelIndex("CardPanel", prop==null? 0 : 1);
 
-    // Update TypeComboBox, SubtypeComboBox, PrimaryCheckBox, PrivateCheckBox
+    // Update TypeComboBox, SubtypeComboBox, PrimaryCheckBox
     if(prop!=null) {
         setViewValue("TypeComboBox", prettyType(prop.getType()));
         setViewValue("SubtypeComboBox", prop.getRelationEntityName());
         setViewValue("PrimaryCheckBox", prop.isPrimary());
-        setViewValue("PrivateCheckBox", prop.isPrivate());
     }
     
     // Update SubtypeComboBox items and selected item
@@ -94,11 +93,9 @@ public void respondUI(ViewEvent anEvent)
     if(anEvent.equals("SubtypeComboBox")) {
         getSelProperty().setRelationEntityName(anEvent.getStringValue()); ds.setCustomSchema(true); }
     
-    // Handle PrimaryCheckBox, PrivateCheckBox
+    // Handle PrimaryCheckBox
     if(anEvent.equals("PrimaryCheckBox")) {
         getSelProperty().setPrimary(anEvent.getBooleanValue()); ds.setCustomSchema(true); }
-    if(anEvent.equals("PrivateCheckBox")) {
-        getSelProperty().setPrivate(anEvent.getBooleanValue()); ds.setCustomSchema(true); }
 }
 
 /**
