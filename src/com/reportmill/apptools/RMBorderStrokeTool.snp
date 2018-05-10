@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SpringView width="275" height="220" PrefWidth="275" PrefHeight="220">
-  <ColorWell Name="StrokeColorWell" x="40" y="13" width="60" height="30" />
-  <Label x="55" y="49" width="50" height="22" text="Width:" />
-  <TextField Name="StrokeWidthText" x="45" y="71" width="50" height="20" Align="CENTER" />
-  <ThumbWheel Name="StrokeWidthThumb" x="15" y="95" width="111" height="16" max="20" absmin="0" round="1" />
-  <Label x="40" y="127" width="70" height="22" text="Dash Array:" />
-  <TextField x="110" y="127" width="104" height="22" />
-  <Label x="40" y="154" width="70" height="22" text="Dash Phase:" />
-  <Spinner x="110" y="154" width="58" height="22" Value="0" />
-  <CheckBox Name="TopCheckBox" x="175" y="25" width="78" height="22" text="Top" />
-  <CheckBox Name="LeftCheckBox" x="136" y="48" width="50" height="22" text="Left" />
-  <CheckBox Name="RightCheckBox" x="225" y="48" width="32" height="22" />
-  <CheckBox Name="BottomCheckBox" x="175" y="71" width="78" height="22" text="Bottom" />
-  <Label x="185" y="48" width="35" height="22" Align="CENTER_RIGHT" text="Right" />
+  <ColorWell Name="StrokeColorWell" x="90" y="13" width="60" height="30" />
+  <Label x="105" y="49" width="50" height="22" text="Width:" />
+  <TextField Name="StrokeWidthText" x="95" y="71" width="50" height="20" Align="CENTER" />
+  <ThumbWheel Name="StrokeWidthThumb" x="65" y="95" width="111" height="16" max="20" absmin="0" round="1" />
+  <CheckBox Name="TopCheckBox" x="105" y="125" width="78" height="22" text="Top" />
+  <CheckBox Name="LeftCheckBox" x="66" y="148" width="50" height="22" text="Left" />
+  <CheckBox Name="RightCheckBox" x="155" y="148" width="32" height="22" />
+  <CheckBox Name="BottomCheckBox" x="105" y="171" width="78" height="22" text="Bottom" />
+  <Label x="115" y="148" width="35" height="22" Align="CENTER_RIGHT" text="Right" />
 </SpringView>

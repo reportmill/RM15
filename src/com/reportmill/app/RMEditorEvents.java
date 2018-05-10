@@ -110,7 +110,7 @@ public void mouseDragged(ViewEvent anEvent)
     editor.getCurrentTool().mouseDragged(anEvent);
     
     // Autoscroll
-    editor.setVisRect(new Rect(anEvent.getX(), anEvent.getY(), 1, 1));
+    editor.scrollToVisible(new Rect(anEvent.getX(), anEvent.getY(), 1, 1));
         
     // Update rulers
     RMEditorPane epane = editor.getEditorPane();

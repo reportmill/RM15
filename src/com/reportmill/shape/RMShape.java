@@ -377,7 +377,12 @@ public Rect getBoundsInside()  { return new Rect(0, 0, getWidth(), getHeight());
 /**
  * Returns the bounds of the path associated with this shape in local coords, adjusted to account for stroke width.
  */
-public Rect getBoundsStroked()  { return getStroke()!=null? getStroke().getBounds(this) : getBoundsInside(); }
+public Rect getBoundsStroked()
+{
+    Rect bnds = getBoundsInside();
+    RMStroke stroke = getStroke(); if(stroke==null) return bnds;
+    bnds.inset(-stroke.getWidth()/2); return bnds;
+}
 
 /**
  * Returns the marked bounds of this shape and it's children.
@@ -1687,15 +1692,21 @@ public void paintShapeAll(Painter aPntr)
  */
 public void paintShape(Painter aPntr)
 {
-    // If fill/stroke present, have them paint
-    if(getFill()!=null) { //getFill().paint(aPntr, this);
-        aPntr.setPaint(getFill().snap().copyFor(getBoundsInside()));
+    // Get fill/stroke
+    RMFill fill = getFill(); RMStroke stroke = getStroke();
+    
+    // Paint fill
+    if(fill!=null) { //getFill().paint(aPntr, this);
+        aPntr.setPaint(fill.snap().copyFor(getBoundsInside()));
         aPntr.fill(getPath());
     }
-    if(getStroke()!=null && !getStrokeOnTop()) { //getStroke().paint(aPntr, this);
-        aPntr.setPaint(getStroke().getColor());
-        aPntr.setStroke(getStroke().snap());
-        aPntr.draw(getPath());
+    
+    // Paint stroke
+    if(stroke!=null && !getStrokeOnTop()) { //getStroke().paint(aPntr, this);
+        aPntr.setPaint(stroke.getColor());
+        aPntr.setStroke(stroke.snap());
+        Shape path = getPath(), spath = stroke.getStrokePath(path);
+        aPntr.draw(spath);
     }
 }
 
@@ -1714,10 +1725,12 @@ public void paintShapeChildren(Painter aPntr)
  */
 public void paintShapeOver(Painter aPntr)
 {
-    if(getStrokeOnTop() && getStroke()!=null) { //getStroke().paint(aPntr, this);
-        aPntr.setPaint(getStroke().getColor());
-        aPntr.setStroke(getStroke().snap());
-        aPntr.draw(getPath());
+    RMStroke stroke = getStroke();
+    if(stroke!=null && getStrokeOnTop()) { //getStroke().paint(aPntr, this);
+        aPntr.setPaint(stroke.getColor());
+        aPntr.setStroke(stroke.snap());
+        Shape path = getPath(), spath = stroke.getStrokePath(path);
+        aPntr.draw(spath);
     }
 }
 

@@ -87,7 +87,7 @@ public int getRowEnd()  { return _row + _rowSpan - 1; }
 /**
  * Returns whether cell shows left border.
  */
-public boolean getShowLeftBorder()  { return _showLeftBorder; }
+public boolean isShowLeftBorder()  { return _showLeftBorder; }
 
 /**
  * Sets whether cell shows left border.
@@ -97,7 +97,7 @@ public void setShowLeftBorder(boolean aFlag)  { _showLeftBorder = aFlag; }
 /**
  * Returns whether cell shows right border.
  */
-public boolean getShowRightBorder()  { return _showRightBorder; }
+public boolean isShowRightBorder()  { return _showRightBorder; }
 
 /**
  * Sets whether cell shows right border.
@@ -107,7 +107,7 @@ public void setShowRightBorder(boolean aFlag)  { _showRightBorder = aFlag; }
 /**
  * Returns whether cell shows top border.
  */
-public boolean getShowTopBorder()  { return _showTopBorder; }
+public boolean isShowTopBorder()  { return _showTopBorder; }
 
 /**
  * Sets whether cell shows top border.
@@ -117,7 +117,7 @@ public void setShowTopBorder(boolean aFlag)  { _showTopBorder = aFlag; }
 /**
  * Returns whether cell shows bottom border.
  */
-public boolean getShowBottomBorder()  { return _showBottomBorder; }
+public boolean isShowBottomBorder()  { return _showBottomBorder; }
 
 /**
  * Sets whether cell shows bottom border.
@@ -283,10 +283,10 @@ public XMLElement toXML(XMLArchiver anArchiver)
     // Archive ColumnSpan, RowSpan, LeftBorder, RightBorder, TopBorder, BottomBorder
     if(getColSpan()>1) e.add("column-span", getColSpan());
     if(getRowSpan()>1) e.add("row-span", getRowSpan());
-    if(!getShowLeftBorder()) e.add("show-left-border", false);
-    if(!getShowRightBorder()) e.add("show-right-border", false);
-    if(!getShowTopBorder()) e.add("show-top-border", false);
-    if(!getShowBottomBorder()) e.add("show-bottom-border", false);
+    if(!isShowLeftBorder()) e.add("show-left-border", false);
+    if(!isShowRightBorder()) e.add("show-right-border", false);
+    if(!isShowTopBorder()) e.add("show-top-border", false);
+    if(!isShowBottomBorder()) e.add("show-bottom-border", false);
 
     // Archive grouping
     if(getGrouping()!=null) e.add(getGrouping().toXML(anArchiver));

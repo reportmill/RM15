@@ -895,7 +895,7 @@ protected void processEvent(ViewEvent anEvent)
                 relayout();
             if(!getVisRect().contains(getSelectedShapesBounds()) &&
                 getSelectTool().getDragMode()==RMSelectTool.DragMode.Move)
-                setVisRect(getSelectedShapesBounds());
+                scrollToVisible(getSelectedShapesBounds());
         }
         
         // If zoom to fit, update zoom to fit factor (just returns if unchanged)

@@ -2,7 +2,6 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.graphics;
-import com.reportmill.shape.RMShape;
 import snap.gfx.*;
 import snap.util.*;
 
@@ -27,38 +26,44 @@ public class RMBorderStroke extends RMStroke {
 /**
  * Returns whether to show left border.
  */
-public boolean getShowLeft()  { return _showLeft; }
+public boolean isShowLeft()  { return _showLeft; }
     
 /**
  * Returns whether to show right border.
  */
-public boolean getShowRight()  { return _showRight; }
+public boolean isShowRight()  { return _showRight; }
     
 /**
  * Returns whether to show top border.
  */
-public boolean getShowTop()  { return _showTop; }
+public boolean isShowTop()  { return _showTop; }
     
 /**
  * Returns whether to show bottom border.
  */
-public boolean getShowBottom()  { return _showBottom; }
+public boolean isShowBottom()  { return _showBottom; }
+
+/**
+ * Returns whether to show all borders.
+ */
+public boolean isShowAll()  { return _showLeft && _showRight && _showTop && _showBottom; }
     
 /**
  * Returns the path to be stroked, transformed from the input path.
  */
-public Shape getStrokePath(RMShape aShape)
+public Shape getStrokePath(Shape aShape)
 {
     // If showing all borders, just return bounds
-    if(getShowLeft() && getShowRight() && getShowTop() && getShowBottom())
-        return aShape.getBoundsInside();
+    Rect rect = aShape.getBounds(); if(isShowAll()) return rect;
+    boolean st = isShowTop(), sr = isShowRight(), sb = isShowBottom(), sl = isShowLeft();
+    double w = rect.width, h = rect.height;
     
     // Otherwise, build path based on sides showing and return
-    Path path = new Path(); boolean st = getShowTop(), sr = getShowRight(), sb = getShowBottom(), sl = getShowLeft();
-    if(st) { path.moveTo(0,0); path.lineTo(aShape.getWidth(), 0); }
-    if(sr) { if(!st) path.moveTo(aShape.getWidth(), 0); path.lineTo(aShape.getWidth(), aShape.getHeight()); }
-    if(sb) { if(!sr) path.moveTo(aShape.getWidth(), aShape.getHeight()); path.lineTo(0, aShape.getHeight()); }
-    if(sl) { if(!sb) path.moveTo(0, aShape.getHeight()); path.lineTo(0,0); }
+    Path path = new Path();
+    if(st) { path.moveTo(0,0); path.lineTo(w, 0); }
+    if(sr) { if(!st) path.moveTo(w, 0); path.lineTo(w, h); }
+    if(sb) { if(!sr) path.moveTo(w, h); path.lineTo(0, h); }
+    if(sl) { if(!sb) path.moveTo(0, h); path.lineTo(0,0); }
     return path;
 }
 
@@ -115,10 +120,10 @@ public XMLElement toXML(XMLArchiver anArchiver)
     XMLElement e = super.toXML(anArchiver); e.add("type", "border");
     
     // Archive ShowLeft, ShowRight, ShowTop, ShowBottom
-    if(!getShowLeft()) e.add("show-left", false);
-    if(!getShowRight()) e.add("show-right", false);
-    if(!getShowTop()) e.add("show-top", false);
-    if(!getShowBottom()) e.add("show-bottom", false);
+    if(!isShowLeft()) e.add("show-left", false);
+    if(!isShowRight()) e.add("show-right", false);
+    if(!isShowTop()) e.add("show-top", false);
+    if(!isShowBottom()) e.add("show-bottom", false);
     return e;
 }
 

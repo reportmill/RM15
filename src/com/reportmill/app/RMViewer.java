@@ -234,7 +234,7 @@ protected void setZoomFactorImpl(double aFactor)
         setSize(getPrefWidth(), getPrefHeight());
         vr2.scale(_zoomFactor/_lastZoomFactor);
         vr2.inset((vr2.getWidth() - vr.getWidth())/2, (vr2.getHeight() - vr.getHeight())/2);
-        setVisRect(vr2);
+        scrollToVisible(vr2);
     }
     
     // Relayout and repaint

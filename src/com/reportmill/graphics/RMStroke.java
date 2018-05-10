@@ -2,7 +2,6 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.graphics;
-import com.reportmill.shape.*;
 import snap.gfx.*;
 import snap.util.*;
 
@@ -86,16 +85,7 @@ public float getDashPhase()  { return _dashPhase; }
 /**
  * Returns the path to be stroked, transformed from the input path.
  */
-public Shape getStrokePath(RMShape aShape)  { return aShape.getPath(); }
-
-/**
- * Returns the bounds required to render this fill for this shape.
- */
-public Rect getBounds(RMShape aShape)
-{
-    // Get bounds inset by stroke width
-    Rect bounds = aShape.getBoundsInside(); bounds.inset(-getWidth()/2); return bounds;
-}
+public Shape getStrokePath(Shape aShape)  { return aShape; }
 
 /**
  * Returns the name of the fill.

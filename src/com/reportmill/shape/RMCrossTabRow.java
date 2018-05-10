@@ -137,8 +137,8 @@ public List <RMCrossTabDivider> getDividers()
         
         // Draw border if first cell shows bottom border or second cell shows top border
         boolean showBorder = false;
-        if(cell!=null && cell.isVisible() && cell.getShowBottomBorder()) showBorder = true;
-        else if(nextCell!=null && nextCell.isVisible() && nextCell.getShowTopBorder()) showBorder = true;
+        if(cell!=null && cell.isVisible() && cell.isShowBottomBorder()) showBorder = true;
+        else if(nextCell!=null && nextCell.isVisible() && nextCell.isShowTopBorder()) showBorder = true;
         
         // Get cell x
         double cellX = cell!=null? cell.getX() : nextCell.getX();

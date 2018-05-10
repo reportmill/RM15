@@ -299,10 +299,10 @@ public void appendTable(RMShapeTable table, PrintStream ps)
             // Cell borders
             RMShape cshape = rmcell.getCellShape();
             RMCrossTabCell ctcell = cshape instanceof RMCrossTabCell? (RMCrossTabCell)cshape : null;
-            ps.print("\\clbrdrt"+RTFBorderStyle(ctcell!=null && ctcell.getShowTopBorder(),20));
-            ps.print("\\clbrdrb"+RTFBorderStyle(ctcell!=null && ctcell.getShowBottomBorder(),20));
-            ps.print("\\clbrdrl"+RTFBorderStyle(ctcell!=null && ctcell.getShowLeftBorder(),20));
-            ps.print("\\clbrdrr"+RTFBorderStyle(ctcell!=null && ctcell.getShowRightBorder(),20));
+            ps.print("\\clbrdrt"+RTFBorderStyle(ctcell!=null && ctcell.isShowTopBorder(),20));
+            ps.print("\\clbrdrb"+RTFBorderStyle(ctcell!=null && ctcell.isShowBottomBorder(),20));
+            ps.print("\\clbrdrl"+RTFBorderStyle(ctcell!=null && ctcell.isShowLeftBorder(),20));
+            ps.print("\\clbrdrr"+RTFBorderStyle(ctcell!=null && ctcell.isShowRightBorder(),20));
             
             // CellX defines the right margin of the cell but clwWidth seems to be more important
             int cw = twip(rmcell.getWidth()) - pads - border;

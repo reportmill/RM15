@@ -21,11 +21,16 @@ public void resetUI()
     RMStroke stroke = shape.getStroke(); if(stroke==null) stroke = new RMStroke();
     RMBorderStroke bstroke = stroke instanceof RMBorderStroke? (RMBorderStroke)stroke : new RMBorderStroke();
     
+    // Update StrokeColorWell, StrokeWidthText, StrokeWidthThumb
+    setViewValue("StrokeColorWell", stroke.getColor());
+    setViewValue("StrokeWidthText", stroke.getWidth());
+    setViewValue("StrokeWidthThumb", stroke.getWidth());
+    
     // Update TopCheckBox, RightCheckBox, BottomCheckBox, LeftCheckBox
-    setViewValue("TopCheckBox", bstroke.getShowTop());
-    setViewValue("RightCheckBox", bstroke.getShowRight());
-    setViewValue("BottomCheckBox", bstroke.getShowBottom());
-    setViewValue("LeftCheckBox", bstroke.getShowLeft());
+    setViewValue("TopCheckBox", bstroke.isShowTop());
+    setViewValue("RightCheckBox", bstroke.isShowRight());
+    setViewValue("BottomCheckBox", bstroke.isShowBottom());
+    setViewValue("LeftCheckBox", bstroke.isShowLeft());
 }
 
 /**

@@ -21,7 +21,8 @@ public static void writeShapeStroke(RMShape aShape, RMStroke aStroke, RMPDFWrite
 {
     // Get PDF page and write stroke path
     PDFPageWriter pdfPage = aWriter.getPageWriter();
-    pdfPage.writePath(aStroke.getStrokePath(aShape));
+    Shape path = aShape.getPath(), spath = aStroke.getStrokePath(path);
+    pdfPage.writePath(spath);
     
     // Set stroke color and width
     pdfPage.setStrokeColor(aStroke.getColor());

@@ -85,7 +85,9 @@ protected void initUI()
     // Configure Window: Image, Add WindowListener to indicate app should exit when close button clicked
     getWindow().setType(WindowView.TYPE_UTILITY); //getWindow().setImage(RMEditorPane.getFrameIcon());
     enableEvents(getWindow(), WinClose);
-    getView("QuitButton", Button.class).setCancelButton(true);
+    
+    // Register for Escape action
+    addKeyActionHandler("QuitButton", "ESCAPE");
 }
 
 /**

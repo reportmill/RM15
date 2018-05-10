@@ -79,10 +79,10 @@ public void resetUI()
     _sortPanel.resetUI();
     
     // Update border checkboxes
-    setViewValue("ShowLeftBorderCheckBox", cell.getShowLeftBorder());
-    setViewValue("ShowRightBorderCheckBox", cell.getShowRightBorder());
-    setViewValue("ShowTopBorderCheckBox", cell.getShowTopBorder());
-    setViewValue("ShowBottomBorderCheckBox", cell.getShowBottomBorder());
+    setViewValue("ShowLeftBorderCheckBox", cell.isShowLeftBorder());
+    setViewValue("ShowRightBorderCheckBox", cell.isShowRightBorder());
+    setViewValue("ShowTopBorderCheckBox", cell.isShowTopBorder());
+    setViewValue("ShowBottomBorderCheckBox", cell.isShowBottomBorder());
 }
 
 /**
