@@ -67,7 +67,7 @@ public class RMTableRow extends RMSwitchShape {
 /**
  * Creates a plain, unstructured table row.
  */    
-public RMTableRow()  { setLayout(new RMTableRowLayout()); setSize(400, 18); }
+public RMTableRow()  { setSize(400, 18); }
 
 /**
  * Creates a table row allowing the user to specify whether it should be structured.
@@ -422,6 +422,54 @@ public void paintShape(Painter aPntr)
  * Returns clip shape for shape.
  */
 public Shape getClipShape()  { return !isStructured()? getBoundsInside() : null; }
+
+/**
+ * Performs layout.
+ */
+protected void layoutChildren()
+{
+    // If not structured or no children, just return
+    if(!isStructured() || getChildCount()==0) return;
+    
+    // Layout children edge to edge by iterating over children and setting successive x values
+    List <RMShape> children = getChildren(); double width = 0;
+    for(RMShape child : children) {
+        child.setBounds(width, 0, child.getWidth(), getHeight());
+        width += child.getWidth();
+    }
+    
+    // If total width doesn't equal parent width, divy up and add to each child by ratio of their current sizes
+    double pwidth = getWidth();
+    if(!MathUtils.equals(width,pwidth)) { double extra = pwidth - width, x = 0;
+        for(RMShape child : children) {
+            double ow = child.getWidth(), nw = ow + ow/width*extra;
+            child.setX(x); child.setWidth(nw); x += nw;
+        }
+    }
+    
+    // Sync Structure With Alternates
+    if(getSyncStructureWithAlternates() && getAlternates()!=null)
+        for(RMTableRow alternate : (Collection<RMTableRow>)(Collection)getAlternates().values())
+            alternate.syncStructureWithShape(this);
+
+    // Sync Structure With Row Above
+    if(getSyncStructureWithRowAbove() && getRowAbove()!=null)
+        getRowAbove().syncStructureWithShape(this);
+}
+
+/**
+ * Override to optimize structured case.
+ */
+protected double computePrefHeight(double aWidth)
+{
+    // If not structured or no children, just return normal version
+    if(!isStructured() || getChildCount()==0) return super.computePrefHeight(aWidth);
+    
+    // Return max of current row height and max child best size
+    double max = getHeight();
+    for(RMShape child : getChildren()) max = Math.max(max, child.getPrefHeight());
+    return max;
+}
 
 /**
  * XML archival.

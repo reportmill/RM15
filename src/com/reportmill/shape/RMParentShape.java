@@ -68,7 +68,7 @@ public void addChild(RMShape aChild, int anIndex)
     aChild.setParent(this);
     
     // Notify layout of add child
-    addLayoutChild(aChild);
+    if(_layout!=null) _layout.addLayoutChild(aChild);
     
     // If this shape has PropChangeListeners, start listening to children as well
     if(hasDeepChangeListener()) {
@@ -93,8 +93,10 @@ public RMShape removeChild(int anIndex)
     // Fire property change
     firePropChange("Child", child, null, anIndex);
     
-    // Notify layout of remove child, stop listening to PropertyChanges, repaint, revalidate and return
-    removeLayoutChild(child);
+    // Notify layout of remove child
+    if(_layout!=null) _layout.removeLayoutChild(child);
+    
+    // Stop listening to PropertyChanges, repaint, revalidate and return
     child.removePropChangeListener(getChildPCL()); child.removeDeepChangeListener(getChildDCL());
     relayout(); repaint();
     return child;
@@ -212,26 +214,6 @@ public <T extends RMShape> List<T> getChildrenWithClass(Class<T> aClass, List aL
 }
 
 /**
- * Returns the layout for this shape.
- */
-public RMShapeLayout getLayout()  { return _layout; }
-
-/**
- * Sets the layout for this shape.
- */
-public void setLayout(RMShapeLayout aLayout)
-{
-    // If old layout is non-null, remove children and clear parent
-    if(_layout!=null) { for(RMShape c : getChildren()) removeLayoutChild(c); _layout.setParent(null); }
-    
-    // Set layout and fire property change
-    firePropChange("Layout", _layout, _layout = aLayout);
-    
-    // If new layout is non-null, set parent to this shape and add children
-    if(_layout!=null) { _layout.setParent(this); for(RMShape c : getChildren()) addLayoutChild(c);  }
-}
-
-/**
  * Adds a deep change listener to shape to listen for shape changes and property changes received by shape.
  */
 public void addDeepChangeListener(DeepChangeListener aLsnr)
@@ -299,26 +281,30 @@ public void layout()
 }
 
 /**
+ * Returns the layout for this shape.
+ */
+public RMShapeLayout getLayout()  { return _layout; }
+
+/**
+ * Sets the layout for this shape.
+ */
+protected void setLayout(RMShapeLayout aLayout)
+{
+    _layout.setParent(this);
+    for(RMShape c : getChildren()) _layout.addLayoutChild(c);
+}
+
+/**
  * Called to reposition/resize children.
  */
 protected void layoutChildren()  { if(_layout!=null) _layout.layoutChildren(); }
-
-/**
- * Adds a child to layout manager.
- */
-protected void addLayoutChild(RMShape aShape)  { if(getLayout()!=null) getLayout().addLayoutChild(aShape); }
-
-/**
- * Removes a child from layout manager.
- */
-protected void removeLayoutChild(RMShape aShape)  { if(getLayout()!=null) getLayout().removeLayoutChild(aShape); }
 
 /**
  * Returns the shape preferred width.
  */
 protected double computePrefWidth(double aHeight)
 {
-    return getLayout()!=null? getLayout().computePrefWidth(aHeight) : super.computePrefWidth(-1);
+    return _layout!=null? _layout.computePrefWidth(aHeight) : super.computePrefWidth(-1);
 }
 
 /**
@@ -326,7 +312,7 @@ protected double computePrefWidth(double aHeight)
  */
 protected double computePrefHeight(double aWidth)
 {
-    return getLayout()!=null? getLayout().computePrefHeight(aWidth) : super.computePrefHeight(-1);
+    return _layout!=null? _layout.computePrefHeight(aWidth) : super.computePrefHeight(-1);
 }
 
 /**
@@ -522,7 +508,7 @@ public RMParentShape clone()
 {
     RMParentShape clone = (RMParentShape)super.clone();
     clone._children = new ArrayList();
-    clone._layout = null; if(getLayout()!=null) clone.setLayout(getLayout().clone());
+    if(_layout!=null) clone.setLayout(_layout.clone());
     return clone;
 }
 

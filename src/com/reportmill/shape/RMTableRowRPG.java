@@ -50,9 +50,6 @@ public void rpgAll(ReportOwner anRptOwner, RMTableRow aRow, RMGroup aGroup, Stri
     setBestHeight(); // Set best height
     layout();
     
-    // Set Hover to row info - handy debug code for table groups and/or many versions
-    //setHover(aRow.getTable().getDatasetKey() + " - " + aRow.getTitle() + " - " + version);
-    
     // Handle invisible shapes
     if(!_row2.isStructured()) {
         if(_row2.getDeleteVerticalSpansOfHiddenShapes()) deleteVerticalSpansOfHiddenShapes();
@@ -290,10 +287,15 @@ public boolean getStrokeOnTop()  { return true; }
  */
 protected void layoutChildren()
 {
+    // If not structured, just return
     if(!_row2.isStructured()) { super.layoutChildren(); return; }
-    float offset = 0;
+    
+    // Layout children edge to edge by iterating over children and setting successive x values
+    double dx = 0;
     for(RMShape child : getChildren()) {
-        child.setBounds(offset, 0, child.getWidth(), getHeight()); offset += child.getWidth(); }
+        child.setBounds(dx, 0, child.getWidth(), getHeight());
+        dx += child.getWidth();
+    }
 }
 
 /**
@@ -301,8 +303,12 @@ protected void layoutChildren()
  */
 protected double computePrefHeight(double aWidth)
 {
+    // If not structured, just return normal version
     if(!_row2.isStructured()) return super.computePrefHeight(aWidth);
-    double max = getHeight(); for(RMShape child : getChildren()) max = Math.max(max, child.getPrefHeight());
+    
+    // Return max of current row height and max child best size
+    double max = getHeight();
+    for(RMShape child : getChildren()) max = Math.max(max, child.getPrefHeight());
     return max;
 }
 
