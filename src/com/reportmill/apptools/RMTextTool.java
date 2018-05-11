@@ -83,7 +83,7 @@ public void resetUI()
     setViewValue("AlignBottomButton", text.getAlignmentY()==RMTypes.AlignY.Bottom); // Update AlignBottomButton
     
     // Set TextView RichText and selection
-    _textView.getTextBox().setText(text.getRichText()); //if(!_textArea.isFocusOwner())?
+    _textView.getTextArea().setRichText(text.getRichText()); //if(!_textArea.isFocusOwner())?
     if(ted!=null) _textView.setSel(ted.getSelStart(),ted.getSelEnd());
 
     // Get text's background color and set in TextArea if found
