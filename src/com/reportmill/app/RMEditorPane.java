@@ -519,8 +519,8 @@ public boolean close()
         }
     }
     
-    // Do real close
-    closeQuick();
+    // Do real close (run later because Java 8 on MacOS sometimes leaves a zombie window after above dialog)
+    runLater(() -> closeQuick());
     return true;
 }
 
