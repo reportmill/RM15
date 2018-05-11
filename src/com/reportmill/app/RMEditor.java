@@ -174,6 +174,9 @@ public void setSelectedShapes(List <RMShape> theShapes)
     // If shapes already set, just return
     if(ListUtils.equalsId(theShapes, _selectedShapes)) return;
     
+    // Request focus in case current focus view has changes
+    requestFocus();
+    
     // If shapes is null or empty super-select the selected page and return
     if(theShapes==null || theShapes.size()==0) {
         setSuperSelectedShape(getSelectedPage()); return; }
@@ -229,18 +232,13 @@ public RMShape getSuperSelectedShape()
 }
 
 /**
- * Returns the first super selected shape, if parent shape.
- */
-public RMParentShape getSuperSelectedParentShape()
-{
-    RMShape ss = getSuperSelectedShape(); return ss instanceof RMParentShape? (RMParentShape)ss : null;
-}
-
-/**
  * Super select a shape.
  */
 public void setSuperSelectedShape(RMShape aShape)
 {
+    // Request focus in case current focus view has changes
+    requestFocus();
+    
     // If given shape is null, reset to selected page
     RMShape shape = aShape!=null? aShape : getSelectedPage();
     
@@ -281,6 +279,14 @@ private void addSuperSelectedShape(RMShape aShape)
     // If ancestor is page but not document's selected page, make it the selected page
     if(aShape instanceof RMPage && aShape!=getDocument().getSelectedPage())
         getDocument().setSelectedPage((RMPage)aShape);
+}
+
+/**
+ * Returns the first super selected shape, if parent shape.
+ */
+public RMParentShape getSuperSelectedParentShape()
+{
+    RMShape ss = getSuperSelectedShape(); return ss instanceof RMParentShape? (RMParentShape)ss : null;
 }
 
 /**

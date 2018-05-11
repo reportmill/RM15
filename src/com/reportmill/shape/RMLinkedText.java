@@ -23,10 +23,8 @@ public RMLinkedText() { }
  */
 public RMLinkedText(RMTextShape aText)
 {
-    // Copy basic attributes of previous text
+    // Copy basic attributes of previous text and set linked text
     copyShape(aText);
-    
-    // Set linked text
     aText.setLinkedText(this);
 }
 
@@ -69,11 +67,6 @@ public void setParent(RMParentShape aShape)
         _previousText.repaint();
     }
 }
-
-/**
- * Overrides text to indicate that linked texts never show clipped lines.
- */
-public boolean getDrawsClippedLine()  { return false; }
 
 /**
  * XML archival.
