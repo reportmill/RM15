@@ -1154,7 +1154,7 @@ public boolean isPrefWidthSet()  { return get("PrefWidth")!=null; }
 public double getPrefWidth()
 {
     Double v = (Double)get("PrefWidth"); if(v!=null) return v;
-    return computePrefWidth(-1);
+    return getPrefWidthImpl(-1);
 }
 
 /**
@@ -1167,11 +1167,6 @@ public void setPrefWidth(double aWidth)
 }
 
 /**
- * Computes the preferred width for given height.
- */
-protected double computePrefWidth(double aHeight)  { return getWidth(); }
-
-/**
  * Returns whether shape preferred height is set.
  */
 public boolean isPrefHeightSet()  { return get("PrefHeight")!=null; }
@@ -1182,7 +1177,7 @@ public boolean isPrefHeightSet()  { return get("PrefHeight")!=null; }
 public double getPrefHeight()
 {
     Double v = (Double)get("PrefHeight"); if(v!=null) return v;
-    return computePrefHeight(-1);
+    return getPrefHeightImpl(-1);
 }
 
 /**
@@ -1195,9 +1190,14 @@ public void setPrefHeight(double aHeight)
 }
 
 /**
+ * Computes the preferred width for given height.
+ */
+protected double getPrefWidthImpl(double aHeight)  { return getWidth(); }
+
+/**
  * Computes the preferred height for given width.
  */
-protected double computePrefHeight(double aWidth)  { return getHeight(); }
+protected double getPrefHeightImpl(double aWidth)  { return getHeight(); }
 
 /**
  * Returns the best width for current height.

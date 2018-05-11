@@ -424,9 +424,9 @@ public void paintShape(Painter aPntr)
 public Shape getClipShape()  { return !isStructured()? getBoundsInside() : null; }
 
 /**
- * Performs layout.
+ * Override to layout children and maybe sync with other rows.
  */
-protected void layoutChildren()
+protected void layoutImpl()
 {
     // If not structured or no children, just return
     if(!isStructured() || getChildCount()==0) return;
@@ -460,10 +460,10 @@ protected void layoutChildren()
 /**
  * Override to optimize structured case.
  */
-protected double computePrefHeight(double aWidth)
+protected double getPrefHeightImpl(double aWidth)
 {
     // If not structured or no children, just return normal version
-    if(!isStructured() || getChildCount()==0) return super.computePrefHeight(aWidth);
+    if(!isStructured() || getChildCount()==0) return super.getPrefHeightImpl(aWidth);
     
     // Return max of current row height and max child best size
     double max = getHeight();

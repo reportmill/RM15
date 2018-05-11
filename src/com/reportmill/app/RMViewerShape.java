@@ -99,17 +99,17 @@ public void setSelectedPageIndex(int anIndex)
 /**
  * Override to return content preferred width.
  */
-protected double computePrefWidth(double aHeight)  { RMDocument d = getDoc(); return d!=null? d.getPrefWidth() : 0; }
+protected double getPrefWidthImpl(double aHeight)  { RMDocument d = getDoc(); return d!=null? d.getPrefWidth() : 0; }
 
 /**
  * Override to return content preferred height.
  */
-protected double computePrefHeight(double aWidth)  { RMDocument d = getDoc(); return d!=null? d.getPrefHeight() : 0; }
+protected double getPrefHeightImpl(double aWidth)  { RMDocument d = getDoc(); return d!=null? d.getPrefHeight() : 0; }
 
 /**
- * This is bogus, but we want to make sure that ViewerShape is always the same size as the content.
+ * Override to layout doc.
  */
-protected void layoutChildren()
+protected void layoutImpl()
 {
     // Get Doc, parent Width/Height and doc bounds in center of ViewerShape
     RMDocument doc = getDoc();

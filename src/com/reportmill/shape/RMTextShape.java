@@ -614,7 +614,7 @@ public void clearTextEditor()  { _textEdtr = null; }
 /**
  * Override to compute from RMTextLayout.
  */
-protected double computePrefWidth(double aHeight)
+protected double getPrefWidthImpl(double aHeight)
 {
     // If font scaling, return current size
     if(_wraps==WRAP_SCALE) return getWidth();
@@ -628,7 +628,7 @@ protected double computePrefWidth(double aHeight)
 /**
  * Override to compute from RMTextLayout.
  */
-protected double computePrefHeight(double aWidth)
+protected double getPrefHeightImpl(double aWidth)
 {
     if(_wraps==WRAP_SCALE) return getHeight();
     if(length()==0) return 0; // Zero instead of getMarginTop()+getMarginBottom() so empty texts are hidden

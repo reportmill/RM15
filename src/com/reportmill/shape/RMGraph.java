@@ -405,9 +405,9 @@ public static List getDefaultColors()
 public static void setDefaultColors(List aList)  { _defaultColors = aList; }
 
 /**
- * Creates and adds new GraphArea.
+ * Override to create/add new graph content.
  */
-protected void layoutChildren()
+protected void layoutImpl()
 {
     // Recreate and add sample graph
     removeChildren();

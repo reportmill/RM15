@@ -360,9 +360,9 @@ void validateCells()
 }
 
 /**
- * Relays out table rows, columns and cells.
+ * Override to layout cells.
  */
-protected void layoutChildren()
+protected void layoutImpl()
 {
     // Remove all children
     removeChildren();

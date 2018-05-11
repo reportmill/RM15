@@ -358,9 +358,9 @@ public int getResizeBarAtPoint(Point aPoint)
 public boolean childrenSuperSelectImmediately()  { return true; }
 
 /**
- * Performs layout.
+ * Override to layout rows.
  */
-protected void layoutChildren()
+protected void layoutImpl()
 {
     // Iterate over table rows and reset successive y values based on cumulative height of preceding rows
     double y = 0, maxy = getChildCount()>0? getChildLast().getMaxY() : 0;

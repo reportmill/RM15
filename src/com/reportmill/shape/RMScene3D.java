@@ -349,7 +349,7 @@ public RMTransform3D getTransform3D()
 /**
  * Rebuilds 3D representation of shapes from shapes list.
  */
-protected void layoutChildren()
+protected void layoutImpl()
 {
     // Remove all existing children
     removeChildren();

@@ -68,7 +68,7 @@ public void setFont(RMFont aFont)  { _font = aFont; }
 /**
  * Override to layout legend.
  */
-protected void layoutChildren()
+protected void layoutImpl()
 {
     // Remove children
     removeChildren(); if(getParent()==null) return;

@@ -156,7 +156,7 @@ public void paintShape(Painter aPntr)
 /**
  * Override to return preferred height of table.
  */
-protected double computePrefHeight(double aWidth)
+protected double getPrefHeightImpl(double aWidth)
 {
     return getChildCount()>0? Math.max(getChild(0).getHeight(), getHeight()) : getHeight();
 }

@@ -473,7 +473,7 @@ public int getPageBreakPageMax()
 /**
  * Override to return PrefHeight is not paginating.
  */
-protected double computePrefHeight(double aWidth)  { return _prefHeight>0? _prefHeight : getHeight(); }
+protected double getPrefHeightImpl(double aWidth)  { return _prefHeight>0? _prefHeight : getHeight(); }
 
 /**
  * Override to paint table stroke on top.

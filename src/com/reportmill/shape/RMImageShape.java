@@ -158,7 +158,7 @@ public void setPreserveRatio(boolean aValue)
 /**
  * Returns the preferred width.
  */
-protected double computePrefWidth(double aHeight)
+protected double getPrefWidthImpl(double aHeight)
 {
     RMImageData id = getImageData(); if(id==null) return 0;
     double pw = id.getImageWidth(), ph = id.getImageHeight();
@@ -169,7 +169,7 @@ protected double computePrefWidth(double aHeight)
 /**
  * Returns the preferred height.
  */
-protected double computePrefHeight(double aWidth)
+protected double getPrefHeightImpl(double aWidth)
 {
     RMImageData id = getImageData(); if(id==null) return 0;
     double pw = id.getImageWidth(), ph = id.getImageHeight();

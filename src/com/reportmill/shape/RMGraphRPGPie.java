@@ -370,7 +370,7 @@ static class PieGraphShape3D extends RMScene3D implements PieGraphShape {
     }
     
     /** Rebuilds 3D representation of shapes from shapes list (called by layout manager). */
-    protected void layoutChildren()
+    protected void layoutImpl()
     {
         // Remove all existing children
         removeChildren();

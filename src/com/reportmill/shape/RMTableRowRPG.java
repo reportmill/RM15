@@ -285,10 +285,10 @@ public boolean getStrokeOnTop()  { return true; }
 /**
  * Override to handle structured row.
  */
-protected void layoutChildren()
+protected void layoutImpl()
 {
-    // If not structured, just return
-    if(!_row2.isStructured()) { super.layoutChildren(); return; }
+    // If not structured, just do normal version
+    if(!_row2.isStructured()) { super.layoutImpl(); return; }
     
     // Layout children edge to edge by iterating over children and setting successive x values
     double dx = 0;
@@ -301,10 +301,10 @@ protected void layoutChildren()
 /**
  * Override to handle structured row.
  */
-protected double computePrefHeight(double aWidth)
+protected double getPrefHeightImpl(double aWidth)
 {
     // If not structured, just return normal version
-    if(!_row2.isStructured()) return super.computePrefHeight(aWidth);
+    if(!_row2.isStructured()) return super.getPrefHeightImpl(aWidth);
     
     // Return max of current row height and max child best size
     double max = getHeight();

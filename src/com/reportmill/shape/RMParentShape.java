@@ -68,7 +68,7 @@ public void addChild(RMShape aChild, int anIndex)
     aChild.setParent(this);
     
     // Notify layout of add child
-    if(_layout!=null) _layout.addLayoutChild(aChild);
+    if(_layout!=null) _layout.addChild(aChild);
     
     // If this shape has PropChangeListeners, start listening to children as well
     if(hasDeepChangeListener()) {
@@ -94,7 +94,7 @@ public RMShape removeChild(int anIndex)
     firePropChange("Child", child, null, anIndex);
     
     // Notify layout of remove child
-    if(_layout!=null) _layout.removeLayoutChild(child);
+    if(_layout!=null) _layout.removeChild(child);
     
     // Stop listening to PropertyChanges, repaint, revalidate and return
     child.removePropChangeListener(getChildPCL()); child.removeDeepChangeListener(getChildDCL());
@@ -275,7 +275,7 @@ public void layout()
     // If layout needed, do layout
     if(getNeedsLayout() && !_inLayout) {
         undoerDisable(); _inLayout = true;
-        layoutChildren(); setNeedsLayout(false);
+        layoutImpl(); setNeedsLayout(false);
         undoerEnable(); _inLayout = false;
     }
 }
@@ -283,22 +283,14 @@ public void layout()
 /**
  * Called to reposition/resize children.
  */
-protected void layoutChildren()  { if(_layout!=null) _layout.layoutChildren(); }
+protected void layoutImpl()  { if(_layout!=null) _layout.layout(); }
 
 /**
- * Returns the shape preferred width.
+ * Override to get from layout, if set.
  */
-protected double computePrefWidth(double aHeight)
+protected double getPrefHeightImpl(double aWidth)
 {
-    return _layout!=null? _layout.computePrefWidth(aHeight) : super.computePrefWidth(-1);
-}
-
-/**
- * Returns the shape preferred height.
- */
-protected double computePrefHeight(double aWidth)
-{
-    return _layout!=null? _layout.computePrefHeight(aWidth) : super.computePrefHeight(-1);
+    return _layout!=null? _layout.getPrefHeight(aWidth) : super.getPrefHeightImpl(-1);
 }
 
 /**
@@ -311,8 +303,8 @@ public RMShapeLayout getLayout()  { return _layout; }
  */
 protected void setLayout(RMShapeLayout aLayout)
 {
-    _layout = aLayout; _layout.setParent(this);
-    for(RMShape c : getChildren()) _layout.addLayoutChild(c);
+    _layout = aLayout; _layout._parent = this;
+    for(RMShape c : getChildren()) _layout.addChild(c);
 }
 
 /**

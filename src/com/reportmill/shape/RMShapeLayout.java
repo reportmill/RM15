@@ -14,9 +14,6 @@ public class RMShapeLayout implements Cloneable, PropChangeListener {
     // The parent this layout works for
     RMParentShape      _parent;
     
-    // Whether we are in layout
-    boolean            _inLayout;
-    
     // The parent best height
     double             _bh;
     
@@ -27,49 +24,40 @@ public class RMShapeLayout implements Cloneable, PropChangeListener {
     enum Position { Above, Below };
 
 /**
- * Returns the parent for this layout.
+ * Called when child added to parent to start listening to child property changes.
  */
-public RMParentShape getParent()  { return _parent; }
-
-/**
- * Sets the parent for this layout.
- */
-public void setParent(RMParentShape aParent)  { _parent = aParent; }
-
-/**
- * Override to start listening to property changes.
- */
-public void addLayoutChild(RMShape aChild)
+public void addChild(RMShape aChild)
 {
-    aChild.addPropChangeListener(this); // Start listening to shape property changes
+    aChild.addPropChangeListener(this);
     addSpringInfo(aChild); _cboxes = null;
 }
 
 /**
- * Override to stop listening to property changes.
+ * Called when child added to parent to stop listening to child property changes.
  */
-public void removeLayoutChild(RMShape aChild)
+public void removeChild(RMShape aChild)
 {
     aChild.removePropChangeListener(this);
     removeSpringInfo(aChild); _cboxes = null;
 }
 
 /**
- * Override to do springs stuff.
+ * Does layout of parent's children.
  */
-protected void layoutChildren()
+protected void layout()
 {
-    _inLayout = true;
-    
     // Get child bounds rects and set bounds of children for new width/height
     Rect rects[] = getChildrenBoundsRects();
     for(int i=0, iMax=_parent.getChildCount(); i<iMax; i++) {
         RMShape child = _parent.getChild(i); Rect rect = rects[i];
         child.setFrame(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
     }
-    
-    _inLayout = false;
 }
+
+/**
+ * Returns preferred height of children after growing.
+ */
+protected double getPrefHeight(double aWidth) { if(_cboxes==null) getChildBoxes(); return _bh; }
 
 /**
  * Returns the child rects for given parent height.
@@ -107,22 +95,12 @@ private Rect[] getChildrenBoundsRects()
 }
 
 /**
- * Override to return parent width.
- */
-protected double computePrefWidth(double aHeight)  { return _parent.getWidth(); }
-
-/**
- * Override to get from Sizer.
- */
-protected double computePrefHeight(double aWidth) { if(_cboxes==null) getChildBoxes(); return _bh; }
-
-/**
  * Called to revalidate when shape bounds change.
  */
 public void propertyChange(PropChange anEvent)
 {
     // If InLayout (we caused property change), just return
-    if(_inLayout) return;
+    if(_parent._inLayout) return;
 
     // Get property name - if frame changer, do something
     String pname = anEvent.getPropertyName();
@@ -262,13 +240,13 @@ public Box[] getChildBoxes()
 /**
  * Returns a list of children of given shape with given relative position to given child shape.
  */
-List <Box> childrenWithPositionRelativeToChild(Position aPosition, Box aChild)
+private List <Box> childrenWithPositionRelativeToChild(Position aPos, Box aChild)
 {
     // Iterate over child boxes and get those that hasPositionRelativeToPeer
     List <Box> hits = null;
     for(Box child : _cboxes) {
         if(child==aChild) continue; // If given child, skip
-        if(hasPositionRelativeToPeer(child, aPosition, aChild)) { // If child has relative position, add to list
+        if(hasPositionRelativeToPeer(child, aPos, aChild)) { // If child has relative position, add to list
             if(hits==null) hits = new ArrayList(); hits.add(child); }
     }
     
@@ -285,7 +263,7 @@ List <Box> childrenWithPositionRelativeToChild(Position aPosition, Box aChild)
             if(child==aChild || child==hitChild) continue;
             
             // If child isn't in hit list but has position relative to child in hit list, add child
-            if(ListUtils.indexOfId(hits, child)==-1 && hasPositionRelativeToPeer(child, aPosition, hitChild))
+            if(ListUtils.indexOfId(hits, child)==-1 && hasPositionRelativeToPeer(child, aPos, hitChild))
                 hits.add(child);
         }
     }
@@ -297,11 +275,11 @@ List <Box> childrenWithPositionRelativeToChild(Position aPosition, Box aChild)
 /**
  * Returns whether given shape has given position relative to other given shape.
  */
-static boolean hasPositionRelativeToPeer(Box aShape, Position aPosition, Box aPeer)
+private static boolean hasPositionRelativeToPeer(Box aShape, Position aPos, Box aPeer)
 {
     // If bounds widths intersect
     if(aShape.widthsIntersect(aPeer)) {
-        if(aPosition==Position.Above) { // Check position above
+        if(aPos==Position.Above) { // Check position above
             if(aShape.getMaxY() <= Math.min(aPeer.getMidY(),aPeer.getY()+10))
                 return true; }
         else if(aShape.getY() >= Math.max(aPeer.getMidY(),aPeer.getMaxY()-10)) // Check position below
@@ -313,13 +291,12 @@ static boolean hasPositionRelativeToPeer(Box aShape, Position aPosition, Box aPe
 }
 
 /**
- * Returns the child rects for given parent height.
+ * Sets the child rects for given parent height.
  */
-public void setHeight(Box theRects[], double oH, double nH) //double oW, double nW, 
+private void setHeight(Box theRects[], double oH, double nH) //double oW, double nW, 
 {
     // Iterate over children and calculate new bounds rects
-    for(int i=0; i<theRects.length; i++) { Box rect = theRects[i];
-        String asize = rect._asize;
+    for(int i=0; i<theRects.length; i++) { Box rect = theRects[i]; String asize = rect._asize;
         //boolean lms = asize.charAt(0)=='~', ws = asize.charAt(1)=='~', rms = asize.charAt(2)=='~';
         //double sw = (lms? x1 : 0) + (ws? w1 : 0) + (rms? oW - (x1 + w1) : 0), dw = nW - oW;
         boolean tms = asize.charAt(4)=='~', hs = asize.charAt(5)=='~', bms = asize.charAt(6)=='~';
@@ -345,7 +322,7 @@ public RMShapeLayout clone()
 /**
  * A class to hold info for a spring child.
  */
-protected static class SpringInfo {
+private static class SpringInfo {
     
     // The bounds and original parent width/height
     double x, y, width, height, pwidth, pheight;

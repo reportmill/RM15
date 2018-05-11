@@ -665,9 +665,9 @@ protected RMShape rpgChildren(ReportOwner anRptOwner, RMParentShape aParent)
 public void resolvePageReferences()  { if(_reportOwner!=null) _reportOwner.resolvePageReferences(); }
 
 /**
- * Rebuilds the document according to the selected page and page layout.
+ * Override to layout pages.
  */
-protected void layoutChildren()
+protected void layoutImpl()
 {
     // Get document
     int selectedIndex = getSelectedIndex();
@@ -723,7 +723,7 @@ protected void layoutChildren()
 /**
  * Override to return double page width for PageLayout.Double & Facing.
  */
-protected double computePrefWidth(double aHeight)
+protected double getPrefWidthImpl(double aHeight)
 {
     double pw = getPageSize().width;
     switch(getPageLayout()) { case Double: case Facing: pw *= 2; break; }
@@ -734,7 +734,7 @@ protected double computePrefWidth(double aHeight)
 /**
  * Override to return height*PageCount (plus spacing) for Continuous.
  */
-protected double computePrefHeight(double aWidth)
+protected double getPrefHeightImpl(double aWidth)
 {
     double ph = getPageSize().height;
     if(getPageLayout()==PageLayout.Continuous && getPageCount()>0) {

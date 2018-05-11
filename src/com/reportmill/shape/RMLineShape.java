@@ -91,9 +91,9 @@ public void setStrokeWidth(float aValue)
 }
 
 /**
- * Called to layout line arrow heads.
+ * Override to layout arrow heads.
  */
-protected void layoutChildren()
+protected void layoutImpl()
 {
     // Get line and arrow head (just return if no arrow head)
     ArrowHead head = getArrowHead(); if(head==null) return;

@@ -519,25 +519,19 @@ public boolean close()
         }
     }
     
-    // Close for real after delay (otherwise it leaves window in zombie state on MacOS/Java8 if Dialog shown above)
-    runLater(() -> closeImmediately());
+    // Do real close
+    closeQuick();
     return true;
 }
 
 /**
- * Closes the editor pane.
+ * Closes window without checking for save.
  */
-protected void closeImmediately()
+protected void closeQuick()
 {
+    // Hide window
     getWindow().hide();
-    editorClosed();
-}
 
-/**
- * Called when editor is closed.
- */
-protected void editorClosed()
-{
     // If another open editor is available focus on it, otherwise run WelcomePanel
     RMEditorPane epane = WindowView.getOpenWindowOwner(RMEditorPane.class);
     if(epane!=null)

@@ -21,11 +21,10 @@ public RMSpringShape()  { setLayout(new RMShapeLayout()); }
 /**
  * Returns the shape preferred height.
  */
-protected double computePrefHeight(double aWidth)
+protected double getPrefHeightImpl(double aWidth)
 {
-    if(!_growHeight)
-        return getHeight();
-    return super.computePrefHeight(aWidth);
+    if(!_growHeight) return getHeight();
+    return super.getPrefHeightImpl(aWidth);
 }
 
 /**

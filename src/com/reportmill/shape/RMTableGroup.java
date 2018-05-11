@@ -283,7 +283,7 @@ public boolean getStrokeOnTop()  { return true; }
 /**
  * Override to reset child in bounds.
  */
-protected void layoutChildren()
+protected void layoutImpl()
 {
     if(getChildCount()==0) return;
     RMShape child = getChild(0);
