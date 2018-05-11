@@ -716,10 +716,7 @@ protected void resolvePageReferences(ReportOwner aRptOwner, Object userInfo)
 /**
  * Creates a shape suitable for the "remainder" portion of a divideShape call (just a clone by default).
  */
-protected RMShape createDivideShapeRemainder(byte anEdge)
-{
-    return anEdge==RMRect.MinYEdge? new RMLinkedText(this) : clone();
-}
+protected RMShape createDivideShapeRemainder(byte anEdge)  { return anEdge==0? new RMLinkedText(this) : clone(); }
 
 /** Editor method - indicates that this shape can be super selected. */
 public boolean superSelectable()  { return true; }

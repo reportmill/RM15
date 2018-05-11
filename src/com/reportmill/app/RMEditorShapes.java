@@ -846,7 +846,7 @@ public static void splitHorizontal(RMEditor editor)
     RMShape shape = editor.getSuperSelectedShape();
     RMParentShape parent = shape.getParent();
     shape.repaint();
-    shape = shape.divideShapeFromEdge(shape.getWidth()/2, RMRect.MinXEdge, null);
+    shape = shape.divideShapeFromLeft(shape.getWidth()/2);
     parent.addChild(shape);
     editor.setSuperSelectedShape(shape);
 }

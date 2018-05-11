@@ -1224,27 +1224,36 @@ public void setBestSize()
 }
 
 /**
- * Divides the shape by a given amount from the top. Returns a clone of the given shape with bounds 
- * set to the remainder. Divies children among the two shapes (recursively calling divide shape for those stradling).
+ * Divides this shape by given amount from top edge. Returns remainder shape with bounds set to the remainder.
  */
-public RMShape divideShapeFromTop(double anAmount)  { return divideShapeFromEdge(anAmount, RMRect.MinYEdge, null); }
-
-/**
- * Divides the shape by a given amount from the given edge. Returns newShape (or, if null, a clone)
- * whose bounds have been set to the remainder.
- */
-public RMShape divideShapeFromEdge(double anAmount, byte anEdge, RMShape aNewShape)
+public RMShape divideShapeFromTop(double anAmt)
 {
-    // Get NewShape (if aNewShape is null, create one)
-    RMShape newShape = aNewShape!=null? aNewShape : createDivideShapeRemainder(anEdge);
+    // Create remainder shape
+    RMShape newShape = createDivideShapeRemainder((byte)0);
 
-    // Get bounds for this shape and remainder bounds (divide bounds by amount from edge)
-    Rect bounds = getFrame();
-    Rect remainder = RMRect.divideRect(bounds, anAmount, anEdge, null);
+    // Get bounds for this shape and remainder bounds (split by amount from top)
+    Rect bnds0 = getFrame();
+    Rect bnds1 = bnds0.clone(); bnds0.height = anAmt; bnds1.y += anAmt; bnds1.height -= anAmt;
     
     // Set this shape's new bounds and NewShape bounds as remainder
-    setFrame(bounds);
-    newShape.setFrame(remainder);
+    setFrame(bnds0); newShape.setFrame(bnds1);
+    return newShape;
+}
+
+/**
+ * Divides this shape by given amount from left edge. Returns remainder shape with bounds set to the remainder.
+ */
+public RMShape divideShapeFromLeft(double anAmt)
+{
+    // Create remainder shape
+    RMShape newShape = createDivideShapeRemainder((byte)1);
+
+    // Get bounds for this shape and remainder bounds (split by amount from left)
+    Rect bnds0 = getFrame();
+    Rect bnds1 = bnds0.clone(); bnds0.width = anAmt; bnds1.x += anAmt; bnds1.width -= anAmt;
+    
+    // Set this shape's new bounds and NewShape bounds as remainder
+    setFrame(bnds0); newShape.setFrame(bnds1);
     return newShape;
 }
 
