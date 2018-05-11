@@ -3,11 +3,11 @@
  */
 package com.reportmill.apptools;
 import com.reportmill.app.RMEditor;
-import com.reportmill.graphics.RMBorderStroke;
-import com.reportmill.graphics.RMStroke;
+import com.reportmill.graphics.*;
 import com.reportmill.shape.RMShape;
 import java.util.List;
 import snap.view.ViewEvent;
+import snap.viewx.ColorWell;
 
 public class RMBorderStrokeTool extends RMStrokeTool {
 
@@ -42,6 +42,21 @@ public void respondUI(ViewEvent anEvent)
     RMEditor editor = getEditor();
     List <RMShape> shapes = editor.getSelectedOrSuperSelectedShapes();
     RMShape shape = editor.getSelectedOrSuperSelectedShape();
+    
+    // Handle StrokeColorWell - get color and set in selected shapes
+    if(anEvent.equals("StrokeColorWell")) {
+        ColorWell cwell = getView("StrokeColorWell", ColorWell.class);
+        RMColor color = RMColor.get(cwell.getColor());
+        for(RMShape s : shapes)
+            s.setStrokeColor(color);
+    }
+    
+    // Handle StrokeWidthText, StrokeWidthThumb
+    if(anEvent.equals("StrokeWidthText") || anEvent.equals("StrokeWidthThumb")) {
+        float width = anEvent.getFloatValue();
+        for(RMShape s : shapes)
+            s.setStrokeWidth(width);
+    }
     
     // Handle TopCheckBox, RightCheckBox, BottomCheckBox, LeftCheckBox
     if(anEvent.equals("TopCheckBox")) {
