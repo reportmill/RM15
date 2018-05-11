@@ -1789,9 +1789,8 @@ public XMLElement toXML(XMLArchiver anArchiver)
     if(isPrefWidthSet()) e.add("PrefWidth", getPrefWidth());
     if(isPrefHeightSet()) e.add("PrefHeight", getPrefHeight());
     
-    // Archive LayoutInfo, Autosizing
-    if(getParent()!=null && getParent().getLayout() instanceof RMSpringLayout) {
-        if(!getAutosizing().equals(getAutosizingDefault())) e.add("asize", getAutosizing()); }
+    // Archive Autosizing
+    if(!getAutosizing().equals(getAutosizingDefault())) e.add("asize", getAutosizing());
     
     // Archive Locked
     if(isLocked()) e.add("locked", true);

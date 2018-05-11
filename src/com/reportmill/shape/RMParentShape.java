@@ -281,20 +281,6 @@ public void layout()
 }
 
 /**
- * Returns the layout for this shape.
- */
-public RMShapeLayout getLayout()  { return _layout; }
-
-/**
- * Sets the layout for this shape.
- */
-protected void setLayout(RMShapeLayout aLayout)
-{
-    _layout.setParent(this);
-    for(RMShape c : getChildren()) _layout.addLayoutChild(c);
-}
-
-/**
  * Called to reposition/resize children.
  */
 protected void layoutChildren()  { if(_layout!=null) _layout.layoutChildren(); }
@@ -313,6 +299,20 @@ protected double computePrefWidth(double aHeight)
 protected double computePrefHeight(double aWidth)
 {
     return _layout!=null? _layout.computePrefHeight(aWidth) : super.computePrefHeight(-1);
+}
+
+/**
+ * Returns the layout for this shape.
+ */
+public RMShapeLayout getLayout()  { return _layout; }
+
+/**
+ * Sets the layout for this shape.
+ */
+protected void setLayout(RMShapeLayout aLayout)
+{
+    _layout = aLayout; _layout.setParent(this);
+    for(RMShape c : getChildren()) _layout.addLayoutChild(c);
 }
 
 /**
@@ -415,7 +415,7 @@ public RMShape divideShapeFromTop(double anAmount)
             //if(cb.getHeight()!=cbh) { bms.setHeight(bms.getHeight() + cb.getHeight() - cbh); bms.layoutReset(); }
             
             // Reset autosizing so that child bottom is nailed to bottomShape top
-            if(getLayout() instanceof RMSpringLayout) {
+            if(_layout!=null) {
                 StringBuffer as = new StringBuffer(childBottom.getAutosizing()); as.setCharAt(4, '-');
                 childBottom.setAutosizing(as.toString());
             }
@@ -423,7 +423,7 @@ public RMShape divideShapeFromTop(double anAmount)
     }
 
     // Reset shape layout to suppress layout and return bottomShape
-    if(getLayout() instanceof RMSpringLayout) ((RMSpringLayout)getLayout()).reset();
+    if(_layout!=null) _layout.reset();
     return bottomShape;
 }
 

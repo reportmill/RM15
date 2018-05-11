@@ -534,7 +534,7 @@ protected RMShape rpgChildren(ReportOwner anRptOwner, RMParentShape aParent)
     // If not paginating, reset layout to Springs
     boolean paginate = anRptOwner.getPaginate();
     if(!paginate)
-        aParent.setLayout(new RMSpringLayout());
+        aParent.setLayout(new RMShapeLayout());
     
     // Do normal version
     RMShape page = super.rpgChildren(anRptOwner, aParent);

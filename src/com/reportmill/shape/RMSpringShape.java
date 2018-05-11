@@ -16,7 +16,7 @@ public class RMSpringShape extends RMParentShape {
 /**
  * Creates a new RMSpringShape.
  */
-public RMSpringShape()  { setLayout(new RMSpringLayout()); }
+public RMSpringShape()  { setLayout(new RMShapeLayout()); }
 
 /**
  * Returns the shape preferred height.

@@ -43,7 +43,7 @@ public void rpgAll(ReportOwner anRptOwner, RMTableRow aRow, RMGroup aGroup, Stri
     
     _row = aRow; _row2 = row; _group = aGroup; // Set ivars
     copyShape(row); // Copy attributes
-    if(!_row2.isStructured()) setLayout(new RMSpringLayout()); // Set layout
+    if(!_row2.isStructured()) setLayout(new RMShapeLayout()); // Set layout
     row.rpgChildren(anRptOwner, this); // RPG children
     
     // Set best height
@@ -213,7 +213,7 @@ public void shiftShapesBelowHiddenShapesUp()
         setHeight(getHeight() + maxFrameY2 - maxFrameY);
     
     // Reset layout
-    ((RMSpringLayout)getLayout()).reset();
+    getLayout().reset();
 }
 
 /**
