@@ -17,10 +17,10 @@ public class RMViewerShape extends RMParentShape {
     RMViewer           _viewer;
 
     // The document being viewed
-    RMDocument         _content;
+    RMDocument         _doc;
     
     // A PropChangeListener to catch Content shape changes (Showing, PageSize, )
-    PropChangeListener _viewerContentLsnr = pc -> _viewer.contentShapeDidPropChange(pc);
+    PropChangeListener _viewerDocLsnr = pc -> _viewer.docDidPropChange(pc);
     
 /**
  * Creates a new ViewerShape.
@@ -35,38 +35,32 @@ public RMViewer getViewer()  { return _viewer; }
 /**
  * Returns the root shape as RMDocument, if available.
  */
-public RMDocument getDoc()  { return _content; }
-
-/**
- * Returns the root shape as RMDocument, if available.
- */
-public RMDocument getDocument()  { return _content; }
-
-/**
- * Returns the root shape that is being viewed in viewer.
- */
-public RMDocument getContent()  { return _content; }
+public RMDocument getDoc()  { return _doc; }
 
 /**
  * Sets the root shape that is being viewed in viewer.
  */
-public void setContent(RMDocument aDoc)
+public void setDoc(RMDocument aDoc)
 {
     // Resolve page references on document and make sure it has a selected page
     aDoc.resolvePageReferences();
     aDoc.layout();
     
     // If old document, stop listening to shape changes and notify shapes hidden 
-    if(_content!=null) _content.removePropChangeListener(_viewerContentLsnr);
+    if(_doc!=null) _doc.removePropChangeListener(_viewerDocLsnr);
     
-    // Set new document and fire property change
-    if(_content!=null) removeChild(_content);
-    addChild(aDoc, 0);
-    firePropChange("Content", _content, _content = aDoc);
+    // Set new document
+    if(_doc!=null) removeChild(_doc);
+    addChild(_doc = aDoc, 0);
     
     // Start listening to shape changes and notify shapes shown
-    _content.addPropChangeListener(_viewerContentLsnr);
+    _doc.addPropChangeListener(_viewerDocLsnr);
 }
+
+/**
+ * Returns the root shape as RMDocument, if available.
+ */
+public RMDocument getDocument()  { return _doc; }
 
 /**
  * Returns the page count.
@@ -133,7 +127,7 @@ protected void repaint(RMShape aShape)
         System.err.println("RMViewerShape.repaint(): called during painting");
     
     // Send repaint event
-    if(aShape==_content) _viewer.repaint();
+    if(aShape==_doc) _viewer.repaint();
     else _viewer.docShapeRepaint(aShape);
 }
 
@@ -157,22 +151,22 @@ public boolean isEditing()  { return _viewer.isEditing(); }
  */
 public WebURL getSourceURL()
 {
-    RMDocument cs = getContent(); return cs!=null && cs.isSourceURLSet()? cs.getSourceURL() : null;
+    RMDocument cs = getDoc(); return cs!=null && cs.isSourceURLSet()? cs.getSourceURL() : null;
 }
 
 /**
  * Sets the SourceURL.
  */
-public void setSourceURL(WebURL aURL)  { if(getContent()!=null) getContent().setSourceURL(aURL); }
+public void setSourceURL(WebURL aURL)  { if(getDoc()!=null) getDoc().setSourceURL(aURL); }
 
 /**
  * Returns RXElement for content shape.
  */
 public XMLElement getContentXML()
 {
-    getContent().layout();
+    getDoc().layout();
     if(getDocument()!=null) getDocument().resolvePageReferences();
-    return new RMArchiver().writeObject(getContent());
+    return new RMArchiver().writeObject(getDoc());
 }
 
 /**

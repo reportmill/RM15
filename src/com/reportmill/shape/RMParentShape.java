@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import snap.gfx.*;
 import snap.util.*;
-import snap.web.WebURL;
 
 /**
  * A shape implementation that can have children.
@@ -22,9 +21,6 @@ public class RMParentShape extends RMShape {
     // Whether layout is in the process of being done
     boolean        _inLayout;
 
-    // The SourceURL
-    WebURL         _sourceURL;
-    
     // A listener to catch child PropChange (for editor undo)
     PropChangeListener  _childPCL;
     
@@ -223,21 +219,6 @@ DeepChangeListener getChildDCL()  { return _childDCL!=null? _childDCL : (_childD
 /** Called when child/descendant changes forward changes on to deep listeners. */
 void childDidPropChange(PropChange aPC)  { _pcs.fireDeepChange(this, aPC); }
 void childDidDeepChange(Object aLsnr, PropChange aPC)  { _pcs.fireDeepChange(aLsnr, aPC); }
-
-/**
- * Returns whether Source URL is set.
- */
-public boolean isSourceURLSet()  { return _sourceURL!=null; }
-
-/**
- * Returns the Source URL.
- */
-public WebURL getSourceURL()  { return _sourceURL!=null? _sourceURL : _parent!=null? _parent.getSourceURL() : null; }
-
-/**
- * Sets the Source URL.
- */
-public void setSourceURL(WebURL aURL)  { _sourceURL = aURL; }
 
 /**
  * Returns whether children need to be laid out.

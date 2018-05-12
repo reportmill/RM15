@@ -77,12 +77,17 @@ protected RMViewerShape createViewerShape()  { return new RMViewerShape(this); }
 /**
  * Returns the RMDocument associated with this viewer.
  */
-public RMDocument getDocument()  { return getContent(); }
+public RMDocument getDoc()  { return _vshape.getDoc(); }
+
+/**
+ * Returns the RMDocument associated with this viewer.
+ */
+public RMDocument getDocument()  { return _vshape.getDoc(); }
 
 /**
  * Returns the root shape that is the content of this viewer.
  */
-public RMDocument getContent()  { return _vshape.getContent(); }
+public RMDocument getContent()  { return _vshape.getDoc(); }
 
 /**
  * Sets the root shape that is the content of this viewer.
@@ -93,8 +98,8 @@ public void setContent(RMDocument aDoc)
     if(aDoc==getContent()) return;
     
     // Set new document and fire property change
-    RMShape shape = getContent(); _vshape.setContent(aDoc);
-    firePropChange(Content_Prop, shape, aDoc);
+    RMDocument doc = getDoc(); _vshape.setDoc(aDoc);
+    firePropChange(Content_Prop, doc, aDoc);
     
     // Set ZoomToFitFactor and relayout/repaint (for possible size change)
     setZoomToFitFactor();
@@ -515,9 +520,9 @@ public Rect getRepaintBoundsForShape(RMShape aShape)
 }
 
 /**
- * Called when content shape has PropChange.
+ * Called when document has PropChange.
  */
-protected void contentShapeDidPropChange(PropChange anEvent)
+protected void docDidPropChange(PropChange anEvent)
 {
     // Handle SelectedPageIndex, PageSize, PageLayout
     String pname = anEvent.getPropertyName();

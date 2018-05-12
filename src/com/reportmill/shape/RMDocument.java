@@ -9,6 +9,7 @@ import java.util.*;
 import java.io.File;
 import snap.gfx.*;
 import snap.util.*;
+import snap.web.WebURL;
 
 /**
  * The RMDocument class represents a ReportMill document and is also an RMShape subclass, so it can be a real part of
@@ -30,6 +31,9 @@ import snap.util.*;
  */
 public class RMDocument extends RMParentShape {
 
+    // The SourceURL
+    WebURL            _sourceURL;
+    
     // The ReportMill version this document was created with
     float             _version = ReportMill.getVersion();
     
@@ -113,6 +117,21 @@ public RMDocument(Object aSource)  { new RMArchiver().getDoc(aSource, this); }
  * Creates a new document from aSource using RMArchiver.
  */
 public static RMDocument getDoc(Object aSource)  { return new RMArchiver().getDoc(aSource); }
+
+/**
+ * Returns whether Source URL is set.
+ */
+public boolean isSourceURLSet()  { return _sourceURL!=null; }
+
+/**
+ * Returns the Source URL.
+ */
+public WebURL getSourceURL()  { return _sourceURL; }
+
+/**
+ * Sets the Source URL.
+ */
+public void setSourceURL(WebURL aURL)  { _sourceURL = aURL; }
 
 /**
  * Returns the filename associated with this document, if available.
