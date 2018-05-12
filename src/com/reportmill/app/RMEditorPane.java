@@ -178,7 +178,7 @@ public void setEditing(boolean aFlag)
         // Create new editor, set editing to false and set report document
         RMEditor editor = new RMEditor();
         editor.setEditing(false);
-        editor.setContent(report);
+        editor.setDoc(report);
         
         // If generateReport hit any keyChain parsing errors, run message dialog
         if(RMKeyChain.getError()!=null) { String err = RMKeyChain.getAndResetError();
@@ -411,7 +411,7 @@ public RMEditorPane open(Object aSource)
     }
     
     // Set document
-    getViewer().setContent(doc);
+    getViewer().setDoc(doc);
     
     // If source is string, add to recent files menu
     if(url!=null) RecentFiles.addPath("RecentDocuments", url.getPath(), 10);

@@ -71,7 +71,7 @@ public RMTrackballControl()
     RMDocument doc = new RMDocument(_tball.getWidth(), _tball.getHeight()); doc.setShowMargin(false);
     RMPage page = doc.getPage(0); page.setPaintBackground(false);
     page.addChild(_tball);
-    setContent(doc);
+    setDoc(doc);
     
     // Create/configure scene and add to page
     _scene = new RMScene3D(); _scene.setBounds(2, 0, _tball.getWidth(), _tball.getHeight());

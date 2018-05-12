@@ -75,30 +75,20 @@ public RMViewerShape getViewerShape()  { return _vshape; }
 protected RMViewerShape createViewerShape()  { return new RMViewerShape(this); }
 
 /**
- * Returns the RMDocument associated with this viewer.
+ * Returns the document associated with this viewer.
  */
 public RMDocument getDoc()  { return _vshape.getDoc(); }
 
 /**
- * Returns the RMDocument associated with this viewer.
+ * Sets the document associated with this viewer.
  */
-public RMDocument getDocument()  { return _vshape.getDoc(); }
-
-/**
- * Returns the root shape that is the content of this viewer.
- */
-public RMDocument getContent()  { return _vshape.getDoc(); }
-
-/**
- * Sets the root shape that is the content of this viewer.
- */
-public void setContent(RMDocument aDoc)
+public void setDoc(RMDocument aDoc)
 {
     // If already set, just return
-    if(aDoc==getContent()) return;
+    RMDocument doc = getDoc(); if(aDoc==doc) return;
     
     // Set new document and fire property change
-    RMDocument doc = getDoc(); _vshape.setDoc(aDoc);
+    _vshape.setDoc(aDoc);
     firePropChange(Content_Prop, doc, aDoc);
     
     // Set ZoomToFitFactor and relayout/repaint (for possible size change)
@@ -107,9 +97,15 @@ public void setContent(RMDocument aDoc)
 }
 
 /**
- * Sets the content from any source.
+ * Sets the document from any source.
  */
-public void setContent(Object aSource)  { setContent(new RMArchiver().getDoc(aSource)); }
+public void setDoc(Object aSource)  { setDoc(new RMArchiver().getDoc(aSource)); }
+
+/**
+ * Legacy.
+ */
+public RMDocument getDocument()  { return _vshape.getDoc(); }
+public RMDocument getContent()  { return _vshape.getDoc(); }
 
 /**
  * Returns the source URL.

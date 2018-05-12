@@ -68,7 +68,7 @@ protected void initUI()
 {
     // Install WelcomeAnim.Viewer
     WebURL url = WebURL.getURL(getClass(), "WelcomeAnim.rpt");
-    RMViewer viewer = new RMViewer(); viewer.setContent(url);
+    RMViewer viewer = new RMViewer(); viewer.setDoc(url);
     View wlabel = getView("WelcomeAnimLabel");
     viewer.setSize(wlabel.getWidth(), wlabel.getHeight());
     getUI(ChildView.class).addChild(viewer, 1);

@@ -16,7 +16,7 @@ public class ReportPage extends WebPage {
 protected View createUI()
 {
     RMViewerPane vpane = new RMViewerPane();
-    vpane.getViewer().setContent(getFile());
+    vpane.getViewer().setDoc(getFile());
     return vpane.getUI();
 }
 
