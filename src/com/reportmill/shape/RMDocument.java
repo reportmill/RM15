@@ -242,7 +242,7 @@ public void setPageLayout(PageLayout aValue)
 {
     if(aValue==_pageLayout) return;
     firePropChange("PageLayout", _pageLayout, _pageLayout = aValue);
-    if(getPageCount()>0) setSize(getPrefWidth(), getPrefHeight()); // Reset size
+    relayoutParent();
 }
 
 /**
@@ -408,11 +408,9 @@ public void setPageSize(double aWidth, double aHeight)
     for(int i=0, iMax=getPageCount(); i<iMax; i++)
         getPage(i).setSize(aWidth, aHeight);
     
-    // Fire property change
+    // Fire property change and relayout parent
     firePropChange("PageSize", oldValue, new Size(aWidth, aHeight));
-    
-    // Set page size and revalidate
-    setSize(getPrefWidth(), getPrefHeight());
+    relayoutParent();
 }
 
 /**

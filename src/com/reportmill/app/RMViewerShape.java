@@ -114,11 +114,11 @@ protected void layoutImpl()
     // Get Doc, parent Width/Height and doc bounds in center of ViewerShape
     RMDocument doc = getDoc();
     double pw = getWidth(), ph = getHeight();
-    double dw = doc.getWidth(), dh = doc.getHeight();
+    double dw = doc.getPrefWidth(), dh = doc.getPrefHeight();
     double dx = pw>dw? Math.floor((pw-dw)/2) : 0, dy = ph>dh? Math.floor((ph-dh)/2) : 0;
 
     // Set doc location and scale for zoom factor
-    doc.setXY(dx,dy);
+    doc.setBounds(dx,dy,dw,dh);
     if(doc.getScaleX()!=_viewer.getZoomFactor()) { double sc = _viewer.getZoomFactor();
         doc.setScaleXY(sc, sc); }
 }

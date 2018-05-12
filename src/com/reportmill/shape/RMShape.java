@@ -1573,6 +1573,20 @@ protected void resolvePageReferences(ReportOwner aRptOwner, Object userInfo)
 }
 
 /**
+ * Called to relayout.
+ */
+public void relayout()  { }
+
+/**
+ * Called to notify parents to relayout because preferred sizes have potentially changed.
+ */
+public void relayoutParent()
+{
+    RMParentShape par = getParent(); if(par==null) return;
+    par.relayout(); par.relayoutParent();
+}
+
+/**
  * Visual change notification - call before making changes that will require repaint.
  */
 public void repaint()  { if(_parent!=null) _parent.repaint(this); }
