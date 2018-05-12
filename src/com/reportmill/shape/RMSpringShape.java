@@ -7,7 +7,7 @@ import snap.gfx.*;
 import snap.util.*;
 
 /**
- * A parent shape that does child layout with RMSpringLayout.
+ * A parent shape that does child layout according to autosizing (springs and struts) settings.
  */
 public class RMSpringShape extends RMParentShape {
     
@@ -86,7 +86,7 @@ private Rect[] getChildBounds()
 }
 
 /**
- * Returns the bounds of children accommodating children that need to grow.
+ * Returns the bounds of children accounting for springs settings and children that want to grow.
  */
 public Box[] getChildBoxes()
 {
@@ -221,7 +221,7 @@ private List <Box> childrenWithPositionRelativeToChild(Position aPos, Box aChild
 /**
  * Returns spring info for child.
  */
-protected SpringInfo getSpringInfo(RMShape aChild)  { return (SpringInfo)aChild._layoutInfoX; }
+protected SpringInfo getSpringInfo(RMShape aChild)  { return (SpringInfo)aChild._springInfo; }
 
 /**
  * Adds spring info for child.
@@ -230,13 +230,13 @@ protected void addSpringInfo(RMShape aChild)
 {
     double x = aChild.getFrameX(), y = aChild.getFrameY(), w = aChild.getFrameWidth(), h = aChild.getFrameHeight();
     SpringInfo sinfo = new SpringInfo(x,y,w,h,getWidth(),getHeight());
-    aChild._layoutInfoX = sinfo;
+    aChild._springInfo = sinfo;
 }
 
 /**
  * Removes spring info for child.
  */
-protected void removeSpringInfo(RMShape aChild)  { aChild._layoutInfoX = null; }
+protected void removeSpringInfo(RMShape aChild)  { aChild._springInfo = null; }
 
 /**
  * Override to initialize child springs.

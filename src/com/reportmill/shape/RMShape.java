@@ -62,8 +62,8 @@ public class RMShape extends SnapObject implements Cloneable, RMTypes, Archivabl
     // The parent of this shape
     RMParentShape  _parent = null;
     
-    // A string describing how this shape should autosize in a Springs shape
-    String         _asize; Object _layoutInfoX;
+    // A string describing how this shape should autosize in an RMSpringShape
+    String         _asize; Object _springInfo;
     
     // Map to hold less used attributes (name, url, etc.)
     RMSharedMap    _attrMap = SHARED_MAP;
@@ -660,7 +660,7 @@ public void setAutosizing(String aValue)
 {
     if(aValue!=null && (aValue.length()<7 || !(aValue.charAt(0)=='-' || aValue.charAt(0)=='~'))) {
         System.err.println("RMShape.setAutosizing: Invalid string: " + aValue); return; }
-    if(SnapUtils.equals(aValue, _asize)) return; _layoutInfoX = null;
+    if(SnapUtils.equals(aValue, _asize)) return;
     firePropChange("Autosizing", _asize, _asize = aValue);
 }
 
@@ -1417,9 +1417,9 @@ public void addBinding(String aPropName, String aKey)  { addBinding(new Binding(
  */
 public RMShape clone()
 {
-    // Do normal version, clear parent, LayoutInfoX, clone RSS
+    // Do normal version, clear parent
     RMShape clone = (RMShape)super.clone();
-    clone._parent = null; clone._layoutInfoX = null;
+    clone._parent = null;
     
     // Clone Rotate/Scale/Skew array
     if(_rss!=null) clone._rss = Arrays.copyOf(_rss,_rss.length);
