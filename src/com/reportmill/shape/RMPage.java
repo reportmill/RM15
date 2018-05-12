@@ -531,20 +531,24 @@ public RMShape rpgAll(ReportOwner anRptOwner, RMShape aParent)
  */
 protected RMShape rpgChildren(ReportOwner anRptOwner, RMParentShape aParent)
 {
-    // If not paginating, reset layout to Springs
-    boolean paginate = anRptOwner.getPaginate();
-    if(!paginate)
-        aParent.setLayout(new RMShapeLayout());
+    // If paginating, just do normal version
+    if(anRptOwner.getPaginate())
+        return super.rpgChildren(anRptOwner, aParent);
+        
+    // Otherwise, generate rpg children to RMSpringShape
+    RMSpringShape springShape = new RMSpringShape(); springShape.setSize(aParent.getWidth(), aParent.getHeight());
+    RMShape page = super.rpgChildren(anRptOwner, springShape);
     
-    // Do normal version
-    RMShape page = super.rpgChildren(anRptOwner, aParent);
+    // Set best height with springs and propogate to given parent
+    springShape.setBestHeight();
+    aParent.setSize(springShape.getWidth(), springShape.getHeight());
     
-    // If not paginating, reset height
-    if(!paginate)
-        aParent.setBestHeight();
+    // Add children back to given parent
+    RMShape children[] = springShape.getChildren().toArray(new RMShape[springShape.getChildCount()]);
+    for(RMShape child : children) aParent.addChild(child);
     
-    // Return page
-    return page;
+    // Return given parent
+    return aParent;
 }
 
 /**

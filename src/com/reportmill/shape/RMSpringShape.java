@@ -3,58 +3,59 @@
  */
 package com.reportmill.shape;
 import snap.gfx.*;
-import snap.util.*;
 
 /**
  * A parent shape that does child layout with RMSpringLayout.
  */
 public class RMSpringShape extends RMParentShape {
-
-    // Whether to GrowHeight
-    boolean       _growHeight = true;
-
+    
+    // Whether springs resizing is disabled
+    boolean          _springsDisabled;
+    
+    // A class to do real layout work
+    RMShapeLayout    _layout = null;
+    
 /**
  * Creates a new RMSpringShape.
  */
-public RMSpringShape()  { setLayout(new RMShapeLayout()); }
+public RMSpringShape()  { _layout = new RMShapeLayout(); _layout._parent = this; }
 
 /**
- * Returns the shape preferred height.
+ * Return whether springs have been disabled.
  */
-protected double getPrefHeightImpl(double aWidth)
+public boolean isSpringsDisabled()  { return _springsDisabled; }
+
+/**
+ * Return whether springs have been disabled.
+ */
+public void setSpringsDisabled(boolean aValue)  { _springsDisabled = aValue; }
+
+/**
+ * Override to notify layout.
+ */
+public void addChild(RMShape aChild, int anIndex)
 {
-    if(!_growHeight) return getHeight();
-    return super.getPrefHeightImpl(aWidth);
+    super.addChild(aChild, anIndex);
+    if(!_springsDisabled) _layout.addChild(aChild);
 }
 
 /**
- * XML unarchival.
+ * Override to notify layout.
  */
-protected void fromXMLShape(XMLArchiver anArchiver, XMLElement anElement)
+public RMShape removeChild(int anIndex)
 {
-    super.fromXMLShape(anArchiver,anElement);
-    if(anElement.hasAttribute("GrowHeight")) _growHeight = anElement.getAttributeBoolValue("GrowHeight");
-    if(anArchiver.getVersion()<=12)
-        _growHeight = false;
+    RMShape child = super.removeChild(anIndex);
+    if(!_springsDisabled) _layout.removeChild(child);
+    return child;
 }
 
-/**
- * XML Archival.
- */
-public XMLElement toXMLShape(XMLArchiver anArchiver)
-{
-    XMLElement e = super.toXMLShape(anArchiver); e.setName("spring-shape");
-    e.add("GrowHeight", false);
-    return e;
-}
-    
 /**
  * Override to paint dashed box around bounds.
  */
 public void paintShape(Painter aPntr)
 {
     // Do normal version
-    super.paintShape(aPntr);
+    super.paintShape(aPntr); if(getClass()!=RMSpringShape.class) return;
     
     // Paint dashed box around bounds
     RMShapePaintProps props = RMShapePaintProps.get(aPntr);
@@ -63,6 +64,41 @@ public void paintShape(Painter aPntr)
         aPntr.setColor(Color.LIGHTGRAY); aPntr.setStroke(Stroke.Stroke1.copyForDashes(3,2));
         aPntr.setAntialiasing(false); aPntr.draw(getBoundsInside()); aPntr.setAntialiasing(true);
     }
+}
+
+/**
+ * Called to reposition/resize children.
+ */
+protected void layoutImpl()  { _layout.layout(); }
+
+/**
+ * Override to get from layout, if set.
+ */
+protected double getPrefHeightImpl(double aWidth)  { return _layout.getPrefHeight(aWidth); }
+
+/**
+ * Resets layout.
+ */
+protected void resetLayout()  { _layout.reset(); }
+
+/**
+ * Override to reset layout.
+ */
+public RMShape divideShapeFromTop(double anAmount)
+{
+    RMShape btmShape = super.divideShapeFromTop(anAmount);
+    resetLayout();
+    return btmShape;
+}
+
+/**
+ * Standard clone implementation.
+ */
+public RMSpringShape clone()
+{
+    RMSpringShape clone = (RMSpringShape)super.clone();
+    clone._layout = new RMShapeLayout(); clone._layout._parent = clone;
+    return clone;
 }
 
 }

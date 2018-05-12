@@ -9,7 +9,7 @@ import snap.util.*;
 /**
  * Handles layout for shape children with autosizing (springs and struts).
  */
-public class RMShapeLayout implements Cloneable, PropChangeListener {
+public class RMShapeLayout implements PropChangeListener {
 
     // The parent this layout works for
     RMParentShape      _parent;
@@ -153,7 +153,7 @@ public Box[] getChildBoxes()
     // Get boxes
     _cboxes = new Box[_parent.getChildCount()];
     for(int i=0, iMax=_parent.getChildCount(); i<iMax; i++) { RMShape child = _parent.getChild(i);
-        _cboxes[i] = new Box(child); }
+        _cboxes[i] = new Box(child, getSpringInfo(child)); }
     
     // Iterate over children to get list of those that need to grow
     List <Box> childrenToGrow = null;
@@ -293,30 +293,17 @@ private static boolean hasPositionRelativeToPeer(Box aShape, Position aPos, Box 
 /**
  * Sets the child rects for given parent height.
  */
-private void setHeight(Box theRects[], double oH, double nH) //double oW, double nW, 
+private void setHeight(Box theRects[], double oH, double nH)
 {
     // Iterate over children and calculate new bounds rects
     for(int i=0; i<theRects.length; i++) { Box rect = theRects[i]; String asize = rect._asize;
-        //boolean lms = asize.charAt(0)=='~', ws = asize.charAt(1)=='~', rms = asize.charAt(2)=='~';
-        //double sw = (lms? x1 : 0) + (ws? w1 : 0) + (rms? oW - (x1 + w1) : 0), dw = nW - oW;
         boolean tms = asize.charAt(4)=='~', hs = asize.charAt(5)=='~', bms = asize.charAt(6)=='~';
         double x = rect.getX(), y = rect.getY(), w = rect.getWidth(), h = rect.getHeight();
         double sh = (tms? y : 0) + (hs? h : 0) + (bms? oH - (y + h) : 0), dh = nH - oH;
-        if(tms && sh!=0) y += dh*y/sh; // if(lms && sw!=0) x += dw*x/sw; if(ws && sw!=0) w += dw*w/sw;
+        if(tms && sh!=0) y += dh*y/sh;
         if(hs && sh!=0) h += dh*h/sh; 
         rect.setRect(x, y, w, h);
     }
-}
-
-/**
- * Standard clone implementation.
- */
-public RMShapeLayout clone()
-{
-    RMShapeLayout clone = null; try { clone = (RMShapeLayout)super.clone(); }
-    catch(CloneNotSupportedException e) { throw new RuntimeException(e); }
-    clone._parent = null; clone._cboxes = null;
-    return clone;
 }
 
 /**
@@ -335,7 +322,7 @@ private static class SpringInfo {
 /**
  * A class to represent the children bounds.
  */
-private class Box extends snap.gfx.Rect {
+private static class Box extends snap.gfx.Rect {
 
     // The autosize settings
     String       _asize, _asize0;
@@ -344,9 +331,8 @@ private class Box extends snap.gfx.Rect {
     double       _bh;
     
     /** Creates a new box for a Node. */
-    public Box(RMShape aShape)
+    public Box(RMShape aShape, SpringInfo sinfo)
     {
-        SpringInfo sinfo = getSpringInfo(aShape);
         _asize = _asize0 = aShape.getAutosizing();
         _bh = getBestHeight(aShape);
         setRect(sinfo.x, sinfo.y, sinfo.width, sinfo.height);

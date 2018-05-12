@@ -16,9 +16,6 @@ public class RMParentShape extends RMShape {
     // The children of this shape
     List <RMShape> _children = new ArrayList();
     
-    // The layout manager for children
-    RMShapeLayout  _layout = null;
-    
     // Whether children need layout
     boolean        _needsLayout;
     
@@ -67,9 +64,6 @@ public void addChild(RMShape aChild, int anIndex)
     _children.add(anIndex, aChild);
     aChild.setParent(this);
     
-    // Notify layout of add child
-    if(_layout!=null) _layout.addChild(aChild);
-    
     // If this shape has PropChangeListeners, start listening to children as well
     if(hasDeepChangeListener()) {
         aChild.addPropChangeListener(getChildPCL()); aChild.addDeepChangeListener(getChildDCL()); }
@@ -92,9 +86,6 @@ public RMShape removeChild(int anIndex)
     
     // Fire property change
     firePropChange("Child", child, null, anIndex);
-    
-    // Notify layout of remove child
-    if(_layout!=null) _layout.removeChild(child);
     
     // Stop listening to PropertyChanges, repaint, revalidate and return
     child.removePropChangeListener(getChildPCL()); child.removeDeepChangeListener(getChildDCL());
@@ -283,29 +274,7 @@ public void layout()
 /**
  * Called to reposition/resize children.
  */
-protected void layoutImpl()  { if(_layout!=null) _layout.layout(); }
-
-/**
- * Override to get from layout, if set.
- */
-protected double getPrefHeightImpl(double aWidth)
-{
-    return _layout!=null? _layout.getPrefHeight(aWidth) : super.getPrefHeightImpl(-1);
-}
-
-/**
- * Returns the layout for this shape.
- */
-public RMShapeLayout getLayout()  { return _layout; }
-
-/**
- * Sets the layout for this shape.
- */
-protected void setLayout(RMShapeLayout aLayout)
-{
-    _layout = aLayout; _layout._parent = this;
-    for(RMShape c : getChildren()) _layout.addChild(c);
-}
+protected void layoutImpl()  { }
 
 /**
  * Returns whether given child shape is hittable.
@@ -373,7 +342,7 @@ public List <RMShape> getChildrenIntersecting(Shape aPath)
  */
 public RMShape divideShapeFromTop(double anAmount)
 {
-    // Validate
+    // Make sure layout is up to date
     layout();
     
     // Call normal divide from top edge
@@ -403,19 +372,13 @@ public RMShape divideShapeFromTop(double anAmount)
             childBottom._y = 0;
             bottomShape.addChild(childBottom);
             
-            // If child bottom grew, grow bottom shape and reset layout? (I don't think this can happen)
-            //if(cb.getHeight()!=cbh) { bms.setHeight(bms.getHeight() + cb.getHeight() - cbh); bms.layoutReset(); }
-            
             // Reset autosizing so that child bottom is nailed to bottomShape top
-            if(_layout!=null) {
-                StringBuffer as = new StringBuffer(childBottom.getAutosizing()); as.setCharAt(4, '-');
-                childBottom.setAutosizing(as.toString());
-            }
+            StringBuffer as = new StringBuffer(childBottom.getAutosizing()); as.setCharAt(4, '-');
+            childBottom.setAutosizing(as.toString());
         }
     }
 
-    // Reset shape layout to suppress layout and return bottomShape
-    if(_layout!=null) _layout.reset();
+    // Return bottom shape
     return bottomShape;
 }
 
@@ -425,9 +388,7 @@ public RMShape divideShapeFromTop(double anAmount)
 public void bringShapesToFront(List <RMShape> shapes)
 {
     for(RMShape shape : shapes) {
-        removeChild(shape);
-        addChild(shape);
-    }
+        removeChild(shape); addChild(shape); }
 }
 
 /**
@@ -436,9 +397,7 @@ public void bringShapesToFront(List <RMShape> shapes)
 public void sendShapesToBack(List <RMShape> shapes)
 {
     for(int i=0, iMax=shapes.size(); i<iMax; i++) { RMShape shape = shapes.get(i);
-        removeChild(shape);
-        addChild(shape, i);
-    }
+        removeChild(shape); addChild(shape, i); }
 }
 
 /**
@@ -494,13 +453,12 @@ protected RMShape rpgChildren(ReportOwner anRptOwner, RMParentShape aParent)
 }
 
 /**
- * Standard implementation of Object clone. Null's out shape's parent and children.
+ * Standard clone implementation.
  */
 public RMParentShape clone()
 {
     RMParentShape clone = (RMParentShape)super.clone();
     clone._children = new ArrayList();
-    if(_layout!=null) clone.setLayout(_layout.clone());
     return clone;
 }
 
