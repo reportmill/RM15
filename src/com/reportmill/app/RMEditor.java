@@ -1019,7 +1019,7 @@ public void deepChange(Object aShape, PropChange anEvent)
     }
     
     // Forward DeepChanges to EditorPane. Should have add/removeDeepChagneLister methods for this.
-    RMEditorPane ep = getEditorPane(); if(ep!=null) ep.deepChange(this, anEvent);
+    RMEditorPane ep = getEditorPane(); ep.resetLater();
 }
 
 /**
@@ -1027,11 +1027,6 @@ public void deepChange(Object aShape, PropChange anEvent)
  */
 protected void saveUndoerChanges()
 {
-    _saveChangesRunnable = null;
-    // If MouseIsDown, come back later
-    if(ViewUtils.isMouseDown()) {
-        saveUndoerChangesLater(); return; }
-
     // Get undoer
     Undoer undoer = getUndoer(); if(undoer==null || !undoer.isEnabled()) return;
     
@@ -1042,6 +1037,14 @@ protected void saveUndoerChanges()
     
     // Save undo changes
     undoer.saveChanges();
+    System.out.println("SaveUndoerChanges");
+    
+    // If MouseUp listener, remove it
+    if(_callOnMouseUp!=null) getEditorPane().getUI().removeEventFilter(_callOnMouseUp, MouseRelease);
+    _callOnMouseUp = null; _saveChangesRun = null;
+    
+    // Reset EditorPane
+    RMEditorPane ep = getEditorPane(); ep.resetLater();
 }
 
 /**
@@ -1049,11 +1052,25 @@ protected void saveUndoerChanges()
  */
 protected void saveUndoerChangesLater()
 {
-    if(_saveChangesRunnable==null)
-        getEnv().runDelayed(_saveChangesRunnable = _scrShared, 400, true);
+    // If runnable already set, just return
+    if(_saveChangesRun!=null) return;
+    
+    // Set SaveChangesRun to shared runnable
+    _saveChangesRun = _scrShared;
+    
+    // If MouseDown, listen for MouseRelease and send then
+    if(ViewUtils.isMouseDown())
+        getEditorPane().getUI().addEventFilter(_callOnMouseUp = _callShared, MouseRelease);
+            
+    // Otherwise, just do it later
+    else getEnv().runLater(_saveChangesRun);
 }
 
-private Runnable _saveChangesRunnable, _scrShared = () -> saveUndoerChanges();
+// A Runnable for runLater(saveUndoerChanges())
+private Runnable _saveChangesRun, _scrShared = () -> saveUndoerChanges();
+
+// An EventListener to trigger saveUndoerChanges() on MouseUp, if mouse down
+private snap.view.EventListener _callOnMouseUp, _callShared = e -> getEnv().runLater(_saveChangesRun);
 
 /**
  * A RMShapePaintProps subclass for editor.

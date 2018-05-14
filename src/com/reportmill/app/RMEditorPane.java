@@ -541,11 +541,6 @@ protected void closeQuick()
 }
 
 /**
- * Catch Editor DeepChanges to register resetUI.
- */
-public void deepChange(Object aShape, PropChange anEvent)  { resetLater(); }
-
-/**
  * Called when the app is about to exit to gracefully handle any open documents.
  */
 public void quit()  { App.quitApp(); }
