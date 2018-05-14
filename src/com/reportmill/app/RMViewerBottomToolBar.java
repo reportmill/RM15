@@ -61,14 +61,14 @@ protected void resetUI()
     setViewValue("ZoomText", Math.round(viewer.getZoomFactor()*100) + "%");
     
     // Reset PageText field
-    String pageText = "" + (viewer.getSelectedPageIndex()+1) + " of " + viewer.getPageCount();
+    String pageText = "" + (viewer.getSelPageIndex()+1) + " of " + viewer.getPageCount();
     setViewValue("PageText", pageText);
     
     // Reset pageforward enabled
-    setViewEnabled("PageBackButton", viewer.getSelectedPageIndex()>0);
-    setViewEnabled("PageBackAllButton", viewer.getSelectedPageIndex()>0);
-    setViewEnabled("PageForwardButton", viewer.getSelectedPageIndex()<viewer.getPageCount()-1);
-    setViewEnabled("PageForwardAllButton", viewer.getSelectedPageIndex()<viewer.getPageCount()-1);
+    setViewEnabled("PageBackButton", viewer.getSelPageIndex()>0);
+    setViewEnabled("PageBackAllButton", viewer.getSelPageIndex()>0);
+    setViewEnabled("PageForwardButton", viewer.getSelPageIndex()<viewer.getPageCount()-1);
+    setViewEnabled("PageForwardAllButton", viewer.getSelPageIndex()<viewer.getPageCount()-1);
 }
 
 /**
@@ -102,7 +102,7 @@ protected void respondUI(ViewEvent anEvent)
     
     // Handle PageText
     if(anEvent.equals("PageText"))
-        viewer.setSelectedPageIndex(anEvent.getIntValue()-1);
+        viewer.setSelPageIndex(anEvent.getIntValue()-1);
     
     // Handle PageBackButton
     if(anEvent.equals("PageBackButton"))
@@ -110,7 +110,7 @@ protected void respondUI(ViewEvent anEvent)
     
     // Handle PageBackAllButton
     if(anEvent.equals("PageBackAllButton"))
-        viewer.setSelectedPageIndex(0);
+        viewer.setSelPageIndex(0);
     
     // Handle PageForwardButton
     if(anEvent.equals("PageForwardButton"))
@@ -118,7 +118,7 @@ protected void respondUI(ViewEvent anEvent)
     
     // Handle PageForwardAllButton
     if(anEvent.equals("PageForwardAllButton"))
-        viewer.setSelectedPageIndex(viewer.getPageCount()-1);
+        viewer.setSelPageIndex(viewer.getPageCount()-1);
     
     // Have viewer pane reset
     viewerPane.resetLater();

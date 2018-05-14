@@ -173,7 +173,7 @@ public void setEditing(boolean aFlag)
         _realEditor.flushEditingChanges();
         
         // Generate report and restore filename
-        RMDocument report = getDocument().generateReport(getEditor().getDataSourceDataset());
+        RMDocument report = getDoc().generateReport(getEditor().getDataSourceDataset());
         
         // Create new editor, set editing to false and set report document
         RMEditor editor = new RMEditor();
@@ -477,7 +477,7 @@ protected void saveImpl() throws Exception
     WebURL url = getSourceURL();
     WebFile file = url.getFile();
     if(file==null) file = url.createFile(false);
-    file.setBytes(getViewer().getViewerShape().getContentXML().getBytes());
+    file.setBytes(getViewer().getViewerShape().getDocXML().getBytes());
     file.save();
 }
 

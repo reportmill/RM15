@@ -165,10 +165,10 @@ public static void addLabels(RMEditor anEditor, String aKeyPath)
 {
     anEditor.undoerSetUndoTitle("Add Labels"); // Get new RMLabels with aKeyPath and move to center of page
     RMLabels labels = new RMLabels(); // Create new labels shape
-    anEditor.getSelectedPage().addChild(labels); // Add to selected page (use editor to get undo)
+    anEditor.getSelPage().addChild(labels); // Add to selected page (use editor to get undo)
     labels.setName(aKeyPath); // Set labels name
     labels.setDatasetKey(aKeyPath); // Set labels dataset key
-    RMPage page = anEditor.getDocument().getSelectedPage(); // Get selected page
+    RMPage page = anEditor.getSelPage(); // Get selected page
     labels.setXY((page.getWidth() - labels.getWidth())/2, (page.getHeight() - labels.getHeight())/2); // Set location
     anEditor.setCurrentToolToSelectTool(); // Reset tool to select tool
     anEditor.setSelectedShape(labels); // Select labels

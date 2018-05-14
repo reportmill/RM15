@@ -40,7 +40,7 @@ protected void initUI()
  */
 protected void resetUI()
 {
-    _shapeTree.setItems(getEditor().getContent());
+    _shapeTree.setItems(getEditor().getDoc());
     _shapeTree.expandAll();
     _shapeTree.setSelItem(getEditor().getSelectedOrSuperSelectedShape());
 }
@@ -65,7 +65,7 @@ protected void respondUI(ViewEvent anEvent)
 public class ShapeTreeResolver extends TreeResolver <RMShape> {
     
     /** Returns the parent of given item. */
-    public RMShape getParent(RMShape anItem)  { return anItem!=getEditor().getContent()? anItem.getParent() : null; }
+    public RMShape getParent(RMShape anItem)  { return anItem!=getEditor().getDoc()? anItem.getParent() : null; }
 
     /** Whether given object is a parent (has children). */
     public boolean isParent(RMShape anItem)

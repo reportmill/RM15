@@ -14,7 +14,7 @@ import snap.web.WebURL;
  * 
  * You might use it like this to view in a Swing component hierarchy:
  * <p><blockquote><pre>
- *   RMViewerPane viewer = new RMViewerPane(); viewer.getViewer().setContent(new RMDocument(aSource));
+ *   RMViewerPane viewer = new RMViewerPane(); viewer.getViewer().setDoc(new RMDocument(aSource));
  *   JComponent vcomp = viewer.getRootView().getNative(JComponent.class);
  *   myFrame.setContentPane(viewer);
  * </pre></blockquote>
@@ -81,14 +81,9 @@ public BorderView getScrollBorderView()  { return _scrollBorderView; }
 public RMViewerShape getViewerShape()  { return getViewer().getViewerShape(); }
 
 /**
- * Returns the content shape.
+ * Returns the document associated with this viewer.
  */
-public RMParentShape getContent()  { return getViewer().getContent(); }
-
-/**
- * Returns the RMDocument associated with this viewer.
- */
-public RMDocument getDocument()  { return getViewer().getDocument(); }
+public RMDocument getDoc()  { return getViewer().getDoc(); }
 
 /**
  * Returns the document source.
@@ -155,7 +150,7 @@ public void runZoomPanel()
  */
 public void previewPDF()
 {
-    getDocument().writePDF(SnapUtils.getTempDir() + "RMPDFFile.pdf");
+    getDoc().writePDF(SnapUtils.getTempDir() + "RMPDFFile.pdf");
     FileUtils.openFile(SnapUtils.getTempDir() + "RMPDFFile.pdf");
 }
 

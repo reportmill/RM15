@@ -304,15 +304,15 @@ public void mouseDraggedSelText(ViewEvent anEvent)
     // Repaint paint area
     RMViewer viewer = getViewer(); viewer.repaint(_paintArea.getBounds());
     
-    // Get rectangle for down point and current event point - in SelectedPage coords
+    // Get rectangle for down point and current event point - in SelPage coords
     double x = Math.min(_downPoint.getX(), anEvent.getX());
     double y = Math.min(_downPoint.getY(), anEvent.getY());
     double w = Math.max(_downPoint.getX(), anEvent.getX()) - x;
     double h = Math.max(_downPoint.getY(), anEvent.getY()) - y;
-    Rect rect = viewer.convertToShape(new Rect(x,y,w,h), viewer.getSelectedPage()).getBounds();
+    Rect rect = viewer.convertToShape(new Rect(x,y,w,h), viewer.getSelPage()).getBounds();
     
     // Get path for rect and find/set text shapes
-    findTextShapes(viewer.getSelectedPage(), rect, _selectedTexts = new ArrayList());
+    findTextShapes(viewer.getSelPage(), rect, _selectedTexts = new ArrayList());
     
     // Get selection paint area and repaint
     _paintArea = getTextSelectionArea();
@@ -420,7 +420,7 @@ public void mousePressedSelImage(ViewEvent anEvent)
     if(!_rect.isEmpty()) getViewer().repaint();
     
     // Get rect in viewer coords
-    Rect rect = getViewer().convertFromShape(_rect, getViewer().getSelectedPage()).getBounds();
+    Rect rect = getViewer().convertFromShape(_rect, getViewer().getSelPage()).getBounds();
     
     // Reset selected sides to edges hit by point
     Point point = new Point(anEvent.getX(), anEvent.getY());
@@ -441,7 +441,7 @@ public void mousePressedSelImage(ViewEvent anEvent)
 public void mouseDraggedSelImage(ViewEvent anEvent)
 {
     // Get rect in viewer coords
-    Rect rect = getViewer().convertFromShape(_rect, getViewer().getSelectedPage()).getBounds();
+    Rect rect = getViewer().convertFromShape(_rect, getViewer().getSelPage()).getBounds();
         
     // Repaint rect
     getViewer().repaint(rect.isEmpty()? getViewer().getBounds() : rect.getInsetRect(-5));
@@ -466,7 +466,7 @@ public void mouseDraggedSelImage(ViewEvent anEvent)
     }
     
     // Set rect ivar in viewer coords
-    _rect = getViewer().convertToShape(rect, getViewer().getSelectedPage()).getBounds();
+    _rect = getViewer().convertToShape(rect, getViewer().getSelPage()).getBounds();
     
     // Repaint rect
     getViewer().repaint(rect.isEmpty()? getViewer().getBounds() : rect.getInsetRect(-5));
@@ -478,7 +478,7 @@ public void mouseDraggedSelImage(ViewEvent anEvent)
 public void mouseMovedSelImage(ViewEvent anEvent)
 {
     // Get point in selected page coords
-    Point point = getViewer().convertToShape(anEvent.getX(), anEvent.getY(), getViewer().getSelectedPage());
+    Point point = getViewer().convertToShape(anEvent.getX(), anEvent.getY(), getViewer().getSelPage());
     
     // Get hit edges
     int hitEdges = _rect.isEmpty()? 0 : getHitEdges(_rect, point, 5);
@@ -504,7 +504,7 @@ public void paintSelImage(Painter aPntr)
     if(_rect.isEmpty()) return;
     
     // Get selection rect in viewer coords
-    Rect rect = getViewer().convertFromShape(_rect, getViewer().getSelectedPage()).getBounds();
+    Rect rect = getViewer().convertFromShape(_rect, getViewer().getSelPage()).getBounds();
     
     // Create area for bounds, subtract rect and fill
     Shape shape = Shape.subtract(getViewer().getBounds(), rect);
@@ -530,7 +530,7 @@ private void drawCircle(Painter aPntr, double aX, double aY)
 private void copySelImage()
 {
     // Get an image of the current page and sub-image
-    RMShape page = getViewer().getDocument().getSelectedPage();
+    RMShape page = getViewer().getDoc().getSelectedPage();
     Image img = RMShapeUtils.createImage(page, Color.WHITE);
     Image img2 = img.getSubimage(_rect.getX(), _rect.getY(), _rect.getWidth(), _rect.getHeight());
     

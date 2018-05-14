@@ -546,7 +546,7 @@ public static void moveDownOnePoint(RMEditor anEditor)
  */
 public static void moveToNewLayer(RMEditor anEditor)
 {
-    RMDocument doc = anEditor.getDocument();
+    RMDocument doc = anEditor.getDoc();
     if(anEditor.getSelectedShapeCount()==0 || doc==null) { anEditor.beep(); return; }
     doc.getSelectedPage().moveToNewLayer(anEditor.getSelectedShapes());
 }

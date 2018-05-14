@@ -103,7 +103,7 @@ public void respondUI(ViewEvent anEvent)
  */
 private RMDataSource getDataSource()
 {
-    RMDocument doc = getEditor().getDocument();
+    RMDocument doc = getEditor().getDoc();
     return doc!=null? doc.getDataSource() : null;
 }
 

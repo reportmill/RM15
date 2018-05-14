@@ -19,11 +19,11 @@ public class RMViewerShape extends RMParentShape {
     // The document being viewed
     RMDocument         _doc;
     
-    // A PropChangeListener to catch Content shape changes (Showing, PageSize, )
+    // A PropChangeListener to catch doc changes (Showing, PageSize, )
     PropChangeListener _viewerDocLsnr = pc -> _viewer.docDidPropChange(pc);
     
 /**
- * Creates a new ViewerShape.
+ * Creates a ViewerShape for given viewer.
  */
 public RMViewerShape(RMViewer aViewer)  { _viewer = aViewer; }
 
@@ -33,12 +33,12 @@ public RMViewerShape(RMViewer aViewer)  { _viewer = aViewer; }
 public RMViewer getViewer()  { return _viewer; }
 
 /**
- * Returns the root shape as RMDocument, if available.
+ * Returns the document.
  */
 public RMDocument getDoc()  { return _doc; }
 
 /**
- * Sets the root shape that is being viewed in viewer.
+ * Sets the document to be viewed in viewer.
  */
 public void setDoc(RMDocument aDoc)
 {
@@ -75,17 +75,17 @@ public RMPage getPage(int anIndex)  { RMDocument d = getDoc(); return d!=null? d
 /**
  * Returns the currently selected page shape.
  */
-public RMPage getSelectedPage()  { RMDocument d = getDoc(); return d!=null? d.getSelectedPage() : null; }
+public RMPage getSelPage()  { RMDocument d = getDoc(); return d!=null? d.getSelectedPage() : null; }
 
 /**
  * Returns the index of the current visible document page.
  */
-public int getSelectedPageIndex()  { RMDocument d = getDoc(); return d!=null? d.getSelectedIndex() : 0; }
+public int getSelPageIndex()  { RMDocument d = getDoc(); return d!=null? d.getSelectedIndex() : 0; }
 
 /**
  * Sets the page of viewer's document that is visible (by index).
  */
-public void setSelectedPageIndex(int anIndex)
+public void setSelPageIndex(int anIndex)
 {
     RMDocument doc = getDoc(); if(doc!=null) doc.setSelectedIndex(anIndex);
 }
@@ -160,9 +160,9 @@ public WebURL getSourceURL()
 public void setSourceURL(WebURL aURL)  { if(getDoc()!=null) getDoc().setSourceURL(aURL); }
 
 /**
- * Returns RXElement for content shape.
+ * Returns XMLElement for document.
  */
-public XMLElement getContentXML()
+public XMLElement getDocXML()
 {
     getDoc().layout();
     if(getDocument()!=null) getDocument().resolvePageReferences();
@@ -170,8 +170,8 @@ public XMLElement getContentXML()
 }
 
 /**
- * Returns the content bytes.
+ * Returns the xml bytes for document.
  */
-public byte[] getContentBytes()  { return getContentXML().getBytes(); }
+public byte[] getDocBytes()  { return getDocXML().getBytes(); }
 
 }

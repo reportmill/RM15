@@ -149,14 +149,14 @@ public class TBInputAdapter extends RMViewerEvents {
         // If inside trackball, replace image with lit version
         if(distance<=INNER_RADIUS) {
             _hitPart = HIT_TRACKBALL; // turn on hilight
-            RMPage page = getDocument().getPage(0);
+            RMPage page = getDoc().getPage(0);
             page.removeChild(_tball); page.addChild(_tball_lit, 0);
         }
         
         // Else if in collar, add knob
         else if(distance<=INNER_RADIUS+COLLAR_THICKNESS && !_scene.isPseudo3D()) {
             _hitPart = HIT_COLLAR;
-            getDocument().getPage(0).addChild(_knob);
+            getDoc().getPage(0).addChild(_knob);
             _lastRollAngle = getMouseAngle(p);
             positionKnob(p);
         }
@@ -192,7 +192,7 @@ public class TBInputAdapter extends RMViewerEvents {
     /** Handle mouse released event. */
     public void mouseReleased(ViewEvent anEvent)
     {
-        RMPage page = getDocument().getPage(0);
+        RMPage page = getDoc().getPage(0);
         if(_hitPart==HIT_TRACKBALL) {
             page.removeChild(_tball_lit); page.addChild(_tball,0); }
         else if(_hitPart==HIT_COLLAR)

@@ -54,8 +54,8 @@ public static void previewPDF(RMEditorPane anEP)
 {
     // Get filename (if alt key is pressed, change to current doc plus .pdf)
     String filename = SnapUtils.getTempDir() + "RMPDFFile.pdf";
-    if(ViewUtils.isAltDown() && anEP.getDocument().getFilename()!=null)
-        filename = FilePathUtils.getSimple(anEP.getDocument().getFilename()) + ".pdf";
+    if(ViewUtils.isAltDown() && anEP.getDoc().getFilename()!=null)
+        filename = FilePathUtils.getSimple(anEP.getDoc().getFilename()) + ".pdf";
     
     // Get report, write report and open file
     RMDocument report = generateReport(anEP, true);
@@ -75,7 +75,7 @@ public static RMDocument generateReport(RMEditorPane anEP, boolean doPaginate)
     else anEP.setEditing(true);
     
     // Get document and return report
-    RMDocument document = anEP.getDocument();
+    RMDocument document = anEP.getDoc();
     return document.generateReport(editor.getDataSourceDataset(), doPaginate);
 }
 
@@ -167,7 +167,7 @@ public static void previewRTF(RMEditorPane anEP)
 public static void previewXML(RMEditorPane anEP)
 {
     RMEditor editor = anEP.getEditor();
-    XMLElement xml = new RMArchiver().writeObject(editor.getContent());
+    XMLElement xml = new RMArchiver().writeObject(editor.getDoc());
     File file = FileUtils.getTempFile("RMXMLFile.xml");
     try { FileUtils.writeBytes(file, xml.getBytes()); }
     catch(Exception e) { throw new RuntimeException(e); }
@@ -182,7 +182,7 @@ public static void saveAsPDF(RMEditorPane anEP)
     RMEditor editor = anEP.getEditor();
     String path = FilePanel.showOpenPanel(editor, "PDF file (.pdf)", "pdf");
     editor.flushEditingChanges();
-    editor.getDocument().writePDF(path);
+    editor.getDoc().writePDF(path);
 }
 
 }

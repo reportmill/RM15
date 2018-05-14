@@ -60,7 +60,7 @@ public void dragOver(ViewEvent anEvent)
     // Get shape at drag point (or the page, if none there)
     RMShape overShape = _editor.getShapeAtPoint(anEvent.getPoint(), true);
     if(overShape==null)
-        overShape = _editor.getSelectedPage();
+        overShape = _editor.getSelPage();
     
     // Go up chain until we find a shape that accepts drag
     while(!_editor.getTool(overShape).acceptsDrag(overShape, anEvent))

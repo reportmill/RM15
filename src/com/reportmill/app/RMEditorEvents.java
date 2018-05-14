@@ -310,7 +310,7 @@ private Point pointSnapped(Point aPoint, boolean snapEdges)
 {
     // Get the editor and editor shape
     RMEditor editor = getEditor();
-    RMDocument doc = editor.getDocument(); if(doc==null) return aPoint;
+    RMDocument doc = editor.getDoc(); if(doc==null) return aPoint;
     
     // Get local copy of point
     Point point = aPoint;
@@ -339,10 +339,10 @@ private Point pointSnappedToGrid(Point aPoint, boolean snapEdges)
 {
     // Get the editor and editor shape
     RMEditor editor = getEditor();
-    RMDocument doc = editor.getDocument(); if(doc==null) return aPoint;
+    RMDocument doc = editor.getDoc(); if(doc==null) return aPoint;
     
     // Get document frame
-    RMShape spage = editor.getSelectedPage();
+    RMShape spage = editor.getSelPage();
     Rect docFrame = editor.convertFromShape(spage.getBoundsInside(), spage).getBounds();
     double docFrameX = docFrame.getX(), docFrameY = docFrame.getY();
     
@@ -416,8 +416,8 @@ private Point pointSnappedToGuides(Point aPoint, boolean snapEdges)
 {
     // Get the editor, document and document frame
     RMEditor editor = getEditor();
-    RMDocument doc = editor.getDocument(); if(doc==null) return aPoint;
-    RMShape spage = editor.getSelectedPage();
+    RMDocument doc = editor.getDoc(); if(doc==null) return aPoint;
+    RMShape spage = editor.getSelPage();
     Rect docFrame = editor.convertFromShape(spage.getBoundsInside(), spage).getBounds();
     
     // Get grid spacing and dx/dy for maximum offsets

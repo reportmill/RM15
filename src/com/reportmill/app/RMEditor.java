@@ -179,20 +179,20 @@ public void setSelectedShapes(List <RMShape> theShapes)
     
     // If shapes is null or empty super-select the selected page and return
     if(theShapes==null || theShapes.size()==0) {
-        setSuperSelectedShape(getSelectedPage()); return; }
+        setSuperSelectedShape(getSelPage()); return; }
     
     // Get the first shape in given shapes list
     RMShape shape = theShapes.get(0);
     
     // If shapes contains superSelectedShapes, superSelect last and return (hidden trick for undoSelectedObjects)
-    if(theShapes.size()>1 && shape==getDocument()) {
+    if(theShapes.size()>1 && shape==getDoc()) {
         setSuperSelectedShape(theShapes.get(theShapes.size()-1)); return; }
     
     // Get the shape's parent
     RMShape shapesParent = shape.getParent();
     
     // If shapes parent is the document, super select shape instead
-    if(shapesParent==getDocument()) {
+    if(shapesParent==getDoc()) {
         setSuperSelectedShape(shape); return; }
     
     // Super select shapes parent
@@ -240,7 +240,7 @@ public void setSuperSelectedShape(RMShape aShape)
     requestFocus();
     
     // If given shape is null, reset to selected page
-    RMShape shape = aShape!=null? aShape : getSelectedPage();
+    RMShape shape = aShape!=null? aShape : getSelPage();
     
     // Unselect selected shapes
     _selectedShapes.clear();
@@ -277,8 +277,8 @@ private void addSuperSelectedShape(RMShape aShape)
     getTool(aShape).didBecomeSuperSelected(aShape);
 
     // If ancestor is page but not document's selected page, make it the selected page
-    if(aShape instanceof RMPage && aShape!=getDocument().getSelectedPage())
-        getDocument().setSelectedPage((RMPage)aShape);
+    if(aShape instanceof RMPage && aShape!=getDoc().getSelectedPage())
+        getDoc().setSelectedPage((RMPage)aShape);
 }
 
 /**
@@ -417,8 +417,8 @@ public RMShape getShapeAtPoint(Point aPoint)
     RMShape superSelShape = getSuperSelectedShape();
     
     // If superSelectedShape is document, start with page instead (maybe should go)
-    if(superSelShape==getDocument())
-        superSelShape = getSelectedPage();
+    if(superSelShape==getDoc())
+        superSelShape = getSelPage();
 
     // Get the point in superSelectedShape's coords
     Point point = convertToShape(aPoint.x, aPoint.y, superSelShape);
@@ -427,21 +427,21 @@ public RMShape getShapeAtPoint(Point aPoint)
     RMShape shapeAtPoint = getChildShapeAtPoint(superSelShape, point);
     
     // If no superSelectedShape child hit by point, find first superSelectedShape that is hit & set to shapeAtPoint
-    while(superSelShape!=getContent() && shapeAtPoint==null) {
+    while(superSelShape!=getDoc() && shapeAtPoint==null) {
         point = superSelShape.localToParent(point);
         superSelShape = superSelShape.getParent();
         shapeAtPoint = getChildShapeAtPoint(superSelShape, point);
     }
 
     // See if point really hits an upper level shape that overlaps shapeAtPoint
-    if(shapeAtPoint!=null && shapeAtPoint!=getSelectedPage()) {
+    if(shapeAtPoint!=null && shapeAtPoint!=getSelPage()) {
         
         // Declare shape/point variables used to iterate up shape hierarchy
         RMShape ssShape = shapeAtPoint;
         Point pnt = point;
 
         // Iterate up shape hierarchy
-        while(ssShape!=getSelectedPage() && ssShape.getParent()!=null) {
+        while(ssShape!=getSelPage() && ssShape.getParent()!=null) {
             
             // Get child of parent hit point point
             RMShape hitChild = getChildShapeAtPoint(ssShape.getParent(), pnt);
@@ -459,8 +459,8 @@ public RMShape getShapeAtPoint(Point aPoint)
     }
 
     // Make sure page is worst case
-    if(shapeAtPoint==null || shapeAtPoint==getDocument())
-        shapeAtPoint = getSelectedPage();
+    if(shapeAtPoint==null || shapeAtPoint==getDoc())
+        shapeAtPoint = getSelPage();
         
     // Return shape at point
     return shapeAtPoint;
@@ -510,8 +510,8 @@ public RMParentShape firstSuperSelectedShapeThatAcceptsChildren()
         parent = parent.getParent();
 
     // Make sure page is worst case
-    if(parent==getDocument())
-        parent = getSelectedPage();
+    if(parent==getDoc())
+        parent = getSelPage();
 
     // Return parent
     return parent;
@@ -542,12 +542,12 @@ public RMShape firstSuperSelectedShapeThatAcceptsChildrenAtPoint(Point aPoint)
         else parent = parent.getParent();
 
         if(parent==null)
-            return getSelectedPage();
+            return getSelPage();
     }
 
     // Make sure page is worst case
-    if(parent==getDocument())
-        parent = getSelectedPage();
+    if(parent==getDoc())
+        parent = getSelPage();
 
     // Return shape
     return parent;
@@ -666,22 +666,22 @@ public void addShapesToShape(List <? extends RMShape> theShapes, RMParentShape a
 /**
  * Adds a page to the document after current page.
  */
-public void addPage()  { addPage(null, getSelectedPageIndex()+1); }
+public void addPage()  { addPage(null, getSelPageIndex()+1); }
 
 /**
  * Adds a page to the document before current page.
  */
-public void addPagePrevious()  { addPage(null, getSelectedPageIndex()); }
+public void addPagePrevious()  { addPage(null, getSelPageIndex()); }
 
 /**
  * Adds a given page to the current document at the given index.
  */
 public void addPage(RMPage aPage, int anIndex)
 {
-    RMDocument doc = getDocument(); if(doc==null) { beep(); return; }
+    RMDocument doc = getDoc(); if(doc==null) { beep(); return; }
     RMPage page = aPage!=null? aPage : doc.createPage();
     doc.addPage(page, anIndex);
-    setSelectedPageIndex(anIndex);
+    setSelPageIndex(anIndex);
 }
 
 /**
@@ -689,9 +689,9 @@ public void addPage(RMPage aPage, int anIndex)
  */
 public void removePage()
 {
-    RMDocument doc = getDocument();
+    RMDocument doc = getDoc();
     if(doc==null || doc.getPageCount()<=1) { beep(); return; }
-    removePage(getSelectedPageIndex());
+    removePage(getSelPageIndex());
 }
 
 /**
@@ -700,10 +700,10 @@ public void removePage()
 public void removePage(int anIndex)
 {
     // Register for Undo, remove page and set page to previous one
-    RMDocument doc = getDocument(); if(doc==null) { beep(); return; }
+    RMDocument doc = getDoc(); if(doc==null) { beep(); return; }
     undoerSetUndoTitle("Remove Page");
     doc.removePage(anIndex);
-    setSelectedPageIndex(Math.min(anIndex, doc.getPageCount()-1));
+    setSelPageIndex(Math.min(anIndex, doc.getPageCount()-1));
 }
 
 /**
@@ -801,10 +801,10 @@ public void resetCurrentTool()
 /**
  * Override viewer method to reset selected shapes on page change.
  */
-public void setSelectedPageIndex(int anIndex)
+public void setSelPageIndex(int anIndex)
 {
-    super.setSelectedPageIndex(anIndex); // Do normal version
-    setSuperSelectedShape(getSelectedPage()); // Super-select new page
+    super.setSelPageIndex(anIndex); // Do normal version
+    setSuperSelectedShape(getSelPage()); // Super-select new page
 }
 
 /**
@@ -926,14 +926,14 @@ public String getToolTip(ViewEvent anEvent)
 /**
  * Returns the datasource associated with the editor's document.
  */
-public RMDataSource getDataSource()  { RMDocument d = getDocument(); return d!=null? d.getDataSource() : null; }
+public RMDataSource getDataSource()  { RMDocument d = getDoc(); return d!=null? d.getDataSource() : null; }
 
 /**
  * Sets the datasource associated with the editor's document.
  */
 public void setDataSource(RMDataSource aDataSource, double aX, double aY)
 {
-    getDocument().setDataSource(aDataSource);
+    getDoc().setDataSource(aDataSource);
     repaint();
 
     // If valid drop point, animate into place

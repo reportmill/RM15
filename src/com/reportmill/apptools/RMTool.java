@@ -173,7 +173,7 @@ public Rect getBoundsSuperSelected(T aShape)  { return aShape.getBoundsMarkedDee
  */
 public double getUnitsFromPoints(double aValue)
 {
-    RMEditor editor = getEditor(); RMDocument doc = editor.getDocument();
+    RMEditor editor = getEditor(); RMDocument doc = editor.getDoc();
     return doc!=null? doc.getUnitsFromPoints(aValue) : aValue;
 }
 
@@ -182,7 +182,7 @@ public double getUnitsFromPoints(double aValue)
  */
 public double getPointsFromUnits(double aValue)
 {
-    RMEditor editor = getEditor(); RMDocument doc = editor.getDocument();
+    RMEditor editor = getEditor(); RMDocument doc = editor.getDoc();
     return doc!=null? doc.getPointsFromUnits(aValue) : aValue;
 }
 
@@ -792,7 +792,7 @@ private void dropImageFile(RMShape aShape, ClipboardData aFile, Point aPoint)
     
     // If image hit a real shape, see if user wants it to be a texture
     RMEditor editor = getEditor();
-    if(aShape!=editor.getSelectedPage()) {
+    if(aShape!=editor.getSelPage()) {
         
         // Create drop image file options array
         String options[] = { "Image Shape", "Texture", "Cancel" };

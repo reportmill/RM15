@@ -367,7 +367,7 @@ private List <RMShape> getHitShapes()
     Shape path = superShape.parentToLocal(selRect, null);
 
     // If selection rect is outside super selected shape, move up shape hierarchy
-    while(superShape!=editor.getContent() &&
+    while(superShape!=editor.getDoc() &&
         !path.getBounds().intersectsEvenIfEmpty(editor.getTool(superShape).getBoundsSuperSelected(superShape))) {
         RMParentShape parent = superShape.getParent();
         editor.setSuperSelectedShape(parent);
@@ -376,8 +376,8 @@ private List <RMShape> getHitShapes()
     }
 
     // Make sure page is worst case
-    if(superShape == editor.getDocument()) {
-        superShape = editor.getSelectedPage();
+    if(superShape == editor.getDoc()) {
+        superShape = editor.getSelPage();
         path = superShape.parentToLocal(selRect, null);
         editor.setSuperSelectedShape(superShape);
     }

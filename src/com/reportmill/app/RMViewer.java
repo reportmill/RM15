@@ -102,12 +102,6 @@ public void setDoc(RMDocument aDoc)
 public void setDoc(Object aSource)  { setDoc(new RMArchiver().getDoc(aSource)); }
 
 /**
- * Legacy.
- */
-public RMDocument getDocument()  { return _vshape.getDoc(); }
-public RMDocument getContent()  { return _vshape.getDoc(); }
-
-/**
  * Returns the source URL.
  */
 public WebURL getSourceURL()  { return getViewerShape().getSourceURL(); }
@@ -130,39 +124,39 @@ public int getPageCount()  { return _vshape.getPageCount(); }
 /**
  * Returns the currently selected page shape.
  */
-public RMPage getSelectedPage()  { return _vshape.getSelectedPage(); }
+public RMPage getSelPage()  { return _vshape.getSelPage(); }
 
 /**
  * Returns the index of the current visible document page.
  */
-public int getSelectedPageIndex()  { return _vshape.getSelectedPageIndex(); }
+public int getSelPageIndex()  { return _vshape.getSelPageIndex(); }
 
 /**
  * Sets the page of viewer's document that is visible (by index).
  */
-public void setSelectedPageIndex(int anIndex)  { _vshape.setSelectedPageIndex(anIndex); }
+public void setSelPageIndex(int anIndex)  { _vshape.setSelPageIndex(anIndex); }
 
 /**
  * Selects the next page.
  */
-public void pageForward()  { setSelectedPageIndex(getSelectedPageIndex()+1); }
+public void pageForward()  { setSelPageIndex(getSelPageIndex()+1); }
 
 /**
  * Selects the previous page.
  */
-public void pageBack()  { setSelectedPageIndex(getSelectedPageIndex()-1); }
+public void pageBack()  { setSelPageIndex(getSelPageIndex()-1); }
 
 /**
  * Returns the bounds of the viewer document.
  */
-public Rect getDocBounds()  { return convertFromShape(getContent().getBoundsInside(), null).getBounds(); }
+public Rect getDocBounds()  { return convertFromShape(getDoc().getBoundsInside(), null).getBounds(); }
 
 /**
  * Returns the bounds of the viewer document's selected page.
  */
 public Rect getPageBounds()
 {
-    RMShape page = getSelectedPage();
+    RMShape page = getSelPage();
     return convertFromShape(page.getBoundsInside(), page).getBounds();
 }
 
@@ -177,7 +171,7 @@ public RMShape getShapeAtPoint(double aX, double aY, boolean goDeep) { return ge
 public RMShape getShapeAtPoint(Point aPoint, boolean goDeep)
 {
     // Convert point from viewer to selected page
-    RMParentShape parent = getSelectedPage();
+    RMParentShape parent = getSelPage();
     Point point = convertToShape(aPoint.x, aPoint.y, parent);
     
     // Iterate over children to find shape hit by point
@@ -479,7 +473,7 @@ public void docShapeRepaint(RMShape aShape)
  */
 protected void flushShapeRepaints()
 {
-    getContent().layout();
+    getDoc().layout();
     // If no dirty shapes, just return
     if(_dirtyShapes==null || _dirtyShapes.size()==0) return;
     

@@ -184,8 +184,8 @@ protected void respondUI(ViewEvent anEvent)
         
         // Hack to open edited file: Get filename (create file if missing) and open file in TextEdit
         if(anEvent.isAltDown()) {
-            String fname = getEditor().getDocument().getFilename();
-            if(fname==null) { fname = SnapUtils.getTempDir() + "RMDocument.rpt"; editor.getDocument().write(fname); }
+            String fname = getEditor().getDoc().getFilename();
+            if(fname==null) { fname = SnapUtils.getTempDir() + "RMDocument.rpt"; editor.getDoc().write(fname); }
             String commands[] = { "open",  "-e", fname };
             try { Runtime.getRuntime().exec(commands); }
             catch(Exception e) { e.printStackTrace(); }

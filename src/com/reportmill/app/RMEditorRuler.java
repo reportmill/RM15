@@ -46,7 +46,7 @@ public RMEditorRuler(RMEditor owner, byte orientation)
 {
     _editor = owner;
     _orientation = orientation;
-    _unitOfMeasure = _editor.getDocument().getUnit();
+    _unitOfMeasure = _editor.getDoc().getUnit();
     _zoomFactor = _editor.getZoomFactor();
     setFill(Color.LIGHTGRAY); setBorder(Border.createLineBorder(Color.BLACK,1));
 }
@@ -54,7 +54,7 @@ public RMEditorRuler(RMEditor owner, byte orientation)
 /**
  * Returns the current document.
  */
-public RMDocument getDoc()  { return _editor.getDocument(); }
+public RMDocument getDoc()  { return _editor.getDoc(); }
 
 /**
  * Returns whether horizontal.

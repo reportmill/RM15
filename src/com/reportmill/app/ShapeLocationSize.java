@@ -122,7 +122,7 @@ public void respondUI(ViewEvent anEvent)
  */
 public double getUnitsFromPoints(double aValue)
 {
-    RMEditor editor = getEditor(); RMDocument doc = editor.getDocument();
+    RMEditor editor = getEditor(); RMDocument doc = editor.getDoc();
     return doc!=null? doc.getUnitsFromPoints(aValue) : aValue;
 }
 
@@ -131,7 +131,7 @@ public double getUnitsFromPoints(double aValue)
  */
 public double getPointsFromUnits(double aValue)
 {
-    RMEditor editor = getEditor(); RMDocument doc = editor.getDocument();
+    RMEditor editor = getEditor(); RMDocument doc = editor.getDoc();
     return doc!=null? doc.getPointsFromUnits(aValue) : aValue;
 }
 
