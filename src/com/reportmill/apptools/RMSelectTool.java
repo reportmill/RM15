@@ -184,6 +184,9 @@ public void mouseDragged(ViewEvent anEvent)
         // Handle DragModeMove
         case Move:
             
+            // If drag event is still a click candidate, just bail
+            if(anEvent.isClickCandidate()) return;
+            
             // Set undo title
             editor.undoerSetUndoTitle("Move");
             
