@@ -16,7 +16,7 @@
     <MenuItem Name="ZoomMenuItem" text="400%" />
   </MenuButton>
   <SpringView x="180" y="2" width="136" height="20" PrefWidth="136" PrefHeight="20" LeanX="CENTER" LeanY="BOTTOM">
-    <binding aspect="Visible" key="ViewerPane.Viewer.Document.PageCount&gt;1" />
+    <binding aspect="Visible" key="ViewerPane.Viewer.Doc.PageCount&gt;1" />
     <Button Name="PageBackAllButton" width="16" height="18" ShowBorder="false" />
     <Button Name="PageBackButton" x="16" width="18" height="18" ShowBorder="false" />
     <TextField Name="PageText" x="34" width="68" height="18" Align="CENTER" text="1 of 1" />

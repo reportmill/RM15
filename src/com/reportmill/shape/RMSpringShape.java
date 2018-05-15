@@ -66,23 +66,55 @@ private Rect[] getChildBounds()
     // Iterate over children and calculate new bounds rect for original child bounds and new parent width/height
     Rect rects[] = new Rect[ccount];
     for(int i=0; i<ccount; i++) { RMShape child = getChild(i); SpringInfo sinfo = getSpringInfo(child);
+    
+        // Create rect and update for new width/height
         Rect rect = rects[i] = new Rect(sinfo.x, sinfo.y, sinfo.width, sinfo.height);
         double oldPW = sinfo.pwidth, oldPH = sinfo.pheight; if(newPW==oldPW && newPH==oldPH) continue;
         String asize = child.getAutosizing();
-        boolean lms = asize.charAt(0)=='~', ws = asize.charAt(1)=='~', rms = asize.charAt(2)=='~';
-        boolean tms = asize.charAt(4)=='~', hs = asize.charAt(5)=='~', bms = asize.charAt(6)=='~';
-        double x1 = rect.x, y1 = rect.y, w1 = rect.width, h1 = rect.height;
-        double sw = (lms? x1 : 0) + (ws? w1 : 0) + (rms? oldPW - (x1 + w1) : 0), dw = newPW - oldPW;
-        double sh = (tms? y1 : 0) + (hs? h1 : 0) + (bms? oldPH - (y1 + h1) : 0), dh = newPH - oldPH;
-        double x2 = (!lms || sw==0)? x1 : (x1 + dw*x1/sw);
-        double y2 = (!tms || sh==0)? y1 : (y1 + dh*y1/sh);
-        double w2 = (!ws || sw==0)? w1 : (w1 + dw*w1/sw);
-        double h2 = (!hs || sh==0)? h1 : (h1 + dh*h1/sh);
-        rect.setRect(x2, y2, w2, h2);
+        
+        // Set new width/height
+        setWidth(rect, asize, oldPW, newPW);
+        setHeight(rect, asize, oldPH, newPH);
     }
     
     // Return rects
     return rects;
+}
+
+/**
+ * Sets the rect width for given parent new/old width and autosizing
+ */
+private static void setWidth(Rect rect, String asize, double oldWidth, double newWidth)
+{
+    // Get setting for whether left-stretches, width-stretches and right-stretches
+    boolean lms = asize.charAt(0)=='~', ws = asize.charAt(1)=='~', rms = asize.charAt(2)=='~';
+    
+    // Get rect x/width, stretch width and width change
+    double rx = rect.x, rw = rect.width;
+    double sw = (lms? rx : 0) + (ws? rw : 0) + (rms? oldWidth - (rx + rw) : 0);
+    double dw = newWidth - oldWidth;
+    
+    // Update rect x/width
+    if(lms) rect.x += sw>0? dw*rx/sw : dw;
+    if(ws && sw!=0) rect.width += dw*rw/sw; 
+}
+
+/**
+ * Sets the rect height for given parent new/old heights and autosizing
+ */
+private static void setHeight(Rect rect, String asize, double oldHeight, double newHeight)
+{
+    // Get setting for whether top-stretches, height-stretches and bottom-stretches
+    boolean tms = asize.charAt(4)=='~', hs = asize.charAt(5)=='~', bms = asize.charAt(6)=='~';
+    
+    // Get rect y/height, stretch height and height change
+    double ry = rect.y, rh = rect.height;
+    double sh = (tms? ry : 0) + (hs? rh : 0) + (bms? oldHeight - (ry + rh) : 0);
+    double dh = newHeight - oldHeight;
+    
+    // Update rect y/height
+    if(tms) rect.y += sh>0? dh*ry/sh : dh;
+    if(hs && sh!=0) rect.height += dh*rh/sh; 
 }
 
 /**
@@ -168,7 +200,8 @@ public Box[] getChildBoxes()
         }
 
         // Set height of boxes to smallest height to accommodate child with minimum BestHeight requirement
-        setHeight(_cboxes, pheight, pheight = _bh = newHeight);
+        for(Box rect : _cboxes) setHeight(rect, rect._asize, pheight, newHeight);
+        pheight = _bh = newHeight;
 
         // Trim all childrenToGrow that have met BestHeight
         for(int i=childrenToGrow.size()-1;  i>=0; i--) { Box child = childrenToGrow.get(i);
@@ -327,22 +360,6 @@ private static boolean hasPositionRelativeToPeer(Box aShape, Position aPos, Box 
     
     // Return false since conditions of position weren't met
     return false;
-}
-
-/**
- * Sets the child rects for given parent height.
- */
-private static void setHeight(Box theRects[], double oH, double nH)
-{
-    // Iterate over children and calculate new bounds rects
-    for(int i=0; i<theRects.length; i++) { Box rect = theRects[i]; String asize = rect._asize;
-        boolean tms = asize.charAt(4)=='~', hs = asize.charAt(5)=='~', bms = asize.charAt(6)=='~';
-        double x = rect.getX(), y = rect.getY(), w = rect.getWidth(), h = rect.getHeight();
-        double sh = (tms? y : 0) + (hs? h : 0) + (bms? oH - (y + h) : 0), dh = nH - oH;
-        if(tms && sh!=0) y += dh*y/sh;
-        if(hs && sh!=0) h += dh*h/sh; 
-        rect.setRect(x, y, w, h);
-    }
 }
 
 /**
