@@ -390,7 +390,7 @@ private static class Box extends snap.gfx.Rect {
     public Box(RMShape aShape, SpringInfo sinfo)
     {
         _asize = _asize0 = aShape.getAutosizing();
-        _bh = getBestHeight(aShape);
+        _bh = aShape.getBestHeight();
         setRect(sinfo.x, sinfo.y, sinfo.width, sinfo.height);
     }
     
@@ -404,14 +404,6 @@ private static class Box extends snap.gfx.Rect {
         if(this.x < r2.x) { if(this.x + this.width <= r2.x) return false; }
         else { if(r2.x + r2.width <= this.x) return false; }
         return true;
-    }
-    
-    /** Returns child best height. */
-    public double getBestHeight(RMShape aChild)
-    {
-        double minH = aChild.getMinHeight();
-        double prefH = aChild.getPrefHeight();
-        return Math.max(prefH, minH);
     }
 }
 
