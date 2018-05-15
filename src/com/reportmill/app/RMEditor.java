@@ -1037,7 +1037,6 @@ protected void saveUndoerChanges()
     
     // Save undo changes
     undoer.saveChanges();
-    System.out.println("SaveUndoerChanges");
     
     // If MouseUp listener, remove it
     if(_callOnMouseUp!=null) getEditorPane().getUI().removeEventFilter(_callOnMouseUp, MouseRelease);
