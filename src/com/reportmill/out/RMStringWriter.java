@@ -30,7 +30,7 @@ public static byte[] delimitedAsciiBytes(RMDocument aDoc, String fieldDelim, Str
 public static String delimitedString(RMDocument aDoc, String fieldDelim, String recordDelim, boolean quoteFields)
 {
     // Validate and resolve page references
-    aDoc.layout();
+    aDoc.layoutDeep();
     aDoc.resolvePageReferences();
     
     // Create new string buffer

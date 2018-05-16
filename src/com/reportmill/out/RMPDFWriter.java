@@ -24,7 +24,7 @@ public class RMPDFWriter extends PDFWriter {
 public byte[] getBytes(RMDocument aDoc)
 {
     // Validate and resolve doc page references
-    aDoc.layout();
+    aDoc.layoutDeep();
     aDoc.resolvePageReferences();
     
     // Add watermark

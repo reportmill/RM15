@@ -395,7 +395,7 @@ boolean splitRow(RMTableRowRPG aRow)
     // Divide row by part1Height, grow to best height and validate
     RMTableRowRPG split = (RMTableRowRPG)aRow.divideShapeFromTop((float)part1Height); aRow._split = split;
     split.setBestHeight();
-    split.layout();
+    split.layoutDeep();
     return true;
 }
 

@@ -765,7 +765,7 @@ protected double getPrefHeightImpl(double aWidth)
  */
 public XMLElement toXML()
 {
-    layout();
+    layoutDeep();
     resolvePageReferences();
     return new RMArchiver().writeObject(this);
 }

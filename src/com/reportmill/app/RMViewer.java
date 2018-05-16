@@ -394,7 +394,7 @@ protected void layoutImpl()
 {
     setZoomToFitFactor();
     _vshape.setBounds(0,0,getWidth(),getHeight());
-    _vshape.layout();
+    _vshape.layoutDeep();
 }
 
 /**
@@ -432,17 +432,11 @@ protected void repaintShape(RMShape aShape)
  */
 protected Rect getRepaintBoundsForShape(RMShape aShape)
 {
-    // Get bounds
-    Rect bnds = aShape.getBoundsLocal();
-    
-    // If stroked, add stroke
-    if(aShape.getStroke()!=null) bnds.inset(-aShape.getStroke().getWidth()/2);
-        
-    // If effect, add effect
-    if(aShape.getEffect()!=null) bnds = aShape.getEffect().getBounds(bnds);
-    
-    // Return bounds
-    return bnds;
+    // Get bounds with stroke and effect and return
+    //Rect bnds = aShape.getBoundsLocal();
+    //if(aShape.getStroke()!=null) bnds.inset(-aShape.getStroke().getWidth()/2);
+    //if(aShape.getEffect()!=null) bnds = aShape.getEffect().getBounds(bnds); return bnds;
+    return aShape.getBoundsMarkedDeep();
 }
 
 /**

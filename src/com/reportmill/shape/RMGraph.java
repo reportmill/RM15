@@ -236,7 +236,7 @@ public boolean isLayered()  { return getItemsLayout()==ItemLayout.Layered; }
  */
 public void repaint()
 {
-    if(getParent()!=null) getParent().repaint();
+    //if(getParent()!=null) getParent().repaint();
     super.repaint();
 }
 

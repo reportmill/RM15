@@ -48,7 +48,7 @@ public void rpgAll(ReportOwner anRptOwner, RMTableRow aRow, RMGroup aGroup, Stri
     
     // Set best height
     setBestHeight(); // Set best height
-    layout();
+    layoutDeep();
     
     // Handle invisible shapes
     if(!_row2.isStructured()) {

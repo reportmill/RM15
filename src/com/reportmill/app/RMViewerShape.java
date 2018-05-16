@@ -44,7 +44,7 @@ public void setDoc(RMDocument aDoc)
 {
     // Resolve page references on document and make sure it has a selected page
     aDoc.resolvePageReferences();
-    aDoc.layout();
+    aDoc.layoutDeep();
     
     // If old document, stop listening to shape changes and notify shapes hidden 
     if(_doc!=null) _doc.removePropChangeListener(_viewerDocLsnr);
@@ -145,10 +145,7 @@ public boolean isEditing()  { return _viewer.isEditing(); }
 /**
  * Returns the SourceURL.
  */
-public WebURL getSourceURL()
-{
-    RMDocument doc = getDoc(); return doc!=null && doc.isSourceURLSet()? doc.getSourceURL() : null;
-}
+public WebURL getSourceURL() { RMDocument d = getDoc(); return d!=null && d.isSourceURLSet()? d.getSourceURL() : null; }
 
 /**
  * Sets the SourceURL.
@@ -156,11 +153,19 @@ public WebURL getSourceURL()
 public void setSourceURL(WebURL aURL)  { if(getDoc()!=null) getDoc().setSourceURL(aURL); }
 
 /**
+ * Override to notify viewer.
+ */
+protected void setNeedsLayoutDeep(boolean aVal)
+{
+    super.setNeedsLayoutDeep(aVal); if(aVal) _viewer.relayout();
+}
+
+/**
  * Returns XMLElement for document.
  */
 public XMLElement getDocXML()
 {
-    getDoc().layout();
+    getDoc().layoutDeep();
     if(getDocument()!=null) getDocument().resolvePageReferences();
     return new RMArchiver().writeObject(getDoc());
 }

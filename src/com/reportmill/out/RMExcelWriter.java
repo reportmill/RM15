@@ -66,7 +66,7 @@ public HSSFWorkbook getWorkbook(RMDocument aDoc)
     _workbook = new HSSFWorkbook();
     
     // Validate and resolve page references in aDoc
-    aDoc.layout();
+    aDoc.layoutDeep();
     aDoc.resolvePageReferences();
 
     // Allocate the array of shapes that ultimately will become the spreadsheet

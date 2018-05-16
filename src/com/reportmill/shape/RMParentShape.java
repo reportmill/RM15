@@ -16,10 +16,10 @@ public class RMParentShape extends RMShape {
     List <RMShape> _children = new ArrayList();
     
     // Whether children need layout
-    boolean        _needsLayout;
+    boolean        _needsLayout, _needsLayoutDeep;
     
     // Whether layout is in the process of being done
-    boolean        _inLayout;
+    boolean        _inLayout, _inLayoutDeep;
 
     // A listener to catch child PropChange (for editor undo)
     PropChangeListener  _childPCL;
@@ -57,8 +57,8 @@ public void addChild(RMShape aChild, int anIndex)
         aChild._parent.removeChild(aChild);
     
     // Add child to children list and set child's parent to this shape
-    _children.add(anIndex, aChild);
     aChild.setParent(this);
+    _children.add(anIndex, aChild);
     
     // If this shape has PropChangeListeners, start listening to children as well
     if(hasDeepChangeListener()) {
@@ -68,7 +68,7 @@ public void addChild(RMShape aChild, int anIndex)
     firePropChange("Child", null, aChild, anIndex);
     
     // Register for repaint and validation
-    relayout(); repaint();
+    relayout(); relayoutParent(); repaint(); setNeedsLayoutDeep(true);
 }
 
 /**
@@ -85,7 +85,7 @@ public RMShape removeChild(int anIndex)
     
     // Stop listening to PropertyChanges, repaint, revalidate and return
     child.removePropChangeListener(getChildPCL()); child.removeDeepChangeListener(getChildDCL());
-    relayout(); repaint();
+    relayout(); relayoutParent(); repaint();
     return child;
 }
 
@@ -233,23 +233,73 @@ public boolean isNeedsLayout()  { return _needsLayout; }
 /**
  * Sets whether children need to be laid out.
  */
-protected void setNeedsLayout(boolean aValue)  { _needsLayout = aValue; }
+protected void setNeedsLayout(boolean aValue)
+{
+    if(aValue==_needsLayout || _inLayout) return;
+    _needsLayout = aValue;
+    RMParentShape par = getParent(); if(par!=null) par.setNeedsLayoutDeep(true);
+}
+
+/**
+ * Returns whether any children need layout.
+ */
+public boolean isNeedsLayoutDeep()  { return _needsLayoutDeep; }
+
+/**
+ * Sets whether any children need layout.
+ */
+protected void setNeedsLayoutDeep(boolean aVal)
+{
+    if(_needsLayoutDeep) return;
+    _needsLayoutDeep = true;
+    if(_inLayoutDeep) return;
+    RMParentShape par = getParent(); if(par!=null) par.setNeedsLayoutDeep(true);
+}
+
+/**
+ * Returns whether shape is currently performing layout.
+ */
+public boolean isInLayout()  { return _inLayout; }
+
+/**
+ * Lays out children deep.
+ */
+public void layoutDeep()
+{
+    // Set InLayoutDeep
+    _inLayoutDeep = true;
+    
+    // Do layout
+    if(_needsLayout) layout();
+    
+    // Do layout deep
+    if(_needsLayoutDeep)
+        layoutDeepImpl();
+    
+    // Clear flags
+    _needsLayout = _needsLayoutDeep = _inLayoutDeep = false;
+}
+
+/**
+ * Lays out children deep.
+ */
+protected void layoutDeepImpl()
+{
+    for(RMShape child : getChildren())
+        if(child instanceof RMParentShape) { RMParentShape par = (RMParentShape)child;
+            if(par._needsLayout || par._needsLayoutDeep)
+                par.layoutDeep(); }
+}
 
 /**
  * Does immediate layout of this shape and children (if invalid).
  */
 public void layout()
 {
-    // Validate deep then do layout
-    for(int i=0, iMax=getChildCount(); i<iMax; i++) { RMShape child = getChild(i);
-        if(child instanceof RMParentShape) ((RMParentShape)child).layout(); }
-    
-    // If layout needed, do layout
-    if(_needsLayout && !_inLayout) {
-        undoerDisable(); _inLayout = true;
-        layoutImpl(); setNeedsLayout(false);
-        undoerEnable(); _inLayout = false;
-    }
+    if(_inLayout) return;
+    undoerDisable(); _inLayout = true;
+    layoutImpl(); setNeedsLayout(false);
+    undoerEnable(); _inLayout = false;
 }
 
 /**
@@ -324,7 +374,7 @@ public List <RMShape> getChildrenIntersecting(Shape aPath)
 public RMShape divideShapeFromTop(double anAmount)
 {
     // Make sure layout is up to date
-    layout();
+    layoutDeep();
     
     // Call normal divide from top edge
     RMParentShape bottomShape = (RMParentShape)super.divideShapeFromTop(anAmount);

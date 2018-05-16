@@ -144,9 +144,18 @@ public static Image createImage(RMShape aShape, Color aColor)
         pntr.setColor(aColor); pntr.fillRect(0,0,w,h); }
 
     // Paint shape and return image
+    layoutDeep(aShape);
     paintShape(pntr, aShape, new Rect(0,0,w,h), 1);
     pntr.flush();
     return img;
+}
+
+/**
+ * Makes sure shape layout is up to date.
+ */
+public static void layoutDeep(RMShape aShape)
+{
+    if(aShape instanceof RMParentShape) ((RMParentShape)aShape).layoutDeep();
 }
 
 /**
@@ -154,9 +163,6 @@ public static Image createImage(RMShape aShape, Color aColor)
  */
 public static void paintShape(Painter aPntr, RMShape aShape, Rect aBounds, double aScale)
 {
-    // Validate shape
-    if(aShape instanceof RMParentShape) ((RMParentShape)aShape).layout();
-    
     // Cache gstate
     aPntr.save();
     

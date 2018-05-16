@@ -472,7 +472,7 @@ private void moveTableColumn(ViewEvent anEvent)
         }
 
         // Do layout again to snap shape back into place
-        tableRow.layout(); _moveTableColumn = false;
+        tableRow.layoutDeep(); _moveTableColumn = false;
     }
 }
 

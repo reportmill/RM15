@@ -49,7 +49,7 @@ public void setShowBorder(boolean aValue)  { _showBorder = aValue; }
 public XMLElement getXML()
 {
     // Validate and resolve doc page references
-    _doc.layout();
+    _doc.layoutDeep();
     _doc.resolvePageReferences();
     
     // Add watermark

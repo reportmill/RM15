@@ -35,7 +35,7 @@ public class RMRTFWriter {
 public byte[] getBytes(RMDocument aDoc)
 {
     // Validate and resolve page references
-    aDoc.layout();
+    aDoc.layoutDeep();
     aDoc.resolvePageReferences();
 
     // Allocate font & color tables
