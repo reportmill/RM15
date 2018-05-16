@@ -85,10 +85,7 @@ public int getSelPageIndex()  { RMDocument d = getDoc(); return d!=null? d.getSe
 /**
  * Sets the page of viewer's document that is visible (by index).
  */
-public void setSelPageIndex(int anIndex)
-{
-    RMDocument doc = getDoc(); if(doc!=null) doc.setSelectedIndex(anIndex);
-}
+public void setSelPageIndex(int anIndex)  { RMDocument d = getDoc(); if(d!=null) d.setSelectedIndex(anIndex); }
 
 /**
  * Override to return content preferred width.
@@ -128,7 +125,7 @@ protected void repaint(RMShape aShape)
     
     // Send repaint event
     if(aShape==_doc) _viewer.repaint();
-    else _viewer.docShapeRepaint(aShape);
+    else _viewer.repaintShape(aShape);
 }
 
 /**
@@ -151,7 +148,7 @@ public boolean isEditing()  { return _viewer.isEditing(); }
  */
 public WebURL getSourceURL()
 {
-    RMDocument cs = getDoc(); return cs!=null && cs.isSourceURLSet()? cs.getSourceURL() : null;
+    RMDocument doc = getDoc(); return doc!=null && doc.isSourceURLSet()? doc.getSourceURL() : null;
 }
 
 /**

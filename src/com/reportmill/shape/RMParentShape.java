@@ -221,19 +221,19 @@ void childDidPropChange(PropChange aPC)  { _pcs.fireDeepChange(this, aPC); }
 void childDidDeepChange(Object aLsnr, PropChange aPC)  { _pcs.fireDeepChange(aLsnr, aPC); }
 
 /**
+ * Sets shape layout to invalid and requests deferred layout.
+ */
+public void relayout()  { setNeedsLayout(true); }
+
+/**
  * Returns whether children need to be laid out.
  */
-public boolean getNeedsLayout()  { return _needsLayout; }
+public boolean isNeedsLayout()  { return _needsLayout; }
 
 /**
  * Sets whether children need to be laid out.
  */
-public void setNeedsLayout(boolean aValue)  { _needsLayout = aValue; }
-
-/**
- * Sets shape layout to invalid and requests deferred layout.
- */
-public void relayout()  { setNeedsLayout(true); }
+protected void setNeedsLayout(boolean aValue)  { _needsLayout = aValue; }
 
 /**
  * Does immediate layout of this shape and children (if invalid).
@@ -245,7 +245,7 @@ public void layout()
         if(child instanceof RMParentShape) ((RMParentShape)child).layout(); }
     
     // If layout needed, do layout
-    if(getNeedsLayout() && !_inLayout) {
+    if(_needsLayout && !_inLayout) {
         undoerDisable(); _inLayout = true;
         layoutImpl(); setNeedsLayout(false);
         undoerEnable(); _inLayout = false;

@@ -434,11 +434,11 @@ public boolean getShapeRepaintEnabled()  { return _dirtyShapes!=null; }
 public void setShapeRepaintEnabled(boolean aFlag)  { _dirtyShapes = aFlag? new Vector() : null; }
 
 /**
- * Doc listener method - called before a shape makes a visual change.
+ * Called from ViewerShape to notify that a doc shape needs to be repainted.
  * Provides a mechanism to efficiently repaint the portion of the viewer that currently displays a shape. Registers
  * the area covered by the shape now and at event end, to efficiently repaint shapes in transition as well.
  */
-public void docShapeRepaint(RMShape aShape)
+public void repaintShape(RMShape aShape)
 {
     // If given shape hasn't been registered yet, post repaint and squirrel shape away for flushGraphics call
     if(isShowing() && _dirtyShapes!=null && !ListUtils.containsId(_dirtyShapes, aShape)) {
@@ -462,7 +462,7 @@ public void docShapeRepaint(RMShape aShape)
     // Iterate over shape siblings to notify them of peer change
     RMParentShape parent = aShape.getParent();
     for(int i=0, iMax=parent!=null? parent.getChildCount() : 0; i<iMax; i++) { RMShape child = parent.getChild(i);
-        if(child instanceof RMTextShape && child !=aShape)
+        if(child instanceof RMTextShape && child!=aShape)
             ((RMTextShape)child).peerDidChange(aShape);
     }
 }

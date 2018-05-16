@@ -450,7 +450,6 @@ private void moveTableColumn(ViewEvent anEvent)
         for(RMShape child : children) {
             if(child==shape) { if(inRow) child.setX(point.x-child.getWidth()/2); else { child.setX(9999); continue; }}
             else child.setX(x); x += child.getWidth(); }
-        tableRow.setNeedsLayout(false);
     }
     
     // Handle MouseReleased: reset children

@@ -109,7 +109,6 @@ public void setX(double aValue)
     if(_x==aValue) return;
     repaint();
     firePropChange("X", _x, _x = aValue);
-    if(_parent!=null) _parent.setNeedsLayout(true); // Rather bogus
 }
 
 /**
@@ -125,7 +124,6 @@ public void setY(double aValue)
     if(_y==aValue) return;
     repaint();
     firePropChange("Y", _y, _y = aValue);
-    if(_parent!=null) _parent.setNeedsLayout(true); // Rather bogus
 }
 
 /**
@@ -141,7 +139,7 @@ public void setWidth(double aValue)
     if(_width==aValue) return;
     repaint();
     firePropChange("Width", _width, _width = aValue);
-    if(_parent!=null) _parent.setNeedsLayout(true); // Rather bogus
+    relayout();
 }
 
 /**
@@ -157,7 +155,7 @@ public void setHeight(double aValue)
     if(_height==aValue) return;
     repaint();
     firePropChange("Height", _height, _height = aValue);
-    if(_parent!=null) _parent.setNeedsLayout(true); // Rather bogus
+    relayout();
 }
 
 /**
