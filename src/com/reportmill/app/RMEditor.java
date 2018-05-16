@@ -1038,10 +1038,6 @@ protected void saveUndoerChanges()
     // Save undo changes
     undoer.saveChanges();
     
-    // If MouseUp listener, remove it
-    if(_callOnMouseUp!=null) getEditorPane().getUI().removeEventFilter(_callOnMouseUp, MouseRelease);
-    _callOnMouseUp = null; _saveChangesRun = null;
-    
     // Reset EditorPane
     RMEditorPane ep = getEditorPane(); ep.resetLater();
 }
@@ -1052,24 +1048,15 @@ protected void saveUndoerChanges()
 protected void saveUndoerChangesLater()
 {
     // If runnable already set, just return
-    if(_saveChangesRun!=null) return;
+    if(_saveChangesRun!=null) return; _saveChangesRun = _scrShared;
     
-    // Set SaveChangesRun to shared runnable
-    _saveChangesRun = _scrShared;
-    
-    // If MouseDown, listen for MouseRelease and send then
-    if(ViewUtils.isMouseDown())
-        getEditorPane().getUI().addEventFilter(_callOnMouseUp = _callShared, MouseRelease);
-            
-    // Otherwise, just do it later
+    // If MouseDown, run on mouse up, otherwise run later
+    if(ViewUtils.isMouseDown()) ViewUtils.runOnMouseUp(_saveChangesRun);
     else getEnv().runLater(_saveChangesRun);
 }
 
 // A Runnable for runLater(saveUndoerChanges())
-private Runnable _saveChangesRun, _scrShared = () -> saveUndoerChanges();
-
-// An EventListener to trigger saveUndoerChanges() on MouseUp, if mouse down
-private snap.view.EventListener _callOnMouseUp, _callShared = e -> getEnv().runLater(_saveChangesRun);
+private Runnable _saveChangesRun, _scrShared = () -> { saveUndoerChanges(); _saveChangesRun = null; };
 
 /**
  * A RMShapePaintProps subclass for editor.
