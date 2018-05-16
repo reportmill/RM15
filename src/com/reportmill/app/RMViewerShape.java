@@ -123,9 +123,8 @@ protected void repaint(RMShape aShape)
     if(_ptg) // Should never happen, but good to check
         System.err.println("RMViewerShape.repaint(): called during painting");
     
-    // Send repaint event
-    if(aShape==_doc) _viewer.repaint();
-    else _viewer.repaintShape(aShape);
+    // Forward to viewer
+    _viewer.repaintShape(aShape);
 }
 
 /**

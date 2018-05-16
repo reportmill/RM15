@@ -366,30 +366,22 @@ public void popSelection()
 }
 
 /**
- * Overrides RMViewer implementation to account for selected shapes potentially having different bounds.
+ * Override to account for selected shapes potentially having different bounds.
  */
-public Rect getRepaintBoundsForShape(RMShape aShape)
+protected Rect getRepaintBoundsForShape(RMShape aShape)
 {
-    // If shape is selected, return marked bounds corrected for handles
-    if(isSelected(aShape)) {
+    // Do normal version
+    Rect bnds = super.getRepaintBoundsForShape(aShape);
     
-        // Get shape marked bounds in shape coords, outset for handles, convert to viewer coords and return
-        Rect bounds = aShape.getBoundsMarkedDeep(); bounds.inset(-4, -4);
-        bounds = convertFromShape(bounds, aShape).getBounds();
-        return bounds;
-    }
+    // If shape is selected, correct for handles
+    if(isSelected(aShape)) bnds.inset(-4, -4);
     
-    // If shape is super-selected, get super-selected bounds corrected for handles
+    // If shape is super-selected, correct for handles
     else if(isSuperSelected(aShape)) {
-        
-        // Get shape super-selected bounds, outset for handles, convert to viewer coords and return
-        Rect bounds = getTool(aShape).getBoundsSuperSelected(aShape); bounds.inset(-16, -16);
-        bounds = convertFromShape(bounds, aShape).getBounds();
-        return bounds;
-    }
+        bnds = getTool(aShape).getBoundsSuperSelected(aShape); bnds.inset(-16, -16); }
     
-    // Otherwise, return normal viewer implementation
-    else return super.getRepaintBoundsForShape(aShape);
+    // Return bounds
+    return bnds;
 }
 
 /**

@@ -30,7 +30,7 @@ public RMStroke()  { }
 /**
  * Creates a stroke with the given color and line width.
  */
-public RMStroke(RMColor aColor, double aStrokeWidth)  { _color = aColor; _width = (float)aStrokeWidth; }
+public RMStroke(Color aColor, double aStrokeWidth)  { _color = RMColor.get(aColor); _width = (float)aStrokeWidth; }
 
 /**
  * Returns the color associated with this fill.

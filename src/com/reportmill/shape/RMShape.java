@@ -109,6 +109,7 @@ public void setX(double aValue)
     if(_x==aValue) return;
     repaint();
     firePropChange("X", _x, _x = aValue);
+    repaint();
 }
 
 /**
@@ -124,6 +125,7 @@ public void setY(double aValue)
     if(_y==aValue) return;
     repaint();
     firePropChange("Y", _y, _y = aValue);
+    repaint();
 }
 
 /**
@@ -136,10 +138,10 @@ public double getWidth()  { return _width<0? -_width : _width; }
  */
 public void setWidth(double aValue)
 {
-    if(_width==aValue) return;
-    repaint();
+    double old = getWidth(); if(aValue==old) return;
+    if(old>aValue) repaint();
     firePropChange("Width", _width, _width = aValue);
-    relayout();
+    if(old<aValue) repaint();
 }
 
 /**
@@ -152,10 +154,10 @@ public double getHeight()  { return _height<0? -_height : _height; }
  */
 public void setHeight(double aValue)
 {
-    if(_height==aValue) return;
-    repaint();
+    double old = getHeight(); if(aValue==old) return;
+    if(old>aValue) repaint();
     firePropChange("Height", _height, _height = aValue);
-    relayout();
+    if(old<aValue) repaint();
 }
 
 /**
@@ -373,6 +375,11 @@ public void offsetXY(double dx, double dy)  { setXY(_x + dx, _y + dy); }
 public Rect getBoundsInside()  { return new Rect(0, 0, getWidth(), getHeight()); }
 
 /**
+ * Returns the bounds of the shape in the shape's own coords.
+ */
+public Rect getBoundsLocal()  { return new Rect(0, 0, getWidth(), getHeight()); }
+
+/**
  * Returns the bounds of the path associated with this shape in local coords, adjusted to account for stroke width.
  */
 public Rect getBoundsStroked()
@@ -433,6 +440,7 @@ public void setRoll(double aValue)
     aValue = Math.round(aValue*100)/100d; if(aValue==getRoll()) return;
     repaint();
     firePropChange("Roll", getRSS()[0], _rss[0] = aValue);
+    repaint();
 }
 
 /**
@@ -445,9 +453,10 @@ public double getScaleX()  { return _rss==null? 1 : _rss[1]; }
  */
 public void setScaleX(double aValue)
 {
-    aValue = Math.round(aValue*100)/100d; if(aValue==getScaleX()) return;
-    repaint();
-    firePropChange("ScaleX", getRSS()[1], _rss[1] = aValue);
+    double old = getScaleX(); aValue = Math.round(aValue*100)/100d; if(aValue==old) return;
+    if(old>aValue) repaint();
+    firePropChange("ScaleX", old, getRSS()[1] = aValue);
+    if(old<aValue) repaint();
 }
 
 /**
@@ -460,9 +469,10 @@ public double getScaleY()  { return _rss==null? 1 : _rss[2]; }
  */
 public void setScaleY(double aValue)
 {
-    aValue = Math.round(aValue*100)/100d; if(aValue==getScaleY()) return;
-    repaint();
-    firePropChange("ScaleY", getRSS()[2], _rss[2] = aValue);
+    double old = getScaleY(); aValue = Math.round(aValue*100)/100d; if(aValue==old) return;
+    if(old>aValue) repaint();
+    firePropChange("ScaleY", old, getRSS()[2] = aValue);
+    if(old<aValue) repaint();
 }
 
 /**
@@ -483,6 +493,7 @@ public void setSkewX(double aValue)
     aValue = Math.round(aValue*100)/100d; if(aValue==getSkewX()) return;
     repaint();
     firePropChange("SkewX", getRSS()[3], _rss[3] = aValue);
+    repaint();
 }
 
 /**
@@ -498,6 +509,7 @@ public void setSkewY(double aValue)
     aValue = Math.round(aValue*100)/100d; if(aValue==getSkewY()) return;
     repaint();
     firePropChange("SkewY", getRSS()[4], _rss[4] = aValue);
+    repaint();
 }
 
 /**
@@ -529,6 +541,11 @@ public void setStroke(RMStroke aStroke)
     repaint();
     firePropChange("Stroke", _stroke, _stroke = aStroke);
 }
+
+/**
+ * Sets the stroke for this shape, with an option to turn on drawsStroke.
+ */
+public void setStroke(Color aColor, double aWidth)  { setStroke(new RMStroke(aColor, aWidth)); }
 
 /**
  * Returns the fill for this shape.
@@ -586,7 +603,6 @@ public RMColor getStrokeColor()  { return getStroke()==null? RMColor.black : get
  */
 public void setStrokeColor(RMColor aColor)
 {
-    // Set stroke color
     if(aColor==null) setStroke(null);
     else if(getStroke()==null) setStroke(new RMStroke(aColor, 1));
     else setStroke(getStroke().deriveColor(aColor));
@@ -602,7 +618,6 @@ public float getStrokeWidth()  { return getStroke()==null? 0 : getStroke().getWi
  */
 public void setStrokeWidth(float aValue)
 {
-    // Set line width
     if(getStroke()==null) setStroke(new RMStroke(RMColor.black, aValue));
     else setStroke(getStroke().deriveWidth(aValue));
 }
@@ -1585,14 +1600,16 @@ public void relayoutParent()
 }
 
 /**
- * Visual change notification - call before making changes that will require repaint.
+ * Called to register view for repaint.
  */
-public void repaint()  { if(_parent!=null) _parent.repaint(this); }
+public void repaint()
+{
+    RMShape root = getRootShape(); if(root==null) return;
+    root.repaint(this);
+}
 
-/**
- * Visual change notification - call before making changes that will require repaint.
- */
-protected void repaint(RMShape aShape)  { if(_parent!=null) _parent.repaint(aShape); }
+/** Called to register view for repaint. */
+protected void repaint(RMShape aShape)  { }
 
 /** Editor method - indicates whether this shape can be super selected. */
 public boolean superSelectable()  { return getClass()==RMParentShape.class; }

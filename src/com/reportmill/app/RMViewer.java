@@ -3,7 +3,6 @@
  */
 package com.reportmill.app;
 import com.reportmill.shape.*;
-import java.util.*;
 import snap.gfx.*;
 import snap.util.*;
 import snap.view.*;
@@ -42,12 +41,6 @@ public class RMViewer extends ParentView {
     // The helper class that handles events for viewer
     RMViewerEvents           _events = createEvents();
 
-    // The current set of shapes that need to be redrawn after the current event
-    List <RMShape>           _dirtyShapes = new Vector(32);
-    
-    // The area of the viewer marked for redraw after the current event
-    Rect                     _dirtyRect;
-    
     // Zoom modes
     public enum ZoomMode { ZoomToFit, ZoomAsNeeded, ZoomToFactor };
     
@@ -424,89 +417,32 @@ public void undoerSetUndoTitle(String aTitle)
 public boolean undoerHasUndos()  { return getUndoer()!=null && getUndoer().hasUndos(); }
 
 /**
- * Returns whether changes to shapes cause repaints.
+ * Called when a shape needs repaint.
  */
-public boolean getShapeRepaintEnabled()  { return _dirtyShapes!=null; }
-
-/**
- * Sets whether changes to shapes cause repaints.
- */
-public void setShapeRepaintEnabled(boolean aFlag)  { _dirtyShapes = aFlag? new Vector() : null; }
-
-/**
- * Called from ViewerShape to notify that a doc shape needs to be repainted.
- * Provides a mechanism to efficiently repaint the portion of the viewer that currently displays a shape. Registers
- * the area covered by the shape now and at event end, to efficiently repaint shapes in transition as well.
- */
-public void repaintShape(RMShape aShape)
+protected void repaintShape(RMShape aShape)
 {
-    // If given shape hasn't been registered yet, post repaint and squirrel shape away for flushGraphics call
-    if(isShowing() && _dirtyShapes!=null && !ListUtils.containsId(_dirtyShapes, aShape)) {
-        
-        // Add shape to dirty shapes set
-        _dirtyShapes.add(aShape);
-        
-        // Get shape dirty rect
-        Rect dirtyRect = getRepaintBoundsForShape(aShape);
-        
-        // If this is the first dirty shape, register for flushGraphics call
-        if(_dirtyRect==null) {
-            _dirtyRect = dirtyRect; // Init dirty rect
-            getEnv().runLater(() -> flushShapeRepaints());
-        }
-        
-        // Otherwise, add shape bounds to dirty rect
-        else _dirtyRect.union(dirtyRect);
-    }
-    
-    // Iterate over shape siblings to notify them of peer change
-    RMParentShape parent = aShape.getParent();
-    for(int i=0, iMax=parent!=null? parent.getChildCount() : 0; i<iMax; i++) { RMShape child = parent.getChild(i);
-        if(child instanceof RMTextShape && child!=aShape)
-            ((RMTextShape)child).peerDidChange(aShape);
-    }
+    // Get shape bounds in viewer coords and repaint
+    Rect bnds0 = getRepaintBoundsForShape(aShape);
+    Rect bnds1 = aShape.localToParent(bnds0, null).getBounds();
+    repaint(bnds1);
 }
 
 /**
- * This method repaints the total bounds of shapes that have previously been registered by shapeNeedsRepaint. This 
- * should only be used internally.
+ * Returns the bounds for a given shape in the viewer. Editor overrides this to account for handles.
  */
-protected void flushShapeRepaints()
+protected Rect getRepaintBoundsForShape(RMShape aShape)
 {
-    getDoc().layout();
-    // If no dirty shapes, just return
-    if(_dirtyShapes==null || _dirtyShapes.size()==0) return;
+    // Get bounds
+    Rect bnds = aShape.getBoundsLocal();
     
-    // Get local dirty shapes and clear ivar so nothing will re-register while we're building
-    List <RMShape> dirtyShapes = _dirtyShapes; _dirtyShapes = null;
+    // If stroked, add stroke
+    if(aShape.getStroke()!=null) bnds.inset(-aShape.getStroke().getWidth()/2);
+        
+    // If effect, add effect
+    if(aShape.getEffect()!=null) bnds = aShape.getEffect().getBounds(bnds);
     
-    // Declare variable for dirty rect
-    Rect dirtyRect = _dirtyRect;
-    
-    // Iterate over dirty shapes and get total marked bounds in viewer coords
-    for(RMShape shape : dirtyShapes) {
-        Rect bounds = getRepaintBoundsForShape(shape); // Get shape marked bounds in viewer coords
-        if(dirtyRect==null) dirtyRect = bounds;  // Either set or union dirty bounds
-        else dirtyRect.union(bounds);
-    }
-
-    // Repaint dirty rect
-    repaint(dirtyRect);
-    
-    // Reset dirty shapes and rect
-    _dirtyShapes = dirtyShapes; _dirtyShapes.clear(); _dirtyRect = null;
-}
-
-/**
- * Returns the bounds for a given shape in the viewer.
- * Subclasses can override this to account for things like different bounds for selected shapes.
- */
-public Rect getRepaintBoundsForShape(RMShape aShape)
-{
-    Rect bounds = aShape.getBoundsMarkedDeep();  // Get shape marked bounds
-    bounds = convertFromShape(bounds, aShape).getBounds();  // Convert to viewer coords
-    bounds.inset(-4, -4); // Outset for handles
-    return bounds;
+    // Return bounds
+    return bnds;
 }
 
 /**

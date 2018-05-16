@@ -63,10 +63,7 @@ public void addBars()
         }
         
         // If 2D line, set stroke color and line width
-        else {
-            lineShape.setColor(null); lineShape.setStrokeColor(_graph.getColor(i));
-            lineShape.setStrokeWidth(2);
-        }
+        else { lineShape.setColor(null); lineShape.setStroke(_graph.getColor(i), 2); }
         
         // Set line bounds
         lineShape.setBounds(path.getBounds());
