@@ -5,8 +5,7 @@ package com.reportmill.app;
 import com.reportmill.shape.*;
 import snap.gfx.*;
 import snap.util.PropChangeListener;
-import snap.util.XMLElement;
-import snap.web.WebURL;
+import snap.util.Undoer;
 
 /**
  * A shape to act as root of shape to be viewed.
@@ -18,6 +17,9 @@ public class RMViewerShape extends RMParentShape {
 
     // The document being viewed
     RMDocument         _doc;
+    
+    // An optional undoer object to track document changes
+    Undoer             _undoer;
     
     // A PropChangeListener to catch doc changes (Showing, PageSize, )
     PropChangeListener _viewerDocLsnr = pc -> _viewer.docDidPropChange(pc);
@@ -88,6 +90,26 @@ public int getSelPageIndex()  { RMDocument d = getDoc(); return d!=null? d.getSe
 public void setSelPageIndex(int anIndex)  { RMDocument d = getDoc(); if(d!=null) d.setSelectedIndex(anIndex); }
 
 /**
+ * Returns whether content snaps to grid.
+ */
+public boolean getSnapGrid()  { RMDocument d = getDoc(); return d!=null && d.getSnapGrid(); }
+
+/**
+ * Returns the content grid spacing.
+ */
+public double getGridSpacing()  { RMDocument d = getDoc(); return d!=null? d.getGridSpacing() : 1; }
+
+/**
+ * Returns whether content snaps to margin.
+ */
+public boolean getSnapMargin()  { RMDocument d = getDoc(); return d!=null && d.getSnapMargin(); }
+
+/**
+ * Returns the undoer.
+ */
+public Undoer getUndoer()  { return _undoer; }
+
+/**
  * Override to return content preferred width.
  */
 protected double getPrefWidthImpl(double aHeight)  { RMDocument d = getDoc(); return d!=null? d.getPrefWidth() : 0; }
@@ -96,6 +118,11 @@ protected double getPrefWidthImpl(double aHeight)  { RMDocument d = getDoc(); re
  * Override to return content preferred height.
  */
 protected double getPrefHeightImpl(double aWidth)  { RMDocument d = getDoc(); return d!=null? d.getPrefHeight() : 0; }
+
+/**
+ * Override to notify viewer.
+ */
+protected void setNeedsLayoutDeep(boolean aVal)  { super.setNeedsLayoutDeep(aVal); if(aVal) _viewer.relayout(); }
 
 /**
  * Override to layout doc.
@@ -131,48 +158,5 @@ protected void repaint(RMShape aShape)
  * Override to set Painting flag.
  */
 public void paint(Painter aPntr)  { _ptg = true; super.paint(aPntr); _ptg = false; } boolean _ptg;
-
-/**
- * Returns whether this shape is being viewed in a viewer.
- */
-public boolean isViewing()  { return true; }
-
-/**
- * Returns whether this shape is being edited in an editor.
- */
-public boolean isEditing()  { return _viewer.isEditing(); }
-
-/**
- * Returns the SourceURL.
- */
-public WebURL getSourceURL() { RMDocument d = getDoc(); return d!=null && d.isSourceURLSet()? d.getSourceURL() : null; }
-
-/**
- * Sets the SourceURL.
- */
-public void setSourceURL(WebURL aURL)  { if(getDoc()!=null) getDoc().setSourceURL(aURL); }
-
-/**
- * Override to notify viewer.
- */
-protected void setNeedsLayoutDeep(boolean aVal)
-{
-    super.setNeedsLayoutDeep(aVal); if(aVal) _viewer.relayout();
-}
-
-/**
- * Returns XMLElement for document.
- */
-public XMLElement getDocXML()
-{
-    getDoc().layoutDeep();
-    if(getDocument()!=null) getDocument().resolvePageReferences();
-    return new RMArchiver().writeObject(getDoc());
-}
-
-/**
- * Returns the xml bytes for document.
- */
-public byte[] getDocBytes()  { return getDocXML().getBytes(); }
 
 }

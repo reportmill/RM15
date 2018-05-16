@@ -97,7 +97,7 @@ public void setDoc(Object aSource)  { setDoc(new RMArchiver().getDoc(aSource)); 
 /**
  * Returns the source URL.
  */
-public WebURL getSourceURL()  { return getViewerShape().getSourceURL(); }
+public WebURL getSourceURL()  { RMDocument d = getDoc(); return d!=null? d.getSourceURL() : null; }
 
 /**
  * Returns whether viewer is really doing editing.

@@ -492,7 +492,7 @@ public void setCompress(boolean aValue)  { _compress = aValue; }
 /**
  * Returns the document as an XML byte array.
  */
-public byte[] getBytes()  { return toXML().getBytes(); }
+public byte[] getBytes()  { return getXML().getBytes(); }
 
 /**
  * Returns the document as a byte array of a PDF file.
@@ -564,7 +564,7 @@ public void write(String aPath)
     if(path.endsWith(".xls")) SnapUtils.writeBytes(getBytesExcel(), aPath);
     if(path.endsWith(".rtf")) SnapUtils.writeBytes(getBytesRTF(), aPath);
     if(path.endsWith(".rpt") || path.endsWith(".xml"))
-        SnapUtils.writeBytes(toXML().getBytes(), aPath);
+        SnapUtils.writeBytes(getXML().getBytes(), aPath);
 }
 
 /**
@@ -763,7 +763,7 @@ protected double getPrefHeightImpl(double aWidth)
 /**
  * Returns RXElement for document.
  */
-public XMLElement toXML()
+public XMLElement getXML()
 {
     layoutDeep();
     resolvePageReferences();

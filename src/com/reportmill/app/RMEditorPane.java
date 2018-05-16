@@ -438,7 +438,7 @@ public void saveAs()
     
     // Run save panel, set Document.Source to path and re-save (or just return if cancelled)
     String path = FilePanel.showSavePanel(getUI(), getFileDescription(), exts); if(path==null) return;
-    getViewerShape().setSourceURL(WebURL.getURL(path));
+    getDoc().setSourceURL(WebURL.getURL(path));
     save();
 }
 
@@ -477,7 +477,7 @@ protected void saveImpl() throws Exception
     WebURL url = getSourceURL();
     WebFile file = url.getFile();
     if(file==null) file = url.createFile(false);
-    file.setBytes(getViewer().getViewerShape().getDocXML().getBytes());
+    file.setBytes(getDoc().getBytes());
     file.save();
 }
 

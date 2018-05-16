@@ -688,16 +688,6 @@ public String getAutosizingDefault()  { return "--~,--~"; }
 public boolean isHittable()  { return isVisible() && (_parent==null || _parent.isHittable(this)); }
 
 /**
- * Returns whether this shape is being viewed in a viewer.
- */
-public boolean isViewing()  { RMShape p = getParent(); return p!=null && p.isViewing(); }
-
-/**
- * Returns whether this shape is being edited in an editor.
- */
-public boolean isEditing()  { RMShape p = getParent(); return p!=null && p.isEditing(); }
-
-/**
  * Returns the text color for the shape.
  */
 public RMColor getTextColor()  { return RMColor.black; }

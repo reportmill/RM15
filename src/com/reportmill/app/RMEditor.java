@@ -20,10 +20,10 @@ public class RMEditor extends RMViewer implements DeepChangeListener {
     boolean             _editing = true;
     
     // List of currently selected shapes
-    List <RMShape>      _selectedShapes = new ArrayList();
+    List <RMShape>      _selShapes = new ArrayList();
     
     // List of super selected shapes (all ancestors of selected shapes)
-    List <RMShape>      _superSelectedShapes = new ArrayList();
+    List <RMShape>      _superSelShapes = new ArrayList();
     
     // The last shape that was copied to the clipboard (used for smart paste)
     RMShape             _lastCopyShape;
@@ -154,17 +154,17 @@ public void setSelectedShape(RMShape aShape)  { setSelectedShapes(aShape==null? 
 /**
  * Returns the number of selected shapes.
  */
-public int getSelectedShapeCount()  { return _selectedShapes.size(); }
+public int getSelectedShapeCount()  { return _selShapes.size(); }
 
 /**
  * Returns the selected shape at the given index.
  */
-public RMShape getSelectedShape(int anIndex)  { return ListUtils.get(_selectedShapes, anIndex); }
+public RMShape getSelectedShape(int anIndex)  { return ListUtils.get(_selShapes, anIndex); }
 
 /**
  * Returns the selected shapes list.
  */
-public List <RMShape> getSelectedShapes()  { return _selectedShapes; }
+public List <RMShape> getSelectedShapes()  { return _selShapes; }
 
 /**
  * Selects the shapes in the given list.
@@ -172,7 +172,7 @@ public List <RMShape> getSelectedShapes()  { return _selectedShapes; }
 public void setSelectedShapes(List <RMShape> theShapes)
 {
     // If shapes already set, just return
-    if(ListUtils.equalsId(theShapes, _selectedShapes)) return;
+    if(ListUtils.equalsId(theShapes, _selShapes)) return;
     
     // Request focus in case current focus view has changes
     requestFocus();
@@ -199,7 +199,7 @@ public void setSelectedShapes(List <RMShape> theShapes)
     setSuperSelectedShape(shapesParent);
     
     // Add shapes to selected list
-    _selectedShapes.addAll(theShapes);
+    _selShapes.addAll(theShapes);
     
     // Fire PropertyChange
     firePropChange(SelectedShapes_Prop, null, theShapes);
@@ -243,13 +243,13 @@ public void setSuperSelectedShape(RMShape aShape)
     RMShape shape = aShape!=null? aShape : getSelPage();
     
     // Unselect selected shapes
-    _selectedShapes.clear();
+    _selShapes.clear();
 
     // Remove current super-selected shapes that aren't an ancestor of given shape    
     while(shape!=getSuperSelectedShape() && !shape.isAncestor(getSuperSelectedShape())) {
         RMShape ssShape = getSuperSelectedShape();
         getTool(ssShape).willLoseSuperSelected(ssShape);
-        ListUtils.removeLast(_superSelectedShapes);
+        ListUtils.removeLast(_superSelShapes);
     }
 
     // Add super selected shape (recursively adds parents if missing)
@@ -271,7 +271,7 @@ private void addSuperSelectedShape(RMShape aShape)
         addSuperSelectedShape(aShape.getParent());
 
     // Add ancestor to super selected list
-    _superSelectedShapes.add(aShape);
+    _superSelShapes.add(aShape);
     
     // Notify tool
     getTool(aShape).didBecomeSuperSelected(aShape);
@@ -292,35 +292,32 @@ public RMParentShape getSuperSelectedParentShape()
 /**
  * Returns whether a given shape is selected in the editor.
  */
-public boolean isSelected(RMShape aShape)  { return ListUtils.containsId(_selectedShapes, aShape); }
+public boolean isSelected(RMShape aShape)  { return ListUtils.containsId(_selShapes, aShape); }
 
 /**
  * Returns whether a given shape is super-selected in the editor.
  */
-public boolean isSuperSelected(RMShape aShape)  { return ListUtils.containsId(_superSelectedShapes, aShape); }
+public boolean isSuperSelected(RMShape aShape)  { return ListUtils.containsId(_superSelShapes, aShape); }
 
 /**
  * Returns the number of super-selected shapes.
  */
-public int getSuperSelectedShapeCount()  { return _superSelectedShapes.size(); }
+public int getSuperSelectedShapeCount()  { return _superSelShapes.size(); }
 
 /**
  * Returns the super-selected shape at the given index.
  */
-public RMShape getSuperSelectedShape(int anIndex)  { return _superSelectedShapes.get(anIndex); }
+public RMShape getSuperSelectedShape(int anIndex)  { return _superSelShapes.get(anIndex); }
 
 /**
  * Returns the super selected shape list.
  */
-public List <RMShape> getSuperSelectedShapes()  { return _superSelectedShapes; }
+public List <RMShape> getSuperSelectedShapes()  { return _superSelShapes; }
 
 /**
  * Returns the number of currently selected shapes or simply 1, if a shape is super-selected.
  */
-public int getSelectedOrSuperSelectedShapeCount()
-{
-    return getSelectedShapeCount()>0? getSelectedShapeCount() : 1;
-}
+public int getSelectedOrSuperSelectedShapeCount()  { int sc = getSelectedShapeCount(); return sc>0? sc : 1; }
 
 /**
  * Returns the currently selected shape at the given index, or the super-selected shape.
@@ -343,7 +340,7 @@ public RMShape getSelectedOrSuperSelectedShape()
  */
 public List <RMShape> getSelectedOrSuperSelectedShapes()
 {
-    return getSelectedShapeCount()>0? _selectedShapes : Arrays.asList(getSuperSelectedShape());
+    return getSelectedShapeCount()>0? _selShapes : Arrays.asList(getSuperSelectedShape());
 }
     
 /**
@@ -589,7 +586,7 @@ public void selectAll()
 public void delete()
 {
     // Get copy of selected shapes (just beep and return if no selected shapes)
-    RMShape shapes[] = _selectedShapes.toArray(new RMShape[0]);
+    RMShape shapes[] = _selShapes.toArray(new RMShape[0]);
     if(shapes.length==0) { if(getTextEditor()==null) beep(); return; }
 
     // Get/superSelect parent of selected shapes
