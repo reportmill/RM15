@@ -198,10 +198,10 @@ public void keyPressed(ViewEvent anEvent)
         editor.delete();
     
     // Handle left, right, up, down arrows
-    else if(keyCode==KeyCode.LEFT) RMEditorShapes.moveLeftOnePoint(editor);
-    else if(keyCode==KeyCode.RIGHT) RMEditorShapes.moveRightOnePoint(editor);
-    else if(keyCode==KeyCode.UP) RMEditorShapes.moveUpOnePoint(editor);
-    else if(keyCode==KeyCode.DOWN) RMEditorShapes.moveDownOnePoint(editor);
+    else if(keyCode==KeyCode.LEFT) RMEditorUtils.moveLeftOnePoint(editor);
+    else if(keyCode==KeyCode.RIGHT) RMEditorUtils.moveRightOnePoint(editor);
+    else if(keyCode==KeyCode.UP) RMEditorUtils.moveUpOnePoint(editor);
+    else if(keyCode==KeyCode.DOWN) RMEditorUtils.moveDownOnePoint(editor);
 
     // If 6 key, show Undo inspector (for undo debugging)
     else if(keyChar=='6')

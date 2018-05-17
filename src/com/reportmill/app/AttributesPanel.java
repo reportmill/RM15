@@ -177,7 +177,7 @@ public class APColorPanel extends ColorPanel {
             return super.getColor();
         
         // Get color from editor
-        return RMEditorShapes.getSelectedColor(getEditor());
+        return RMEditorUtils.getSelectedColor(getEditor());
     }
 
     /** Override to forward to editor. */
@@ -185,7 +185,7 @@ public class APColorPanel extends ColorPanel {
     {
         super.setColor(aColor);
         if(getColorWell()==null)
-            RMEditorShapes.setSelectedColor(getEditor(), RMColor.get(aColor));
+            RMEditorUtils.setSelectedColor(getEditor(), RMColor.get(aColor));
     }
     
     /** Returns the name for this panel. */

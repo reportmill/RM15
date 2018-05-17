@@ -13,25 +13,12 @@ import snap.util.ListUtils;
 import snap.view.ViewUtils;
 
 /**
- * Handles editor methods specific to clipboard operations (cut, copy paste).
+ * Handles useful methods to help editor.
  */
-public class RMEditorShapes {
-
-    // The editor
-    RMEditor          _editor;
+public class RMEditorUtils {
 
     // The last color set by or returned to the color panel
     static RMColor    _lastColor = RMColor.black;
-
-/**
- * Creates a new editor shapes helper.
- */
-public RMEditorShapes(RMEditor anEditor) { _editor = anEditor; }
-
-/**
- * Returns the editor.
- */
-public RMEditor getEditor() { return _editor; }
 
 /**
  * Groups the given shape list to the given group shape.

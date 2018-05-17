@@ -116,13 +116,13 @@ public void resetUI()
     // If line height min not set (0), update LineHeightMinSpinner with current font size
     // If valid line height min, update LineHeightMinSpinner with line height
     double lineHtMin = text.getLineHeightMin();
-    boolean lineHtMinSet = lineHtMin!=0; if(!lineHtMinSet) lineHtMin = RMEditorShapes.getFont(editor).getSize();
+    boolean lineHtMinSet = lineHtMin!=0; if(!lineHtMinSet) lineHtMin = RMEditorUtils.getFont(editor).getSize();
     setViewValue("LineHeightMinSpinner", lineHtMin);
     
     // If line height max not set, update LineHeightMaxSpinner with current font size
     // If line height max is set, update LineHeightMaxSpinner with line height max
     double lineHtMax = text.getLineHeightMax();
-    boolean lineHtMaxSet = lineHtMax>999; if(!lineHtMaxSet) lineHtMax = RMEditorShapes.getFont(editor).getSize();
+    boolean lineHtMaxSet = lineHtMax>999; if(!lineHtMaxSet) lineHtMax = RMEditorUtils.getFont(editor).getSize();
     setViewValue("LineHeightMaxSpinner", lineHtMax);
 }
 
@@ -162,10 +162,10 @@ public void respondUI(ViewEvent anEvent)
     }*/
     
     // Handle AlignLeftButton, AlignCenterButton, AlignRightButton, AlignFullButton, AlignTopButton, AlignMiddleButton
-    if(anEvent.equals("AlignLeftButton")) RMEditorShapes.setAlignmentX(editor, RMTypes.AlignX.Left);
-    if(anEvent.equals("AlignCenterButton")) RMEditorShapes.setAlignmentX(editor, RMTypes.AlignX.Center);
-    if(anEvent.equals("AlignRightButton")) RMEditorShapes.setAlignmentX(editor, RMTypes.AlignX.Right);
-    if(anEvent.equals("AlignFullButton")) RMEditorShapes.setAlignmentX(editor, RMTypes.AlignX.Full);
+    if(anEvent.equals("AlignLeftButton")) RMEditorUtils.setAlignmentX(editor, RMTypes.AlignX.Left);
+    if(anEvent.equals("AlignCenterButton")) RMEditorUtils.setAlignmentX(editor, RMTypes.AlignX.Center);
+    if(anEvent.equals("AlignRightButton")) RMEditorUtils.setAlignmentX(editor, RMTypes.AlignX.Right);
+    if(anEvent.equals("AlignFullButton")) RMEditorUtils.setAlignmentX(editor, RMTypes.AlignX.Full);
     if(anEvent.equals("AlignTopButton")) for(RMTextShape txt : texts) txt.setAlignmentY(RMTypes.AlignY.Top);
     if(anEvent.equals("AlignMiddleButton")) for(RMTextShape txt : texts) txt.setAlignmentY(RMTypes.AlignY.Middle);
     if(anEvent.equals("AlignBottomButton")) for(RMTextShape txt : texts) txt.setAlignmentY(RMTypes.AlignY.Bottom);

@@ -31,9 +31,6 @@ public class RMEditor extends RMViewer implements DeepChangeListener {
     // The last shape that was pasted from the clipboard (used for smart paste)
     RMShape             _lastPasteShape;
     
-    // A helper class providing utilities for shape
-    RMEditorShapes      _shapesHelper = createShapesHelper();
-    
     // A helper class to handle drag and drop
     RMEditorDnD         _dragHelper = createDragHelper();
     
@@ -125,16 +122,6 @@ public RMTextEditor getTextEditor()
     RMShape shp = getSuperSelectedShape();
     return shp instanceof RMTextShape? ((RMTextShape)shp).getTextEditor() : null;
 }
-
-/**
- * Returns the shapes helper.
- */
-public RMEditorShapes getShapesHelper()  { return _shapesHelper; }
-
-/**
- * Creates the shapes helper.
- */
-protected RMEditorShapes createShapesHelper()  { return new RMEditorShapes(this); }
 
 /**
  * Creates the shapes helper.

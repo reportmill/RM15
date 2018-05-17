@@ -221,7 +221,7 @@ public static void dropDragKey(RMShape aShape, ViewEvent anEvent)
     // Handle KeysPanel to-many drop - run dataset key panel (after delay)
     if(_active.isSelectedToMany()) {
         String datasetKey = StringUtils.delete(KeysPanel.getDragKey(), "@");
-        editor.getEnv().runLater(() -> RMEditorShapes.runDatasetKeyPanel(editor, datasetKey));
+        editor.getEnv().runLater(() -> RMEditorUtils.runDatasetKeyPanel(editor, datasetKey));
     }
     
     // Otherwise, just drop string as text shape

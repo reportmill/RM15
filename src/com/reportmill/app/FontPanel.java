@@ -92,7 +92,7 @@ public void resetUI()
 {
     // Get current font
     RMEditor editor = getEditor();
-    RMFont font = RMEditorShapes.getFont(editor);
+    RMFont font = RMEditorUtils.getFont(editor);
     
     // Get family name and size
     String familyName = font.getFamily();
@@ -107,8 +107,8 @@ public void resetUI()
     setViewEnabled("BoldButton", font.getBold()!=null);
     setViewValue("ItalicButton", font.isItalic());
     setViewEnabled("ItalicButton", font.getItalic()!=null);
-    setViewValue("UnderlineButton", RMEditorShapes.isUnderlined(editor));
-    setViewValue("OutlineButton", RMEditorShapes.getTextBorder(editor)!=null);
+    setViewValue("UnderlineButton", RMEditorUtils.isUnderlined(editor));
+    setViewValue("OutlineButton", RMEditorUtils.getTextBorder(editor)!=null);
     
     // Get font names in currently selected font's family
     String familyNames[] = RMFont.getFontNames(font.getFamily());
@@ -128,36 +128,32 @@ public void respondUI(ViewEvent anEvent)
     RMEditor editor = getEditor();
     
     // Handle FontSizeUpButton, FontSizeDownButton
-    if(anEvent.equals("FontSizeUpButton")) { Font font = RMEditorShapes.getFont(editor);
-        RMEditorShapes.setFontSize(editor, font.getSize()<16? 1 : 2, true); }
-    if(anEvent.equals("FontSizeDownButton")) { Font font = RMEditorShapes.getFont(editor);
-        RMEditorShapes.setFontSize(editor, font.getSize()<16? -1 : -2, true); }
+    if(anEvent.equals("FontSizeUpButton")) { Font font = RMEditorUtils.getFont(editor);
+        RMEditorUtils.setFontSize(editor, font.getSize()<16? 1 : 2, true); }
+    if(anEvent.equals("FontSizeDownButton")) { Font font = RMEditorUtils.getFont(editor);
+        RMEditorUtils.setFontSize(editor, font.getSize()<16? -1 : -2, true); }
     
     // Handle BoldButton, ItalicButton, UnderlineButton, OutlineButton
-    if(anEvent.equals("BoldButton"))
-        RMEditorShapes.setFontBold(editor, anEvent.getBoolValue());
-    if(anEvent.equals("ItalicButton"))
-        RMEditorShapes.setFontItalic(editor, anEvent.getBoolValue());
-    if(anEvent.equals("UnderlineButton"))
-        RMEditorShapes.setUnderlined(editor);
-    if(anEvent.equals("OutlineButton"))
-        RMEditorShapes.setTextBorder(editor);
+    if(anEvent.equals("BoldButton")) RMEditorUtils.setFontBold(editor, anEvent.getBoolValue());
+    if(anEvent.equals("ItalicButton")) RMEditorUtils.setFontItalic(editor, anEvent.getBoolValue());
+    if(anEvent.equals("UnderlineButton")) RMEditorUtils.setUnderlined(editor);
+    if(anEvent.equals("OutlineButton")) RMEditorUtils.setTextBorder(editor);
     
     // Handle FontPickerButton
     if(anEvent.equals("FontPickerButton")) {
-        RMFont ofont = RMEditorShapes.getFont(editor);
+        RMFont ofont = RMEditorUtils.getFont(editor);
         Font font = new FontPicker().showPicker(getEditorPane().getUI(), ofont);
         if(font!=null) { RMFont rfont = RMFont.get(font);
-            RMEditorShapes.setFontFamily(editor, rfont); }
+            RMEditorUtils.setFontFamily(editor, rfont); }
     }
     
     // Handle SizesList
     if(anEvent.equals("SizesList") && anEvent.getValue()!=null)
-        RMEditorShapes.setFontSize(editor, anEvent.getFloatValue(), false);
+        RMEditorUtils.setFontSize(editor, anEvent.getFloatValue(), false);
     
     // Handle SizeText
     if(anEvent.equals("SizeText"))
-        RMEditorShapes.setFontSize(editor, anEvent.getFloatValue(), false);
+        RMEditorUtils.setFontSize(editor, anEvent.getFloatValue(), false);
 
     // Handle FamilyList, FamilyComboBox
     if(anEvent.equals("FamilyList") || (anEvent.equals("FamilyComboBox") && anEvent.isActionEvent())) {
@@ -165,7 +161,7 @@ public void respondUI(ViewEvent anEvent)
         String fontNames[] = RMFont.getFontNames(familyName); if(fontNames.length==0) return;
         String fontName = fontNames[0];
         RMFont font = RMFont.getFont(fontName, 12);
-        RMEditorShapes.setFontFamily(editor, font);
+        RMEditorUtils.setFontFamily(editor, font);
     }
     
     // Handle AllButton, PDFButton
@@ -175,7 +171,7 @@ public void respondUI(ViewEvent anEvent)
     // Handle FontNameComboBox
     if(anEvent.equals("FontNameComboBox")) {
         RMFont font = RMFont.getFont(anEvent.getStringValue(), 12);
-        RMEditorShapes.setFontName(editor, font);
+        RMEditorUtils.setFontName(editor, font);
     }
 }
 

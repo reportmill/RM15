@@ -69,7 +69,7 @@ public void resetUI()
 {
     // Get main editor and currently selected format (just return if null)
     RMEditor editor = getEditor(); if(editor==null) return;
-    RMFormat format = RMEditorShapes.getFormat(editor);
+    RMFormat format = RMEditorUtils.getFormat(editor);
             
     // Handle NumberFormat: Update NumberPanel
     if(format instanceof RMNumberFormat) { RMNumberFormat nformat = (RMNumberFormat)format;
@@ -121,27 +121,26 @@ public void respondUI(ViewEvent anEvent)
 {
     // Get main editor and currently selected format, number format and date format (one or the other will be null)
     RMEditor editor = getEditor(); if(editor==null) return;
-    RMFormat format = RMEditorShapes.getFormat(editor);
+    RMFormat format = RMEditorUtils.getFormat(editor);
     RMNumberFormat numFormat = format instanceof RMNumberFormat? (RMNumberFormat)format : null;
     RMDateFormat dateFormat = format instanceof RMDateFormat? (RMDateFormat)format : null;
     
     // Handle NoFormatButton
-    if(anEvent.equals("NoFormatButton"))
-        RMEditorShapes.setFormat(editor, null);
+    if(anEvent.equals("NoFormatButton"))  RMEditorUtils.setFormat(editor, null);
     
     // Handle NumberFormatButton
     if(anEvent.equals("NumberFormatButton") && !(format instanceof RMNumberFormat))
-        RMEditorShapes.setFormat(editor, getNumberFormat(0).clone());
+        RMEditorUtils.setFormat(editor, getNumberFormat(0).clone());
     
     // Handle DateFormatButton
     if(anEvent.equals("DateFormatButton") && !(format instanceof RMDateFormat))
-        RMEditorShapes.setFormat(editor, new RMDateFormat(getDateFormat(0).getPattern()));
+        RMEditorUtils.setFormat(editor, new RMDateFormat(getDateFormat(0).getPattern()));
         
     // Handle NumberFormatTable
     if(anEvent.equals("NumberFormatTable")) {
         int row = anEvent.getSelIndex();
         if(row > -1) 
-            RMEditorShapes.setFormat(editor, getNumberFormat(row).clone());
+            RMEditorUtils.setFormat(editor, getNumberFormat(row).clone());
     }
     
     // Handle NumberFormatText
@@ -156,31 +155,31 @@ public void respondUI(ViewEvent anEvent)
 
     // Handle MoneyButton: If currently selected format is number format, add or remove dollars
     if(anEvent.equals("MoneyButton")) {
-        if(numFormat==null) RMEditorShapes.setFormat(editor, RMNumberFormat.CURRENCY);
+        if(numFormat==null) RMEditorUtils.setFormat(editor, RMNumberFormat.CURRENCY);
         else {
             numFormat = numFormat.clone(); // Clone it
             numFormat.setLocalCurrencySymbolUsed(!numFormat.isLocalCurrencySymbolUsed()); // Toggle whether $ is used
-            RMEditorShapes.setFormat(editor, numFormat);
+            RMEditorUtils.setFormat(editor, numFormat);
         }
     }
     
     // Handle PercentButton: If currently selected format is number format, add or remove percent symbol
     if(anEvent.equals("PercentButton")) {
-        if(numFormat==null) RMEditorShapes.setFormat(editor, new RMNumberFormat("#,##0.00 %"));
+        if(numFormat==null) RMEditorUtils.setFormat(editor, new RMNumberFormat("#,##0.00 %"));
         else {
             numFormat = numFormat.clone(); // Clone it
             numFormat.setPercentSymbolUsed(!numFormat.isPercentSymbolUsed()); // Toggle whether percent symbol is used
-            RMEditorShapes.setFormat(editor, numFormat); // Set new format
+            RMEditorUtils.setFormat(editor, numFormat); // Set new format
         }
     }
     
     // Handle CommaButton: If currently selected format is number format, add or remove grouping
     if(anEvent.equals("CommaButton")) {
-        if(numFormat==null) RMEditorShapes.setFormat(editor, new RMNumberFormat("#,##0.00"));
+        if(numFormat==null) RMEditorUtils.setFormat(editor, new RMNumberFormat("#,##0.00"));
         else {
             numFormat = numFormat.clone(); // Clone it
             numFormat.setGroupingUsed(!numFormat.isGroupingUsed()); // Toggle whether grouping is used
-            RMEditorShapes.setFormat(editor, numFormat); // Set new format
+            RMEditorUtils.setFormat(editor, numFormat); // Set new format
         }
     }
     
@@ -190,7 +189,7 @@ public void respondUI(ViewEvent anEvent)
             numFormat = numFormat.clone(); // Clone it
             numFormat.setMinimumFractionDigits(numFormat.getMinimumFractionDigits()+1); // Add decimal digits
             numFormat.setMaximumFractionDigits(numFormat.getMinimumFractionDigits());
-            RMEditorShapes.setFormat(editor, numFormat); // Set new format
+            RMEditorUtils.setFormat(editor, numFormat); // Set new format
         }
     }
     
@@ -200,7 +199,7 @@ public void respondUI(ViewEvent anEvent)
             numFormat = numFormat.clone(); // Clone it
             numFormat.setMinimumFractionDigits(numFormat.getMinimumFractionDigits()-1); // Remove decimal digits
             numFormat.setMaximumFractionDigits(numFormat.getMinimumFractionDigits());
-            RMEditorShapes.setFormat(editor, numFormat); // Set new format
+            RMEditorUtils.setFormat(editor, numFormat); // Set new format
         }
     }
         // Handle NegativeInRedCheckBox
@@ -215,7 +214,7 @@ public void respondUI(ViewEvent anEvent)
     if(anEvent.equals("DateFormatTable") && anEvent.getSelIndex()>=0) {
         int row = anEvent.getSelIndex();
         RMDateFormat df = getDateFormat(row).clone();
-        RMEditorShapes.setFormat(editor, df);
+        RMEditorUtils.setFormat(editor, df);
     }
     
     // Handle DateFormatText
