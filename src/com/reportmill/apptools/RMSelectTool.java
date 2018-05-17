@@ -36,7 +36,7 @@ public class RMSelectTool extends RMTool {
     Rect            _selectionRect = new Rect();
     
     // The list of shapes currently selected while selecting
-    List <RMShape>  _whileSelectingSelectedShapes = new Vector();
+    List <RMShape>  _whileSelectingSelShapes = new Vector();
     
     // Whether to re-enter mouse pressed
     boolean         _redoMousePressed;
@@ -245,25 +245,25 @@ public void mouseDragged(ViewEvent anEvent)
             List newShapes = getHitShapes();
             
             // Repaint selected shapes and SelectionRect
-            _whileSelectingSelectedShapes.forEach(i -> i.repaint());
+            for(RMShape s : _whileSelectingSelShapes) repaintShape(s);
             editor.repaint(editor.convertFromShape(_selectionRect.getInsetRect(-2), null).getBounds());
             
             // Get new _selectionRect and clear _whileSelectingSelectedShapes
             _selectionRect = Rect.get(_downPoint, editor.convertToShape(anEvent.getX(), anEvent.getY(), null));
-            _whileSelectingSelectedShapes.clear();
+            _whileSelectingSelShapes.clear();
 
             // If shift key was down, exclusive OR (xor) newShapes with selectedShapes
             if(anEvent.isShiftDown()) {
                 List xor = ListUtils.clone(editor.getSelectedShapes());
                 ListUtils.xor(xor, newShapes);
-                _whileSelectingSelectedShapes.addAll(xor);
+                _whileSelectingSelShapes.addAll(xor);
             }
             
             // If shit key not down, select all new shapes
-            else _whileSelectingSelectedShapes.addAll(newShapes);
+            else _whileSelectingSelShapes.addAll(newShapes);
 
             // Repaint selected shapes and SelectionRect
-            _whileSelectingSelectedShapes.forEach(i -> i.repaint());
+            for(RMShape s : _whileSelectingSelShapes) repaintShape(s);
             editor.repaint(editor.convertFromShape(_selectionRect.getInsetRect(-2), null).getBounds());
 
             // break
@@ -310,7 +310,7 @@ public void mouseReleased(ViewEvent anEvent)
             else editor.setSuperSelectedShape(editor.getSuperSelectedShape());
 
             // Reset _whileSelectingSelectedShapes and _selectionRect since we don't need them anymore
-            _whileSelectingSelectedShapes.clear();
+            _whileSelectingSelShapes.clear();
             _selectionRect.setRect(0,0,0,0);
             break;
 
@@ -429,7 +429,7 @@ public void paintTool(Painter aPntr)
             tool.paintBoundsRect((RMTextShape)shape, aPntr);
         }
     
-        selectedShapes = _whileSelectingSelectedShapes;
+        selectedShapes = _whileSelectingSelShapes;
     }
 
     // Iterate over SelectedShapes and have tool paint Selected
@@ -450,6 +450,16 @@ public void paintTool(Painter aPntr)
         // Draw selection frame as darker transparent border
         aPntr.setStroke(Stroke.Stroke1); aPntr.setColor(new Color(.6,.6)); aPntr.draw(rect);
     }
+}
+
+/**
+ * Calls Editor.repaint() for given shape, assuming it might be selected and have handles.
+ */
+void repaintShape(RMShape aShape)
+{
+    Rect bnds0 = aShape.getBoundsMarkedDeep(); bnds0.inset(-4);
+    Rect bnds1 = aShape.localToParent(bnds0, null).getBounds();
+    getEditor().repaint(bnds1);
 }
 
 /**
