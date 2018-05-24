@@ -9,7 +9,7 @@ import snap.util.*;
 /**
  * This class describes an attribute of an entity.
  */
-public class Property extends SnapObject implements Comparable, XMLArchiver.Archivable {
+public class Property implements Comparable, XMLArchiver.Archivable {
 
     // The entity that owns this property
     Entity         _entity;
@@ -90,8 +90,7 @@ public String getName()  { return _name; }
 public void setName(String aName)
 {
     String name = aName!=null? aName.trim().replace(" ", "") : null;
-    if(SnapUtils.equals(name, _name)) return;
-    firePropChange("Name", _name, _name = name);
+    _name = name;
 }
 
 /**
@@ -107,11 +106,7 @@ public Type getType()  { return _type; }
 /**
  * Sets the type of this property.
  */
-public void setType(Type aType)
-{
-    if(aType==_type) return;
-    firePropChange("Type", _type, _type = aType);
-}
+public void setType(Type aType)  { _type = aType; }
 
 /**
  * Sets the type from a given name.
@@ -163,11 +158,7 @@ public boolean isPrimary()  { return _primary; }
 /**
  * Sets whether this property is a primary key.
  */
-public void setPrimary(boolean isPrimary)
-{
-    if(isPrimary==_primary) return;
-    firePropChange("Primary", _primary, _primary = isPrimary);
-}
+public void setPrimary(boolean isPrimary) { _primary = isPrimary; }
 
 /**
  * Returns whether this property is private.
@@ -177,11 +168,7 @@ public boolean isPrivate()  { return _private; }
 /**
  * Sets whether this property is private.
  */
-public void setPrivate(boolean isPrivate)
-{
-    if(isPrivate==_private) return;
-    firePropChange("Private", _private, _private = isPrivate);
-}
+public void setPrivate(boolean isPrivate)  { _private = isPrivate; }
 
 /**
  * Returns the number type.
@@ -195,7 +182,7 @@ public void setNumberType(NumberType aNumberType)
 {
     if(aNumberType==_numberType) return;
     setType(Type.Number);  // Ensure type is number
-    firePropChange("NumberType", _numberType, _numberType = aNumberType);
+    _numberType = aNumberType;
 }
 
 /**
@@ -250,11 +237,7 @@ public String getRelationEntityName()  { return _relEntityName; }
 /**
  * Sets the name of the entity that this relation property points to. 
  */
-public void setRelationEntityName(String aName)
-{
-    if(SnapUtils.equals(aName, getRelationEntityName())) return;
-    firePropChange("RelationEntityName", _relEntityName, _relEntityName = aName);
-}
+public void setRelationEntityName(String aName)  { _relEntityName = aName; }
 
 /**
  * Converts an arbitrary object to property type.
@@ -313,11 +296,6 @@ public boolean equals(Object anObj)
     // Return true since all checks passed
     return true;
 }
-
-/**
- * Standard clone implementation.
- */
-public Property clone()  { return (Property)super.clone(); }
 
 /**
  * Implements comparable to compare based on name.

@@ -9,7 +9,7 @@ import snap.util.*;
  * This class represents an entity for a data source. It has a list of properties, some of which are simple
  * attributes and some of which are relationships.
  */
-public class Entity extends SnapObject implements XMLArchiver.Archivable {
+public class Entity implements XMLArchiver.Archivable {
     
     // The schema that owns this entity
     Schema             _schema;
@@ -25,9 +25,6 @@ public class Entity extends SnapObject implements XMLArchiver.Archivable {
     
     // Cached lists of properties that are attributes (simple properties), relations, primaries, etc.
     List <Property>    _attrs, _relations, _primaries, _attrsSorted, _relationsSorted;
-    
-    // A Listener to catch child Property PropChanges
-    PropChangeListener _propLsnr = pc -> propertyDidPropChange(pc);
     
     // Constants for properties
     final public static String Name_Prop = "Name";
@@ -69,7 +66,7 @@ public void setName(String aName)
 {
     String name = aName!=null? aName.trim().replace(" ", "") : null;
     if(SnapUtils.equals(name, _name)) return;
-    firePropChange(Name_Prop, _name, _name = name);
+    _name = name;
 }
 
 /**
@@ -114,11 +111,7 @@ public void addProperty(Property aProperty, int anIndex)
     // Add property to list
     _props.add(anIndex, aProperty);
     aProperty.setEntity(this);  // Set Property.Entity to this
-    aProperty.addPropChangeListener(_propLsnr);  // Start listening to PropertyChanges
     _attrs = _attrsSorted = _relations = _relationsSorted = _primaries = null;  // Reset cached lists
-    
-    // Fire property change event
-    firePropChange("Property", null, aProperty, anIndex);
 }
 
 /**
@@ -132,13 +125,9 @@ public void addProperty(Property ... theProperties)  { for(Property p : thePrope
 public Object removeProperty(int anIndex)
 {
     // Remove property from list
-    Property property = _props.remove(anIndex);
-    property.removePropChangeListener(_propLsnr);  // Stop listening to PropertyChanges
+    Property prop = _props.remove(anIndex);
     _attrs = _attrsSorted = _relations = _relationsSorted = _primaries = null;  // Reset cached lists
-
-    // Fire property change event and return
-    firePropChange("Property", property, null, anIndex);
-    return property;
+    return prop;
 }
 
 /**
@@ -307,11 +296,6 @@ public Property getKeyPathProperty(String aKeyPath)
 }
 
 /**
- * PropChangeListener implementation to forward Property property changes to entity property change listener.
- */
-protected void propertyDidPropChange(PropChange anEvent)  { firePropChange(anEvent); }
-
-/**
  * Standard equals method.
  */
 public boolean equals(Object anObj)
@@ -324,18 +308,6 @@ public boolean equals(Object anObj)
     if(!SnapUtils.equals(other._name, _name)) return false;
     if(!SnapUtils.equals(other._props, _props)) return false;
     return true;  // Return true since all checks passed
-}
-
-/**
- * Standard clone implementation.
- */
-public Entity clone()
-{
-    // Do normal version, reset property list and clone properties
-    Entity clone = (Entity)super.clone();
-    clone._props = new ArrayList();
-    for(Property property : getProperties()) clone.addProperty(property.clone());
-    return clone;
 }
 
 /**

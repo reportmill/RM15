@@ -8,7 +8,7 @@ import snap.util.*;
 /**
  * This class describes the structure of a data source by managing a list of entities.
  */
-public class Schema extends SnapObject implements XMLArchiver.Archivable {
+public class Schema implements XMLArchiver.Archivable {
 
     // The schema name
     String           _name;
@@ -37,11 +37,7 @@ public String getName()  { return _name; }
 /**
  * Sets the name of the entity.
  */
-public void setName(String aName)
-{
-    if(SnapUtils.equals(aName, _name)) return;
-    firePropChange("Name", _name, _name = aName);
-}
+public void setName(String aName)  { _name = aName; }
 
 /**
  * Returns the number of entities in this schema.
@@ -75,9 +71,6 @@ public void addEntity(Entity anEntity, int anIndex)
     // Add entity, set Entity.Schema and clear RootEntity
     getEntities().add(anIndex, anEntity);
     anEntity.setSchema(this); _rootEntity = null;
-
-    // Fire PropertyChange
-    firePropChange("Entity", null, anEntity, anIndex);
 }
 
 /**
@@ -88,9 +81,6 @@ public Entity removeEntity(int anIndex)
     // Remove entity and clear RootEntity
     Entity entity = getEntities().remove(anIndex);
     _rootEntity = null;
-    
-    // Fire PropertyChange and return
-    firePropChange("Entity", entity, null, anIndex);
     return entity;
 }
 
@@ -167,18 +157,6 @@ public boolean equals(Object anObj)
     if(!SnapUtils.equals(other._name, _name)) return false;
     if(!other._entities.equals(_entities)) return false;
     return true;  // Return true since all checks passed
-}
-
-/**
- * Standard clone implementation.
- */
-public Schema clone()
-{
-    // Do normal version, reset Entities list and clone entities and return
-    Schema clone = (Schema)super.clone();
-    clone._entities = new ArrayList();
-    for(Entity entity : getEntities()) clone.addEntity(entity.clone());
-    return clone;
 }
 
 /**
