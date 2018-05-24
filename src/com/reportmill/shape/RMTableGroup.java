@@ -37,9 +37,8 @@ public void setMainTable(RMTable aTable)
     // Set new main table and fire property change
     firePropChange("MainTable", _mainTable, _mainTable = aTable);
     
-    // Remove current child table and add new main table
-    while(getChildCount()>0) removeChild(0).setParent(this);
-    addChild(_mainTable);
+    // Call relayout to actually set new MainTable as child so changes are hidden from undo
+    relayout();
 }
 
 /**
@@ -285,7 +284,16 @@ public boolean getStrokeOnTop()  { return true; }
  */
 protected void layoutImpl()
 {
-    if(getChildCount()==0) return;
+    // If no MainTable, just return
+    if(_mainTable==null) return; //if(getChildCount()==0) return;
+    
+    // Make sure MainTable is only child
+    if(getChildCount()!=1 || getChild(0)!=_mainTable) {
+        while(getChildCount()>0) removeChild(0).setParent(this);
+        addChild(_mainTable);
+    }
+
+    // Set MainTable bounds to full bounds
     RMShape child = getChild(0);
     child.setBounds(0, 0, getWidth(), getHeight());
 }

@@ -979,23 +979,36 @@ public void deepChange(Object aShape, PropChange anEvent)
     //if(getTextEditor()!=null && getTextEditor().getTextShape()==aShape &&
     //    (anEvent.getSource() instanceof RMXString || anEvent.getSource() instanceof RMXStringRun)) return;
     
-    // If undoer exists, set selected objects and add property change
-    Undoer undoer = getUndoer();
-    if(undoer!=null) {
-        
-        // If no changes yet, set selected objects
-        if(undoer.getActiveUndoSet().getChangeCount()==0)
-            undoer.setUndoSelection(new ArrayList(getSelectedOrSuperSelectedShapes()));
-        
-        // Add property change
-        undoer.addPropertyChange(anEvent);
-        
-        // Save UndoerChanges after delay
-        saveUndoerChangesLater();
-    }
+    // Add undo change
+    addUndoChange(anEvent);
     
-    // Forward DeepChanges to EditorPane. Should have add/removeDeepChagneLister methods for this.
+    // Reset EditorPane UI
     RMEditorPane ep = getEditorPane(); ep.resetLater();
+}
+
+/**
+ * Property change.
+ */
+protected void addUndoChange(PropChange anEvent)
+{
+    // Get undoer (just return if null)
+    Undoer undoer = getUndoer(); if(undoer==null) return;
+    
+    // If no undos and change is RMDocument.SelectedPage or RMTableGroup.MainTable, just return
+    if(!undoer.hasUndos()) { String pname = anEvent.getPropName();
+        if(pname=="SelectedPage") return;
+        if(pname=="MainTable") return;
+    }
+        
+    // If no changes yet, set selected objects
+    if(undoer.getActiveUndoSet().getChangeCount()==0)
+        undoer.setUndoSelection(new ArrayList(getSelectedOrSuperSelectedShapes()));
+    
+    // Add property change
+    undoer.addPropertyChange(anEvent);
+    
+    // Save UndoerChanges after delay
+    saveUndoerChangesLater();
 }
 
 /**
