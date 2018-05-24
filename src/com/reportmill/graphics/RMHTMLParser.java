@@ -26,10 +26,10 @@ public class RMHTMLParser {
 /**
  * Returns an xstring for the given html string and a default font.
  */
-public static RMXString parse(String html, RMFont baseFont)
+public static RMXString parse(String html, RMFont baseFont, RMParagraph aPGraph)
 {
     // Get HTML String from HTMLParser
-    RMXString s = new HTMLParser(html, baseFont).getXString();
+    RMXString s = new HTMLParser(html, baseFont, aPGraph).getXString();
     
     // Find the start of any trailing whitespace characters in string HTML string
     int whitespaceStart = s.length();
@@ -56,7 +56,7 @@ private static class HTMLParser extends HTMLEditorKit.ParserCallback {
     Map                 _attrs = new Hashtable();
     
     // The current paragraph attributes
-    RMParagraph         _pgraph = RMParagraph.DEFAULT;
+    RMParagraph         _pgraph;
     
     // The current stack of fonts (during parsing)
     List                _fontStack = new ArrayList();
@@ -68,13 +68,12 @@ private static class HTMLParser extends HTMLEditorKit.ParserCallback {
     boolean             _isSymbol = false;
 
     /** Creates a new parser for an html string and a default font. */
-    public HTMLParser(String aString, RMFont baseFont)
+    public HTMLParser(String aString, RMFont baseFont, RMParagraph aPGraph)
     {
-        // Initialize attributes map
+        // Initialize attributes map, FontStack and PGraph
         _attrs.put(RMTextStyle.FONT_KEY, baseFont);
-        
-        // Initialize font stack
         _fontStack.add(baseFont);
+        _pgraph = aPGraph!=null? aPGraph : RMParagraph.DEFAULT;
         
         // Convert known character entity references to unicode chars
         String s2 = aString;
@@ -94,6 +93,8 @@ private static class HTMLParser extends HTMLEditorKit.ParserCallback {
         
         // Catch exceptions
         catch(Exception e) { e.printStackTrace(); }
+        
+        
     }
     
     /** Returns the XString resulting from the parse. */

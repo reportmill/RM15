@@ -179,12 +179,13 @@ public static Object rtf(Object aValue) { return RMRTF(aValue); }
 public static Object RMHTML(Object aValue)
 {
     // Get default font (or if val is xstring, get its first font)
-    RMFont font = RMFont.getDefaultFont();
-    if(aValue instanceof RMXString)
-        font = ((RMXString)aValue).getFontAt(0);
+    RMXString xstr = aValue instanceof RMXString? (RMXString)aValue : null;
+    String str = xstr!=null? xstr.getText() : aValue.toString();
+    RMFont font = xstr!=null? xstr.getFontAt(0) : RMFont.getDefaultFont();
+    RMParagraph pgraph = xstr!=null? xstr.getParagraphAt(0) : RMParagraph.DEFAULT;
     
     // Return result of parsing html from val string
-    return RMHTMLParser.parse(aValue.toString(), font);
+    return RMHTMLParser.parse(str, font, pgraph);
 }
 
 /**
