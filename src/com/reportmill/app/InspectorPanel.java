@@ -13,8 +13,8 @@ import snap.view.*;
  */
 public class InspectorPanel extends RMEditorPane.SupportPane {
     
-    // The selection path panel
-    ChildView             _selectionPathPane;
+    // The selection path view
+    ChildView             _selPathView;
     
     // The ShapeButton
     ToggleButton          _shapeBtn;
@@ -56,9 +56,9 @@ public InspectorPanel(RMEditorPane anEP)  { super(anEP); }
  */
 public void initUI()
 {
-    // Get SelectionPathPanel and InspectorPanel
-    _selectionPathPane = getView("SelectionPathPanel", ChildView.class);
-    enableEvents(_selectionPathPane, MouseRelease);
+    // Get SelPathView and InspectorPanel
+    _selPathView = getView("SelPathView", ChildView.class);
+    enableEvents(_selPathView, MouseRelease);
     _shapeBtn = getView("ShapeSpecificButton", ToggleButton.class);
     
     // Create the Action that redispatches the event and add the action to the action map
@@ -97,8 +97,8 @@ public void resetUI()
     if(owner!=null)
         owner.resetLater();
     
-    // Reset the selection path matrix
-    resetSelectionPathMatrix();
+    // Reset the selection path view
+    resetSelPathView();
     
     // Get image for current tool and set in ShapeSpecificButton
     Image timage = tool.getImage();
@@ -126,8 +126,8 @@ public void respondUI(ViewEvent anEvent)
     if(anEvent.getName().startsWith("SelPath"))
         popSelection(SnapUtils.intValue(anEvent.getName()));
     
-    // Handle SelectionPathPanel
-    if(anEvent.equals("SelectionPathPanel") && anEvent.isMouseRelease())
+    // Handle SelPathView
+    if(anEvent.equals("SelPathView") && anEvent.isMouseRelease())
         setVisible(9);
     
     // Reset ui
@@ -217,9 +217,9 @@ protected void setInspector(ViewOwner anOwner)
 }
 
 /**
- * Updates the selection path UI.
+ * Updates the selection path view.
  */
-public void resetSelectionPathMatrix() 
+public void resetSelPathView() 
 {
     // Get main editor, Selected/SuperSelected shape and shape that should be selected in selection path
     RMEditor editor = getEditor();
@@ -234,9 +234,9 @@ public void resetSelectionPathMatrix()
     _deepestShape = shape; _selectedShape = selectedShape;
 
     // Remove current buttons
-    for(int i=_selectionPathPane.getChildCount()-1; i>=0; i--) {
-        View button = _selectionPathPane.removeChild(i);
-        if(button instanceof ToggleButton) getToggleGroup("SelectionPath").remove((ToggleButton)button);
+    for(int i=_selPathView.getChildCount()-1; i>=0; i--) {
+        View button = _selPathView.removeChild(i);
+        if(button instanceof ToggleButton) getToggleGroup("SelPathGroup").remove((ToggleButton)button);
     }
     
     // Add buttons for DeepestShape and its ancestors
@@ -253,9 +253,9 @@ public void resetSelectionPathMatrix()
         if(shp==selectedShape) button.setSelected(true);  // Whether selected
         
         // Add button to selection path panel and button group
-        _selectionPathPane.addChild(button, 0); button.setOwner(this);
-        getToggleGroup("SelectionPath").add(button);
-        if(shp!=_deepestShape) _selectionPathPane.addChild(new Sep(), 1);
+        _selPathView.addChild(button, 0); button.setOwner(this);
+        getToggleGroup("SelPathGroup").add(button);
+        if(shp!=_deepestShape) _selPathView.addChild(new Sep(), 1);
     }
 }
 
@@ -302,9 +302,9 @@ public void popSelection(int selIndex)
  */
 public void showDocumentInspector()
 {
-    setVisible(0); // Select the shape specific inspector
-    resetSelectionPathMatrix(); // Reset selection path matrix
-    popSelection(0); // Pop selection
+    setVisible(0);
+    resetSelPathView();
+    popSelection(0);
 }
 
 /** View to render SelectionPath separator. */

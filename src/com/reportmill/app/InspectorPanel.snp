@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SpringView width="275" height="425" PrefWidth="275" PrefHeight="425">
-  <HBox Name="SelectionPathPanel" x="3" y="3" width="269" height="42">
-    <BevelBorder />
-  </HBox>
+  <ScaleBox x="3" y="3" width="269" height="42">
+    <HBox Name="SelPathView" MinWidth="269">
+      <BevelBorder />
+    </HBox>
+  </ScaleBox>
   <HBox x="3" y="48" width="269" height="48" Align="CENTER">
     <ToggleButton Name="ShapeSpecificButton" PrefWidth="66" PrefHeight="42" ToolTip="Shape-Specific Attributes Inspector" Selected="true" ToggleGroup="InspTG" Position="CENTER_LEFT" />
     <ToggleButton Name="ShapeFillsButton" PrefWidth="66" PrefHeight="42" ToolTip="Fill &amp; Stroke Inspector" image="ShapeFills.png" ToggleGroup="InspTG" Position="CENTER" />
