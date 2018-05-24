@@ -542,6 +542,7 @@ public RMShape fromXML(XMLArchiver anArchiver, XMLElement anElement)
     // Unarchive shape and children and return
     fromXMLShape(anArchiver, anElement); // Unarchive shape
     fromXMLChildren(anArchiver, anElement); // Unarchive children
+    layoutDeep();
     return this;
 }
 

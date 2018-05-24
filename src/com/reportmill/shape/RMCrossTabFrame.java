@@ -60,7 +60,8 @@ public RMShape rpgAll(ReportOwner anRptOwner, RMShape aParent)
     if(ctab.getWidth()>getWidth()) rclone.shrinkCrossTabToFitFrameWidth(ctab);
     
     // If paginating, return paginated frame clone, otherwise just frame clone
-    if(anRptOwner.getPaginate()) return rclone.paginateFrame(ctab);
+    if(anRptOwner.getPaginate() && getParent(RMTableRow.class)==null)
+        return rclone.paginateFrame(ctab);
     return rclone;
 }
 
@@ -91,7 +92,7 @@ private RMParentShape paginateFrame(RMCrossTab ctab)
 {
     // Create ShapeList and while remainder is greater than page height, divide and add
     ReportOwner.ShapeList slist = new ReportOwner.ShapeList(); slist.addChild(this);
-    while(ctab.getHeight()>getHeight() && getParent(RMTableRow.class)==null) {
+    while(ctab.getHeight()>getHeight()) {
         RMCrossTabFrame frame = new RMCrossTabFrame(); frame.copyShape(this);
         ctab = (RMCrossTab)ctab.divideShapeFromTop(getHeight()); // Divide clone from top by frame height
         ctab.setXY(0,0);
