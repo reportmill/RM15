@@ -416,7 +416,7 @@ public void mouseDragged(T aTable, ViewEvent anEvent)
     // Update last mouse point, rese table row height and repaint table
     _lastMousePoint.y += dh;
     tableRow.setHeight(tableRow.height() + dh);
-    aTable.repaint();
+    aTable.relayout(); aTable.repaint();
 }
 
 /**
