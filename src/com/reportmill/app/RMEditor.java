@@ -998,6 +998,7 @@ protected void addUndoChange(PropChange anEvent)
     if(!undoer.hasUndos()) { String pname = anEvent.getPropName();
         if(pname=="SelectedPage") return;
         if(pname=="MainTable") return;
+        if(pname=="Version") return;
     }
         
     // If no changes yet, set selected objects
