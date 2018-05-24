@@ -61,13 +61,13 @@ public void addChild(RMShape aChild, int anIndex)
     _children.add(anIndex, aChild);
     
     // If this shape has PropChangeListeners, start listening to children as well
-    if(hasDeepChangeListener()) {
-        aChild.addPropChangeListener(getChildPCL()); aChild.addDeepChangeListener(getChildDCL()); }
+    if(_childPCL!=null) {
+        aChild.addPropChangeListener(_childPCL); aChild.addDeepChangeListener(_childDCL); }
     
     // Fire property change
     firePropChange("Child", null, aChild, anIndex);
     
-    // Register for repaint and validation
+    // Register to layout this shape and parents and repaint
     relayout(); relayoutParent(); repaint(); setNeedsLayoutDeep(true);
 }
 
@@ -80,12 +80,15 @@ public RMShape removeChild(int anIndex)
     RMShape child = _children.remove(anIndex);
     child.setParent(null);
     
-    // Fire property change
-    firePropChange("Child", child, null, anIndex);
+    // If this view has child prop listeners, clear from child
+    if(_childPCL!=null) {
+        child.removePropChangeListener(_childPCL); child.removeDeepChangeListener(_childDCL); }
     
-    // Stop listening to PropertyChanges, repaint, revalidate and return
-    child.removePropChangeListener(getChildPCL()); child.removeDeepChangeListener(getChildDCL());
+    // Register to layout this shape and parents and repaint
     relayout(); relayoutParent(); repaint();
+    
+    // Fire property change and return
+    firePropChange("Child", child, null, anIndex);
     return child;
 }
 
@@ -201,23 +204,45 @@ public <T extends RMShape> List<T> getChildrenWithClass(Class<T> aClass, List aL
 }
 
 /**
- * Adds a deep change listener to shape to listen for shape changes and property changes received by shape.
+ * Override to add change listener to children on first call.
  */
 public void addDeepChangeListener(DeepChangeListener aLsnr)
 {
-    boolean first = !hasDeepChangeListener();
+    // Do normal version
     super.addDeepChangeListener(aLsnr);
-    if(first)   // If first listener, add for children
-        for(int i=0, iMax=getChildCount(); i<iMax; i++) { RMShape child = getChild(i);
-            child.addPropChangeListener(getChildPCL()); child.addDeepChangeListener(getChildDCL()); }
+    
+    // If child listeners not yet set, create/add for children
+    if(_childPCL==null) {
+        _childPCL = pc -> childDidPropChange(pc); _childDCL = (lsnr,pc) -> childDidDeepChange(lsnr,pc);
+        for(RMShape child : getChildren()) {
+            child.addPropChangeListener(_childPCL); child.addDeepChangeListener(_childDCL); }
+    }
 }
 
-// Return Child PropChangeListener and DeepChangeListener
-PropChangeListener getChildPCL()  { return _childPCL!=null? _childPCL : (_childPCL=pc -> childDidPropChange(pc)); }
-DeepChangeListener getChildDCL()  { return _childDCL!=null? _childDCL : (_childDCL=(l,p) -> childDidDeepChange(l,p)); }
+/**
+ * Override to remove this view as change listener to children when not needed.
+ */
+public void removeDeepChangeListener(DeepChangeListener aDCL)
+{
+    // Do normal version
+    super.removeDeepChangeListener(aDCL);
+    
+    // If no more deep listeners, remove 
+    if(!_pcs.hasDeepListener() && _childPCL!=null) {
+        for(RMShape child : getChildren()) {
+            child.removePropChangeListener(_childPCL); child.removeDeepChangeListener(_childDCL); }
+        _childPCL = null; _childDCL = null;
+    }
+}
 
-/** Called when child/descendant changes forward changes on to deep listeners. */
+/**
+ * Property change listener implementation to forward changes on to deep listeners.
+ */
 void childDidPropChange(PropChange aPC)  { _pcs.fireDeepChange(this, aPC); }
+
+/**
+ * Deep property change listener implementation to forward deep changes to deep listeners.
+ */
 void childDidDeepChange(Object aLsnr, PropChange aPC)  { _pcs.fireDeepChange(aLsnr, aPC); }
 
 /**
