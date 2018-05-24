@@ -798,6 +798,7 @@ public RMTextShape clone()
     // Get normal shape clone, clone XString, clear layout and return
     RMTextShape clone = (RMTextShape)super.clone();
     clone._xstr = null; clone._textBox = null; clone._textEdtr = null;
+    clone._richTextLsnr = pc -> richTextDidPropChange(pc);
     if(_xstr!=null) clone.setXString(_xstr.clone());
     return clone;
 }
