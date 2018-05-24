@@ -109,7 +109,7 @@ public void respondUI(ViewEvent anEvent)
     if(anEvent.equals("SaveButton")) {
         RMImageData idata = image.getImageData(); if(idata==null) return;
         String type = idata.getType(); if(StringUtils.length(type)==0) return;
-        String path = FilePanel.showOpenPanel(getEditor(), type.toUpperCase() + " File", type); if(path==null) return;
+        String path = FilePanel.showSavePanel(getEditor(), type.toUpperCase() + " File", type); if(path==null) return;
         SnapUtils.writeBytes(idata.getBytes(), path);
     }
     
