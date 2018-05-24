@@ -34,7 +34,7 @@ public void setDoc(RMDocument aDoc)
     if(_editor._selShapes!=null) _editor.setSuperSelectedShape(getSelPage());
     
     // Create and install undoer
-    _undoer = new Undoer();
+    if(_editor.isEditing()) _undoer = new Undoer();
 }
 
 }

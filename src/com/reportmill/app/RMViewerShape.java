@@ -125,6 +125,16 @@ protected double getPrefHeightImpl(double aWidth)  { RMDocument d = getDoc(); re
 protected void setNeedsLayoutDeep(boolean aVal)  { super.setNeedsLayoutDeep(aVal); if(aVal) _viewer.relayout(); }
 
 /**
+ * Lays out children deep.
+ */
+public void layoutDeep()
+{
+    undoerDisable();
+    super.layoutDeep();
+    undoerEnable();
+}
+
+/**
  * Override to layout doc.
  */
 protected void layoutImpl()

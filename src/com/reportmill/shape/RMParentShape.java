@@ -489,7 +489,7 @@ protected RMShape rpgChildren(ReportOwner anRptOwner, RMParentShape aParent)
 public RMParentShape clone()
 {
     RMParentShape clone = (RMParentShape)super.clone();
-    clone._children = new ArrayList();
+    clone._children = new ArrayList(); clone._childPCL = null; clone._childDCL = null;
     return clone;
 }
 
