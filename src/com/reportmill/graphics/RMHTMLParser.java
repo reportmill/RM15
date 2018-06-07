@@ -239,7 +239,7 @@ private static class HTMLParser extends HTMLEditorKit.ParserCallback {
         
         // Handle Underline (<U>)
         if(t.equals(HTML.Tag.U))
-            _attrs.remove(RMTextStyle.UNDERLINE_KEY);
+            _attrs.put(RMTextStyle.UNDERLINE_KEY, 0);
         
         // Handle paragraph end (</P>)
         if(t.equals(HTML.Tag.P))
