@@ -68,10 +68,10 @@ public RMCrossTabCell removeCell(int anIndex)  { return _cells.remove(anIndex); 
 /**
  * Returns the x of this column.
  */
-public float getX()
+public double getX()
 {
     double x = 0; for(int i=0, iMax=getIndex(); i<iMax; i++) x += _table.getCol(i).getWidth();
-    return (float)x;
+    return x;
 }
 
 /**

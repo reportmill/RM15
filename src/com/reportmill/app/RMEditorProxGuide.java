@@ -309,7 +309,7 @@ public static Point pointSnappedToProximityGuides(RMEditor anEditor, Point aPoin
     
     // If mode is resize, set bounds to just snap a handle
     else {
-        bounds = new Rect(aPoint.getX(), aPoint.getY(), 0, 0);
+        bounds = new Rect(aPoint.x, aPoint.y, 0, 0);
         bounds = parent.parentToLocal(bounds, null).getBounds();
     }
 
@@ -358,19 +358,19 @@ public static Point pointSnappedToProximityGuides(RMEditor anEditor, Point aPoin
 
     // If
     if(minDX <= maxDX && minDX < 5)
-        aPoint.setX(aPoint.getX() - (bounds.getX() - minDXShape.getFrameX()));
+        aPoint.setX(aPoint.x - (bounds.getX() - minDXShape.getFrameX()));
 
     // If
     if(maxDX < minDX && maxDX < 5)
-        aPoint.setX(aPoint.getX() - (float)(bounds.getMaxX() - maxDXShape.getFrameMaxX()));
+        aPoint.setX(aPoint.x - (bounds.getMaxX() - maxDXShape.getFrameMaxX()));
 
     // If
     if(minDY <= maxDY && minDY < 5)
-        aPoint.setY(aPoint.getY() - (bounds.getY() - minDYShape.getFrameY()));
+        aPoint.setY(aPoint.y - (bounds.getY() - minDYShape.getFrameY()));
 
     // If
     if(maxDY < minDY && maxDY < 5)
-        aPoint.setY(aPoint.getY() - (float)(bounds.getMaxY() - maxDYShape.getFrameMaxY()));
+        aPoint.setY(aPoint.y - (bounds.getMaxY() - maxDYShape.getFrameMaxY()));
 
     // Return point
     return aPoint;

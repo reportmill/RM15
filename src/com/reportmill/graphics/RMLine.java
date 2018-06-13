@@ -215,7 +215,7 @@ public double getTangent(double t, Size tan)
     
     // If tan is present, set and normalize
     if(tan!=null) {
-        tan.width = (float)tanW; tan.height = (float)tanH; tan.normalize(); }
+        tan.width = tanW; tan.height = tanH; tan.normalize(); }
     
     // Return atan converted to degrees
     return Math.atan2(tanH, tanW)*180/Math.PI;

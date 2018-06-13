@@ -76,7 +76,7 @@ public static RMShape getTextCharsShape(RMTextShape aText)
                 RMTextShape glyph = new RMTextShape(gstring); glyph.setAutosizing("~-~,~-~");
 
                 charsShape.addChild(glyph);
-                runBounds.width = (float)Math.ceil(Math.max(advance, glyphBounds.getMaxX()));
+                runBounds.width = Math.ceil(Math.max(advance, glyphBounds.getMaxX()));
                 glyph.setFrame(getBoundsFromTextBounds(aText, runBounds));
             }
 

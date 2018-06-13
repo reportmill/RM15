@@ -176,7 +176,7 @@ public class TBInputAdapter extends RMViewerEvents {
             double scale = getZoomFactor();
             Point p = anEvent.getPoint(); p.x /= scale; p.y /= scale;
             double theta = getMouseAngle(p);
-            _scene.setRoll3D(_scene.getRoll3D()+(float)Math.toDegrees(theta - _lastRollAngle));
+            _scene.setRoll3D(_scene.getRoll3D() + Math.toDegrees(theta - _lastRollAngle));
             _lastRollAngle = theta;
             positionKnob(p);
             repaint();

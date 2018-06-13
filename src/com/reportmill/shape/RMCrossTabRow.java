@@ -71,7 +71,7 @@ public RMCrossTabCell removeCell(int anIndex)  { return _cells.remove(anIndex); 
 public double getY()
 {
     double y = 0; for(int i=0, iMax=getIndex(); i<iMax; i++) y += _table.getRow(i).getHeight();
-    return (float)y;
+    return y;
 }
 
 /**
