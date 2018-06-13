@@ -393,7 +393,7 @@ boolean splitRow(RMTableRowRPG aRow)
         part1Height = aRow.getHeight() - minSplitRemainderHeight;
 
     // Divide row by part1Height, grow to best height and validate
-    RMTableRowRPG split = (RMTableRowRPG)aRow.divideShapeFromTop((float)part1Height); aRow._split = split;
+    RMTableRowRPG split = (RMTableRowRPG)aRow.divideShapeFromTop(part1Height); aRow._split = split;
     split.setBestHeight();
     split.layoutDeep();
     return true;
@@ -408,7 +408,7 @@ protected void moveRowsToBottom()
     double shift = 0;
     for(int i=0, iMax=getChildCount(); i<iMax; i++) { RMTableRowRPG rowRPG = (RMTableRowRPG)getChild(i);
         if(shift==0 && rowRPG._row.getMoveToBottom()) { shift = getHeight() - getChildLast().getFrameMaxY(); }
-        if(shift>0) rowRPG.setY(rowRPG.getY() + (float)shift);
+        if(shift>0) rowRPG.setY(rowRPG.getY() + shift);
     }
 }
 
@@ -427,7 +427,6 @@ protected RMTableRPG makeColumns()
     // Create first ColumnsPage
     RMTableRPG columnsPage = new RMTableRPG(_rptOwner, null);
     columnsPage.setBounds(_table.getX(), _table.getY(), width, _table.getHeight());
-    columnsPage.setWidth((float)width);
     
     // Iterate over pages and add to ColumnsPages
     RMTableRPG page = this, cpage = columnsPage;
@@ -439,7 +438,6 @@ protected RMTableRPG makeColumns()
         if(page!=null) {
             cpage._nextPage = new RMTableRPG(_rptOwner, null); cpage = cpage._nextPage;
             cpage.setBounds(_table.getX(), _table.getY(), width, _table.getHeight());
-            cpage.setWidth((float)width);
         }
     }
 

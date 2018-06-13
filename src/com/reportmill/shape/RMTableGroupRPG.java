@@ -67,9 +67,16 @@ public RMShape rpgAll()
         rpgTable(table);
     }
     
+    // Get return shape - convert to multi columns if needed (and reset x/y of column pages)
+    RMTableRPG rshape = this;
+    if(_table.getColumnCount()>1) {
+        rshape = makeColumns(); double x = _tgroup.getX(), y = _tgroup.getY();
+        for(RMTableRPG shp=rshape;shp!=null;shp=shp._nextPage) shp.setXY(x,y);
+    }
+    
     // If only one page generated, return it, otherwise return ShapeList
     ReportOwner.ShapeList slist = new ReportOwner.ShapeList(); //if(_nextPage==null) return this;
-    for(RMTableRPG pg=this; pg!=null; pg=pg._nextPage) slist.addChild(pg);
+    for(RMTableRPG pg=rshape; pg!=null; pg=pg._nextPage) slist.addChild(pg);
     return slist;
 }
 
