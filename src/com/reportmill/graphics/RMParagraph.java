@@ -48,14 +48,14 @@ public AlignX getAlignmentX()
 }
 
 /**
+ * Returns indentation of first line in paragraph (this can be set different than successive lines).
+ */
+public double getFirstIndent() { return _lstyle.getFirstIndent(); }
+
+/**
  * Returns the left side indentation of this paragraph.
  */
 public double getLeftIndent() { return _lstyle.getLeftIndent(); }
-
-/**
- * Returns left side indentation of first line in this paragraph (this can be set different than successive lines).
- */
-public double getLeftIndentFirst() { return _lstyle.getLeftIndentFirst(); }
 
 /**
  * Returns the right side indentation of this paragraph.
@@ -136,12 +136,12 @@ public RMParagraph deriveAligned(AlignX anAlign)
 /**
  * Returns a paragraph identical to the receiver, but with the given indentation values.
  */
-public RMParagraph deriveIndent(double leftIndent, double leftIndentFirst, double rightIndent)
+public RMParagraph deriveIndent(double firstIndent, double leftIndent, double rightIndent)
 {
     RMParagraph ps = clone();
-    ps._lstyle = _lstyle.copyFor(TextLineStyle.LEFT_INDENT_KEY, leftIndent);
-    ps._lstyle = _lstyle.copyFor(TextLineStyle.FIRST_INDENT_KEY, leftIndent);
-    ps._lstyle = _lstyle.copyFor(TextLineStyle.RIGHT_INDENT_KEY, leftIndent);
+    ps._lstyle = ps._lstyle.copyFor(TextLineStyle.FIRST_INDENT_KEY, firstIndent);
+    ps._lstyle = ps._lstyle.copyFor(TextLineStyle.LEFT_INDENT_KEY, leftIndent);
+    ps._lstyle = ps._lstyle.copyFor(TextLineStyle.RIGHT_INDENT_KEY, rightIndent);
     return ps;
 }
 
@@ -211,5 +211,10 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
     _lstyle = new TextLineStyle().fromXML(anArchiver, anElement);
     return this;
 }
+
+/**
+ * Standard toString implementation.
+ */
+public String toString()  { return "RMParagraph: " + _lstyle; }
 
 }

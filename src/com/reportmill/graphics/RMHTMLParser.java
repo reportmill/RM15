@@ -136,16 +136,14 @@ private static class HTMLParser extends HTMLEditorKit.ParserCallback {
             _listLevel++;
             if(!_string.getRunLast().toString().endsWith("\n")) _string.addChars("\n");
             RMFont font = (RMFont)_attrs.get(RMTextStyle.FONT_KEY);
-            //double firstIndent = _pgraph.getTab(_listLevel-1); this solution would support multi-line list items
-            //double leftIndent = firstIndent + font.getStringAdvance(((char)8226) + " ");
-            //_pgraph = _pgraph.deriveIndent(leftIndent, firstIndent, _pgraph.getRightIndent());
+            double firstIndent = _pgraph.getTab(_listLevel-1);
+            double leftIndent = firstIndent + font.getStringAdvance(((char)8226) + " ");
+            _pgraph = _pgraph.deriveIndent(firstIndent, leftIndent, _pgraph.getRightIndent());
         }
         
         // Handle List item (<LI>)
-        if(aTag.equals(HTML.Tag.LI)) {
-            String indStr = ""; for(int i=0;i<_listLevel;i++) indStr += '\t';
-            _string.addChars((indStr + (char)8226) + ' ', _attrs);
-        }
+        if(aTag.equals(HTML.Tag.LI))
+            _string.addChars((char)8226 + " ", _attrs);
     
         // Handle FONT (<FONT face="Times, Arial" size=3 color=#FF00FF00>)
         if(aTag.equals(HTML.Tag.FONT)) {
@@ -254,9 +252,9 @@ private static class HTMLParser extends HTMLEditorKit.ParserCallback {
             _listLevel = Math.max(0, _listLevel-1);
             if(!_string.getRunLast().toString().endsWith("\n")) _string.addChars("\n");
             RMFont font = (RMFont)_attrs.get(RMTextStyle.FONT_KEY);
-            //double firstIndent = _listLevel==0? 0 : _pgraph.getTab(_listLevel-1);
-            //double leftIndent = _listLevel==0? 0 : firstIndent + font.getStringAdvance(((char)8226) + " ");
-            //_pgraph = _pgraph.deriveIndent(leftIndent, firstIndent, _pgraph.getRightIndent());
+            double firstIndent = _listLevel==0? 0 : _pgraph.getTab(_listLevel-1);
+            double leftIndent = _listLevel==0? 0 : firstIndent + font.getStringAdvance(((char)8226) + " ");
+            _pgraph = _pgraph.deriveIndent(firstIndent, leftIndent, _pgraph.getRightIndent());
         }
     
         // Handle CENTER
