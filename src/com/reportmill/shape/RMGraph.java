@@ -571,6 +571,11 @@ public static class FontBox extends Rect {
 }
 
 /**
+ * Override to trigger relayout.
+ */
+public void setFill(RMFill aFill)  { super.setFill(aFill); relayout(); }
+
+/**
  * Standard clone implementation.
  */
 public RMGraph clone()
