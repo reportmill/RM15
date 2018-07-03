@@ -4,8 +4,8 @@
 package com.reportmill.shape;
 import com.reportmill.base.*;
 import com.reportmill.shape.RMGraph.*;
+import java.util.Arrays;
 import java.util.List;
-import snap.util.ListUtils;
 
 /**
  * A shape class for a generated RMGraph.
@@ -52,9 +52,9 @@ public RMGraphRPG(RMGraph aGraph, ReportOwner anRptOwner)
             // Make dataset a copy of last table row group
             dataset = tableRowGroup.cloneDeep();
             
-            // If tableRowGroup is leaf, embed it inside a list (can't remember why I though this was needed)
+            // If tableRowGroup is leaf, embed it inside a list (can't remember why I thought this was needed)
             if(tableRowGroup.isLeaf())
-                dataset = ListUtils.newList(dataset);
+                dataset = Arrays.asList(dataset); //ListUtils.newList(dataset);
         }
         
         // If dataset key, evaluate it
@@ -67,7 +67,7 @@ public RMGraphRPG(RMGraph aGraph, ReportOwner anRptOwner)
     // Get filtered list from dataset and graph filter key
     List filteredList = dataset;
     if(dataset!=null && _graph.getFilterKey()!=null && _graph.getFilterKey().length()>0)
-        filteredList = ListUtils.getFilteredList(dataset, _graph.getFilterKey());
+        filteredList = DataUtils.getFilteredList(dataset, _graph.getFilterKey());
     
     // Get filtered list as group
     _objects = filteredList instanceof RMGroup? (RMGroup)filteredList : new RMGroup(filteredList);

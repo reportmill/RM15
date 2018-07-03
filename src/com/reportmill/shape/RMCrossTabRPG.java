@@ -4,7 +4,6 @@
 package com.reportmill.shape;
 import com.reportmill.base.*;
 import java.util.List;
-import snap.util.ListUtils;
 
 /**
  * Report generation for RMCrossTab.
@@ -38,7 +37,7 @@ public RMShape rpgCrossTab(ReportOwner anRptOwner, RMShape aParent, RMCrossTab a
     //Object parentTableRowGroup = parentTableRow==null? null : anRptOwner.popDataStack();
     
     // Apply filter key to dataset
-    if(dataset!=null) dataset = ListUtils.getFilteredList(dataset, aCTab.getFilterKey());
+    if(dataset!=null) dataset = DataUtils.getFilteredList(dataset, aCTab.getFilterKey());
     
     // Get dataset as group
     RMGroup datasetGroup = dataset instanceof RMGroup? (RMGroup)dataset : new RMGroup(dataset);

@@ -104,7 +104,7 @@ protected RMGroup getGroup(RMTable aTable)
 {
     List dataset = _rptOwner.getKeyChainListValue(aTable.getDatasetKey()); // Get dataset
     if(dataset==null) dataset = new ArrayList();
-    dataset = ListUtils.getFilteredList(dataset, aTable.getFilterKey()); // Apply FilterKey
+    dataset = DataUtils.getFilteredList(dataset, aTable.getFilterKey()); // Apply FilterKey
     return aTable.getGrouper().groupObjects(dataset); // Do grouping
 }
 
