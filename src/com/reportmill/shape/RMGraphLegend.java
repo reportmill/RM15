@@ -5,6 +5,7 @@ package com.reportmill.shape;
 import com.reportmill.base.RMGroup;
 import com.reportmill.graphics.*;
 import java.util.*;
+import snap.gfx.Rect;
 import snap.util.*;
 
 /**
@@ -15,17 +16,9 @@ public class RMGraphLegend extends RMParentShape {
     // The legend text
     String          _legendText;
     
-    // The number of columns in legend
-    int             _colCount = 1;
-    
     // The font
     RMFont          _font;
     
-/**
- * Returns the graph that owns this legend.
- */
-public RMGraph getGraph()  { return getParent()!=null? getParent().getChildWithClass(RMGraph.class) : null; }
-
 /**
  * Returns the legend text.
  */
@@ -35,20 +28,6 @@ public String getLegendText()  { return _legendText; }
  * Sets the legend text.
  */
 public void setLegendText(String aString)  { _legendText = aString; relayout(); }
-
-/**
- * Returns the number of columns in legend.
- */
-public int getColumnCount()  { return _colCount; }
-
-/**
- * Sets the number of columns in legend.
- */
-public void setColumnCount(int aValue)
-{
-    firePropChange("ColumnCount", _colCount, _colCount = aValue);
-    relayout(); repaint();
-}
 
 /**
  * Returns whether font has been set.
@@ -66,25 +45,58 @@ public RMFont getFont()  { return _font!=null? _font : RMFont.Helvetica10; }
 public void setFont(RMFont aFont)  { _font = aFont; }
 
 /**
+ * Override to configure sample legend if no children.
+ */
+public void setParent(RMParentShape aPar)
+{
+    // Do normal version and return if already has children
+    super.setParent(aPar);
+    if(getChildCount()>0) return;
+    
+    // Get graph rpg
+    RMGraphRPG graphRPG = getGraphRPG(aPar);
+    configureRPG(graphRPG, false);
+}
+
+/**
+ * Override to .
+ */
+public RMShape rpgAll(ReportOwner anRptOwner, RMShape aParent)
+{
+    // Do normal clone (rpgShape())
+    RMGraphLegend clone = (RMGraphLegend)clone();
+    
+    // Get Graph RPG and configure
+    RMGraphRPG graphRPG = getGraphRPG((RMParentShape)aParent);
+    clone.configureRPG(graphRPG, true);
+    
+    // Do bindings and return
+    rpgBindings(anRptOwner, clone);
+    return clone;
+}
+
+/**
  * Override to layout legend.
  */
-protected void layoutImpl()
+protected void configureRPG(RMGraphRPG graphRPG, boolean doRPG)
 {
-    // Remove children
-    removeChildren(); if(getParent()==null) return;
+    // Make sure there is a graphRPG
+    if(graphRPG==null) { System.err.println("RMGraphLegend.confiureRPG: Graph RPG not found"); return; }
     
-    // Get Graph/GraphRPG
-    RMGraph graph = getParent().getChildWithClass(RMGraph.class);
-    RMGraphRPG graphRPG = getGraphRPG(); if(graphRPG==null || graphRPG.getSeriesCount()==0) return;
-    boolean isPreview = graph!=null; if(graph==null) graph = graphRPG._graph;
-    boolean isPie = graph.getType()==RMGraph.Type.Pie;
+    // Get Graph
+    RMGraph graph = getGraph(); if(graph==null) graph = graphRPG._graph;
+    
+    // Get legend text whether to do per item
+    String legendText = getLegendText(); if(legendText==null) legendText = "";
+    boolean doTextRPG = doRPG && legendText.contains("@");
+    boolean doPerItem = graph.getType()==RMGraph.Type.Pie || graph.getKeyCount()<2 && legendText.contains("@");
     
     // Get strings and groups
     List <String> strings = new ArrayList();
     List <RMGroup> groups = new ArrayList();
     
-    // If pie, add for each item
-    if(isPie) { RMGraphSeries series = graphRPG.getSeries(0); String ltext = StringUtils.min(getLegendText());
+    // If doPerItem, add for each item
+    if(doPerItem) { RMGraphSeries series = graphRPG.getSeries(0); String ltext = StringUtils.min(getLegendText());
         for(int i=0,iMax=series.getItemCount();i<iMax;i++) { RMGraphSeries.Item item = series.getItem(i);
             strings.add(ltext!=null? ltext : ("Item " + (i+1))); groups.add(item._group); }
     }
@@ -99,24 +111,28 @@ protected void layoutImpl()
         String text = strings.get(i); RMGroup group = groups.get(i);
         RMRectShape box = new RMRectShape(); box.setColor(graph.getColor(i)); box.setBounds(x,y,16,12); x += 18;
         RMTextShape label = new RMTextShape(); label.setText(text); label.setFont(getFont());
-        if(!isPreview) label.getXString().rpgClone(graphRPG._rptOwner, group, null, false);
-        //double pw = label.getPrefWidth(), ph = label.getPrefHeight(); label.setBounds(x,y,pw,ph);
-        label.setBounds(x,y,getWidth()-x-2,8); label.setBestHeight(); double ph = label.getHeight();
-        addChild(box); addChild(label); x = 2; y += ph+2;
+        if(doTextRPG) label.getXString().rpgClone(graphRPG._rptOwner, group, null, false);
+        label.setBounds(x,y,getWidth()-x-2,8); label.setBestHeight();
+        addChild(box); addChild(label); x = 2; y += label.getHeight() + 2;
     }
     
     // Resize
-    //Rect bounds = getBoundsOfChildren();
-    //if(bounds.getMaxX()>getWidth()) setWidth(bounds.getMaxX());
-    //if(bounds.getMaxY()>getHeight()) setHeight(bounds.getMaxX());
+    Rect bounds = getBoundsOfChildren();
+    if(bounds.getMaxX()+2>getWidth()) setWidth(bounds.getMaxX()+2);
+    if(bounds.getMaxY()+2>getHeight()) setHeight(bounds.getMaxY()+2);
 }
+
+/**
+ * Returns the graph that owns this legend.
+ */
+private RMGraph getGraph()  { return getParent()!=null? getParent().getChildWithClass(RMGraph.class) : null; }
 
 /**
  * Returns RMGraphRPG, if parent has RMGraphRPG.GraphShape child.
  */
-private RMGraphRPG getGraphRPG()
+private RMGraphRPG getGraphRPG(RMParentShape aParent)
 {
-    RMGraphRPG.GraphShape gshp = getParent()!=null? getParent().getChildWithClass(RMGraphRPG.GraphShape.class) : null;
+    RMGraphRPG.GraphShape gshp = aParent!=null? aParent.getChildWithClass(RMGraphRPG.GraphShape.class) : null;
     return gshp!=null? gshp.getGraphRPG() : null;
 }
 
@@ -128,9 +144,8 @@ public XMLElement toXMLShape(XMLArchiver anArchiver)
     // Archive basic shape attributes
     XMLElement e = super.toXMLShape(anArchiver); e.setName("graph-legend");
     
-    // Archive LegendText, ColumnCount
+    // Archive LegendText
     if(getLegendText()!=null && getLegendText().length()>0) e.add("text", getLegendText());
-    if(getColumnCount()>1) e.add("ColumnCount", getColumnCount());
     return e;
 }
 
@@ -142,9 +157,8 @@ public void fromXMLShape(XMLArchiver anArchiver, XMLElement anElement)
     // Unarchive basic shape attributes
     super.fromXMLShape(anArchiver, anElement);
     
-    // Unarchive LegendText, ColumnCount
+    // Unarchive LegendText
     setLegendText(anElement.getAttributeValue("text"));
-    if(anElement.hasAttribute("ColumnCount")) setColumnCount(anElement.getAttributeIntValue("ColumnCount"));
 }
 
 /** Override to suppress child archival. */
