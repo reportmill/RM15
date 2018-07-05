@@ -66,6 +66,9 @@ public class RMGraph extends RMParentShape {
     // Whether to draw graph in 3D
     boolean                   _draw3D = true;
     
+    // Whether graph should color individual items
+    boolean                   _colorItems;
+    
     // This list of colors this graph uses
     List                      _colors;
     
@@ -331,7 +334,7 @@ public RMGraphLegend getLegend()
 /**
  * Returns whether the graph shows a legend.
  */
-public boolean getShowLegend()  { return getLegend()!=null; }
+public boolean isShowLegend()  { return getLegend()!=null; }
 
 /**
  * Sets whether the graph shows a legend.
@@ -353,6 +356,20 @@ public void setShowLegend(boolean aFlag)
     // If aFlag is false and legend is present, remove it
     else if(!aFlag && legend!=null)
         legend.getParent().removeChild(legend);
+}
+
+/**
+ * Returns whether graph should color individual items.
+ */
+public boolean isColorItems()  { return _colorItems; }
+
+/**
+ * Sets whether graph should color individual items.
+ */
+public void setColorItems(boolean aValue)
+{
+    _colorItems = aValue; relayout();
+    if(getLegend()!=null) getLegend().resetItems();
 }
 
 /**
@@ -635,8 +652,9 @@ protected XMLElement toXMLShape(XMLArchiver anArchiver)
     for(int i=0; i<getSeriesCount(); i++) { RMGraphPartSeries series = getSeries(i);
         e.add(anArchiver.toXML(series, this)); }
     
-    // Archive Draw3d 
+    // Archive Draw3d, ColorItems
     if(!_draw3D) e.add("draw-3d", false);
+    if(isColorItems()) e.add("ColorItems", true);
     
     // Archive colors
     if(!getColors().equals(getDefaultColors())) {
@@ -708,8 +726,9 @@ protected void fromXMLShape(XMLArchiver anArchiver, XMLElement anElement)
         _series.add(series);
     }
     
-    // Unarchive Draw3d
+    // Unarchive Draw3d, ColorItems
     setDraw3D(anElement.getAttributeBoolValue("draw-3d", true));
+    if(anElement.hasAttribute("ColorItems")) setColorItems(anElement.getAttributeBoolValue("ColorItems"));
     
     // Unarchive colors: Get colors string, string array and create colors list and set
     if(anElement.hasAttribute("colors")) {

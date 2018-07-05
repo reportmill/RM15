@@ -12,10 +12,10 @@ public class RMGraphLegendTool <T extends RMGraphLegend> extends RMParentShapeTo
 /**
  * Override to suppress superclass.
  */
-protected void initUI()  { enableEvents("LegendText", DragDrop); enableEvents("ColumnCountText", DragDrop); }
+protected void initUI()  { enableEvents("LegendText", DragDrop); }
 
 /**
- * Override to suppress superclass.
+ * Reset UI.
  */
 public void resetUI()  { }
 

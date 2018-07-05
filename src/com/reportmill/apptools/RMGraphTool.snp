@@ -25,10 +25,11 @@
         <ListView Name="ItemsLayoutList" x="125" y="22" width="105" height="58" />
       </SpringView>
     </TitleView>
-    <Label x="6" y="149" width="50" height="18" text="Colors:">
+    <Label x="6" y="152" width="50" height="18" text="Colors:">
       <font name="Arial Bold" size="11" />
     </Label>
     <ColorDock Name="ColorDock" x="6" y="173" width="109" height="44" />
+    <CheckBox Name="ColorItemsCheckBox" x="120" y="185" width="100" height="17" text="Color Items" />
     <CheckBox Name="ShowLegendCheckBox" x="6" y="227" width="100" height="17" text="Show Legend" />
     <CheckBox Name="Draw3DCheckBox" x="6" y="250" width="100" height="17" text="Draw 3D" />
   </SpringView>

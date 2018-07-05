@@ -208,7 +208,7 @@ public void addBars()
             _rptOwner.popDataStack();
             
             // Set bar color and bounds
-            int cindex = i; if(_stacked && (iMax==1 || !_meshed)) cindex = j;
+            int cindex = i; if(_stacked && (iMax==1 || !_meshed) || _graph.isColorItems()) cindex = j;
             bar.setColor(_graph.getColor(cindex));
             Rect barBounds = getBarBounds(i, j); bar.setBounds(barBounds);
             

@@ -27,7 +27,10 @@ public String getLegendText()  { return _legendText; }
 /**
  * Sets the legend text.
  */
-public void setLegendText(String aString)  { _legendText = aString; relayout(); }
+public void setLegendText(String aString)
+{
+    _legendText = aString; relayout();
+}
 
 /**
  * Returns whether font has been set.
@@ -45,16 +48,33 @@ public RMFont getFont()  { return _font!=null? _font : RMFont.Helvetica10; }
 public void setFont(RMFont aFont)  { _font = aFont; }
 
 /**
- * Override to configure sample legend if no children.
+ * Override to reset sample legend items if no children.
  */
 public void setParent(RMParentShape aPar)
 {
-    // Do normal version and return if already has children
     super.setParent(aPar);
-    if(getChildCount()>0) return;
+    if(getChildCount()==0) resetItems();
+}
+
+/**
+ * Reset items.
+ */
+public void resetItems()
+{
+    removeChildren();
+    relayout();
+}
+
+/**
+ * Override to reset items if needed.
+ */
+protected void layoutImpl()
+{
+    // If items already set or no parent, just return
+    if(getChildCount()>0 || getParent()==null) return;
     
-    // Get graph rpg
-    RMGraphRPG graphRPG = getGraphRPG(aPar);
+    // Configure items
+    RMGraphRPG graphRPG = getGraphRPG(getParent());
     configureRPG(graphRPG, false);
 }
 
@@ -89,21 +109,25 @@ protected void configureRPG(RMGraphRPG graphRPG, boolean doRPG)
     // Get legend text whether to do per item
     String legendText = getLegendText(); if(legendText==null) legendText = "";
     boolean doTextRPG = doRPG && legendText.contains("@");
-    boolean doPerItem = graph.getType()==RMGraph.Type.Pie || graph.getKeyCount()<2 && legendText.contains("@");
+    boolean doPerItem = graph.isColorItems() || graph.getType()==RMGraph.Type.Pie;
     
     // Get strings and groups
     List <String> strings = new ArrayList();
     List <RMGroup> groups = new ArrayList();
     
     // If doPerItem, add for each item
-    if(doPerItem) { RMGraphSeries series = graphRPG.getSeries(0); String ltext = StringUtils.min(getLegendText());
+    if(doPerItem) { RMGraphSeries series = graphRPG.getSeries(0);
         for(int i=0,iMax=series.getItemCount();i<iMax;i++) { RMGraphSeries.Item item = series.getItem(i);
-            strings.add(ltext!=null? ltext : ("Item " + (i+1))); groups.add(item._group); }
+            String text = legendText.length()>0? legendText : ("Item " + (i+1));
+            strings.add(text); groups.add(item._group);
+        }
     }
 
     // If more than one series, add item for each series
     else for(int i=0, iMax=graphRPG.getSeriesCount(); i<iMax; i++) { RMGraphSeries series = graphRPG.getSeries(i);
-        strings.add(series.getTitle()); groups.add(series._group); }
+        String text = legendText.length()>0? legendText : series.getTitle();
+        strings.add(text); groups.add(series._group);
+    }
     
     // Iterate over strings and add legend items
     double x = 2, y = 2;

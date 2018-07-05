@@ -107,8 +107,9 @@ protected void resetUI()
     for(int i=0, iMax=Math.min(colors.size(), colorDock.getSwatchCount()); i<iMax; i++)
         colorDock.setColor(colors.get(i), i); 
     
-    // Update ShowLegendCheckBox, Draw3DCheckBox
-    setViewValue("ShowLegendCheckBox", graph.getShowLegend());
+    // Update ColorItemsCheckBox, ShowLegendCheckBox, Draw3DCheckBox
+    setViewValue("ColorItemsCheckBox", graph.isColorItems());
+    setViewValue("ShowLegendCheckBox", graph.isShowLegend());
     setViewValue("Draw3DCheckBox", graph.getDraw3D());
     
     // Update sortpanel
@@ -181,7 +182,8 @@ public void respondUI(ViewEvent anEvent)
         graph.setColors(colors); // Set new colors in graph
     }
 
-    // Handle ShowLegendCheckBox, Draw3DCheckBox
+    // Handle ColorItemsCheckBox, ShowLegendCheckBox, Draw3DCheckBox
+    if(anEvent.equals("ColorItemsCheckBox")) graph.setColorItems(anEvent.getBoolValue());
     if(anEvent.equals("ShowLegendCheckBox")) graph.setShowLegend(anEvent.getBoolValue());
     if(anEvent.equals("Draw3DCheckBox")) graph.setDraw3D(anEvent.getBoolValue());
 }
