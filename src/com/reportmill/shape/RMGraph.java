@@ -249,7 +249,7 @@ public void repaint()
 public void relayout()
 {
     super.relayout();
-    RMGraphLegend leg = getLegend(); if(leg!=null)  { leg.relayout(); leg.repaint(); }
+    RMGraphLegend leg = getLegend(); if(leg!=null)  leg.resetItems();
 }
 
 /**
@@ -605,7 +605,7 @@ public RMGraph clone()
     clone._bars = (RMGraphPartBars)_bars.clone();
     clone._pie = (RMGraphPartPie)_pie.clone();
     clone._3d = (RMScene3D)get3D().clone();
-    clone._series = SnapUtils.cloneDeep(_series);
+    clone._series = SnapUtils.cloneDeep(_series); for(RMGraphPartSeries s : clone._series) s._graph = clone;
     return clone;
 }
 

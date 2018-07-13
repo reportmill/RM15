@@ -29,7 +29,7 @@ public String getLegendText()  { return _legendText; }
  */
 public void setLegendText(String aString)
 {
-    _legendText = aString; relayout();
+    _legendText = aString; resetItems();
 }
 
 /**
