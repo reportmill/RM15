@@ -49,21 +49,17 @@ public RMTableRPG(ReportOwner anRptOwner, RMTable aTable)
  */
 public RMShape rpgAll()
 {
-    // If paginate, grow show
+    // If not paginating, set height arbitrarily large
     if(!_rptOwner.getPaginate()) {
-        _prefHeight = getHeight();
-        setHeight(Float.MAX_VALUE);
-        setAutosizing("--~,-~-");
-    }
+        _prefHeight = getHeight(); setHeight(Float.MAX_VALUE); } //setAutosizing("--~,-~-");
     
     // Do report generation for table
     rpgTable(_table);
     
-    // If paginating, get pref height and reset height
+    // If not paginating, reset height and set PrefHeight
     if(_prefHeight>0) {
-        double height = _prefHeight;
+        setHeight(_prefHeight);
         if(getChildCount()>0) _prefHeight = getChildLast().getFrameMaxY();
-        setHeight(height);
     }
     
     // Get return shape - convert to ColumnsPage if needed

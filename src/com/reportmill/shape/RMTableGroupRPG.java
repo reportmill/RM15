@@ -39,12 +39,9 @@ public RMTableGroupRPG(ReportOwner anRptOwner, RMTableGroup aTableGroup, RMTable
  */
 public RMShape rpgAll()
 {
-    // If paginate, grow show
+    // If not paginating, set height arbitrarily large
     if(!_rptOwner.getPaginate()) {
-        _prefHeight = getHeight();
-        setHeight(Float.MAX_VALUE);
-        setAutosizing("--~,-~-");
-    }
+        _prefHeight = getHeight(); setHeight(Float.MAX_VALUE); }
     
     // Initialize ChildTables/Groups
     _childTables = new HashMap(); _groups = new HashMap();
@@ -65,6 +62,12 @@ public RMShape rpgAll()
         
         // Do table RPG
         rpgTable(table);
+    }
+    
+    // If not paginating, reset height and set PrefHeight
+    if(_prefHeight>0) {
+        setHeight(_prefHeight);
+        if(getChildCount()>0) _prefHeight = getChildLast().getFrameMaxY();
     }
     
     // Get return shape - convert to multi columns if needed (and reset x/y of column pages)
