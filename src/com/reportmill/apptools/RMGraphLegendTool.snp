@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SpringView width="262" height="284" PrefWidth="262" PrefHeight="284">
   <Label x="8" y="30" width="54" height="22" text="Text:" />
-  <TextField Name="LegendText" x="54" y="30" width="193" height="22">
-    <binding aspect="Text" key="SelectedShape.LegendText" />
-  </TextField>
+  <TextField Name="LegendText" x="54" y="30" width="193" height="22" />
 </SpringView>

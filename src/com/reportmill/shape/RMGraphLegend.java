@@ -33,6 +33,15 @@ public void setLegendText(String aString)
 }
 
 /**
+ * Override to get from graph.
+ */
+public String getDatasetKey()
+{
+    RMGraph graph = getGraph();
+    return graph!=null? graph.getDatasetKey() : null;
+}
+
+/**
  * Returns whether font has been set.
  */
 public boolean isFontSet()  { return _font!=null; }
