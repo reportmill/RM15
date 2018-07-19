@@ -1474,12 +1474,9 @@ public void copyShape(RMShape aShape)
     setOpacity(aShape.getOpacity());
     setVisible(aShape.isVisible());
     
-    // Copy Name, Url, Locked
+    // Copy Name, URL, Autosizing
     setName(aShape.getName());
     setURL(aShape.getURL());
-    setLocked(aShape.isLocked());
-    
-    // Copy Autosizing
     setAutosizing(aShape.getAutosizing());
     
     // Copy bindings

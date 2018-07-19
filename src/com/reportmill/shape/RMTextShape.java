@@ -804,6 +804,16 @@ public RMTextShape clone()
 }
 
 /**
+ * Override to support margin copy.
+ */
+public void copyShape(RMShape aShape)
+{
+    super.copyShape(aShape);
+    RMTextShape other = aShape instanceof RMTextShape? (RMTextShape)aShape : null; if(other==null) return;
+    setMargin(other.getMargin());
+}
+
+/**
  * XML archival.
  */
 public XMLElement toXML(XMLArchiver anArchiver)
