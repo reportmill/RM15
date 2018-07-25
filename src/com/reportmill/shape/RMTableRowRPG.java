@@ -280,7 +280,7 @@ public void shiftShapesBelowHiddenRect(List <RMShape> theShapes, Rect aRect)
 public boolean superSelectable()  { return true; }
 
 /** Override to paint stroke on top. */
-public boolean getStrokeOnTop()  { return true; }
+public boolean isStrokeOnTop()  { return true; }
 
 /**
  * Override to handle structured row.

@@ -472,7 +472,7 @@ protected double getPrefHeightImpl(double aWidth)  { return _prefHeight>0? _pref
 /**
  * Override to paint table stroke on top.
  */
-public boolean getStrokeOnTop()  { return true; }
+public boolean isStrokeOnTop()  { return true; }
 
 /** Override to make selectable. */
 public boolean superSelectable()  { return true; }

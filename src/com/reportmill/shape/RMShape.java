@@ -1727,7 +1727,7 @@ public void paintShape(Painter aPntr)
     }
     
     // Paint stroke
-    if(stroke!=null && !getStrokeOnTop()) { //getStroke().paint(aPntr, this);
+    if(stroke!=null && !isStrokeOnTop()) { //getStroke().paint(aPntr, this);
         aPntr.setPaint(stroke.getColor());
         aPntr.setStroke(stroke.snap());
         Shape path = getPath(), spath = stroke.getStrokePath(path);
@@ -1751,7 +1751,7 @@ public void paintShapeChildren(Painter aPntr)
 public void paintShapeOver(Painter aPntr)
 {
     RMStroke stroke = getStroke();
-    if(stroke!=null && getStrokeOnTop()) { //getStroke().paint(aPntr, this);
+    if(stroke!=null && isStrokeOnTop()) { //getStroke().paint(aPntr, this);
         aPntr.setPaint(stroke.getColor());
         aPntr.setStroke(stroke.snap());
         Shape path = getPath(), spath = stroke.getStrokePath(path);
@@ -1762,7 +1762,7 @@ public void paintShapeOver(Painter aPntr)
 /**
  * Returns whether to stroke on top.
  */
-public boolean getStrokeOnTop()  { return false; }
+public boolean isStrokeOnTop()  { return false; }
 
 /**
  * Returns clip shape for shape.

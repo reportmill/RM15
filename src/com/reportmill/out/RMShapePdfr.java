@@ -85,7 +85,7 @@ protected void writeShape(T aShape, RMPDFWriter aWriter)
     
     // Get stroke and write pdf if not null
     RMStroke stroke = aShape.getStroke();
-    if(stroke!=null)
+    if(stroke!=null && !aShape.isStrokeOnTop())
         RMFillPdfr.writeShapeStroke(aShape, stroke, aWriter);
 }
 
@@ -106,6 +106,11 @@ protected void writeShapeChildren(RMShape aShape, RMPDFWriter aWriter)
  */
 protected void writeShapeAfter(T aShape, RMPDFWriter aWriter)
 {
+    // Get stroke and write pdf if not null
+    RMStroke stroke = aShape.getStroke();
+    if(stroke!=null && aShape.isStrokeOnTop())
+        RMFillPdfr.writeShapeStroke(aShape, stroke, aWriter);
+        
     // Get pdf page
     PDFPageWriter pwriter = aWriter.getPageWriter();
     
@@ -126,12 +131,9 @@ protected void writeShapeAfter(T aShape, RMPDFWriter aWriter)
  */
 public static RMShapePdfr getPdfr(RMShape aShape)
 {
-    if(aShape instanceof RMTextShape)
-        return RMShapePdfrs._textShapePdfr;
-    if(aShape instanceof RMImageShape)
-        return RMShapePdfrs._imgShapePdfr;
-    if(aShape instanceof RMPage)
-        return RMShapePdfrs._pageShapePdfr;
+    if(aShape instanceof RMTextShape) return RMShapePdfrs._textShapePdfr;
+    if(aShape instanceof RMImageShape) return RMShapePdfrs._imgShapePdfr;
+    if(aShape instanceof RMPage) return RMShapePdfrs._pageShapePdfr;
     return _shapePdfr;
 }
 
