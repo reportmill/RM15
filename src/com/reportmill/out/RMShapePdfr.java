@@ -118,10 +118,12 @@ protected void writeShapeAfter(T aShape, RMPDFWriter aWriter)
     pwriter.grestore();
 
     // Add link, if it's there (What happens with rotated or skewed shapes?)
-    if(aShape.getURL() != null) {
+    String url = aShape.getURL();
+    if(url!=null) {
         Rect frame = aShape.localToParent(aShape.getBoundsInside(), null).getBounds();
         frame.setY(aShape.getPageShape().getHeight() - frame.getMaxY());
-        PDFAnnotation link = new PDFAnnotation.Link(frame, aShape.getURL());
+        PDFAnnotation link = new PDFAnnotation.Link(frame, url);
+        if(url.startsWith("textfield")) link = new PDFAnnotation.Widget(frame,"");
         pwriter.addAnnotation(link);
     }
 }
