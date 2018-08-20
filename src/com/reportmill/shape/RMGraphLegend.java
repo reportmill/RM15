@@ -115,9 +115,8 @@ protected void configureRPG(RMGraphRPG graphRPG, boolean doRPG)
     // Get Graph
     RMGraph graph = getGraph(); if(graph==null) graph = graphRPG._graph;
     
-    // Get legend text whether to do per item
+    // Get legend text whether to add legend entry per item
     String legendText = getLegendText(); if(legendText==null) legendText = "";
-    boolean doTextRPG = doRPG && legendText.contains("@");
     boolean doPerItem = graph.isColorItems() || graph.getType()==RMGraph.Type.Pie;
     
     // Get strings and groups
@@ -144,7 +143,7 @@ protected void configureRPG(RMGraphRPG graphRPG, boolean doRPG)
         String text = strings.get(i); RMGroup group = groups.get(i);
         RMRectShape box = new RMRectShape(); box.setColor(graph.getColor(i)); box.setBounds(x,y,16,12); x += 18;
         RMTextShape label = new RMTextShape(); label.setText(text); label.setFont(getFont());
-        if(doTextRPG) label.getXString().rpgClone(graphRPG._rptOwner, group, null, false);
+        if(doRPG && text.contains("@")) label.getXString().rpgClone(graphRPG._rptOwner, group, null, false);
         label.setBounds(x,y,getWidth()-x-2,8); label.setBestHeight();
         addChild(box); addChild(label); x = 2; y += label.getHeight() + 2;
     }
