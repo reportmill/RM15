@@ -17,9 +17,9 @@
   </SpringView>
   <SpringView width="254" height="282" PrefWidth="254" PrefHeight="282" title="Keys">
     <Label x="5" y="5" width="120" height="20" text="Table Row Version Key:" />
-    <TextView Name="VersionKeyText" x="5" y="25" width="246" height="60" />
+    <TextView Name="VersionKeyText" x="5" y="25" width="246" height="60" FireActionOnEnterKey="true" FireActionOnFocusLost="true" />
     <Label x="5" y="90" width="174" height="20" text="Page Break Expression:" />
-    <TextView Name="PageBreakKeyText" x="5" y="110" width="246" height="60" FireActionOnEnterKey="true">
+    <TextView Name="PageBreakKeyText" x="5" y="110" width="246" height="60" FireActionOnEnterKey="true" FireActionOnFocusLost="true" >
       <binding aspect="Text" key="SelectedShapes.PageBreakKey" />
     </TextView>
   </SpringView>
