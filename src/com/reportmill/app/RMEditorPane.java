@@ -450,8 +450,9 @@ public void save()
     // If can't save to current source, do SaveAs instead
     WebURL url = getSourceURL(); if(url==null) { saveAs(); return; }
     
-    // Make sure editor isn't previewing
+    // Make sure editor isn't previewing and has focus (to commit any inspector textfield changes)
     setEditing(true);
+    getEditor().requestFocus();
     
     // Do actual save - if exception, print stack trace and set error string
     try { saveImpl(); }

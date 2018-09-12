@@ -20,6 +20,7 @@ protected void initUI()
     ListView <LabelPos> labelPositionsList = getView("LabelPositionsList", ListView.class);
     labelPositionsList.setItems(RMGraphPartSeries.LabelPos.values());
     labelPositionsList.setCellConfigure(this :: configureLabelsPositionListCell);
+    enableEvents("TitleText", DragDrop);
     enableEvents("SeriesText", DragDrop);
 }
 
