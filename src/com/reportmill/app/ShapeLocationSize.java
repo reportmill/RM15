@@ -3,6 +3,7 @@
  */
 package com.reportmill.app;
 import com.reportmill.shape.*;
+import java.text.DecimalFormat;
 import java.util.List;
 import snap.util.MathUtils;
 import snap.view.*;
@@ -11,6 +12,9 @@ import snap.view.*;
  * This class provides UI editing for the currently selected shapes location and size.
  */
 public class ShapeLocationSize extends RMEditorPane.SupportPane {
+    
+    // A formatter for bounds fields
+    DecimalFormat _fmt = new DecimalFormat("0.##");
     
 /**
  * Creates a new ShapeLocationSize pane.
@@ -27,19 +31,19 @@ public void resetUI()
     
     // Update XThumb & XText
     setViewValue("XThumb", getUnitsFromPoints(shape.getFrameX()));
-    setViewValue("XText", getUnitsFromPoints(shape.getFrameX()));
+    setViewValue("XText", getUnitsFromPointsStr(shape.getFrameX()));
     
     // Update YThumb & YText
     setViewValue("YThumb", getUnitsFromPoints(shape.getFrameY()));
-    setViewValue("YText", getUnitsFromPoints(shape.getFrameY()));
+    setViewValue("YText", getUnitsFromPointsStr(shape.getFrameY()));
     
     // Update WThumb & WText
     setViewValue("WThumb", getUnitsFromPoints(shape.width()));
-    setViewValue("WText", getUnitsFromPoints(shape.width()));
+    setViewValue("WText", getUnitsFromPointsStr(shape.width()));
     
     // Update HThumb & HText
     setViewValue("HThumb", getUnitsFromPoints(shape.height()));
-    setViewValue("HText", getUnitsFromPoints(shape.height()));
+    setViewValue("HText", getUnitsFromPointsStr(shape.height()));
     
     // Update MinWText and MinHText
     setViewValue("MinWText", shape.isMinWidthSet()? shape.getMinWidth() : "-");
@@ -125,6 +129,11 @@ public double getUnitsFromPoints(double aValue)
     RMEditor editor = getEditor(); RMDocument doc = editor.getDoc();
     return doc!=null? doc.getUnitsFromPoints(aValue) : aValue;
 }
+
+/**
+ * Converts from shape units to tool units.
+ */
+public String getUnitsFromPointsStr(double aValue)  { return _fmt.format(getUnitsFromPoints(aValue)); }
 
 /**
  * Converts from tool units to shape units.

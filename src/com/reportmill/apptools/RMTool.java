@@ -6,6 +6,7 @@ import com.reportmill.app.*;
 import com.reportmill.base.Entity;
 import com.reportmill.shape.*;
 import com.reportmill.graphics.*;
+import java.text.DecimalFormat;
 import java.util.*;
 import snap.gfx.*;
 import snap.util.*;
@@ -28,6 +29,9 @@ public class RMTool <T extends RMShape> extends ViewOwner {
     
     // The mouse down point that initiated last tool mouse loop
     Point                   _downPoint;
+    
+    // A formatter for bounds fields
+    static DecimalFormat    _fmt = new DecimalFormat("0.##");
     
     // The image for a shape handle
     static Image            _handle = Image.get(RMEditor.class, "Handle8x8.png");
@@ -176,6 +180,11 @@ public double getUnitsFromPoints(double aValue)
     RMEditor editor = getEditor(); RMDocument doc = editor.getDoc();
     return doc!=null? doc.getUnitsFromPoints(aValue) : aValue;
 }
+
+/**
+ * Converts from shape units to tool units.
+ */
+public String getUnitsFromPointsStr(double aValue)  { return _fmt.format(getUnitsFromPoints(aValue)); }
 
 /**
  * Converts from tool units to shape units.

@@ -64,8 +64,8 @@ public void resetUI()
     }
 
     // Set PageWidthText and PageHeightText
-    setViewValue("PageWidthText", StringUtils.toString(getUnitsFromPoints(page.getWidth())));
-    setViewValue("PageHeightText", StringUtils.toString(getUnitsFromPoints(page.getHeight())));
+    setViewValue("PageWidthText", getUnitsFromPointsStr(page.getWidth()));
+    setViewValue("PageHeightText", getUnitsFromPointsStr(page.getHeight()));
     
     // Update PaperSizeComboBox: Get index of PaperName for Page.Size and set SelIndex
     int sindex = 0; for(int i=1; i<_paperSizeNames.length && sindex==0; i++) { Size size = _paperSizes[i];
@@ -78,17 +78,17 @@ public void resetUI()
     setViewValue("LandscapeRadioButton", page.getWidth()>page.getHeight());
     
     // Reset Margin controls
-    setViewValue("LeftMarginText", StringUtils.toString(getUnitsFromPoints(doc.getMarginLeft())));
-    setViewValue("RightMarginText", StringUtils.toString(getUnitsFromPoints(doc.getMarginRight())));
-    setViewValue("TopMarginText", StringUtils.toString(getUnitsFromPoints(doc.getMarginTop())));
-    setViewValue("BottomMarginText", StringUtils.toString(getUnitsFromPoints(doc.getMarginBottom())));
+    setViewValue("LeftMarginText", getUnitsFromPointsStr(doc.getMarginLeft()));
+    setViewValue("RightMarginText", getUnitsFromPointsStr(doc.getMarginRight()));
+    setViewValue("TopMarginText", getUnitsFromPointsStr(doc.getMarginTop()));
+    setViewValue("BottomMarginText", getUnitsFromPointsStr(doc.getMarginBottom()));
     setViewValue("DrawMarginCheckBox", doc.getShowMargin());
     setViewValue("SnapMarginCheckBox", doc.getSnapMargin());
     
     // Reset Grid controls
     setViewValue("ShowGridCheckBox", doc.getShowGrid());
     setViewValue("SnapGridCheckBox", doc.getSnapGrid());
-    setViewValue("GridSpacingText", StringUtils.toString(getUnitsFromPoints(doc.getGridSpacing())));
+    setViewValue("GridSpacingText", getUnitsFromPointsStr(doc.getGridSpacing()));
     
     // Reset Page Layout controls and null string text
     setViewValue("SingleRadio", doc.getPageLayout()==RMDocument.PageLayout.Single);
