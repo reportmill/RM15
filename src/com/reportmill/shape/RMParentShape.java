@@ -402,8 +402,10 @@ public RMShape divideShapeFromTop(double anAmount)
     layoutDeep();
     
     // Call normal divide from top edge
+    double oldHeight = getHeight();
     RMParentShape bottomShape = (RMParentShape)super.divideShapeFromTop(anAmount);
-    
+    double bottomHeight = bottomShape.getHeight();
+        
     // Iterate over children to see if they belong to self or newShape (or need to be recursively split)
     for(int i=0, iMax=getChildCount(); i<iMax; i++) { RMShape child = getChild(i);
         
@@ -421,11 +423,14 @@ public RMShape divideShapeFromTop(double anAmount)
         else if(child.getFrameMaxY()>getHeight()) {
             
             // Get child top/bottom height and divide from top by amount
+            double bottomMargin = oldHeight - child.getMaxY();
             double childTopHeight = getHeight() - childMinY; // , cbh = child.getHeight() - childTopHeight;
             RMShape childBottom = child.divideShapeFromTop(childTopHeight);
             
             // Move new child bottom shape to new y in BottomShape
             childBottom._y = 0;
+            if(bottomHeight - childBottom.getHeight()<bottomMargin)
+                bottomShape.setHeight(childBottom.getHeight()+bottomMargin);
             bottomShape.addChild(childBottom);
             
             // Reset autosizing so that child bottom is nailed to bottomShape top
