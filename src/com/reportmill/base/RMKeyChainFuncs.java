@@ -38,7 +38,8 @@ public static RMKeyChainFuncs getFunctionCall(Object aRoot, Object anObj, RMKeyC
 
     // Try to find method on anObj that takes a single keyChain 
     // (if found, set args to first argument for one arg funcs, or argument list for multiple arg funcs)
-    Method method = ClassUtils.getMethod(anObj, name, RMKeyChain.class);
+    Class cls = ClassUtils.getClass(anObj); 
+    Method method = ClassUtils.getMethod(cls, name, RMKeyChain.class);
     if(method!=null)
         args = ArrayUtils.add(args, argList.getChildCount()==1? argList.getChild(0) : argList, 0);
     
@@ -49,7 +50,7 @@ public static RMKeyChainFuncs getFunctionCall(Object aRoot, Object anObj, RMKeyC
         Class argTypes[] = new Class[argList.getChildCount()]; Arrays.fill(argTypes, Object.class);
         
         // Look for method with given args
-        method = ClassUtils.getMethod(anObj, name, argTypes);
+        method = ClassUtils.getMethodBest(cls, name, argTypes);
         
         // If object doesn't implement the method, see if we have a Category implementation.
         // A category takes the target object as the first argument.
