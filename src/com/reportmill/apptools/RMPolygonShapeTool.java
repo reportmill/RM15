@@ -237,7 +237,7 @@ public void mouseDragged(T aPolygon, ViewEvent anEvent)
     // Repaint, create path with moved point and set new path
     aPolygon.repaint();
     Point point = getEditorEvents().getEventPointInShape(true);
-    RMPath path = aPolygon.getPath(), newPath = path.clone();
+    Path path = aPolygon.getPath(), newPath = path.clone();
     setPointStructured(newPath, _selectedPointIndex, point);
     aPolygon.resetPath(newPath);
 }
@@ -444,7 +444,7 @@ private Rect getControlPointBounds(Path aPath)
 public void runContextMenu(RMPolygonShape aPolyShape, ViewEvent anEvent)
 {
     // Get the handle that was clicked on
-    RMPath path = aPolyShape.getPath();
+    Path path = aPolyShape.getPath();
     int pindex = _selectedPointIndex;
     String mtitle = null, mname = null;
     
@@ -481,7 +481,7 @@ public void deleteSelectedPoint()
 {
     // Make changes to a clone of the path so deletions can be undone
     RMPolygonShape p = getSelectedShape();
-    RMPath path = p.getPath().clone();
+    RMPath path = new RMPath(p.getPath());
 
     // get the index of the path segment corresponding to the selected control point
     int sindex = path.getSegIndexForPointIndex(_selectedPointIndex);
@@ -515,7 +515,8 @@ public void addNewPointAt(Point aPoint)
 {
     // Get old path and new path
     RMPolygonShape poly = getSelectedShape();
-    RMPath path = poly.getPath(), path2 = new RMPath();
+    Path path = poly.getPath();
+    RMPath path2 = new RMPath();
     
     // Create small horizontal and vertical lines around mouse point
     Line hor = new Line(aPoint.x-3, aPoint.y, aPoint.x+3, aPoint.y);

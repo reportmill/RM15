@@ -12,7 +12,7 @@ import snap.util.*;
 public class RMPolygonShape extends RMParentShape {
     
     // The explicit path associated with this shape
-    RMPath        _path;
+    Path        _path;
     
 /**
  * Creates a new empty polygon shape.
@@ -27,17 +27,17 @@ public RMPolygonShape(Shape aShape)  { this(); _path = new RMPath(aShape); }
 /**
  * Returns the path for this polygon shape.
  */
-public RMPath getPath()  { return _path.getPathInRect(getBoundsInside()); }
+public Path getPath()  { return (Path)_path.copyFor(getBoundsInside()); }
 
 /**
  * Sets the path for this polygon shape.
  */
-public void setPath(RMPath aPath)  { _path = aPath; repaint(); }
+public void setPath(Path aPath)  { _path = aPath; repaint(); }
 
 /**
  * Replace the polygon's current path with a new path, adjusting the shape's bounds to match the new path.
  */
-public void resetPath(RMPath newPath)
+public void resetPath(Path newPath)
 {
     // Get the transform to parent shape coords
     Transform toParentXF = getTransform();  

@@ -107,20 +107,20 @@ public void configureScene()
 private void addScuff(float theta, float phi)
 {
     // Small triangle at the origin to represent a scuff mark
-    RMPath3D path = new RMPath3D(); path.moveTo(-1,-1,0); path.lineTo(0,1,0); path.lineTo(1,-1,0); path.close();
+    Path3D path = new Path3D(); path.moveTo(-1,-1,0); path.lineTo(0,1,0); path.lineTo(1,-1,0); path.close();
     
     // translate out to surface of sphere and rotate to latitude, longitude
-    RMTransform3D transform = new RMTransform3D();
+    Transform3D transform = new Transform3D();
     transform.translate(0, 0, _radius);
     transform.rotateY(theta).rotateZ(phi);
     
     // translate to scene origin
-    RMPoint3D origin = _scene.getOrigin();
+    Point3D origin = _scene.getOrigin();
     transform.translate(origin.x, origin.y, origin.z);
     path.transform(transform);
     
     // create the shape
-    RMScene3D.RMShape3D scuff = new RMScene3D.RMShape3D(path); scuff.setStroke(null);
+    Shape3D scuff = new Shape3D(path); scuff.setStroke(null);
     
     // If the trackball is shrunk down, draw the scuffmarks a darker color so they'll show up.
     if(getZoomFactor()<.75) scuff.setColor(new RMColor(0,0,0,.75f));

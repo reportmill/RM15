@@ -55,10 +55,10 @@ public class RMScene3D extends RMParentShape {
     double     _kd = .5f;
     
     // Camera
-    RMVector3D _camera = new RMVector3D(0, 0, 1);
+    Vector3D   _camera = new Vector3D(0, 0, 1);
     
     // Lights
-    RMVector3D _light = new RMVector3D(0, 0, -1).normalize();
+    Vector3D   _light = new Vector3D(0, 0, -1).normalize();
     
     // List of real child shapes
     List <RMShape> _shapes = new ArrayList();
@@ -96,7 +96,7 @@ public void setDepth(double aValue)
 /**
  * Returns the scene's origin.
  */
-public RMPoint3D getOrigin()  { return new RMPoint3D(getWidth()/2, getHeight()/2, getDepth()/2); }
+public Point3D getOrigin()  { return new Point3D(getWidth()/2, getHeight()/2, getDepth()/2); }
 
 /**
  * Returns the rotation about the Y axis in degrees.
@@ -272,12 +272,12 @@ public void setDefaultViewSettings()
 /**
  * Returns the camera as a vector.
  */
-public RMVector3D getCamera()  { return _camera; }
+public Vector3D getCamera()  { return _camera; }
 
 /**
  * Returns the scene light as a vector.
  */
-public RMVector3D getLight()  { return _light; }
+public Vector3D getLight()  { return _light; }
 
 /**
  * Returns the number of shapes in the shape list.
@@ -322,10 +322,10 @@ public void removeShapes()  { while(getShapeCount()>0) removeShape(0); }
 /**
  * Returns the transform 3d for the scene's camera.
  */
-public RMTransform3D getTransform3D()
+public Transform3D getTransform3D()
 {
     // Create base transform
-    RMTransform3D t = new RMTransform3D();
+    Transform3D t = new Transform3D();
     
     // If pseudo 3d, just return skewed transform
     if(isPseudo3D()) {
@@ -335,7 +335,7 @@ public RMTransform3D getTransform3D()
     }
     
     // Normal transform: translate about center, rotate X & Y, translate by Z, perspective, translate back
-    RMPoint3D origin = getOrigin();
+    Point3D origin = getOrigin();
     t.translate(-origin.x, -origin.y, -origin.z);
     t.rotate(_pitch, _yaw, _roll); //t.rotateY(_yaw).rotateX(_pitch).rotateZ(_roll);
     t.translate(0, 0, getOffsetZ());
@@ -367,23 +367,23 @@ protected void layoutImpl()
  * FixEdges flag indicates wheter to stroke polygons created during extrusion, to try to make them mesh better.
  * The axisAlign flag can be set to true to make sure the shape's coordinate system is aligned with the screen. 
  */
-protected RMShape3D addChild3D(RMShape aShape, double z1, double z2, boolean fixEdges)
+protected Shape3D addChild3D(RMShape aShape, double z1, double z2, boolean fixEdges)
 {
     // Get the camera transform & optionally align it to the screen
-    RMTransform3D xform = getTransform3D();
+    Transform3D xform = getTransform3D();
         
     // If the shape is already a 3D shape, just apply new camera transform
-    if(aShape instanceof RMShape3D) { RMShape3D shape3d = (RMShape3D)aShape;
+    if(aShape instanceof Shape3D) { Shape3D shape3d = (Shape3D)aShape;
         
         // Get path clone
-        RMPath3D path3d = (RMPath3D)shape3d.getPath3D().clone();
+        Path3D path3d = (Path3D)shape3d.getPath3D().clone();
         
         // Transform clone by scene transform
         path3d.transform(xform);
         
         // Backface culling : Only add paths that face the camera
         if(!path3d.getNormal().isAligned(getCamera(), true)) {
-            RMShape3D shape3d2 = new RMShape3D(path3d);
+            Shape3D shape3d2 = new Shape3D(path3d);
             shape3d2.setColor(shape3d.getColor());
             addChild(shape3d2);
             return shape3d2;
@@ -427,7 +427,7 @@ protected RMShape3D addChild3D(RMShape aShape, double z1, double z2, boolean fix
     else if(z1>=z2) {
         
         // Get path3d for shape path
-        RMPath3D path3d = new RMPath3D(shapePath, z1);
+        Path3D path3d = new Path3D(shapePath, z1);
 
         // Transform path for camera
         path3d.transform(xform);
@@ -438,7 +438,7 @@ protected RMShape3D addChild3D(RMShape aShape, double z1, double z2, boolean fix
                 path3d.reverse();
 
         // Create 3D shape from path, set fill, stroke, opacity and add
-        RMShape3D shape3d = new RMShape3D(path3d);
+        Shape3D shape3d = new Shape3D(path3d);
         setFillAndStroke(shape3d, aShape.getFill(), aShape.getStroke(), aShape.getEffect());
         shape3d.setOpacity(aShape.getOpacity());
         addChild(shape3d);
@@ -448,13 +448,13 @@ protected RMShape3D addChild3D(RMShape aShape, double z1, double z2, boolean fix
     else {
         
 	    // Get front, back and side faces for extruded path
-        List <RMPath3D> paths = RMPath3D.getPaths(shapePath, z1, z2, fixEdges ? .001f : 0f);
+        List <Path3D> paths = Path3D.getPaths(shapePath, z1, z2, fixEdges ? .001f : 0f);
 	
         // Save away original size, to identify the front face
         int frontface = paths.size()-1;
         
 	    // Transform paths by scene's rotations and remove those facing away from camera vector
-	    for(int j=paths.size()-1; j>=0; j--) { RMPath3D path = paths.get(j);
+	    for(int j=paths.size()-1; j>=0; j--) { Path3D path = paths.get(j);
             
             // Transform path by camera transform
             path.transform(xform);
@@ -469,7 +469,7 @@ protected RMShape3D addChild3D(RMShape aShape, double z1, double z2, boolean fix
 	        else {
                 
                 // Create new 3d shape for path3d
-	            RMShape3D shape3d = new RMShape3D(path);
+	            Shape3D shape3d = new Shape3D(path);
                 
                 // Set fill and stroke colors
                 setFillAndStroke(shape3d, aShape.getFill(), aShape.getStroke(), null);
@@ -488,13 +488,13 @@ protected RMShape3D addChild3D(RMShape aShape, double z1, double z2, boolean fix
     }
     
     // Returns the newly added shape3d
-    return childCount<getChildCount()? (RMShape3D)getChild(childCount) : null;
+    return childCount<getChildCount()? (Shape3D)getChild(childCount) : null;
 }
 
 /**
  * Sets the fill and stroke of a 3D shape from a 2D shape.
  */
-public void setFillAndStroke(RMShape3D aShape3D, RMFill aFill, RMStroke aStroke, Effect anEffect)
+public void setFillAndStroke(Shape3D aShape3D, RMFill aFill, RMStroke aStroke, Effect anEffect)
 {
     if(aFill!=null) setColor(aShape3D, aFill.getColor()); // Set shape3D fill to fill from shape
     else aShape3D.setFill(null);
@@ -505,13 +505,13 @@ public void setFillAndStroke(RMShape3D aShape3D, RMFill aFill, RMStroke aStroke,
 /**
  * Sets the color for a 3d shape from a base color.
  */
-public void setColor(RMShape3D aShape3D, RMColor aColor)
+public void setColor(Shape3D aShape3D, RMColor aColor)
 {
     // Get shape3d path3d
-    RMPath3D path = aShape3D.getPath3D();
+    Path3D path = aShape3D.getPath3D();
     
     // Get shape3d path normal
-    RMVector3D normal = path.getNormal();
+    Vector3D normal = path.getNormal();
     
     // If shape is facing away from camera, negate normal
     if(normal.isAligned(getCamera(), true))
@@ -535,20 +535,20 @@ public void setColor(RMShape3D aShape3D, RMColor aColor)
 public void resort()
 {
     // Get list of children (just return if null)    
-    List <RMShape3D> list = (List)_children; if(list==null) return;
+    List <Shape3D> list = (List)_children; if(list==null) return;
     
     // Sort children from front to back with simple Z based sort
     RMSort.sort(list, new RMSort("getPath3D.getZMin"));
 
     // Sort again front to back with exhaustive sort satisfying Depth Sort Algorithm
-    for(int i=list.size()-1; i>=0; i--) { RMShape3D poly0 = list.get(i), poly1 = poly0;
+    for(int i=list.size()-1; i>=0; i--) { Shape3D poly0 = list.get(i), poly1 = poly0;
         
         // Iterate over remaining shapes
-        for(int j=0, jMax=i; j<jMax; j++) { RMShape3D poly2 = list.get(j); if(poly2==poly1) continue;
+        for(int j=0, jMax=i; j<jMax; j++) { Shape3D poly2 = list.get(j); if(poly2==poly1) continue;
         
             // Get poly paths
-            RMPath3D path1 = poly1.getPath3D();
-            RMPath3D path2 = poly2.getPath3D();
+            Path3D path1 = poly1.getPath3D();
+            Path3D path2 = poly2.getPath3D();
 
             if(path1.getZMin()>=path2.getZMax()) continue;
             if(path1.getXMax()<=path2.getXMin() || path1.getXMin()>=path2.getXMax()) continue;
@@ -756,30 +756,6 @@ protected void fromXMLShape(XMLArchiver anArchiver, XMLElement anElement)
     if(shapesXML!=null)
         for(int i=0, iMax=shapesXML.size(); i<iMax; i++)
             addShape((RMShape)anArchiver.fromXML(shapesXML.get(i), this));
-}
-
-/**
- * RMPolygon subclass that encapsulates a Path3D.
- */
-public static class RMShape3D extends RMPolygonShape {
-
-    // The path 3d used to describe this shape 3d
-    RMPath3D _path3d;
-    
-    /** Creates a new shape 3d from the given path3d. */
-    public RMShape3D(RMPath3D aPath3D) { setPath3D(aPath3D); }
-    
-    /** Returns the path3D for this shape. */
-    public RMPath3D getPath3D()  { return _path3d; }
-    
-    /** Sets the path3d for this shape. */
-    public void setPath3D(RMPath3D aPath3D)
-    {
-        _path3d = aPath3D;
-        RMPath path = aPath3D.getPath(); Rect pbounds = path.getBounds();
-        setBounds(pbounds);
-        setPath(path.getPathInRect(new Rect(0, 0, pbounds.getWidth(), pbounds.getHeight())));
-    }
 }
 
 }

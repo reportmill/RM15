@@ -6,16 +6,16 @@ package com.reportmill.graphics;
 /**
  * This class represents a 3D transform. 
  */
-public class RMTransform3D implements Cloneable {
+public class Transform3D implements Cloneable {
     
     // All of the transform components
     public double[][] m = new double[][] { { 1, 0, 0, 0 }, { 0, 1, 0, 0 }, { 0, 0, 1, 0 }, { 0, 0, 0, 1 } };
     
 /** Creates a transform3d with the identity matrix. */
-public RMTransform3D() { }
+public Transform3D() { }
 
 /** Multiplies receiver by given transform. */
-public RMTransform3D multiply(RMTransform3D aTransform)
+public Transform3D multiply(Transform3D aTransform)
 {
     // Get this float array, given float array and new float array
     double m1[][] = m;
@@ -33,18 +33,18 @@ public RMTransform3D multiply(RMTransform3D aTransform)
 }
 
 /** Translates by given x, y & z. */
-public RMTransform3D translate(double x, double y, double z)
+public Transform3D translate(double x, double y, double z)
 {
     //m[3][0] += x; m[3][1] += y; m[3][2] += z;
-    RMTransform3D rm = new RMTransform3D();
+    Transform3D rm = new Transform3D();
     rm.m[3][0] = x; rm.m[3][1] = y; rm.m[3][2] = z;
     return multiply(rm);
 }
 
 /** Rotate x axis by given degrees. */
-public RMTransform3D rotateX(double anAngle)
+public Transform3D rotateX(double anAngle)
 {
-    RMTransform3D rm = new RMTransform3D();
+    Transform3D rm = new Transform3D();
     double angle = Math.toRadians(anAngle);
     double c = Math.cos(angle), s = Math.sin(angle);
     rm.m[1][1] = c;
@@ -55,9 +55,9 @@ public RMTransform3D rotateX(double anAngle)
 }
 
 /** Rotate y axis by given degrees. */
-public RMTransform3D rotateY(double anAngle)
+public Transform3D rotateY(double anAngle)
 {
-    RMTransform3D rm = new RMTransform3D();
+    Transform3D rm = new Transform3D();
     double angle = Math.toRadians(anAngle);
     double c = Math.cos(angle), s = Math.sin(angle);
     rm.m[0][0] = c;
@@ -68,9 +68,9 @@ public RMTransform3D rotateY(double anAngle)
 }
 
 /** Rotate z axis by given degrees. */
-public RMTransform3D rotateZ(double anAngle)
+public Transform3D rotateZ(double anAngle)
 {
-    RMTransform3D rm = new RMTransform3D();
+    Transform3D rm = new Transform3D();
     double angle = Math.toRadians(anAngle);
     double c = Math.cos(angle), s = Math.sin(angle);
     rm.m[0][0] = c;
@@ -81,9 +81,9 @@ public RMTransform3D rotateZ(double anAngle)
 }
 
 /** Rotate about arbitrary axis. */
-public RMTransform3D rotate(RMVector3D anAxis, double anAngle)
+public Transform3D rotate(Vector3D anAxis, double anAngle)
 {
-    RMTransform3D rm = new RMTransform3D();
+    Transform3D rm = new Transform3D();
     double angle = Math.toRadians(anAngle);
     double c = Math.cos(angle), s = Math.sin(angle), t = 1 - c;
     rm.m[0][0] = t*anAxis.x*anAxis.x + c;
@@ -99,9 +99,9 @@ public RMTransform3D rotate(RMVector3D anAxis, double anAngle)
 }
 
 /** Rotate x,y,z with three Euler angles (same as rotateX(rx).rotateY(ry).rotateZ(rz)) */
-public RMTransform3D rotate(double rx, double ry, double rz)
+public Transform3D rotate(double rx, double ry, double rz)
 {
-    RMTransform3D rm = new RMTransform3D();
+    Transform3D rm = new Transform3D();
     double ax = Math.toRadians(rx);
     double ay = Math.toRadians(ry);
     double az = Math.toRadians(rz);
@@ -129,9 +129,9 @@ public RMTransform3D rotate(double rx, double ry, double rz)
 /** Returns a matrix whose axes are aligned with the world (screen) coordinate system.
  * All rotations & skews are removed, and perspective is replaced by uniform scaling.
  */
-public RMTransform3D worldAlign(RMPoint3D originPt)
+public Transform3D worldAlign(Point3D originPt)
 {
-   RMPoint3D tp = transform((RMPoint3D)originPt.clone());
+   Point3D tp = transform(originPt.clone());
    double w = m[2][3]*originPt.z+m[3][3];
    
    for(int i=0; i<4; ++i)
@@ -143,25 +143,32 @@ public RMTransform3D worldAlign(RMPoint3D originPt)
    return this;
 }
 
-/** Skew by the given degrees. */
-public RMTransform3D skew(double skx, double sky)
+/**
+ * Skew by the given degrees.
+ */
+public Transform3D skew(double skx, double sky)
 {
-    RMTransform3D rm = new RMTransform3D();
+    Transform3D rm = new Transform3D();
     rm.m[2][0] = skx; //Math.toRadians(skx);
     rm.m[2][1] = sky; //Math.toRadians(sky);
     return multiply(rm);
 }
 
-/** Apply perspective transform. */
-public RMTransform3D perspective(double d)
+/**
+ * Apply perspective transform.
+ */
+public Transform3D perspective(double d)
 {
-    RMTransform3D p = new RMTransform3D(); p.m[2][3] = 1/d; //p.m[3][3] = 0;
+    Transform3D p = new Transform3D(); p.m[2][3] = 1/d; //p.m[3][3] = 0;
     return multiply(p);
 }
 
-public RMTransform3D invert()
+/**
+ * Invert.
+ */
+public Transform3D invert()
 {
-    double t[][] = toArray(), minv[][] = new RMTransform3D().toArray();
+    double t[][] = toArray(), minv[][] = new Transform3D().toArray();
     double determinant = 1, factor;
 
     // Forward elimination
@@ -226,8 +233,10 @@ public RMTransform3D invert()
     return fromArray(minv);
 }
 
-/** Transforms a given point (and returns it as a convenience). */
-public RMPoint3D transform(RMPoint3D aPoint)
+/**
+ * Transforms a given point (and returns it as a convenience).
+ */
+public Point3D transform(Point3D aPoint)
 {
     double x2 = m[0][0]*aPoint.x + m[1][0]*aPoint.y + m[2][0]*aPoint.z + m[3][0];
     double y2 = m[0][1]*aPoint.x + m[1][1]*aPoint.y + m[2][1]*aPoint.z + m[3][1];
@@ -237,16 +246,20 @@ public RMPoint3D transform(RMPoint3D aPoint)
     return aPoint;
 }
 
-/** Transforms a given vector (and returns it as a convenience). */
-public RMVector3D transform(RMVector3D aVector)
+/**
+ * Transforms a given vector (and returns it as a convenience).
+ */
+public Vector3D transform(Vector3D aVector)
 {
-    RMPoint3D p1 = transform(new RMPoint3D(0, 0, 0));
-    RMPoint3D p2 = transform(new RMPoint3D(aVector.x, aVector.y, aVector.z));
+    Point3D p1 = transform(new Point3D(0, 0, 0));
+    Point3D p2 = transform(new Point3D(aVector.x, aVector.y, aVector.z));
     aVector.x = p2.x - p1.x; aVector.y = p2.y - p1.y; aVector.z = p2.z - p1.z;
     return aVector;
 }
 
-/** Returns a float array for the transform. */
+/**
+ * Returns a float array for the transform.
+ */
 public double[][] toArray()
 {
     double m2[][] = new double[4][4];
@@ -254,16 +267,21 @@ public double[][] toArray()
     return m2;
 }
 
-/** Loads the transform flom a float array. */
-public RMTransform3D fromArray(double m2[][])
+/**
+ * Loads the transform flom a float array.
+ */
+public Transform3D fromArray(double m2[][])
 {
     for(int i=0; i<4; i++) for(int j=0; j<4; j++) m[i][j] = m2[i][j];
     return this;
 }
 
-public Object clone()
+/**
+ * Standard clone implemenation.
+ */
+public Transform3D clone()
 {
-    RMTransform3D copy = new RMTransform3D();
+    Transform3D copy = new Transform3D();
     return copy.fromArray(toArray());
 }
 

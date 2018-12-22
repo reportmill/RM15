@@ -6,7 +6,7 @@ package com.reportmill.graphics;
 /**
  * This class represents a 3D vector.
  */
-public class RMVector3D {
+public class Vector3D {
     
     // X Y Z components
     double x, y, z;
@@ -14,12 +14,12 @@ public class RMVector3D {
 /**
  * Creates a new vector from the given coords.
  */
-public RMVector3D(double x, double y, double z)  { this.x = x; this.y = y; this.z = z; }
+public Vector3D(double x, double y, double z)  { this.x = x; this.y = y; this.z = z; }
 
 /**
  * Creates a new vector from the given vector.
  */
-public RMVector3D(RMVector3D aVector)  { x = aVector.x; y = aVector.y; z = aVector.z; }
+public Vector3D(Vector3D aVector)  { x = aVector.x; y = aVector.y; z = aVector.z; }
     
 /**
  * Returns the magnitude of the vector.
@@ -29,17 +29,17 @@ public double getMagnitude()  { return Math.sqrt(x*x + y*y + z*z); }
 /**
  * Makes the vector unit length.
  */
-public RMVector3D normalize()  { double t = getMagnitude(); x /= t; y /= t; z /= t; return this; }
+public Vector3D normalize()  { double t = getMagnitude(); x /= t; y /= t; z /= t; return this; }
 
 /**
  * Add the given vector to this.
  */
-public void add(RMVector3D aVector)  { x += aVector.x; y += aVector.y; z += aVector.z; }
+public void add(Vector3D aVector)  { x += aVector.x; y += aVector.y; z += aVector.z; }
     
 /**
  * Returns the vector perpendicular to the receiver and the given vector.
  */
-public RMVector3D getCrossProduct(RMVector3D v2)
+public Vector3D getCrossProduct(Vector3D v2)
 {
     // Get cross components
     double a = y*v2.z - v2.y*z;
@@ -47,18 +47,18 @@ public RMVector3D getCrossProduct(RMVector3D v2)
     double c = x*v2.y - v2.x*y;
     
     // Return new vecotr with components (normalized)
-    return new RMVector3D(a, b, c).normalize();
+    return new Vector3D(a, b, c).normalize();
 }
     
 /**
  * Returns the dot product of the receiver and the given vector.
  */
-public double getDotProduct(RMVector3D v2)  { return x*v2.x + y*v2.y + z*v2.z; }
+public double getDotProduct(Vector3D v2)  { return x*v2.x + y*v2.y + z*v2.z; }
 
 /**
  * Returns whether given vector is in same general direction of this (with option to include perpendiculars).
  */
-public boolean isAligned(RMVector3D aVector, boolean includePerpendiculars)
+public boolean isAligned(Vector3D aVector, boolean includePerpendiculars)
 {
     return !isAway(aVector, !includePerpendiculars);
 }
@@ -66,13 +66,13 @@ public boolean isAligned(RMVector3D aVector, boolean includePerpendiculars)
 /**
  * Returns whether given vector is pointing away from the direction of this (with option to include perpendiculars).
  */
-public boolean isAway(RMVector3D aVector, boolean includePerpendiculars)
+public boolean isAway(Vector3D aVector, boolean includePerpendiculars)
 {
     // Get normalized version of this vector
-    RMVector3D v1 = getMagnitude()==1? this : new RMVector3D(this).normalize();
+    Vector3D v1 = getMagnitude()==1? this : new Vector3D(this).normalize();
     
     // Get normalized version of given vector
-    RMVector3D v2 = aVector.getMagnitude()==1? aVector : new RMVector3D(aVector).normalize();
+    Vector3D v2 = aVector.getMagnitude()==1? aVector : new Vector3D(aVector).normalize();
     
     // Dot of normalized vectors GT 0: angle<90deg, EQ 0: angle==90deg, LT 0: angle>90deg
     double dot = v1.getDotProduct(v2);
@@ -84,7 +84,7 @@ public boolean isAway(RMVector3D aVector, boolean includePerpendiculars)
 /**
  * Returns the angle between the receiver and the given vector.
  */
-public double getAngleBetween(RMVector3D aVector)
+public double getAngleBetween(Vector3D aVector)
 {
     double m1 = getMagnitude();
     double m2 = aVector.getMagnitude();
@@ -100,10 +100,10 @@ public void negate()  { x = -x; y = -y; z = -z; }
 /**
  * Transforms the vector by the given transform3d.
  */
-public RMVector3D transform(RMTransform3D aTransform)  { return aTransform.transform(this); }
+public Vector3D transform(Transform3D aTransform)  { return aTransform.transform(this); }
 
 /**
- * Returns a string representation of the vector.
+ * Standard toString implementation.
  */
 public String toString()  { return "Vector [" + x + " " + y + " " + z + "]"; }
 

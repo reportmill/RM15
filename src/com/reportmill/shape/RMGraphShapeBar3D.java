@@ -157,18 +157,18 @@ public double getBarWidth()  { return _barWidth; }
 /**
  * Returns bar graph's camera transform (overrides Scene3D to make pitch always relative to camera).
  */
-public RMTransform3D getTransform3D()
+public Transform3D getTransform3D()
 {
     // If pseudo 3d, just use original implementation
     if(isPseudo3D())
         return super.getTransform3D();
     
     // Normal transform: 
-    RMTransform3D t = new RMTransform3D();
+    Transform3D t = new Transform3D();
     t.translate(-getWidth()/2, -getHeight()/2, -getDepth()/2);
     t.rotateY(getYaw());
-    t.rotate(new RMVector3D(1, 0, 0), getPitch());
-    t.rotate(new RMVector3D(0, 0, 1), getRoll3D());
+    t.rotate(new Vector3D(1, 0, 0), getPitch());
+    t.rotate(new Vector3D(0, 0, 1), getRoll3D());
     t.translate(0, 0, getOffsetZ() - _offsetZ2);
     t.perspective(getFocalLength());
     t.translate(getWidth()/2, getHeight()/2, getDepth()/2);
@@ -193,7 +193,7 @@ protected void layoutImpl()
     _offsetZ2 = 0;
     
     // Get bounding box in camera coords with no Z offset
-    RMPath3D bbox = new RMPath3D();
+    Path3D bbox = new Path3D();
     bbox.moveTo(0, 0, 0);
     bbox.lineTo(0, 0, getDepth());
     bbox.lineTo(getWidth(), 0, getDepth());
@@ -234,12 +234,12 @@ protected void layoutImpl()
     addChild3D(bar.barShape, barMin + bar.layer*layerDepth, barMax + bar.layer*layerDepth, false); }
     
     // Calculate whether back plane should be shifted to the front
-    RMVector3D backVector = new RMVector3D(0, 0, -1).transform(getTransform3D());
+    Vector3D backVector = new Vector3D(0, 0, -1).transform(getTransform3D());
     boolean shiftBack = backVector.isAligned(getCamera(), true);
     double backZ = shiftBack? 0 : getDepth();
     
     // Create back plane path
-    RMPath3D back = new RMPath3D();
+    Path3D back = new Path3D();
     back.moveTo(0, 0, backZ);
     back.lineTo(0, getHeight(), backZ);
     back.lineTo(getWidth(), getHeight(), backZ);
@@ -250,34 +250,34 @@ protected void layoutImpl()
         back.reverse();
     
     // Create back plane shape
-    RMShape3D back3d = new RMShape3D(back);
+    Shape3D back3d = new Shape3D(back);
     setFillAndStroke(back3d, _backgroundFill, _backgroundStroke, null);
     back3d.setOpacity(.8f);
     addChild(back3d);
     
     // Add _grid to back3d
-    RMPath3D gpath3d = new RMPath3D(_grid, backZ);
+    Path3D gpath3d = new Path3D(_grid, backZ);
     gpath3d.transform(getTransform3D());
-    RMShape3D grid3d = new RMShape3D(gpath3d);
+    Shape3D grid3d = new Shape3D(gpath3d);
     grid3d.setXY(grid3d.x() - back3d.x(), grid3d.y() - back3d.y());
     grid3d.setStroke(new RMStroke());
     back3d.addChild(grid3d);
     
     // Add _gridMinor to back3d
-    gpath3d = new RMPath3D(_gridMinor, backZ);
+    gpath3d = new Path3D(_gridMinor, backZ);
     gpath3d.transform(getTransform3D());
-    RMShape3D gridMinor3d = new RMShape3D(gpath3d);
+    Shape3D gridMinor3d = new Shape3D(gpath3d);
     gridMinor3d.setXY(gridMinor3d.x() - back3d.x(), gridMinor3d.y() - back3d.y());
     gridMinor3d.setStrokeColor(RMColor.lightGray);
     back3d.addChild(gridMinor3d);
 
     // Calculate whether side plane should be shifted to the right
-    RMVector3D sideVector = new RMVector3D(1, 0, 0).transform(getTransform3D());
+    Vector3D sideVector = new Vector3D(1, 0, 0).transform(getTransform3D());
     boolean shiftSide = _vertical && !isPseudo3D() && sideVector.isAligned(getCamera(), true);
     double sideX = shiftSide? getWidth() : 0;
         
     // Create side path
-    RMPath3D side = new RMPath3D();
+    Path3D side = new Path3D();
     side.moveTo(sideX, 0, 0);
     side.lineTo(sideX, getHeight(), 0);
     side.lineTo(sideX, getHeight(), getDepth());
@@ -294,14 +294,14 @@ protected void layoutImpl()
         side.reverse();   
     
     // Create side shape
-    RMShape3D side3d = new RMShape3D(side);
+    Shape3D side3d = new Shape3D(side);
     setColor(side3d, RMColor.lightGray);
     side3d.setStroke(new RMStroke());
     side3d.setOpacity(.8f);        
     addChild(side3d);
     
     // Create floor path
-    RMPath3D floor = new RMPath3D();
+    Path3D floor = new Path3D();
     floor.moveTo(0, getHeight() + .5f, 0);
     floor.lineTo(getWidth(), getHeight() + .5f, 0);
     floor.lineTo(getWidth(), getHeight() + .5f, getDepth());
@@ -312,38 +312,38 @@ protected void layoutImpl()
         floor.reverse();
     
     // Create floor shape
-    RMShape3D floor3d = new RMShape3D(floor);
+    Shape3D floor3d = new Shape3D(floor);
     setColor(floor3d, RMColor.lightGray);
     floor3d.setStroke(new RMStroke());
     floor3d.setOpacity(.8f);
     addChild(floor3d);
     
     // Determine whether side grid should be added to graph side or floor
-    RMShape3D sideGridBuddy = _vertical? side3d : floor3d;
+    Shape3D sideGridBuddy = _vertical? side3d : floor3d;
     Rect gridWithoutSepBnds = _gridWithoutSep.getBounds(), gridMinorBnds = _gridMinor.getBounds();
     Rect gridRect = _vertical? new Rect(0, gridWithoutSepBnds.getY(), getDepth(), gridWithoutSepBnds.getHeight()) :
         new Rect(gridWithoutSepBnds.getX(), 0, gridWithoutSepBnds.getWidth(), getDepth());
     Rect gridMinorRect = _vertical? new Rect(0, gridMinorBnds.getY(), getDepth(), gridMinorBnds.getHeight()) :
         new Rect(gridMinorBnds.getX(), 0, gridMinorBnds.getWidth(), getDepth());
-    RMTransform3D gridTrans = _vertical? new RMTransform3D().rotateY(-90).translate(sideX, 0, 0) :
-        new RMTransform3D().rotateX(90).translate(0, getHeight(), 0);
+    Transform3D gridTrans = _vertical? new Transform3D().rotateY(-90).translate(sideX, 0, 0) :
+        new Transform3D().rotateX(90).translate(0, getHeight(), 0);
     
     // Configure grid
     RMPath sideGridPath = _gridWithoutSep.getPathInRect(gridRect);
-    RMPath3D sideGridPath3D = new RMPath3D(sideGridPath, 0);
+    Path3D sideGridPath3D = new Path3D(sideGridPath, 0);
     sideGridPath3D.transform(gridTrans);
     sideGridPath3D.transform(getTransform3D());
-    RMShape3D sideGrid3D = new RMShape3D(sideGridPath3D);
+    Shape3D sideGrid3D = new Shape3D(sideGridPath3D);
     sideGrid3D.setXY(sideGrid3D.x() - sideGridBuddy.x(), sideGrid3D.y() - sideGridBuddy.y());
     sideGrid3D.setStroke(new RMStroke());
     sideGridBuddy.addChild(sideGrid3D);
 
     // Add _gridMinor to side3d
     sideGridPath = _gridMinor.getPathInRect(gridMinorRect);
-    sideGridPath3D = new RMPath3D(sideGridPath, 0);
+    sideGridPath3D = new Path3D(sideGridPath, 0);
     sideGridPath3D.transform(gridTrans);
     sideGridPath3D.transform(getTransform3D());
-    sideGrid3D = new RMShape3D(sideGridPath3D);
+    sideGrid3D = new Shape3D(sideGridPath3D);
     sideGrid3D.setXY(sideGrid3D.x() - sideGridBuddy.x(), sideGrid3D.y() - sideGridBuddy.y());
     sideGrid3D.setStrokeColor(RMColor.lightGray);
     sideGridBuddy.addChild(sideGrid3D);

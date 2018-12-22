@@ -351,17 +351,17 @@ static class PieGraphShape3D extends RMScene3D implements PieGraphShape {
     public void addWedgeLabelLine(RMLineShape aLine)  { _lines.add(aLine); }
     
     /** Returns bar graph's camera transform (overrides Scene3D to make pitch always relative to camera). */
-    public RMTransform3D getTransform3D()
+    public Transform3D getTransform3D()
     {
         // If pseudo 3d, just use original implementation
         if(isPseudo3D()) return super.getTransform3D();
         
         // Normal transform:    
-        RMTransform3D t = new RMTransform3D();
+        Transform3D t = new Transform3D();
         t.translate(-getWidth()/2, -getHeight()/2, -getDepth()/2);
         t.rotateY(getYaw());
-        t.rotate(new RMVector3D(1, 0, 0), getPitch());
-        t.rotate(new RMVector3D(0, 0, 1), getRoll3D());
+        t.rotate(new Vector3D(1, 0, 0), getPitch());
+        t.rotate(new Vector3D(0, 0, 1), getRoll3D());
         t.perspective(getFocalLength());
         t.translate(getWidth()/2, getHeight()/2, getDepth()/2);
         
