@@ -2,7 +2,6 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.shape;
-import com.reportmill.graphics.*;
 import snap.gfx.*;
 import snap.util.*;
 
@@ -22,12 +21,12 @@ public RMPolygonShape() { }
 /**
  * Creates a new polygon shape for the given path.
  */
-public RMPolygonShape(Shape aShape)  { this(); _path = new RMPath(aShape); }
+public RMPolygonShape(Shape aShape)  { this(); _path = new Path(aShape); }
 
 /**
  * Returns the path for this polygon shape.
  */
-public Path getPath()  { return (Path)_path.copyFor(getBoundsInside()); }
+public Path getPath()  { return _path.copyFor(getBoundsInside()); }
 
 /**
  * Sets the path for this polygon shape.
@@ -69,7 +68,7 @@ protected void fromXMLShape(XMLArchiver anArchiver, XMLElement anElement)
 {
     super.fromXMLShape(anArchiver, anElement);                         // Unarchive basic shape attributes
     XMLElement pathXML = anElement.get("path");                        // Unarchive path
-    _path = anArchiver.fromXML(pathXML, RMPath.class, this);
+    _path = anArchiver.fromXML(pathXML, Path.class, this);
 }
 
 /**

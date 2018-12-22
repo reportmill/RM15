@@ -4,7 +4,7 @@
 package com.reportmill.shape;
 import com.reportmill.graphics.*;
 import java.util.*;
-import snap.gfx.Rect;
+import snap.gfx.*;
 
 /**
  * This class renders a bar graph in 3D.
@@ -24,13 +24,13 @@ class RMGraphShapeBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape
     RMStroke          _backgroundStroke;
     
     // Shapes for grid
-    RMPath            _grid = new RMPath();
+    Path              _grid = new Path();
     
     // Shapes for the minor grid
-    RMPath            _gridMinor = new RMPath();
+    Path              _gridMinor = new Path();
     
     // The grid path without separators
-    RMPath            _gridWithoutSep = new RMPath();
+    Path              _gridWithoutSep = new Path();
     
     // The bar width
     double            _barWidth = 0;
@@ -329,7 +329,7 @@ protected void layoutImpl()
         new Transform3D().rotateX(90).translate(0, getHeight(), 0);
     
     // Configure grid
-    RMPath sideGridPath = _gridWithoutSep.getPathInRect(gridRect);
+    Path sideGridPath = _gridWithoutSep.copyFor(gridRect);
     Path3D sideGridPath3D = new Path3D(sideGridPath, 0);
     sideGridPath3D.transform(gridTrans);
     sideGridPath3D.transform(getTransform3D());
@@ -339,7 +339,7 @@ protected void layoutImpl()
     sideGridBuddy.addChild(sideGrid3D);
 
     // Add _gridMinor to side3d
-    sideGridPath = _gridMinor.getPathInRect(gridMinorRect);
+    sideGridPath = _gridMinor.copyFor(gridMinorRect);
     sideGridPath3D = new Path3D(sideGridPath, 0);
     sideGridPath3D.transform(gridTrans);
     sideGridPath3D.transform(getTransform3D());

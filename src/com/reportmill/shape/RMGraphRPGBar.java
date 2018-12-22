@@ -374,7 +374,7 @@ private void addValueAxisLabels()
     axis.setStroke(new RMStroke());
 
     // Create path for axis labels line
-    RMPath path = new RMPath();
+    Path path = new Path();
     
     // Iterate over graph intervals to add ticks to axis path
     for(int i=0, iMax=getIntervalCount(); i<iMax; i++) {

@@ -14,7 +14,7 @@ import snap.view.*;
 public class RMPolygonShapeTool <T extends RMPolygonShape> extends RMTool <T> {
     
     // The current path being added
-    RMPath       _path;
+    Path         _path;
     
     // Whether path should be smoothed on mouse up
     boolean      _smoothPathOnMouseUp;
@@ -61,7 +61,7 @@ public void respondUI(ViewEvent anEvent)
     if(anEvent.equals("PathText")) {
         String str = anEvent.getStringValue();
         Path path = Path.getPathFromSVG(str); if(path==null) return;
-        pshape.resetPath(new RMPath(path));
+        pshape.resetPath(new Path(path));
     }
     
     // Handle DeletePointMenuItem
@@ -105,7 +105,7 @@ public void mousePressed(ViewEvent anEvent)
     getEditor().getSelectedShapes().forEach(i -> i.repaint());
 
     // If this is the first mouseDown of a new path, create path and add moveTo. Otherwise add lineTo to current path
-    if(_path==null) { _path = new RMPath(); _path.moveTo(point.x, point.y); }
+    if(_path==null) { _path = new Path(); _path.moveTo(point.x, point.y); }
     else _path.lineTo(point.x, point.y);    
 
     // Get the value of _shouldSmoothPathOnMouseUp for the mouseDrag and store current pointCount
@@ -481,7 +481,7 @@ public void deleteSelectedPoint()
 {
     // Make changes to a clone of the path so deletions can be undone
     RMPolygonShape p = getSelectedShape();
-    RMPath path = new RMPath(p.getPath());
+    Path path = new Path(p.getPath());
 
     // get the index of the path segment corresponding to the selected control point
     int sindex = path.getSegIndexForPointIndex(_selectedPointIndex);
@@ -516,7 +516,7 @@ public void addNewPointAt(Point aPoint)
     // Get old path and new path
     RMPolygonShape poly = getSelectedShape();
     Path path = poly.getPath();
-    RMPath path2 = new RMPath();
+    Path path2 = new Path();
     
     // Create small horizontal and vertical lines around mouse point
     Line hor = new Line(aPoint.x-3, aPoint.y, aPoint.x+3, aPoint.y);

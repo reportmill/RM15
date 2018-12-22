@@ -397,7 +397,7 @@ protected Shape3D addChild3D(RMShape aShape, double z1, double z2, boolean fixEd
     int childCount = getChildCount();
     
     // Get shape path
-    RMPath shapePath = new RMPath(aShape.getPath());
+    Path shapePath = new Path(aShape.getPath());
     
     // Flatten path to remove curve tos
     shapePath = shapePath.getPathFlattened();

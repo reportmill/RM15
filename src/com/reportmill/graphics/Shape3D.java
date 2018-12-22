@@ -22,7 +22,7 @@ public class Shape3D extends RMPolygonShape {
         _path3d = aPath3D;
         Path path = aPath3D.getPath(); Rect pbounds = path.getBounds();
         setBounds(pbounds);
-        Path shp = (Path)path.copyFor(new Rect(0, 0, pbounds.getWidth(), pbounds.getHeight()));
+        Path shp = path.copyFor(new Rect(0, 0, pbounds.getWidth(), pbounds.getHeight()));
         setPath(shp);
     }
 }

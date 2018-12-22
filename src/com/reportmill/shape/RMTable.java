@@ -4,7 +4,6 @@
 package com.reportmill.shape;
 import com.reportmill.base.RMGrouper;
 import com.reportmill.base.RMGrouping;
-import com.reportmill.graphics.*;
 import java.util.*;
 import snap.gfx.*;
 import snap.util.*;
@@ -438,7 +437,7 @@ public void paintShape(Painter aPntr)
             aPntr.drawString(version, titleX, titleY);
             
             // Draw drop-down arrow
-            RMPath p = new RMPath(); p.moveTo(titleX + titleWidth + 2.5f, titleY - 6f);
+            Path p = new Path(); p.moveTo(titleX + titleWidth + 2.5f, titleY - 6f);
             p.lineTo(titleX + titleWidth + 5.5f, titleY - 1f);
             p.lineTo(titleX + titleWidth + 8.5f, titleY - 6f); p.close();
             aPntr.fill(p);
