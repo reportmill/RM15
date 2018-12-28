@@ -119,13 +119,10 @@ private void addScuff(float theta, float phi)
     transform.translate(origin.x, origin.y, origin.z);
     path.transform(transform);
     
-    // create the shape
-    Shape3D scuff = new Shape3D(path); scuff.setStroke(null);
-    
     // If the trackball is shrunk down, draw the scuffmarks a darker color so they'll show up.
-    if(getZoomFactor()<.75) scuff.setColor(new RMColor(0,0,0,.75f));
-    else scuff.setColor(new RMColor(.2f,.2f,.2f,.5f));
-    _scene.addShape(scuff);
+    if(getZoomFactor()<.75) path.setColor(new Color(0,0,0,.75f));
+    else path.setColor(new Color(.2f,.2f,.2f,.5f));
+    _scene.addShape(path);
 }
 
 /** Override to provide special event helper. */

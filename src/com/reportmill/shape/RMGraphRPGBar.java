@@ -373,10 +373,8 @@ private void addValueAxisLabels()
     axis.setFrame(axisX, axisY, axisW, axisH);
     axis.setStroke(new RMStroke());
 
-    // Create path for axis labels line
+    // Create path for axis labels line: Iterate over graph intervals to add ticks to axis path
     Path path = new Path();
-    
-    // Iterate over graph intervals to add ticks to axis path
     for(int i=0, iMax=getIntervalCount(); i<iMax; i++) {
         double intervalPosition = isVertical()? height - height*i/(iMax - 1) : width*i/(iMax - 1);
         path.moveTo(isVertical()? 0  : intervalPosition, isVertical()? intervalPosition : 0);
@@ -385,8 +383,6 @@ private void addValueAxisLabels()
     
     // Add path to axis and add axis shape to the graph
     axis.setPath(path);
-    
-    // Add axis to graph view
     _barShape.addAxis(axis);
 
     // Iterate over graph intervals to create axis label texts

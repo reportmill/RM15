@@ -9,7 +9,7 @@ import java.util.*;
 /**
  * This class represents a path in 3D space.
  */
-public class Path3D implements Cloneable {
+public class Path3D extends Shape3D implements Cloneable {
     
     // The list of elements in this path
     List <Seg>      _elements = new ArrayList();
@@ -26,6 +26,9 @@ public class Path3D implements Cloneable {
     // The path bounding box
     Point3D         _bbox[];
     
+    // A list of Path3Ds to be drawn in front of this Path3D
+    List <Path3D>   _layers;
+
     // Cached pointers for iterating efficiently over the path
     int             _nextElementIndex = -100;
     int             _nextPointIndex = -100;
@@ -165,15 +168,15 @@ public void addPath(Path aPath, double aDepth)
  */
 public Point3D getCenter()
 {
-    // If center point hasn't been cached, calculate and cache it
-    if(_center==null) {
-        Point3D bbox[] = getBBox();
-        _center = new Point3D(bbox[0].x + (bbox[1].x-bbox[0].x)/2, bbox[0].y + (bbox[1].y-bbox[0].y)/2,
-                                bbox[0].z + (bbox[1].z-bbox[0].z)/2);
-    }
+    // If already set, just return
+    if(_center!=null) return _center;
     
-    // Return center point
-    return _center;
+    // If center point hasn't been cached, calculate and cache it
+    Point3D bbox[] = getBBox();
+    double cx = bbox[0].x + (bbox[1].x-bbox[0].x)/2;
+    double cy = bbox[0].y + (bbox[1].y-bbox[0].y)/2;
+    double cz = bbox[0].z + (bbox[1].z-bbox[0].z)/2;
+    return _center = new Point3D(cx, cy, cz);
 }
 
 /**
@@ -186,29 +189,22 @@ public void setCenter(Point3D aPoint)  { _center = aPoint; }
  */
 public Vector3D getNormal()
 {
-    // If normal hasn't been calculated
-    if(_normal==null) {
+    // If already set, just return
+    if(_normal!=null) return _normal;
         
-        // Create a new normal vector
-        _normal = new Vector3D(0, 0, 0);
-        
-        // Calculate least-square-fit normal. Works for either convex or concave polygons.
-        // Reference is Newell's Method for Computing the Plane Equation of a Polygon.
-        //   Graphics Gems III, David Kirk (Ed.), AP Professional, 1992.
-        for(int pc=getPointCount(), i=0; i<pc; i++) {
-            Point3D cur = getPoint(i), next = getPoint((i+1)%pc);
-            _normal.x += (cur.y - next.y) * (cur.z + next.z);
-            _normal.y += (cur.z - next.z) * (cur.x + next.x);
-            _normal.z += (cur.x - next.x) * (cur.y + next.y);
-        }
- 
-        // Normalize the result
-        _normal.normalize();
-        _normal.negate(); // swap sign of normal so it matches right hand rule
+    // Calculate least-square-fit normal. Works for either convex or concave polygons.
+    // Reference is Newell's Method for Computing the Plane Equation of a Polygon.
+    //   Graphics Gems III, David Kirk (Ed.), AP Professional, 1992.
+    Vector3D normal = new Vector3D(0, 0, 0);
+    for(int i=0, pc=getPointCount(); i<pc; i++) { Point3D cur = getPoint(i), next = getPoint((i+1)%pc);
+        normal.x += (cur.y - next.y) * (cur.z + next.z);
+        normal.y += (cur.z - next.z) * (cur.x + next.x);
+        normal.z += (cur.x - next.x) * (cur.y + next.y);
     }
-
-    // Return normal
-    return _normal;
+ 
+    // Normalize the result and swap sign so it matches right hand rule
+    normal.normalize(); normal.negate();
+    return _normal = normal;
 }
 
 /**
@@ -286,7 +282,7 @@ public void transform(Transform3D xform)
         getPoint(i).transform(xform);
     
     // Remove center point from _points list and reset normal
-    _points.remove(_points.size()-1); _normal = null; _bbox = null;
+    _center = _points.remove(_points.size()-1); _normal = null; _bbox = null;
 }
 
 /**
@@ -405,21 +401,23 @@ public int comparePlane(Path3D aPath)
  */
 public Point3D[] getBBox()
 {
-    if (_bbox==null) {
-        _bbox = new Point3D[2];
-        _bbox[0] = new Point3D(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
-        _bbox[1] = new Point3D(-Float.MAX_VALUE, -Float.MAX_VALUE, -Float.MAX_VALUE);
+    // If already set, just return
+    if(_bbox!=null) return _bbox;
+    
+    // Set
+    Point3D bbox[] = new Point3D[2];
+    bbox[0] = new Point3D(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
+    bbox[1] = new Point3D(-Float.MAX_VALUE, -Float.MAX_VALUE, -Float.MAX_VALUE);
         
-        for(int i=0, iMax=getPointCount(); i<iMax; i++) { Point3D pt = getPoint(i);
-            _bbox[0].x = Math.min(_bbox[0].x, pt.x);
-            _bbox[0].y = Math.min(_bbox[0].y, pt.y);
-            _bbox[0].z = Math.min(_bbox[0].z, pt.z);
-            _bbox[1].x = Math.max(_bbox[1].x, pt.x);
-            _bbox[1].y = Math.max(_bbox[1].y, pt.y);
-            _bbox[1].z = Math.max(_bbox[1].z, pt.z);
-        }
+    for(int i=0, iMax=getPointCount(); i<iMax; i++) { Point3D pt = getPoint(i);
+        bbox[0].x = Math.min(bbox[0].x, pt.x);
+        bbox[0].y = Math.min(bbox[0].y, pt.y);
+        bbox[0].z = Math.min(bbox[0].z, pt.z);
+        bbox[1].x = Math.max(bbox[1].x, pt.x);
+        bbox[1].y = Math.max(bbox[1].y, pt.y);
+        bbox[1].z = Math.max(bbox[1].z, pt.z);
     }
-    return _bbox;
+    return _bbox = bbox;
 }
 
 /**
@@ -453,124 +451,45 @@ public double getZMin()  { return getBBox()[0].z; }
 public double getZMax()  { return getBBox()[1].z; }
 
 /**
+ * Returns layers to be drawn in front of this path.
+ */
+public List <Path3D> getLayers()  { return _layers!=null? _layers : Collections.EMPTY_LIST; }
+
+/**
+ * Adds a path to be drawn immediately in front of this path.
+ */
+public void addLayer(Path3D aPath)
+{
+    if(_layers==null) _layers = new ArrayList();
+    _layers.add(aPath);
+}
+
+/**
+ * Copies path for given transform.
+ */
+public Path3D copyFor(Transform3D aTrans)
+{
+    Path3D copy = clone(); copy.transform(aTrans);
+    if(_layers!=null) for(Path3D layer : copy._layers) layer.transform(aTrans);
+    return copy;
+}
+
+/**
  * Standard clone implementation.
  */
-public Object clone()
+public Path3D clone()
 {
-    Path3D clone = new Path3D();
-    clone._elements = SnapUtils.clone(_elements);
+    Path3D clone = null; try { clone = (Path3D)super.clone(); }
+    catch(Exception e) { throw new RuntimeException(e); }
+    clone._elements = new ArrayList(_elements);
     clone._points = SnapUtils.cloneDeep(_points);
+    clone._layers = _layers!=null? SnapUtils.cloneDeep(_layers) : null;
     return clone;
 }
 
 /**
- * Creates and returns a list of paths in 3D for a given 2D path and extrusion. 
- * Also can take into account the width of a stroke applied to the side (extrusion) panels.
+ * Returns the array of Path3D that can render this shape.
  */
-public static List <Path3D> getPaths(Path aPath, double z1, double z2, double strokeWidth)
-{
-    // Create list to hold paths
-    List <Path3D> paths = new ArrayList();
-
-    // Declare local variable for back face
-    Path3D back = null;
-    
-    // If path is closed, create path3d for front from aPath and z1
-    if(aPath.isClosed()) {
-        
-        // Create path3d for front and back
-        Path3D front = new Path3D(aPath, z1);
-        back = new Path3D(aPath, z2);
-        
-        // Add front to paths list
-        paths.add(front);
-    
-        // If front is pointing wrong way, reverse it
-        if(front.getNormal().isAway(new Vector3D(0, 0, -1), true))
-            front.reverse();
-        
-        // Otherwise, reverse back
-        else {
-            back.reverse();
-            aPath = back.getPath();
-        }
-    }
-    
-    // Make room for path stroke
-    z1 += strokeWidth;
-    z2 -= strokeWidth;
-    
-    // Iterate over path elements
-    PathIter piter = aPath.getPathIter(null);
-    double pts[] = new double[6], lastX = 0, lastY = 0, lastMoveX = 0, lastMoveY = 0;
-    while(piter.hasNext()) switch(piter.getNext(pts)) {
-
-        // MoveTo
-        case MoveTo: lastX = lastMoveX = pts[0]; lastY = lastMoveY = pts[1]; break;
-        
-        // LineTo
-        case LineTo: {
-            if(Point.equals(lastX,lastY,pts[0],pts[1])) continue;
-            Path3D path = new Path3D(); path.moveTo(lastX, lastY, z1);
-            path.lineTo(pts[0], pts[1], z1);
-            path.lineTo(pts[0], pts[1], z2);
-            path.lineTo(lastX, lastY, z2);
-            path.close();
-            double x = lastX + (pts[0] - lastX)/2;
-            double y = lastY + (pts[1] - lastY)/2;
-            path.setCenter(new Point3D(x, y, z2/2));
-            paths.add(path);
-            lastX = pts[0]; lastY = pts[1];
-        } break;
-            
-        // QuadTo
-        case QuadTo: {
-            Path3D path = new Path3D(); path.moveTo(lastX, lastY, z1);
-            path.quadTo(pts[0], pts[1], z1, pts[2], pts[3], z1);
-            path.lineTo(pts[4], pts[5], z2);
-            path.quadTo(pts[0], pts[1], z2, lastX, lastY, z2);
-            path.close();
-            double x = lastX + (pts[2] - lastX)/2;
-            double y = lastY + (pts[3] - lastY)/2;
-            path.setCenter(new Point3D(x, y, z2/2));
-            paths.add(path);
-            lastX = pts[2]; lastY = pts[3];
-        } break;
-            
-        // CubicTo
-        case CubicTo: {
-            Path3D path = new Path3D(); path.moveTo(lastX, lastY, z1);
-            path.curveTo(pts[0], pts[1], z1, pts[2], pts[3], z1, pts[4], pts[5], z1);
-            path.lineTo(pts[4], pts[5], z2);
-            path.curveTo(pts[2], pts[3], z2, pts[0], pts[1], z2, lastX, lastY, z2);
-            path.close();
-            double x = lastX + (pts[4] - lastX)/2;
-            double y = lastY + (pts[5] - lastY)/2;
-            path.setCenter(new Point3D(x, y, z2/2));
-            paths.add(path);
-            lastX = pts[4]; lastY = pts[5];
-        } break;
-        
-        // Close
-        case Close: {
-            Path3D path = new Path3D(); path.moveTo(lastX, lastY, z1);
-            path.lineTo(lastMoveX, lastMoveY, z1);
-            path.lineTo(lastMoveX, lastMoveY, z2);
-            path.lineTo(lastX, lastY, z2);
-            path.close();
-            double x = lastX + (lastMoveX - lastX)/2;
-            double y = lastY + (lastMoveY - lastY)/2;
-            path.setCenter(new Point3D(x, y, z2/2));
-            paths.add(path);
-        } break;
-    }
-    
-    // Add back face to paths
-    if(back != null)
-        paths.add(back);
-    
-    // Return paths
-    return paths;
-}
+public Path3D[] getPath3Ds()  { return _path3ds; }  Path3D _path3ds[] = { this };
 
 }

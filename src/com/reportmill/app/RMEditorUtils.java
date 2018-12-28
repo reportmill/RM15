@@ -406,7 +406,7 @@ public static void groupInScene3D(RMEditor anEditor)
     // Iterate over children and add to group shape
     for(int i=0, iMax=selectedShapes.size(); i<iMax; i++) {
         RMShape shape = selectedShapes.get(i);
-        groupShape.addShape(shape);
+        groupShape.addShapeRM(shape);
         shape.removeFromParent();
         shape.setXY(shape.x() - groupShape.x(), shape.y() - groupShape.y());
     }

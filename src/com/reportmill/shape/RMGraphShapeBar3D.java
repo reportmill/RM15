@@ -18,10 +18,10 @@ class RMGraphShapeBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape
     boolean           _vertical;
 
     // The background color for the grid
-    RMFill            _backgroundFill;
+    RMFill            _backFill;
     
     // The background stroke for the grid
-    RMStroke          _backgroundStroke;
+    RMStroke          _backStroke;
     
     // Shapes for grid
     Path              _grid = new Path();
@@ -60,7 +60,7 @@ public RMGraphShapeBar3D(RMGraph aGraph)
 {
     // Set attributes
     _graph = aGraph; _vertical = _graph.isVertical();
-    _backgroundFill = _graph.getFill(); _backgroundStroke = _graph.getStroke();
+    _backFill = _graph.getFill(); _backStroke = _graph.getStroke();
     setBounds(_graph.getBounds());
     setOpacity(_graph.getOpacity());
     copy3D(_graph.get3D());
@@ -137,7 +137,7 @@ public void addBarLabel(RMShape aBarLabel, RMGraphPartSeries.LabelPos aPosition)
 /**
  * Adds the axis to the graph view.
  */
-public void addAxis(RMShape aShape)  { addChild(aShape); }
+public void addAxis(RMShape aShape)  { } // Handled in layoutImp
 
 /**
  * Adds the value axis label to the graph view.
@@ -155,26 +155,44 @@ public void addLabelAxisLabel(RMShape anAxisLabel)  { _axisLabels.add(anAxisLabe
 public double getBarWidth()  { return _barWidth; }
 
 /**
- * Returns bar graph's camera transform (overrides Scene3D to make pitch always relative to camera).
+ * Override to make pitch always relative to camera.
  */
 public Transform3D getTransform3D()
 {
-    // If pseudo 3d, just use original implementation
-    if(isPseudo3D())
-        return super.getTransform3D();
+    // If pseudo 3d, just use normal version
+    if(isPseudo3D()) return super.getTransform3D();
     
     // Normal transform: 
     Transform3D t = new Transform3D();
-    t.translate(-getWidth()/2, -getHeight()/2, -getDepth()/2);
+    double midx = getWidth()/2, midy = getHeight()/2, midz = getDepth()/2; t.translate(-midx, -midy, -midz);
     t.rotateY(getYaw());
     t.rotate(new Vector3D(1, 0, 0), getPitch());
     t.rotate(new Vector3D(0, 0, 1), getRoll3D());
     t.translate(0, 0, getOffsetZ() - _offsetZ2);
     t.perspective(getFocalLength());
-    t.translate(getWidth()/2, getHeight()/2, getDepth()/2);
+    t.translate(midx, midy, midz);
     
     // Return transform
     return t;
+}
+
+/**
+ * Resets bar view Z offset.
+ */
+protected void resetBarViewZOffset()
+{
+    // Cache and clear scene3D Z offset and bar view Z offset
+    double offsetZ = getOffsetZ(); setOffsetZ(0); _offsetZ2 = 0;
+    
+    // Get bounding box in camera coords with no Z offset
+    double width = getWidth(), height = getHeight(), depth = getDepth();
+    Path3D bbox = new Path3D(); bbox.moveTo(0, 0, 0); bbox.lineTo(0, 0, depth); bbox.lineTo(width, 0, depth);
+    bbox.lineTo(width, 0, 0); bbox.lineTo(0, 0, 0); bbox.lineTo(0, height, 0);
+    bbox.lineTo(0, height, depth); bbox.lineTo(width, height, depth); bbox.lineTo(width, height, 0); bbox.close();
+    bbox.transform(getTransform3D());
+    
+    // Get offset Z of graph view from bounding box and restore original graph Z offset
+    _offsetZ2 = bbox.getZMin(); setOffsetZ(offsetZ);
 }
 
 /**
@@ -184,36 +202,16 @@ protected void layoutImpl()
 {
     // Remove all existing children
     removeChildren();
+    removeShapes();
+    
+    // Reset extra Z offset that keeps bar view in positive space by default
+    resetBarViewZOffset();
 
-    // Cache and clear scene3D Z offset
-    double offsetZ = getOffsetZ();
-    setOffsetZ(0);
-    
-    // Clear bar view Z offset
-    _offsetZ2 = 0;
-    
-    // Get bounding box in camera coords with no Z offset
-    Path3D bbox = new Path3D();
-    bbox.moveTo(0, 0, 0);
-    bbox.lineTo(0, 0, getDepth());
-    bbox.lineTo(getWidth(), 0, getDepth());
-    bbox.lineTo(getWidth(), 0, 0);
-    bbox.lineTo(0, 0, 0);
-    bbox.lineTo(0, getHeight(), 0);
-    bbox.lineTo(0, getHeight(), getDepth());
-    bbox.lineTo(getWidth(), getHeight(), getDepth());
-    bbox.lineTo(getWidth(), getHeight(), 0);
-    bbox.close();
-    bbox.transform(getTransform3D());
-    
-    // Get offset Z of graph view from bounding box
-    _offsetZ2 = bbox.getZMin();
-
-    // Restore original graph Z offset
-    setOffsetZ(offsetZ);
+    // Get standard width, height, depth
+    double width = getWidth(), height = getHeight(), depth = getDepth();
     
     // Get depth of layers
-    double layerDepth = getDepth()/_layerCount;
+    double layerDepth = depth/_layerCount;
     
     // Calculate bar depth
     double barDepth = layerDepth/(1 + _graph.getBars().getBarGap());
@@ -231,130 +229,80 @@ protected void layoutImpl()
     
     // Iterate over bars and add each bar shape at bar layer
     for(int i=0, iMax=_bars.size(); i<iMax; i++) { Bar bar = _bars.get(i);
-    addChild3D(bar.barShape, barMin + bar.layer*layerDepth, barMax + bar.layer*layerDepth, false); }
+    addShapesForRMShape(bar.barShape, barMin + bar.layer*layerDepth, barMax + bar.layer*layerDepth, false); }
     
-    // Calculate whether back plane should be shifted to the front
-    Vector3D backVector = new Vector3D(0, 0, -1).transform(getTransform3D());
-    boolean shiftBack = backVector.isAligned(getCamera(), true);
-    double backZ = shiftBack? 0 : getDepth();
-    
-    // Create back plane path
-    Path3D back = new Path3D();
-    back.moveTo(0, 0, backZ);
-    back.lineTo(0, getHeight(), backZ);
-    back.lineTo(getWidth(), getHeight(), backZ);
-    back.lineTo(getWidth(), 0, backZ);
-    back.close();
-    back.transform(getTransform3D());
-    if(!shiftBack)
-        back.reverse();
+    // Calculate whether back plane should be shifted to the front. Back normal = { 0, 0,-1 }.
+    boolean shiftBack = isFacingAway(localToCameraForVector(0, 0, -1));
+    double backZ = shiftBack? 0 : depth;
     
     // Create back plane shape
-    Shape3D back3d = new Shape3D(back);
-    setFillAndStroke(back3d, _backgroundFill, _backgroundStroke, null);
-    back3d.setOpacity(.8f);
-    addChild(back3d);
+    Path3D back = new Path3D(); back.setOpacity(.8f);
+    if(_backFill!=null) back.setColor(_backFill.getColor());
+    if(_backStroke!=null) back.setStroke(_backStroke.getColor(), _backStroke.getWidth());
+    back.moveTo(0, 0, backZ); back.lineTo(0, height, backZ);
+    back.lineTo(width, height, backZ); back.lineTo(width, 0, backZ); back.close();
+    if(!shiftBack) back.reverse();
+    addShape(back);
     
-    // Add _grid to back3d
-    Path3D gpath3d = new Path3D(_grid, backZ);
-    gpath3d.transform(getTransform3D());
-    Shape3D grid3d = new Shape3D(gpath3d);
-    grid3d.setXY(grid3d.x() - back3d.x(), grid3d.y() - back3d.y());
-    grid3d.setStroke(new RMStroke());
-    back3d.addChild(grid3d);
+    // Add Grid to back
+    Path3D grid = new Path3D(_grid, backZ); grid.setStroke(Color.BLACK, 1);
+    back.addLayer(grid);
     
-    // Add _gridMinor to back3d
-    gpath3d = new Path3D(_gridMinor, backZ);
-    gpath3d.transform(getTransform3D());
-    Shape3D gridMinor3d = new Shape3D(gpath3d);
-    gridMinor3d.setXY(gridMinor3d.x() - back3d.x(), gridMinor3d.y() - back3d.y());
-    gridMinor3d.setStrokeColor(RMColor.lightGray);
-    back3d.addChild(gridMinor3d);
+    // Add GridMinor to back
+    Path3D gridMinor = new Path3D(_gridMinor, backZ); gridMinor.setStrokeColor(Color.LIGHTGRAY);
+    back.addLayer(gridMinor);
 
-    // Calculate whether side plane should be shifted to the right
-    Vector3D sideVector = new Vector3D(1, 0, 0).transform(getTransform3D());
-    boolean shiftSide = _vertical && !isPseudo3D() && sideVector.isAligned(getCamera(), true);
-    double sideX = shiftSide? getWidth() : 0;
+    // Calculate whether side plane should be shifted to the right. Side normal = { 1, 0, 0 }.
+    boolean shiftSide = _vertical && !isPseudo3D() && isFacingAway(localToCameraForVector(1,0,0));
+    double sideX = shiftSide? width : 0;
         
-    // Create side path
-    Path3D side = new Path3D();
-    side.moveTo(sideX, 0, 0);
-    side.lineTo(sideX, getHeight(), 0);
-    side.lineTo(sideX, getHeight(), getDepth());
-    side.lineTo(sideX, 0, getDepth());
-    side.close();
-    side.transform(getTransform3D());
+    // Create side path shape
+    Path3D side = new Path3D(); side.setColor(Color.LIGHTGRAY); side.setStroke(Color.BLACK, 1); side.setOpacity(.8f);
+    side.moveTo(sideX, 0, 0); side.lineTo(sideX, height, 0);
+    side.lineTo(sideX, height, depth); side.lineTo(sideX, 0, depth); side.close();
     
     // For horizonatal bar charts, make sure the side panel always points towards the camera
-    if(!_vertical || isPseudo3D())
-        shiftSide = side.getNormal().isAway(getCamera(),true);
-
-    // If side wasn't shifted, reverse it
-    if(!shiftSide)
-        side.reverse();   
+    boolean sideFacingAway = isFacingAway(localToCamera(side));
+    if(sideFacingAway) side.reverse();   
+    addShape(side);
     
-    // Create side shape
-    Shape3D side3d = new Shape3D(side);
-    setColor(side3d, RMColor.lightGray);
-    side3d.setStroke(new RMStroke());
-    side3d.setOpacity(.8f);        
-    addChild(side3d);
-    
-    // Create floor path
-    Path3D floor = new Path3D();
-    floor.moveTo(0, getHeight() + .5f, 0);
-    floor.lineTo(getWidth(), getHeight() + .5f, 0);
-    floor.lineTo(getWidth(), getHeight() + .5f, getDepth());
-    floor.lineTo(0, getHeight() + .5f, getDepth());
-    floor.close();
-    floor.transform(getTransform3D());
-    if(floor.getNormal().isAligned(getCamera(), true))
-        floor.reverse();
-    
-    // Create floor shape
-    Shape3D floor3d = new Shape3D(floor);
-    setColor(floor3d, RMColor.lightGray);
-    floor3d.setStroke(new RMStroke());
-    floor3d.setOpacity(.8f);
-    addChild(floor3d);
+    // Create floor path shape
+    Path3D floor = new Path3D(); floor.setColor(Color.LIGHTGRAY); floor.setStroke(Color.BLACK, 1); floor.setOpacity(.8f);
+    floor.moveTo(0, height + .5, 0); floor.lineTo(width, height + .5, 0);
+    floor.lineTo(width, height + .5, depth); floor.lineTo(0, height + .5, depth); floor.close();
+    boolean floorFacingAway = isFacingAway(localToCamera(floor));
+    if(floorFacingAway) floor.reverse();
+    addShape(floor);
     
     // Determine whether side grid should be added to graph side or floor
-    Shape3D sideGridBuddy = _vertical? side3d : floor3d;
+    Path3D sideGridBuddy = _vertical? side : floor;
     Rect gridWithoutSepBnds = _gridWithoutSep.getBounds(), gridMinorBnds = _gridMinor.getBounds();
-    Rect gridRect = _vertical? new Rect(0, gridWithoutSepBnds.getY(), getDepth(), gridWithoutSepBnds.getHeight()) :
-        new Rect(gridWithoutSepBnds.getX(), 0, gridWithoutSepBnds.getWidth(), getDepth());
-    Rect gridMinorRect = _vertical? new Rect(0, gridMinorBnds.getY(), getDepth(), gridMinorBnds.getHeight()) :
-        new Rect(gridMinorBnds.getX(), 0, gridMinorBnds.getWidth(), getDepth());
+    Rect gridRect = _vertical? new Rect(0, gridWithoutSepBnds.y, depth, gridWithoutSepBnds.height) :
+        new Rect(gridWithoutSepBnds.x, 0, gridWithoutSepBnds.width, depth);
+    Rect gridMinorRect = _vertical? new Rect(0, gridMinorBnds.y, depth, gridMinorBnds.height) :
+        new Rect(gridMinorBnds.x, 0, gridMinorBnds.width, depth);
     Transform3D gridTrans = _vertical? new Transform3D().rotateY(-90).translate(sideX, 0, 0) :
-        new Transform3D().rotateX(90).translate(0, getHeight(), 0);
+        new Transform3D().rotateX(90).translate(0, height, 0);
     
     // Configure grid
     Path sideGridPath = _gridWithoutSep.copyFor(gridRect);
-    Path3D sideGridPath3D = new Path3D(sideGridPath, 0);
-    sideGridPath3D.transform(gridTrans);
-    sideGridPath3D.transform(getTransform3D());
-    Shape3D sideGrid3D = new Shape3D(sideGridPath3D);
-    sideGrid3D.setXY(sideGrid3D.x() - sideGridBuddy.x(), sideGrid3D.y() - sideGridBuddy.y());
-    sideGrid3D.setStroke(new RMStroke());
-    sideGridBuddy.addChild(sideGrid3D);
+    Path3D sideGrid = new Path3D(sideGridPath, 0); sideGrid.transform(gridTrans); sideGrid.setStroke(Color.BLACK, 1);
+    sideGridBuddy.addLayer(sideGrid);
 
-    // Add _gridMinor to side3d
-    sideGridPath = _gridMinor.copyFor(gridMinorRect);
-    sideGridPath3D = new Path3D(sideGridPath, 0);
-    sideGridPath3D.transform(gridTrans);
-    sideGridPath3D.transform(getTransform3D());
-    sideGrid3D = new Shape3D(sideGridPath3D);
-    sideGrid3D.setXY(sideGrid3D.x() - sideGridBuddy.x(), sideGrid3D.y() - sideGridBuddy.y());
-    sideGrid3D.setStrokeColor(RMColor.lightGray);
-    sideGridBuddy.addChild(sideGrid3D);
-    setFillAndStroke(sideGridBuddy, _backgroundFill, _backgroundStroke, null);
+    // Add GridMinor to side3d
+    Path sideGridPathMinor = _gridMinor.copyFor(gridMinorRect);
+    Path3D sideGridMinor = new Path3D(sideGridPathMinor, 0); sideGridMinor.transform(gridTrans);
+    sideGridMinor.setStroke(Color.LIGHTGRAY,1);
+    sideGridBuddy.addLayer(sideGridMinor);
+    if(_backFill!=null) sideGridBuddy.setColor(_backFill.getColor());
+    if(_backStroke!=null) sideGridBuddy.setStroke(_backStroke.getColor(), _backStroke.getWidth());
     
     // If no pseudo 3d, add axis and bar labels as 3d shapes
     if(!isPseudo3D()) {
          
         // Create axis label shapes
         for(int i=0, iMax=_axisLabels.size(); i<iMax && !getValueIsAdjusting(); i++)
-            addChild3D(_axisLabels.get(i), -.1f, -.1f, false);
+            addShapesForRMShape(_axisLabels.get(i), -.1f, -.1f, false);
     
         // Create bar label shapes
         for(int i=0, iMax=_barLabels.size(); i<iMax && !getValueIsAdjusting(); i++) {
@@ -365,15 +313,15 @@ protected void layoutImpl()
             // Handle outside labels
             if(_barLabelPositions.get(i)==RMGraphPartSeries.LabelPos.Above ||
                 _barLabelPositions.get(i)==RMGraphPartSeries.LabelPos.Below)
-                addChild3D(barLabel, getDepth()/2, getDepth()/2, false);
+                addShapesForRMShape(barLabel, depth/2, depth/2, false);
     
             // Handle inside
-            else addChild3D(barLabel, (getDepth() - _barWidth)/2 - 5, (getDepth() - _barWidth)/2 - 5, false);
+            else addShapesForRMShape(barLabel, (depth - _barWidth)/2 - 5, (depth - _barWidth)/2 - 5, false);
         }
     }
           
-    // Do 3d sort
-    resort();
+    // Do normal version
+    super.layoutImpl();
     
     // If Pseudo3d, add bar labels
     if(isPseudo3D()) {

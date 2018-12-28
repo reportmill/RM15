@@ -6,10 +6,10 @@ package com.reportmill.graphics;
 /**
  * This class represents a 3D vector.
  */
-public class Vector3D {
+public class Vector3D implements Cloneable {
     
     // X Y Z components
-    double x, y, z;
+    public double x, y, z;
     
 /**
  * Creates a new vector from the given coords.
@@ -101,6 +101,15 @@ public void negate()  { x = -x; y = -y; z = -z; }
  * Transforms the vector by the given transform3d.
  */
 public Vector3D transform(Transform3D aTransform)  { return aTransform.transform(this); }
+
+/**
+ * Standard clone implementation.
+ */
+public Vector3D clone()
+{
+    try { return (Vector3D)super.clone(); }
+    catch(Exception e) { throw new RuntimeException(e); }
+}
 
 /**
  * Standard toString implementation.
