@@ -423,32 +423,6 @@ public int compareZMin(Path3D path2)
 }
 
 /**
- * A compareTo implementation that returns a usable draw order.
- * Can't be used in real sort since it doesn't guarantee a<b<c.
- */
-public int comparePaintOrder(Path3D path2)
-{
-    // If receiver max z is less than other path min z, return ORDER_ASCEND (Determinative)
-    if(getZMax()<=path2.getZMin()) return ORDER_FRONT_TO_BACK;
-    if(getZMin()>=path2.getZMax()) return ORDER_BACK_TO_FRONT;
-    
-    // If no X/Y/Z overlap, just continue (not determinative)
-    if(getZMin()>=path2.getZMax()) return ORDER_SAME;
-    if(getXMax()<=path2.getXMin() || getXMin()>=path2.getXMax()) return ORDER_SAME;
-    if(getYMax()<=path2.getYMin() || getYMin()>=path2.getYMax()) return ORDER_SAME;
-            
-    // If either path can be determined to be in front/back of the other (or aligned), return that
-    int comp = comparePlane(path2); if(comp!=ORDER_INEDETERMINATE) return comp;
-    int comp2 = path2.comparePlane(this); if(comp2!=ORDER_INEDETERMINATE) return -comp2;
-    
-    // If 2d paths don't intersect, just continue
-    if(!getPath().intersects(path2.getPath(),0)) return ORDER_SAME;
-
-    // Return indeterminate
-    return ORDER_INEDETERMINATE;
-}
-
-/**
  * Returns whether this path is in front (FRONT_TO_BACK) or aPath in front (BACK_TO_FRONT).
  * Returns ORDER_SAME if the two paths are coplanar, or INDETERMINATE if they intersect.
  */
@@ -514,7 +488,7 @@ public String toString()
 }
 
 /**
- * Resorts child shapes from back to front.
+ * Resorts a Path3D list from back to front using Depth Sort Algorithm.
  */
 public static void sort(List <Path3D> paths)
 {
@@ -524,7 +498,7 @@ public static void sort(List <Path3D> paths)
     // Sort again front to back with exhaustive sort satisfying Depth Sort Algorithm
     for(int i=paths.size()-1; i>0; i--) { Path3D path0 = paths.get(i), path1 = path0;
         
-        // Iterate over remaining shapes
+        // Iterate over remaining paths
         for(int j=0, jMax=i; j<jMax; j++) { Path3D path2 = paths.get(j); if(path2==path1) continue;
         
             // If no X/Y/Z overlap, just continue
@@ -539,7 +513,7 @@ public static void sort(List <Path3D> paths)
             // If 2d paths don't intersect, just continue
             if(!path1.getPath().intersects(path2.getPath(),0)) continue;
             
-            // If all five tests fail, try next polygon up from poly1
+            // If all five tests fail, try next path up from path1
             int index = ListUtils.indexOfId(paths, path1);  // Below shouldn't happen
             if(index==0) { System.err.println("Path3D.sort: sort failed"); path1 = path0; break; }
             path1 = paths.get(index-1);
