@@ -3,6 +3,7 @@
  */
 package com.reportmill.graphics;
 import snap.gfx.*;
+import snap.util.ListUtils;
 import snap.util.SnapUtils;
 import java.util.*;
 
@@ -510,6 +511,49 @@ public Path3D[] getPath3Ds()  { return _path3ds; }  Path3D _path3ds[] = { this }
 public String toString()
 {
     return "Path3D: " + getBBox()[0] + ", " + getBBox()[1];
+}
+
+/**
+ * Resorts child shapes from back to front.
+ */
+public static void sort(List <Path3D> paths)
+{
+    // Get list of paths and sort from front to back with simple Z min sort
+    Collections.sort(paths, (p0,p1) -> p0.compareZMin(p0));
+
+    // Sort again front to back with exhaustive sort satisfying Depth Sort Algorithm
+    for(int i=paths.size()-1; i>0; i--) { Path3D path0 = paths.get(i), path1 = path0;
+        
+        // Iterate over remaining shapes
+        for(int j=0, jMax=i; j<jMax; j++) { Path3D path2 = paths.get(j); if(path2==path1) continue;
+        
+            // If no X/Y/Z overlap, just continue
+            if(path1.getZMin()>=path2.getZMax()) continue;
+            if(path1.getXMax()<=path2.getXMin() || path1.getXMin()>=path2.getXMax()) continue;
+            if(path1.getYMax()<=path2.getYMin() || path1.getYMin()>=path2.getYMax()) continue;
+            
+            // Test path planes - if on same plane or in correct order, they don't overlap
+            int comp1 = path1.comparePlane(path2); if(comp1==ORDER_SAME || comp1==ORDER_BACK_TO_FRONT) continue;
+            int comp2 = path2.comparePlane(path1); if(comp2==ORDER_FRONT_TO_BACK) continue;
+            
+            // If 2d paths don't intersect, just continue
+            if(!path1.getPath().intersects(path2.getPath(),0)) continue;
+            
+            // If all five tests fail, try next polygon up from poly1
+            int index = ListUtils.indexOfId(paths, path1);
+            if(index==0) { //System.out.println("i is " + i); // There is still a bug - this shouldn't happen
+                path1 = paths.get(i); j = jMax; continue; }
+            path1 = paths.get(index-1);
+            j = -1;
+        }
+        
+        // Move poly
+        if(path1!=path0) {
+            ListUtils.removeId(paths, path1); paths.add(i, path1); }
+    }
+
+    // Reverse child list so it is back to front (so front most shape will be drawn last)
+    Collections.reverse(paths);
 }
 
 }

@@ -420,7 +420,7 @@ protected void layoutImpl()
         addPathsForShape(shp);
     
     // Resort paths
-    resort();
+    Path3D.sort(_paths);
 }
 
 /**
@@ -466,55 +466,6 @@ protected void setRenderColor(Path3D aShape3D, Color aColor)
     
     // Set new color
     aShape3D.setColor(new Color(r, g, b, aColor.getAlpha()));    
-}
-
-// Constants for ordering
-public static final int ORDER_BACK_TO_FRONT = -1;
-public static final int ORDER_FRONT_TO_BACK = 1;
-public static final int ORDER_SAME = 0, ORDER_INEDETERMINATE = 2;
-
-/**
- * Resorts child shapes from back to front.
- */
-public void resort()
-{
-    // Get list of paths and sort from front to back with simple Z min sort
-    List <Path3D> paths = _paths;
-    Collections.sort(paths, (p0,p1) -> p0.compareZMin(p0));
-
-    // Sort again front to back with exhaustive sort satisfying Depth Sort Algorithm
-    for(int i=paths.size()-1; i>0; i--) { Path3D path0 = paths.get(i), path1 = path0;
-        
-        // Iterate over remaining shapes
-        for(int j=0, jMax=i; j<jMax; j++) { Path3D path2 = paths.get(j); if(path2==path1) continue;
-        
-            // If no X/Y/Z overlap, just continue
-            if(path1.getZMin()>=path2.getZMax()) continue;
-            if(path1.getXMax()<=path2.getXMin() || path1.getXMin()>=path2.getXMax()) continue;
-            if(path1.getYMax()<=path2.getYMin() || path1.getYMin()>=path2.getYMax()) continue;
-            
-            // Test path planes - if on same plane or in correct order, they don't overlap
-            int comp1 = path1.comparePlane(path2); if(comp1==ORDER_SAME || comp1==ORDER_BACK_TO_FRONT) continue;
-            int comp2 = path2.comparePlane(path1); if(comp2==ORDER_FRONT_TO_BACK) continue;
-            
-            // If 2d paths don't intersect, just continue
-            if(!path1.getPath().intersects(path2.getPath(),0)) continue;
-            
-            // If all five tests fail, try next polygon up from poly1
-            int index = ListUtils.indexOfId(paths, path1);
-            if(index==0) { //System.out.println("i is " + i); // There is still a bug - this shouldn't happen
-                path1 = paths.get(i); j = jMax; continue; }
-            path1 = paths.get(index-1);
-            j = -1;
-        }
-        
-        // Move poly
-        if(path1!=path0) {
-            ListUtils.removeId(paths, path1); paths.add(i, path1); }
-    }
-
-    // Reverse child list so it is back to front (so front most shape will be drawn last)
-    Collections.reverse(paths);
 }
 
 /**
