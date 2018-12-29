@@ -39,9 +39,10 @@ public Path3D[] getPath3Ds()
     
     // Create paths for Z1 & Z2, set Color, Stroke, Opacity and return
     Path3D paths[] = getPaths(_path, _z1, _z2, _fixEdges? .001f : 0);
-    for(Path3D p : paths) {
+    for(int i=0, iMax=paths.length; i<iMax; i++) { Path3D p = paths[i];
         p.setColor(getColor()); p.setOpacity(getOpacity());
-        p.setStrokeColor(getStrokeColor()); p.setStroke(getStroke());
+        if(_fixEdges && i!=0 && i!=iMax-1) p.setStroke(getColor(), 1.5);
+        else { p.setStrokeColor(getStrokeColor()); p.setStroke(getStroke()); }
     }
     return _path3ds = paths;
 }
