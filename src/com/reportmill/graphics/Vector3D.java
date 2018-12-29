@@ -2,6 +2,7 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.graphics;
+import snap.util.MathUtils;
 
 /**
  * This class represents a 3D vector.
@@ -112,8 +113,25 @@ public Vector3D clone()
 }
 
 /**
+ * Standard equals implementation.
+ */
+public boolean equals(Object anObj)
+{
+    Vector3D v2 = (Vector3D)anObj;
+    return equals(x, y, z, v2.x, v2.y, v2.z);
+}
+
+/**
  * Standard toString implementation.
  */
 public String toString()  { return "Vector [" + x + " " + y + " " + z + "]"; }
+
+/**
+ * Returns whether given vector components are equal.
+ */
+public static boolean equals(double v0x, double v0y, double v0z, double v1x, double v1y, double v1z)
+{
+    return MathUtils.equals(v0x, v1x) && MathUtils.equals(v0y, v1y) && MathUtils.equals(v0z, v1z);
+}
 
 }

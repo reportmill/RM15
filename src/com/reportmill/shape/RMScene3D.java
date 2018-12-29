@@ -2,7 +2,6 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.shape;
-import com.reportmill.base.RMSort;
 import com.reportmill.graphics.*;
 import java.util.*;
 import snap.gfx.*;
@@ -432,7 +431,7 @@ protected void addPathsForShape(Shape3D aShape)
     // Get the camera transform & optionally align it to the screen
     Transform3D xform = getTransform3D();
     Color color = aShape.getColor();
-    
+
     // Iterate over paths
     for(Path3D path3d : aShape.getPath3Ds()) {
         
@@ -469,44 +468,43 @@ protected void setRenderColor(Path3D aShape3D, Color aColor)
     aShape3D.setColor(new Color(r, g, b, aColor.getAlpha()));    
 }
 
+// Constants for ordering
+public static final int ORDER_BACK_TO_FRONT = -1;
+public static final int ORDER_FRONT_TO_BACK = 1;
+public static final int ORDER_SAME = 0, ORDER_INEDETERMINATE = 2;
+
 /**
  * Resorts child shapes from back to front.
  */
 public void resort()
 {
-    // Get list of paths and sort from front to back with simple Z based sort
+    // Get list of paths and sort from front to back with simple Z min sort
     List <Path3D> paths = _paths;
-    RMSort.sort(paths, new RMSort("getZMin"));
+    Collections.sort(paths, (p0,p1) -> p0.compareZMin(p0));
 
     // Sort again front to back with exhaustive sort satisfying Depth Sort Algorithm
-    for(int i=paths.size()-1; i>=0; i--) { Path3D path0 = paths.get(i), path1 = path0;
+    for(int i=paths.size()-1; i>0; i--) { Path3D path0 = paths.get(i), path1 = path0;
         
         // Iterate over remaining shapes
         for(int j=0, jMax=i; j<jMax; j++) { Path3D path2 = paths.get(j); if(path2==path1) continue;
         
+            // If no X/Y/Z overlap, just continue
             if(path1.getZMin()>=path2.getZMax()) continue;
             if(path1.getXMax()<=path2.getXMin() || path1.getXMin()>=path2.getXMax()) continue;
             if(path1.getYMax()<=path2.getYMin() || path1.getYMin()>=path2.getYMax()) continue;
             
-            // Test poly against poly2
-            int comp1 = path1.comparePlane(path2);
+            // Test path planes - if on same plane or in correct order, they don't overlap
+            int comp1 = path1.comparePlane(path2); if(comp1==ORDER_SAME || comp1==ORDER_BACK_TO_FRONT) continue;
+            int comp2 = path2.comparePlane(path1); if(comp2==ORDER_FRONT_TO_BACK) continue;
             
-            // If the polygons are on the same plane, they don't overlap.
-            if(comp1==RMSort.ORDER_SAME || comp1==RMSort.ORDER_DESCEND) continue;
-            
-            int comp2 = path2.comparePlane(path1);
-            if(comp2==RMSort.ORDER_ASCEND) continue;
-            
+            // If 2d paths don't intersect, just continue
             if(!path1.getPath().intersects(path2.getPath(),0)) continue;
             
             // If all five tests fail, try next polygon up from poly1
             int index = ListUtils.indexOfId(paths, path1);
-            
             if(index==0) { //System.out.println("i is " + i); // There is still a bug - this shouldn't happen
                 path1 = paths.get(i); j = jMax; continue; }
-            
-            path1 = paths.get(ListUtils.indexOfId(paths, path1)-1);
-            
+            path1 = paths.get(index-1);
             j = -1;
         }
         
@@ -524,32 +522,20 @@ public void resort()
  */
 public void paintShapeChildren(Painter aPntr)
 {
-    // Get global opacity and set if not 1
-    double opacity = getOpacityDeep();
-    if(opacity<1) aPntr.setOpacity(opacity);
-    
-    // Iterate over Path3Ds
+    // Iterate over Path3Ds and paint
     for(int i=0, iMax=getPathCount(); i<iMax; i++) { Path3D child = getPath(i);
         
         // Translate to child
         double x = child.x(), y = child.y(), op = child.getOpacity();
-        aPntr.translate(x, y); if(op<1) aPntr.setOpacity(op*opacity);
+        aPntr.translate(x, y);
         
-        // Paint path fill and stroke
-        Paint fill = child.getColor(), stroke = child.getStrokeColor();
-        Shape path = child.getPath();
-        if(fill!=null) {
-            aPntr.setPaint(fill); aPntr.fill(path); }
-        if(stroke!=null) {
-            aPntr.setPaint(stroke); aPntr.setStroke(child.getStroke()); aPntr.draw(path); }
-            
-        // Paint path layers
-        if(child.getLayers().size()>0)
-            for(Path3D layer : child.getLayers())
-                paintPath3D(aPntr, layer);
+        // Paint path and path layers
+        paintPath3D(aPntr, child);
+        if(child.getLayers().size()>0) for(Path3D layer : child.getLayers())
+            paintPath3D(aPntr, layer);
             
         // Translate back from child
-        aPntr.translate(-x, -y); if(op<1) aPntr.setOpacity(opacity);
+        aPntr.translate(-x, -y);
     }
     
     // Do normal version
@@ -561,13 +547,31 @@ public void paintShapeChildren(Painter aPntr)
  */
 protected void paintPath3D(Painter aPntr, Path3D aPath3D)
 {
-    Paint fill = aPath3D.getColor(), stroke = aPath3D.getStrokeColor();
+    // Get path, fill, stroke and opacity
     Shape path = aPath3D.getPath();
+    Paint fill = aPath3D.getColor(), stroke = aPath3D.getStrokeColor();
+    
+    // Get opacity and set if needed
+    double op = aPath3D.getOpacity(), oldOP = 0;
+    if(op<1) { oldOP = aPntr.getOpacity(); aPntr.setOpacity(op*oldOP); }
+    
+    // Do fill and stroke
     if(fill!=null) {
         aPntr.setPaint(fill); aPntr.fill(path); }
     if(stroke!=null) {
         aPntr.setPaint(stroke); aPntr.setStroke(aPath3D.getStroke()); aPntr.draw(path); }
+        
+    // Reset opacity if needed
+    if(op<1) aPntr.setOpacity(oldOP);
 }
+
+/** Paints a Path3D with labels on sides. */
+/*private void paintPath3DDebug(Painter aPntr, Path3D aPath3D, String aStr) {
+    aPntr.setOpacity(.8); paintPath3D(aPntr, aPath3D); aPntr.setOpacity(1);
+    Font font = Font.Arial14.getBold(); double asc = font.getAscent(); aPntr.setFont(font);
+    Rect r = font.getStringBounds(aStr), r2 = aPath3D.getPath().getBounds();
+    aPntr.drawString(aStr, r2.x + (r2.width - r.width)/2, r2.y + (r2.height - r.height)/2 + asc);
+}*/
 
 /**
  * Viewer method.

@@ -2,6 +2,7 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.graphics;
+import snap.util.StringUtils;
 
 /**
  *  This class represents a 3D point.
@@ -38,6 +39,9 @@ public Point3D clone()  { return new Point3D(x,y,z); }
 /**
  * Standard toString implementation.
  */
-public String toString()  { return "Point [" + x + " " + y + " " + z + "]"; }
+public String toString()
+{
+    return "Point [" + StringUtils.toString(x) + " " + StringUtils.toString(y) + " " + StringUtils.toString(z) + "]";
+}
 
 }

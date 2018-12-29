@@ -17,6 +17,9 @@ public class Path3D extends Shape3D implements Cloneable {
     // The list of point3Ds in this path
     List <Point3D>  _points = new ArrayList();
     
+    // A list of Path3Ds to be drawn in front of this Path3D
+    List <Path3D>   _layers;
+
     // The path center point
     Point3D         _center;
     
@@ -26,9 +29,9 @@ public class Path3D extends Shape3D implements Cloneable {
     // The path bounding box
     Point3D         _bbox[];
     
-    // A list of Path3Ds to be drawn in front of this Path3D
-    List <Path3D>   _layers;
-
+    // The cached path (2d)
+    Path            _path;
+    
     // Cached pointers for iterating efficiently over the path
     int             _nextElementIndex = -100;
     int             _nextPointIndex = -100;
@@ -109,6 +112,7 @@ public void moveTo(double x, double y, double z)
 {
     _elements.add(MOVE_TO);
     _points.add(new Point3D(x, y, z));
+    clearCache();
 }
 
 /**
@@ -118,6 +122,7 @@ public void lineTo(double x, double y, double z)
 {
     _elements.add(LINE_TO);
     _points.add(new Point3D(x, y, z));
+    clearCache();
 }
 
 /**
@@ -128,6 +133,7 @@ public void quadTo(double cpx, double cpy, double cpz, double x, double y, doubl
     _elements.add(QUAD_TO);
     _points.add(new Point3D(cpx, cpy, cpz));
     _points.add(new Point3D(x, y, z));
+    clearCache();
 }
 
 /**
@@ -139,6 +145,7 @@ public void curveTo(double cp1x,double cp1y,double cp1z,double cp2x,double cp2y,
     _points.add(new Point3D(cp1x, cp1y, cp1z));
     _points.add(new Point3D(cp2x, cp2y, cp2z));
     _points.add(new Point3D(x, y, z));
+    clearCache();
 }
 
 /**
@@ -180,11 +187,6 @@ public Point3D getCenter()
 }
 
 /**
- * Sets the center point of the path.
- */
-public void setCenter(Point3D aPoint)  { _center = aPoint; }
-
-/**
  * Returns the normal of the path3d. Right hand rule for clockwise/counter-clockwise defined polygons.
  */
 public Vector3D getNormal()
@@ -208,18 +210,6 @@ public Vector3D getNormal()
 }
 
 /**
- * Returns the distance from a point to the plane of this polygon.
- */
-public double getDistance(Point3D aPoint)
-{
-    Vector3D normal = getNormal();
-    Point3D point = getPoint(0);
-    double d = -normal.x*point.x - normal.y*point.y - normal.z*point.z;
-    double dist = normal.x*aPoint.x + normal.y*aPoint.y + normal.z*aPoint.z + d;
-    return Math.abs(dist)<.01? 0 : dist;
-}
-
-/**
  * Reverses the path3d.
  */
 public void reverse()  { reverse(0, null, null); }
@@ -231,7 +221,7 @@ private void reverse(int element, Point3D lastPoint, Point3D lastMoveTo)
 {
     // Simply return if element is beyond bounds
     if(element==getElementCount()) {
-        _elements.clear(); _points.clear(); _normal = null; return; }
+        _elements.clear(); _points.clear(); clearCache(); return; }
     
     // Get info for this element
     Point3D pts[] = new Point3D[3], lp = null, lmt = lastMoveTo;
@@ -274,15 +264,9 @@ private void reverse(int element, Point3D lastPoint, Point3D lastMoveTo)
  */
 public void transform(Transform3D xform)
 {
-    // Add center point to _points list
-    _points.add(getCenter());
-    
-    // Transform points
     for(int i=0, iMax=getPointCount(); i<iMax; i++)
         getPoint(i).transform(xform);
-    
-    // Remove center point from _points list and reset normal
-    _center = _points.remove(_points.size()-1); _normal = null; _bbox = null;
+    clearCache();
 }
 
 /**
@@ -341,59 +325,8 @@ public Path getPath()
     }
     
     // Draw surface normals - handy for debugging
-    //RMPoint3D c = getCenter(); RMVector3D n = getNormal(); path.moveTo(c.x,c.y); path.lineTo(c.x+n.x*20,c.y+.y*20);
-    
-    // Return path
+    //Point3D c = getCenter(); Vector3D n = getNormal(); path.moveTo(c.x,c.y); path.lineTo(c.x+n.x*20,c.y+.y*20);
     return path;
-}
-
-/**
- * UNUSED!!! Returns wether the given path is behind (ASCEND) or in front (DESCEND) of this path.
- */
-/*public int compare(Object anObj)
-{
-    // Cast other object as a path3d
-    Path3D path = (Path3D)anObj;
-    
-    // If receiver max z is less than other path min z, return ORDER_ASCEND
-    if(getZMax()<=path.getZMin()) return RMSort.ORDER_ASCEND;
-    
-    // If receiver min z is greater than otehr path max z, return ORDER_DESCEND
-    if(getZMin()>=path.getZMax()) return RMSort.ORDER_DESCEND;
-    
-    // If receiver is in front or back of aPath's plane, return that
-    int comp = comparePlane(path); if(comp!=RMSort.ORDER_SAME) return comp;
-    
-    // If aPath is in front or back of receiver, return that
-    comp = path.comparePlane(this); if(comp!=RMSort.ORDER_SAME) return comp;
-    return RMSort.ORDER_SAME;
-}*/
-
-/**
- * Returns whether receiver is in front (ORDER_ASCEND) or aPath in front (ORDER_DESCEND).
- * Returns (ORDER_SAME) if the two paths are coplanar, or (ORDER_INDETERMINATE) if they intersect.
- */
-public int comparePlane(Path3D aPath)
-{
-    double d1 = 0;
-    for(int i=0, iMax=getPointCount(); i<iMax; i++) {
-        double d2 = aPath.getDistance(getPoint(i));
-        
-        // If d1 is uninitialized, initialize it
-        if(d1==0)
-            d1 = d2;
-        
-        // If d1 is initialized and d2 is nonzero and distances are opposite, return INDETERMINATE 
-        else if(d2!=0 && d1*d2<0)
-            return 2; //RMSort.ORDER_INDETERMINATE;
-    }
-    
-    // If all of receiver's points are on aPath's plane, return SAME
-    if(d1==0)
-        return 0;//RMSort.ORDER_SAME;
-    
-    // If all points are above aPath's plane, return ORDER_ASCEND (receiver in front), otherwise ORDER_DESCEND
-    return d1>0? -1 : 1; //RMSort.ORDER_ASCEND : RMSort.ORDER_DESCEND;
 }
 
 /**
@@ -451,6 +384,11 @@ public double getZMin()  { return getBBox()[0].z; }
 public double getZMax()  { return getBBox()[1].z; }
 
 /**
+ * Returns the mid Z for the path.
+ */
+public double getZMid()  { return getZMin() + (getZMax() - getZMin())/2; }
+
+/**
  * Returns layers to be drawn in front of this path.
  */
 public List <Path3D> getLayers()  { return _layers!=null? _layers : Collections.EMPTY_LIST; }
@@ -462,6 +400,80 @@ public void addLayer(Path3D aPath)
 {
     if(_layers==null) _layers = new ArrayList();
     _layers.add(aPath);
+}
+
+/**
+ * Clears cached values when path changes.
+ */
+protected void clearCache()  { _center = null; _normal = null; _bbox = null; _path = null; }
+
+// Constants for ordering
+public static final int ORDER_BACK_TO_FRONT = -1;
+public static final int ORDER_FRONT_TO_BACK = 1;
+public static final int ORDER_SAME = 0, ORDER_INEDETERMINATE = 2;
+
+/**
+ * Compares ZMin for this path and given path.
+ */
+public int compareZMin(Path3D path2)
+{
+    double z0 = getZMin(), z1 = path2.getZMin();
+    return z0<z1? ORDER_BACK_TO_FRONT : z1<z0? ORDER_FRONT_TO_BACK : 0;
+}
+
+/**
+ * A compareTo implementation that returns a usable draw order.
+ * Can't be used in real sort since it doesn't guarantee a<b<c.
+ */
+public int comparePaintOrder(Path3D path2)
+{
+    // If receiver max z is less than other path min z, return ORDER_ASCEND (Determinative)
+    if(getZMax()<=path2.getZMin()) return ORDER_FRONT_TO_BACK;
+    if(getZMin()>=path2.getZMax()) return ORDER_BACK_TO_FRONT;
+    
+    // If no X/Y/Z overlap, just continue (not determinative)
+    if(getZMin()>=path2.getZMax()) return ORDER_SAME;
+    if(getXMax()<=path2.getXMin() || getXMin()>=path2.getXMax()) return ORDER_SAME;
+    if(getYMax()<=path2.getYMin() || getYMin()>=path2.getYMax()) return ORDER_SAME;
+            
+    // If either path can be determined to be in front/back of the other (or aligned), return that
+    int comp = comparePlane(path2); if(comp!=ORDER_INEDETERMINATE) return comp;
+    int comp2 = path2.comparePlane(this); if(comp2!=ORDER_INEDETERMINATE) return -comp2;
+    
+    // If 2d paths don't intersect, just continue
+    if(!getPath().intersects(path2.getPath(),0)) return ORDER_SAME;
+
+    // Return indeterminate
+    return ORDER_INEDETERMINATE;
+}
+
+/**
+ * Returns whether this path is in front (FRONT_TO_BACK) or aPath in front (BACK_TO_FRONT).
+ * Returns ORDER_SAME if the two paths are coplanar, or INDETERMINATE if they intersect.
+ */
+public int comparePlane(Path3D aPath)
+{
+    double d1 = 0;
+    for(int i=0, iMax=aPath.getPointCount(); i<iMax; i++) { Point3D pnt = aPath.getPoint(i);
+        double d2 = getDistance(pnt);
+        if(d1==0) d1 = d2;
+        if(d2!=0 && d1*d2<0) return 2; // Indeterminate
+    }
+    
+    // If all points are above aPath's plane, return BACK_TO_FRONT (receiver in front), otherwise ORDER_DESCEND
+    return d1>0? ORDER_BACK_TO_FRONT : d1<0? ORDER_FRONT_TO_BACK : ORDER_SAME;
+}
+
+/**
+ * Returns the distance from a point to the plane of this polygon.
+ */
+public double getDistance(Point3D aPoint)
+{
+    Vector3D normal = getNormal();
+    Point3D p0 = getPoint(0);
+    double d = -normal.x*p0.x - normal.y*p0.y - normal.z*p0.z;
+    double dist = normal.x*aPoint.x + normal.y*aPoint.y + normal.z*aPoint.z + d;
+    return Math.abs(dist)<.1? 0 : dist;
 }
 
 /**
@@ -491,5 +503,13 @@ public Path3D clone()
  * Returns the array of Path3D that can render this shape.
  */
 public Path3D[] getPath3Ds()  { return _path3ds; }  Path3D _path3ds[] = { this };
+
+/**
+ * Standard toString implementation.
+ */
+public String toString()
+{
+    return "Path3D: " + getBBox()[0] + ", " + getBBox()[1];
+}
 
 }

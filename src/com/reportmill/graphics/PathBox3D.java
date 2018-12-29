@@ -54,8 +54,6 @@ public static Path3D[] getPaths(Path aPath, double z1, double z2, double strokeW
 {
     // Create list to hold paths
     List <Path3D> paths = new ArrayList();
-
-    // Declare local variable for back face
     Path3D back = null;
     
     // If path is closed, create path3d for front from aPath and z1
@@ -95,13 +93,8 @@ public static Path3D[] getPaths(Path aPath, double z1, double z2, double strokeW
         case LineTo: {
             if(Point.equals(lastX,lastY,pts[0],pts[1])) continue;
             Path3D path = new Path3D(); path.moveTo(lastX, lastY, z1);
-            path.lineTo(pts[0], pts[1], z1);
-            path.lineTo(pts[0], pts[1], z2);
-            path.lineTo(lastX, lastY, z2);
-            path.close();
-            double x = lastX + (pts[0] - lastX)/2;
-            double y = lastY + (pts[1] - lastY)/2;
-            path.setCenter(new Point3D(x, y, z2/2));
+            path.lineTo(pts[0], pts[1], z1); path.lineTo(pts[0], pts[1], z2);
+            path.lineTo(lastX, lastY, z2); path.close();
             paths.add(path);
             lastX = pts[0]; lastY = pts[1];
         } break;
@@ -109,13 +102,8 @@ public static Path3D[] getPaths(Path aPath, double z1, double z2, double strokeW
         // QuadTo
         case QuadTo: {
             Path3D path = new Path3D(); path.moveTo(lastX, lastY, z1);
-            path.quadTo(pts[0], pts[1], z1, pts[2], pts[3], z1);
-            path.lineTo(pts[4], pts[5], z2);
-            path.quadTo(pts[0], pts[1], z2, lastX, lastY, z2);
-            path.close();
-            double x = lastX + (pts[2] - lastX)/2;
-            double y = lastY + (pts[3] - lastY)/2;
-            path.setCenter(new Point3D(x, y, z2/2));
+            path.quadTo(pts[0], pts[1], z1, pts[2], pts[3], z1); path.lineTo(pts[4], pts[5], z2);
+            path.quadTo(pts[0], pts[1], z2, lastX, lastY, z2); path.close();
             paths.add(path);
             lastX = pts[2]; lastY = pts[3];
         } break;
@@ -123,13 +111,8 @@ public static Path3D[] getPaths(Path aPath, double z1, double z2, double strokeW
         // CubicTo
         case CubicTo: {
             Path3D path = new Path3D(); path.moveTo(lastX, lastY, z1);
-            path.curveTo(pts[0], pts[1], z1, pts[2], pts[3], z1, pts[4], pts[5], z1);
-            path.lineTo(pts[4], pts[5], z2);
-            path.curveTo(pts[2], pts[3], z2, pts[0], pts[1], z2, lastX, lastY, z2);
-            path.close();
-            double x = lastX + (pts[4] - lastX)/2;
-            double y = lastY + (pts[5] - lastY)/2;
-            path.setCenter(new Point3D(x, y, z2/2));
+            path.curveTo(pts[0], pts[1], z1, pts[2], pts[3], z1, pts[4], pts[5], z1); path.lineTo(pts[4], pts[5], z2);
+            path.curveTo(pts[2], pts[3], z2, pts[0], pts[1], z2, lastX, lastY, z2); path.close();
             paths.add(path);
             lastX = pts[4]; lastY = pts[5];
         } break;
@@ -137,13 +120,8 @@ public static Path3D[] getPaths(Path aPath, double z1, double z2, double strokeW
         // Close
         case Close: {
             Path3D path = new Path3D(); path.moveTo(lastX, lastY, z1);
-            path.lineTo(lastMoveX, lastMoveY, z1);
-            path.lineTo(lastMoveX, lastMoveY, z2);
-            path.lineTo(lastX, lastY, z2);
-            path.close();
-            double x = lastX + (lastMoveX - lastX)/2;
-            double y = lastY + (lastMoveY - lastY)/2;
-            path.setCenter(new Point3D(x, y, z2/2));
+            path.lineTo(lastMoveX, lastMoveY, z1); path.lineTo(lastMoveX, lastMoveY, z2);
+            path.lineTo(lastX, lastY, z2); path.close();
             paths.add(path);
         } break;
     }
