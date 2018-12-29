@@ -540,9 +540,8 @@ public static void sort(List <Path3D> paths)
             if(!path1.getPath().intersects(path2.getPath(),0)) continue;
             
             // If all five tests fail, try next polygon up from poly1
-            int index = ListUtils.indexOfId(paths, path1);
-            if(index==0) { //System.out.println("i is " + i); // There is still a bug - this shouldn't happen
-                path1 = paths.get(i); j = jMax; continue; }
+            int index = ListUtils.indexOfId(paths, path1);  // Below shouldn't happen
+            if(index==0) { System.err.println("Path3D.sort: sort failed"); path1 = path0; break; }
             path1 = paths.get(index-1);
             j = -1;
         }
