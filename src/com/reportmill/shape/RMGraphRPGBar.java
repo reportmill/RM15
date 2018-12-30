@@ -67,7 +67,7 @@ public RMGraphRPGBar(RMGraph aGraph, ReportOwner anRptOwner)
  */
 protected RMParentShape createGraphShape()
 {
-    return _graph.getDraw3D()? new RMGraphShapeBar3D(_graph) : new BarGraphShape2D(_graph);
+    return _graph.getDraw3D()? new RMGraphRPGBar3D(_graph) : new BarGraphShape2D(_graph);
 }
 
 /**

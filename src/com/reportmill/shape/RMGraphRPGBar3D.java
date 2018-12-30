@@ -9,7 +9,7 @@ import snap.gfx.*;
 /**
  * This class renders a bar graph in 3D.
  */
-class RMGraphShapeBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
+class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
     
     // The graph
     RMGraph           _graph;
@@ -54,9 +54,9 @@ class RMGraphShapeBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape
     double            _offsetZ2 = 0;
 
 /**
- * Creates a new graph bar view.
+ * Creates a RMGraphRPGBar3D.
  */
-public RMGraphShapeBar3D(RMGraph aGraph)
+public RMGraphRPGBar3D(RMGraph aGraph)
 {
     // Set attributes
     _graph = aGraph; _vertical = _graph.isVertical();
