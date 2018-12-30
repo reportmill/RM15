@@ -476,17 +476,10 @@ public void paintShapeChildren(Painter aPntr)
     // Iterate over Path3Ds and paint
     for(int i=0, iMax=getPathCount(); i<iMax; i++) { Path3D child = getPath(i);
         
-        // Translate to child
-        double x = child.x(), y = child.y(), op = child.getOpacity();
-        aPntr.translate(x, y);
-        
         // Paint path and path layers
         paintPath3D(aPntr, child);
         if(child.getLayers().size()>0) for(Path3D layer : child.getLayers())
             paintPath3D(aPntr, layer);
-            
-        // Translate back from child
-        aPntr.translate(-x, -y);
     }
     
     // Do normal version
@@ -498,7 +491,7 @@ public void paintShapeChildren(Painter aPntr)
  */
 protected void paintPath3D(Painter aPntr, Path3D aPath3D)
 {
-    // Get path, fill, stroke and opacity
+    // Get path, fill and stroke
     Shape path = aPath3D.getPath();
     Paint fill = aPath3D.getColor(), stroke = aPath3D.getStrokeColor();
     

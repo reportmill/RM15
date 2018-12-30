@@ -3,7 +3,6 @@
  */
 package com.reportmill.graphics;
 import snap.gfx.*;
-import snap.util.ListUtils;
 import snap.util.SnapUtils;
 import java.util.*;
 
@@ -448,7 +447,7 @@ public double getDistance(Point3D aPoint)
     Point3D p0 = getPoint(0);
     double d = -normal.x*p0.x - normal.y*p0.y - normal.z*p0.z;
     double dist = normal.x*aPoint.x + normal.y*aPoint.y + normal.z*aPoint.z + d;
-    return Math.abs(dist)<.1? 0 : dist;
+    return Math.abs(dist)<.01? 0 : dist;
 }
 
 /**
@@ -482,10 +481,7 @@ public Path3D[] getPath3Ds()  { return _path3ds; }  Path3D _path3ds[] = { this }
 /**
  * Standard toString implementation.
  */
-public String toString()
-{
-    return "Path3D: " + getBBox()[0] + ", " + getBBox()[1];
-}
+public String toString()  { return "Path3D: " + getBBox()[0] + ", " + getBBox()[1]; }
 
 /**
  * Resorts a Path3D list from back to front using Depth Sort Algorithm.
@@ -493,13 +489,13 @@ public String toString()
 public static void sort(List <Path3D> paths)
 {
     // Get list of paths and sort from front to back with simple Z min sort
-    Collections.sort(paths, (p0,p1) -> p0.compareZMin(p0));
+    Collections.sort(paths, (p0,p1) -> p0.compareZMin(p1));
 
     // Sort again front to back with exhaustive sort satisfying Depth Sort Algorithm
-    for(int i=paths.size()-1; i>0; i--) { Path3D path0 = paths.get(i), path1 = path0;
+    for(int i=paths.size()-1; i>0; i--) { Path3D path1 = paths.get(i); int i2 = i;
         
         // Iterate over remaining paths
-        for(int j=0, jMax=i; j<jMax; j++) { Path3D path2 = paths.get(j); if(path2==path1) continue;
+        for(int j=0; j<i; j++) { Path3D path2 = paths.get(j); if(path2==path1) continue;
         
             // If no X/Y/Z overlap, just continue
             if(path1.getZMin()>=path2.getZMax()) continue;
@@ -514,12 +510,12 @@ public static void sort(List <Path3D> paths)
             if(!path1.getPath().intersects(path2.getPath(),0)) continue;
             
             // If all five tests fail, try next path up from path1
-            path1 = paths.get(--jMax); j = -1;
+            path1 = paths.get(--i2); j = -1;
         }
         
         // Move poly
-        if(path1!=path0) {
-            ListUtils.removeId(paths, path1); paths.add(i, path1); }
+        if(i2!=i) {
+            paths.remove(i2); paths.add(i, path1); }
     }
 
     // Reverse child list so it is back to front (so front most shape will be drawn last)

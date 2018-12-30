@@ -37,13 +37,18 @@ public Path3D[] getPath3Ds()
     // If already set, just return
     if(_path3ds!=null) return _path3ds;
     
-    // Create paths for Z1 & Z2, set Color, Stroke, Opacity and return
-    Path3D paths[] = getPaths(_path, _z1, _z2, _fixEdges? .001f : 0);
+    // Create paths for Z1 & Z2
+    Path3D paths[] = getPaths(_path, _z1, _z2, _fixEdges? .001 : 0);
+    
+    // Set Color, Stroke, Opacity
+    Color color = getColor(), strokeColor = getStrokeColor(); Stroke stroke = getStroke(); double op = getOpacity();
     for(int i=0, iMax=paths.length; i<iMax; i++) { Path3D p = paths[i];
-        p.setColor(getColor()); p.setOpacity(getOpacity());
-        if(_fixEdges && i!=0 && i!=iMax-1) p.setStroke(getColor(), 1.5);
-        else { p.setStrokeColor(getStrokeColor()); p.setStroke(getStroke()); }
+        p.setColor(color); p.setOpacity(op);
+        if(_fixEdges && i!=0 && i!=iMax-1) { p.setStroke(color, 1.5); p._fixEdges = true; }
+        else { p.setStrokeColor(strokeColor); p.setStroke(stroke); }
     }
+    
+    // Return paths
     return _path3ds = paths;
 }
 
@@ -79,8 +84,7 @@ public static Path3D[] getPaths(Path aPath, double z1, double z2, double strokeW
     }
     
     // Make room for path stroke
-    z1 += strokeWidth;
-    z2 -= strokeWidth;
+    z1 += strokeWidth; z2 -= strokeWidth;
     
     // Iterate over path elements
     PathIter piter = aPath.getPathIter(null);
