@@ -383,7 +383,8 @@ static class PieGraphShape3D extends RMScene3D implements PieGraphShape {
         //for(int i=0, iMax=_lines.size(); i<iMax; i++) addChild3D(_lines.get(i), getDepth()/3-5, getDepth()/3-5);
         
         // Create label shapes
-        for(int i=0, iMax=_labels.size(); i<iMax && !getValueIsAdjusting(); i++) { RMShape label = _labels.get(i);
+        boolean fullRender = true; // !isValueAdjusting()
+        for(int i=0, iMax=_labels.size(); i<iMax && fullRender; i++) { RMShape label = _labels.get(i);
             addShapesForRMShape(label, -5, -5, false); }
     
         // Do normal version

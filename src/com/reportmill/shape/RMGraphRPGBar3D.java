@@ -200,6 +200,9 @@ protected void resetBarViewZOffset()
  */
 protected void layoutImpl()
 {
+    // Get whether to draw fast
+    boolean fullRender = true; // !isValueAdjusting()
+    
     // Remove all existing children
     removeChildren();
     removeShapes();
@@ -299,13 +302,13 @@ protected void layoutImpl()
     
     // If no pseudo 3d, add axis and bar labels as 3d shapes
     if(!isPseudo3D()) {
-         
+
         // Create axis label shapes
-        for(int i=0, iMax=_axisLabels.size(); i<iMax && !getValueIsAdjusting(); i++)
+        for(int i=0, iMax=_axisLabels.size(); i<iMax && fullRender; i++)
             addShapesForRMShape(_axisLabels.get(i), -.1f, -.1f, false);
     
         // Create bar label shapes
-        for(int i=0, iMax=_barLabels.size(); i<iMax && !getValueIsAdjusting(); i++) {
+        for(int i=0, iMax=_barLabels.size(); i<iMax && fullRender; i++) {
             
             // Get current loop bar label and bar label type
             RMShape barLabel = _barLabels.get(i);
@@ -327,11 +330,11 @@ protected void layoutImpl()
     if(isPseudo3D()) {
 
         // Create axis label shapes
-        for(int i=0, iMax=_axisLabels.size(); i<iMax && !getValueIsAdjusting(); i++)
+        for(int i=0, iMax=_axisLabels.size(); i<iMax && fullRender; i++)
             addChild(_axisLabels.get(i));
     
         // Create bar label shapes
-        for(int i=0, iMax=_barLabels.size(); i<iMax && !getValueIsAdjusting(); i++)
+        for(int i=0, iMax=_barLabels.size(); i<iMax && fullRender; i++)
             addChild(_barLabels.get(i));
     }
 }

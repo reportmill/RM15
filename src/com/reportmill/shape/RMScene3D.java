@@ -525,11 +525,10 @@ public void processEvent(ViewEvent anEvent)
     // Do normal version
     super.processEvent(anEvent); if(anEvent.isConsumed()) return;
     
-    // Handle MousePressed
+    // Handle MousePressed: Set last point to event location in scene coords and _dragConstraint
     if(anEvent.isMousePress()) {
-        _pointLast = anEvent.getPoint(); // Set last point to event location in scene coords
-        _valueAdjusting = true; // Set value adjusting
-        _dragConstraint = CONSTRAIN_NONE; // Set drag constraint
+        _pointLast = anEvent.getPoint(); _valueAdjusting = true;
+        _dragConstraint = CONSTRAIN_NONE;
     }
     
     // Handle MouseDragged
@@ -537,9 +536,7 @@ public void processEvent(ViewEvent anEvent)
         mouseDragged(anEvent);
         
     // Handle MouseReleased
-    else if(anEvent.isMouseRelease()) {
-        _valueAdjusting = false; repaint(); relayout();
-    }
+    else if(anEvent.isMouseRelease()) { _valueAdjusting = false; repaint(); relayout(); }
 }
 
 /**
@@ -596,7 +593,7 @@ public void mouseDragged(ViewEvent anEvent)
 /**
  * Returns whether scene3d is being re-oriented.
  */
-public boolean getValueIsAdjusting()  { return _valueAdjusting; }
+public boolean isValueAdjusting()  { return _valueAdjusting; }
 
 /**
  * Copy 3D attributes only.
@@ -604,14 +601,10 @@ public boolean getValueIsAdjusting()  { return _valueAdjusting; }
 public void copy3D(RMScene3D aScene3D)
 {
     setDepth(aScene3D.getDepth());
-    setYaw(aScene3D.getYaw());
-    setPitch(aScene3D.getPitch());
-    setRoll(aScene3D.getRoll());
-    setFocalLength(aScene3D.getFocalLength());
-    setOffsetZ(aScene3D.getOffsetZ());
+    setYaw(aScene3D.getYaw()); setPitch(aScene3D.getPitch()); setRoll(aScene3D.getRoll());
+    setFocalLength(aScene3D.getFocalLength()); setOffsetZ(aScene3D.getOffsetZ());
     setPseudo3D(aScene3D.isPseudo3D());
-    setPseudoSkewX(aScene3D.getPseudoSkewX());
-    setPseudoSkewY(aScene3D.getPseudoSkewY());
+    setPseudoSkewX(aScene3D.getPseudoSkewX()); setPseudoSkewY(aScene3D.getPseudoSkewY());
 }
 
 /**
