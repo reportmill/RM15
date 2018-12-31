@@ -3,6 +3,7 @@
  */
 package com.reportmill.shape;
 import com.reportmill.base.*;
+import com.reportmill.gfx3d.*;
 import com.reportmill.graphics.*;
 import java.util.*;
 import snap.gfx.Rect;

@@ -1,4 +1,4 @@
-package com.reportmill.graphics;
+package com.reportmill.gfx3d;
 import snap.gfx.*;
 
 /**

@@ -2,6 +2,7 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.apptools;
+import com.reportmill.gfx3d.Trackball;
 import com.reportmill.shape.*;
 import snap.view.ViewEvent;
 
@@ -10,16 +11,16 @@ import snap.view.ViewEvent;
  */
 public class RMScene3DTool <T extends RMScene3D> extends RMTool <T> {
     
-    // The scene3d control for rotating selected scene3d
-    RMTrackballControl  _sceneControl;
+    // The Trackball control for rotating selected scene3d
+    Trackball  _trackball;
     
 /**
  * Initialize UI panel.
  */
 protected void initUI()
 {
-    // Get TrackballControl
-    _sceneControl = getView("TrackballControl", RMTrackballControl.class);
+    // Get Trackball
+    _trackball = getView("Trackball", Trackball.class);
     
     // Initialize RenderingComboBox
     setViewItems("RenderingComboBox", new String[] { "Real 3D", "Pseudo 3D" });
@@ -42,7 +43,7 @@ public void resetUI()
     setViewValue("RollSpinner", Math.round(scene.getRoll3D()));
     
     // Reset scene control
-    _sceneControl.syncFrom(scene);
+    _trackball.syncFrom(scene);
     
     // Reset Depth slider/text
     setViewValue("DepthSlider", scene.getDepth());
@@ -75,9 +76,9 @@ public void respondUI(ViewEvent anEvent)
     if(anEvent.equals("RollSpinner"))
         scene.setRoll3D(anEvent.getFloatValue());
 
-    // Handle Scene3DControl
-    if(anEvent.equals("TrackballControl"))
-        _sceneControl.syncTo(scene);
+    // Handle Trackball
+    if(anEvent.equals("Trackball"))
+        _trackball.syncTo(scene);
     
     // Handle DepthSlider and DepthText
     if(anEvent.equals("DepthSlider") || anEvent.equals("DepthText"))

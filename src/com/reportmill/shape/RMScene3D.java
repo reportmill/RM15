@@ -2,6 +2,7 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.shape;
+import com.reportmill.gfx3d.*;
 import com.reportmill.graphics.*;
 import java.util.*;
 import snap.gfx.*;
@@ -71,9 +72,6 @@ public class RMScene3D extends RMParentShape {
     // Mouse drag variable - mouse drag last point
     Point          _pointLast;
     
-    // Mouse drag variable - whether in mouse drag loop
-    boolean        _valueAdjusting = false;
-
     // used for shift-drag to indicate which axis to constrain rotation to
     int            _dragConstraint;
     
@@ -93,9 +91,8 @@ public double getDepth()  { return _depth; }
 public void setDepth(double aValue)
 {
     if(aValue==_depth) return;
-    repaint();
     firePropChange("Depth", _depth, _depth = aValue);
-    relayout(); _xform3D = null;
+    relayout(); repaint(); _xform3D = null;
 }
 
 /**
@@ -114,9 +111,8 @@ public double getYaw()  { return _yaw; }
 public void setYaw(double aValue)
 {
     if(aValue==_yaw) return;
-    repaint();
     firePropChange("Yaw", _yaw, _yaw = aValue);
-    relayout(); _xform3D = null;
+    relayout(); repaint(); _xform3D = null;
 }
 
 /**
@@ -130,9 +126,8 @@ public double getPitch()  { return _pitch; }
 public void setPitch(double aValue)
 {
     if(aValue==_pitch) return;
-    repaint();
     firePropChange("Pitch", _pitch, _pitch = aValue);
-    relayout(); _xform3D = null;
+    relayout(); repaint(); _xform3D = null;
 }
 
 /**
@@ -146,9 +141,8 @@ public double getRoll3D()  { return _roll; }
 public void setRoll3D(double aValue)
 {
     if(aValue==_roll) return;
-    repaint();
     firePropChange("Roll3D", _roll, _roll = aValue);
-    relayout(); _xform3D = null;
+    relayout(); repaint(); _xform3D = null;
 }
 
 /**
@@ -162,9 +156,8 @@ public double getFocalLength()  { return _focalLength; }
 public void setFocalLength(double aValue)
 {
     if(aValue==_focalLength) return;
-    repaint();
     firePropChange("FocalLength", _focalLength, _focalLength = aValue);
-    relayout(); _xform3D = null;
+    relayout(); repaint(); _xform3D = null;
 }
 
 /**
@@ -178,9 +171,8 @@ public double getOffsetZ()  { return _offsetZ; }
 public void setOffsetZ(double aValue)
 {
     if(aValue==_offsetZ) return;
-    repaint();
     firePropChange("OffsetZ", _offsetZ, _offsetZ = aValue);
-    relayout(); _xform3D = null;
+    relayout(); repaint(); _xform3D = null;
 }
 
 /**
@@ -194,9 +186,8 @@ public boolean isPseudo3D()  { return _pseudo3D; }
 public void setPseudo3D(boolean aFlag)
 {
     if(_pseudo3D==aFlag) return;
-    repaint();
     firePropChange("Pseudo3D", _pseudo3D, _pseudo3D = aFlag);
-    relayout(); _xform3D = null;
+    relayout(); repaint(); _xform3D = null;
 }
 
 /**
@@ -210,9 +201,8 @@ public double getPseudoSkewX()  { return _pseudoSkewX; }
 public void setPseudoSkewX(double anAngle)
 {
     if(anAngle==_pseudoSkewX) return;
-    repaint();
     firePropChange("PseudoSkewX", _pseudoSkewX, _pseudoSkewX = anAngle);
-    relayout(); _xform3D = null;
+    relayout(); repaint(); _xform3D = null;
 }
 
 /**
@@ -226,9 +216,8 @@ public double getPseudoSkewY()  { return _pseudoSkewY; }
 public void setPseudoSkewY(double anAngle)
 {
     if(anAngle==_pseudoSkewY) return;
-    repaint();
     firePropChange("PseudoSkewY", _pseudoSkewY, _pseudoSkewY = anAngle);
-    relayout(); _xform3D = null;
+    relayout(); repaint(); _xform3D = null;
 }
 
 /**
@@ -257,21 +246,11 @@ public void setFieldOfView(double aValue)
  */
 public void setDefaultViewSettings()
 {
-    // If pseudo 3d, set good defaults
-    if(isPseudo3D()) {
-        setPseudoSkewX(.3f);
-        setPseudoSkewY(-.25f);
-        setDepth(20);
-        setFocalLength(60*72);
-    }
+    // Set defaults for pseudo 3d
+    if(isPseudo3D()) { setPseudoSkewX(.3f); setPseudoSkewY(-.25f); setDepth(20); setFocalLength(60*72); }
     
-    // If true 3d, set good 3d defaults
-    else {
-        setYaw(23);
-        setPitch(12);
-        setDepth(100);
-        setFocalLength(8*72);
-    }    
+    // Set defaults for true 3d
+    else { setYaw(23); setPitch(12); setDepth(100); setFocalLength(8*72); }    
 }
 
 /**
@@ -527,7 +506,7 @@ public void processEvent(ViewEvent anEvent)
     
     // Handle MousePressed: Set last point to event location in scene coords and _dragConstraint
     if(anEvent.isMousePress()) {
-        _pointLast = anEvent.getPoint(); _valueAdjusting = true;
+        _pointLast = anEvent.getPoint(); //_valueAdjusting = true;
         _dragConstraint = CONSTRAIN_NONE;
     }
     
@@ -536,7 +515,7 @@ public void processEvent(ViewEvent anEvent)
         mouseDragged(anEvent);
         
     // Handle MouseReleased
-    else if(anEvent.isMouseRelease()) { _valueAdjusting = false; repaint(); relayout(); }
+    //else if(anEvent.isMouseRelease()) { _valueAdjusting = false; repaint(); relayout(); }
 }
 
 /**
@@ -544,9 +523,6 @@ public void processEvent(ViewEvent anEvent)
  */
 public void mouseDragged(ViewEvent anEvent)
 {
-    // Register for repaint
-    repaint();
-    
     // Get event location in this scene shape coords
     Point point = anEvent.getPoint();
 
@@ -589,11 +565,6 @@ public void mouseDragged(ViewEvent anEvent)
     // Set last point
     _pointLast = point;
 }
-
-/**
- * Returns whether scene3d is being re-oriented.
- */
-public boolean isValueAdjusting()  { return _valueAdjusting; }
 
 /**
  * Copy 3D attributes only.

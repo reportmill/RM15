@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
-package com.reportmill.graphics;
+package com.reportmill.gfx3d;
 
 /**
  * This class represents a 3D transform. 

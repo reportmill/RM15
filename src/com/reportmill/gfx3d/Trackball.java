@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
-package com.reportmill.apptools;
+package com.reportmill.gfx3d;
 import com.reportmill.app.RMViewer;
 import com.reportmill.app.RMViewerEvents;
-import com.reportmill.graphics.*;
+import com.reportmill.gfx3d.*;
 import com.reportmill.shape.*;
 import java.util.Random;
 import snap.gfx.*;
@@ -27,7 +27,7 @@ import snap.web.WebURL;
  *   2.  Get the matrix, rotate by dx,dy,dz, decompose into new euler angles and set those
  *   3.  Use quaternions (gasp) 
  */
-public class RMTrackballControl extends RMViewer {
+public class Trackball extends RMViewer {
 
     // The scene3d drawn by this viewer (contains the trackball's scuffmarks)
     RMScene3D        _scene;
@@ -63,9 +63,9 @@ public class RMTrackballControl extends RMViewer {
     static final int HIT_TRACKBALL = 2;
 
 /**
- * Creates a new trackball control
+ * Creates a Trackball.
  */
-public RMTrackballControl()
+public Trackball()
 {
     // Create a document whose size matches the image
     RMDocument doc = new RMDocument(_tball.getWidth(), _tball.getHeight()); doc.setShowMargin(false);

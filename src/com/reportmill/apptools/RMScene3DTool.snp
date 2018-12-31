@@ -4,7 +4,7 @@
     <Label PrefWidth="60" Align="CENTER_RIGHT" text="Rendering:" />
     <ComboBox Name="RenderingComboBox" PrefWidth="75" PrefHeight="22" />
   </HBox>
-  <View Name="TrackballControl" x="35" y="48" width="112" height="112" LeanX="CENTER" Class="com.reportmill.apptools.RMTrackballControl">
+  <View Name="Trackball" x="35" y="48" width="112" height="112" LeanX="CENTER" Class="com.reportmill.gfx3d.Trackball">
     <font name="Arial" size="12" />
   </View>
   <Spinner Name="YawSpinner" x="194" y="60" width="54" height="22" Value="0" />
