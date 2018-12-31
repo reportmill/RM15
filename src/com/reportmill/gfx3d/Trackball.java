@@ -2,10 +2,7 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.gfx3d;
-import com.reportmill.app.RMViewer;
-import com.reportmill.app.RMViewerEvents;
 import com.reportmill.gfx3d.*;
-import com.reportmill.shape.*;
 import java.util.Random;
 import snap.gfx.*;
 import snap.view.*;
@@ -14,7 +11,7 @@ import snap.web.WebURL;
 /**
  * This class implements the trackball widget.  It is an optional replacement for the Scene3DControl.
  * 
- * Trackball inherits the RMScene3D's behavior, which is that mouse motion in the x direction changes the pitch, and 
+ * Trackball encapsulates the Scene3D's behavior, which is that mouse motion in the x direction changes the pitch, and 
  * mouse motion in the y direction changes the yaw. The controll adds rotation about the z axis (roll) by clicking
  * on a ring outside the trackball.
  *   
@@ -27,24 +24,24 @@ import snap.web.WebURL;
  *   2.  Get the matrix, rotate by dx,dy,dz, decompose into new euler angles and set those
  *   3.  Use quaternions (gasp) 
  */
-public class Trackball extends RMViewer {
+public class Trackball extends ParentView {
 
     // The scene3d drawn by this viewer (contains the trackball's scuffmarks)
-    RMScene3D        _scene;
+    Scene3D        _scene;
 
     // The radius of the trackball sphere, which sits at the origin
-    float            _radius = 36;
+    float          _radius = 36;
    
     // hit test result, for dragging
-    int              _hitPart;
+    int            _hitPart;
 
     // saved angle for calculating new roll during drags on the collar
-    double           _lastRollAngle;
+    double         _lastRollAngle;
 
     // The trackball image, highlight image and knob image
-    RMImageShape     _tball = new RMImageShape(WebURL.getURL(getClass(), "pkg.images/Trackball.png"));
-    RMImageShape     _tball_lit = new RMImageShape(WebURL.getURL(getClass(), "pkg.images/Trackball_lit.png"));
-    RMImageShape     _knob = new RMImageShape(WebURL.getURL(getClass(), "pkg.images/Trackball_knob.png"));
+    ImageView      _tball = new ImageView(WebURL.getURL(getClass(), "pkg.images/Trackball.png"));
+    ImageView      _tball_lit = new ImageView(WebURL.getURL(getClass(), "pkg.images/Trackball_lit.png"));
+    ImageView      _knob = new ImageView(WebURL.getURL(getClass(), "pkg.images/Trackball_knob.png"));
    
     // Location of the important parts of the control image
     static final float LEFT_EDGE = 2;
@@ -61,33 +58,29 @@ public class Trackball extends RMViewer {
     static final int HIT_NONE = 0;
     static final int HIT_COLLAR = 1;
     static final int HIT_TRACKBALL = 2;
+    
+    // Constants
+    static Color SCUFF_COLOR = new Color(.2f,.2f,.2f,.5f);
 
 /**
  * Creates a Trackball.
  */
 public Trackball()
 {
-    // Create a document whose size matches the image
-    RMDocument doc = new RMDocument(_tball.getWidth(), _tball.getHeight()); doc.setShowMargin(false);
-    RMPage page = doc.getPage(0); page.setPaintBackground(false);
-    page.addChild(_tball);
-    setDoc(doc);
+    // Fix image sizes
+    _tball.setSize(_tball.getPrefWidth(), _tball.getPrefHeight());
+    _tball_lit.setSize(_tball_lit.getPrefWidth(), _tball_lit.getPrefHeight());
+    _knob.setSize(_knob.getPrefWidth(), _knob.getPrefHeight());
     
-    // Create/configure scene and add to page
-    _scene = new RMScene3D(); _scene.setBounds(2, 0, _tball.getWidth(), _tball.getHeight());
-    page.addChild(_scene);
-    enableEvents(Action);
-    setFill(null);
-}
-
-/**
- * Override set bounds to fix zoom factor.
- */
-public void setWidth(double aValue)
-{
-    if(aValue==getWidth()) return; super.setWidth(aValue); // Do normal version
-    setZoomFactor(getWidth()/118); // Set zoom factor
-    configureScene(); // Reconfigure scene
+    // Add trackball image
+    addChild(_tball);
+    
+    // Create/configure scene
+    _scene = new Scene3D(); _scene.setWidth(_tball.getWidth()); _scene.setHeight(_tball.getHeight()); // set X to 2 ???
+    
+    // Enable mouse/action events
+    enableEvents(MousePress, MouseDrag, MouseRelease, Action); //setFill(null);
+    setPrefSize(_tball.getPrefWidth(), _tball.getPrefHeight());
 }
 
 /**
@@ -120,98 +113,102 @@ private void addScuff(float theta, float phi)
     path.transform(transform);
     
     // If the trackball is shrunk down, draw the scuffmarks a darker color so they'll show up.
-    if(getZoomFactor()<.75) path.setColor(new Color(0,0,0,.75f));
-    else path.setColor(new Color(.2f,.2f,.2f,.5f));
+    //if(getZoomFactor()<.75) path.setColor(new Color(0,0,0,.75f)); else
+    path.setColor(SCUFF_COLOR);
     _scene.addShape(path);
 }
 
-/** Override to provide special event helper. */
-public RMViewerEvents createEvents()  { return new TBInputAdapter(this); }
+/**
+ * Override to paint scene.
+ */
+protected void paintAbove(Painter aPntr)  { _scene.paintPaths(aPntr); }
 
 /**
- * A Viewer Event helper for TrackBall.
+ * Handle events.
  */
-public class TBInputAdapter extends RMViewerEvents { 
-    
-    /** Creates new TBInputAdapter. */
-    public TBInputAdapter(RMViewer aVwr)  { super(aVwr); }
+protected void processEvent(ViewEvent anEvent)
+{
+    if(anEvent.isMousePress()) mousePressed(anEvent);
+    else if(anEvent.isMouseDrag()) mouseDragged(anEvent);
+    else if(anEvent.isMouseRelease()) mouseReleased(anEvent);
+}
 
-    /** Handle mouse pressed event.     */
-    public void mousePressed(ViewEvent anEvent)
-    {
-        double scale = getZoomFactor();
+/**
+ * Handle mouse press.
+ */
+protected void mousePressed(ViewEvent anEvent)
+{
+    double scale = 1; //getZoomFactor(); ???
+    Point p = anEvent.getPoint(); p.x /= scale; p.y /= scale;
+    double distance = p.getDistance(CENTER_X,CENTER_Y);
+    
+    // If inside trackball, replace image with lit version
+    if(distance<=INNER_RADIUS) {
+        _hitPart = HIT_TRACKBALL; // turn on hilight
+        removeChild(_tball); addChild(_tball_lit);
+        _scene.processEvent(anEvent);
+    }
+    
+    // Else if in collar, add knob
+    else if(distance<=INNER_RADIUS+COLLAR_THICKNESS && !_scene.isPseudo3D()) {
+        _hitPart = HIT_COLLAR;
+        addChild(_knob);
+        _lastRollAngle = getMouseAngle(p);
+        positionKnob(p);
+    }
+    
+    // Else
+    else _hitPart = HIT_NONE;
+}
+
+/**
+ * Handle mouse drag.
+ */
+protected void mouseDragged(ViewEvent anEvent)
+{
+    // If
+    if(_hitPart==HIT_COLLAR) {
+        double scale = 1; //getZoomFactor(); ???
         Point p = anEvent.getPoint(); p.x /= scale; p.y /= scale;
-        double distance = p.getDistance(CENTER_X,CENTER_Y);
-        
-        // If inside trackball, replace image with lit version
-        if(distance<=INNER_RADIUS) {
-            _hitPart = HIT_TRACKBALL; // turn on hilight
-            RMPage page = getDoc().getPage(0);
-            page.removeChild(_tball); page.addChild(_tball_lit, 0);
-        }
-        
-        // Else if in collar, add knob
-        else if(distance<=INNER_RADIUS+COLLAR_THICKNESS && !_scene.isPseudo3D()) {
-            _hitPart = HIT_COLLAR;
-            getDoc().getPage(0).addChild(_knob);
-            _lastRollAngle = getMouseAngle(p);
-            positionKnob(p);
-        }
-        
-        // Else
-        else _hitPart = HIT_NONE;
-        
-        // Do normal mouse pressed
-        super.mousePressed(anEvent);
+        double theta = getMouseAngle(p);
+        _scene.setRoll(_scene.getRoll() + Math.toDegrees(theta - _lastRollAngle));
+        _lastRollAngle = theta;
+        positionKnob(p);
     }
     
-    /** Handle mouse dragged event. */
-    public void mouseDragged(ViewEvent anEvent)
-    {
-        // If
-        if(_hitPart==HIT_COLLAR) {
-            double scale = getZoomFactor();
-            Point p = anEvent.getPoint(); p.x /= scale; p.y /= scale;
-            double theta = getMouseAngle(p);
-            _scene.setRoll3D(_scene.getRoll3D() + Math.toDegrees(theta - _lastRollAngle));
-            _lastRollAngle = theta;
-            positionKnob(p);
-            repaint();
-        }
-        
-        // Otherwise do normal mouse dragged
-        else super.mouseDragged(anEvent);
-        
-        // Send ViewEvent to owner
-        fireActionEvent();
-    }
+    // Otherwise, forward to scene
+    else _scene.processEvent(anEvent);
     
-    /** Handle mouse released event. */
-    public void mouseReleased(ViewEvent anEvent)
-    {
-        RMPage page = getDoc().getPage(0);
-        if(_hitPart==HIT_TRACKBALL) {
-            page.removeChild(_tball_lit); page.addChild(_tball,0); }
-        else if(_hitPart==HIT_COLLAR)
-            page.removeChild(_knob);
-       
-        // Do normal mouse released
-        super.mouseReleased(anEvent);
-       
-        // Send ViewEvent to owner
-        fireActionEvent();
+    // Repaint and fire action event
+    repaint();
+    fireActionEvent();
+}
+
+/**
+ * Handle mouse release.
+ */
+protected void mouseReleased(ViewEvent anEvent)
+{
+    if(_hitPart==HIT_TRACKBALL) {
+        _scene.processEvent(anEvent);
+        removeChild(_tball_lit); addChild(_tball);
     }
+    else if(_hitPart==HIT_COLLAR)
+        removeChild(_knob);
+   
+    // Send ViewEvent to owner
+    fireActionEvent();
 }
 
 /**
  * Returns the angle from the mousePoint to the center of the control, in radians.
  */
-public double getMouseAngle(Point p)  { double dx = p.x - CENTER_X, dy = p.y - CENTER_Y; return Math.atan2(dy, dx); }
+private double getMouseAngle(Point p)  { double dx = p.x - CENTER_X, dy = p.y - CENTER_Y; return Math.atan2(dy, dx); }
 
 /**
  * Move the collar knob to the correct location for the given mouse point.
  */
-public void positionKnob(Point p)
+private void positionKnob(Point p)
 {
     double theta = getMouseAngle(p), r = INNER_RADIUS + KNOB_WIDTH/2;
     double x = CENTER_X + r*Math.cos(theta) - KNOB_CENTER_X;
@@ -222,18 +219,28 @@ public void positionKnob(Point p)
 /**
  * Sync from given scene to this scene control.
  */
-public void syncFrom(RMScene3D aScene)  { sync(aScene, _scene); }
+public void syncFrom(Scene3D aScene)  { sync(aScene, _scene); }
 
 /**
  * Sync to a given scene from this scene control.
  */
-public void syncTo(RMScene3D aScene)  { sync(_scene, aScene); }
+public void syncTo(Scene3D aScene)  { sync(_scene, aScene); }
 
 /** Sync scenes. */    
-private void sync(RMScene3D s1, RMScene3D s2)
+private void sync(Scene3D s1, Scene3D s2)
 {
     if(s1.isPseudo3D()) { s2.setPseudoSkewX(s1.getPseudoSkewX()); s2.setPseudoSkewY(s1.getPseudoSkewY()); }
-    else { s2.setPitch(s1.getPitch()); s2.setYaw(s1.getYaw()); s2.setRoll3D(s1.getRoll3D()); }
+    else { s2.setPitch(s1.getPitch()); s2.setYaw(s1.getYaw()); s2.setRoll(s1.getRoll()); }
+}
+
+/**
+ * Override set bounds to fix zoom factor.
+ */
+public void setWidth(double aValue)
+{
+    if(aValue==getWidth()) return; super.setWidth(aValue); // Do normal version
+    //setZoomFactor(getWidth()/118); // Set zoom factor  ???
+    configureScene();
 }
 
 }

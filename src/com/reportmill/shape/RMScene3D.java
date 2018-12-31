@@ -362,6 +362,9 @@ protected void fromXMLShape(XMLArchiver anArchiver, XMLElement anElement)
     // Unarchive basic shape attributes
     super.fromXMLShape(anArchiver, anElement);
     
+    // Fix scene width/height
+    _scene.setWidth(getWidth()); _scene.setHeight(getHeight());
+    
     // Unarchive Depth, Yaw, Pitch, Roll, FocalLength, OffsetZ
     setDepth(anElement.getAttributeFloatValue("depth"));
     setYaw(anElement.getAttributeFloatValue("yaw"));

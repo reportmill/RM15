@@ -43,7 +43,7 @@ public void resetUI()
     setViewValue("RollSpinner", Math.round(scene.getRoll3D()));
     
     // Reset scene control
-    _trackball.syncFrom(scene);
+    _trackball.syncFrom(scene.getScene());
     
     // Reset Depth slider/text
     setViewValue("DepthSlider", scene.getDepth());
@@ -78,7 +78,7 @@ public void respondUI(ViewEvent anEvent)
 
     // Handle Trackball
     if(anEvent.equals("Trackball"))
-        _trackball.syncTo(scene);
+        _trackball.syncTo(scene.getScene());
     
     // Handle DepthSlider and DepthText
     if(anEvent.equals("DepthSlider") || anEvent.equals("DepthText"))
