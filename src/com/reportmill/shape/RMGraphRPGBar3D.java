@@ -50,9 +50,6 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
     
     // The number of layers
     int               _layerCount;
-    
-    // The z offset
-    double            _offsetZ2 = 0;
 
 /**
  * Creates a RMGraphRPGBar3D.
@@ -65,6 +62,7 @@ public RMGraphRPGBar3D(RMGraph aGraph)
     setBounds(_graph.getBounds());
     setOpacity(_graph.getOpacity());
     copy3D(_graph.get3D());
+    getScene().setAdjustZ(true);
 }
 
 /** Returns the RMGraphRPG. */
@@ -156,47 +154,6 @@ public void addLabelAxisLabel(RMShape anAxisLabel)  { _axisLabels.add(anAxisLabe
 public double getBarWidth()  { return _barWidth; }
 
 /**
- * Override to make pitch always relative to camera.
- */
-public Transform3D getTransform3D()
-{
-    // If pseudo 3d, just use normal version
-    if(isPseudo3D()) return super.getTransform3D();
-    
-    // Normal transform: 
-    Transform3D t = new Transform3D();
-    double midx = getWidth()/2, midy = getHeight()/2, midz = getDepth()/2; t.translate(-midx, -midy, -midz);
-    t.rotateY(getYaw());
-    t.rotate(new Vector3D(1, 0, 0), getPitch());
-    t.rotate(new Vector3D(0, 0, 1), getRoll3D());
-    t.translate(0, 0, getOffsetZ() - _offsetZ2);
-    t.perspective(getFocalLength());
-    t.translate(midx, midy, midz);
-    
-    // Return transform
-    return t;
-}
-
-/**
- * Resets bar view Z offset.
- */
-protected void resetBarViewZOffset()
-{
-    // Cache and clear scene3D Z offset and bar view Z offset
-    double offsetZ = getOffsetZ(); setOffsetZ(0); _offsetZ2 = 0;
-    
-    // Get bounding box in camera coords with no Z offset
-    double width = getWidth(), height = getHeight(), depth = getDepth();
-    Path3D bbox = new Path3D(); bbox.moveTo(0, 0, 0); bbox.lineTo(0, 0, depth); bbox.lineTo(width, 0, depth);
-    bbox.lineTo(width, 0, 0); bbox.lineTo(0, 0, 0); bbox.lineTo(0, height, 0);
-    bbox.lineTo(0, height, depth); bbox.lineTo(width, height, depth); bbox.lineTo(width, height, 0); bbox.close();
-    bbox.transform(getTransform3D());
-    
-    // Get offset Z of graph view from bounding box and restore original graph Z offset
-    _offsetZ2 = bbox.getZMin(); setOffsetZ(offsetZ);
-}
-
-/**
  * Rebuilds 3D representation of shapes from shapes list (called by layout manager).
  */
 protected void layoutImpl()
@@ -208,9 +165,6 @@ protected void layoutImpl()
     removeChildren();
     removeShapes();
     
-    // Reset extra Z offset that keeps bar view in positive space by default
-    resetBarViewZOffset();
-
     // Get standard width, height, depth
     double width = getWidth(), height = getHeight(), depth = getDepth();
     

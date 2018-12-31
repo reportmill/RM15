@@ -115,8 +115,8 @@ private void addScuff(float theta, float phi)
     transform.rotateY(theta).rotateZ(phi);
     
     // translate to scene origin
-    Point3D origin = _scene.getOrigin();
-    transform.translate(origin.x, origin.y, origin.z);
+    double midx = _scene.getWidth()/2, midy = _scene.getHeight()/2, midz = _scene.getDepth()/2;
+    transform.translate(midx, midy, midz);
     path.transform(transform);
     
     // If the trackball is shrunk down, draw the scuffmarks a darker color so they'll show up.
