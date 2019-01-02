@@ -356,7 +356,7 @@ public Transform3D getTransform3D()
 protected void adjustZ()
 {
     // Cache and clear scene3D Z offset and bar view Z offset
-    double offsetZ = getOffsetZ(); setOffsetZ(0); _offsetZ2 = 0; _xform3D = null;
+    double offsetZ = getOffsetZ(); _offsetZ = _offsetZ2 = 0; _xform3D = null;
     
     // Get bounding box in camera coords with no Z offset
     double width = getWidth(), height = getHeight(), depth = getDepth();
@@ -366,7 +366,7 @@ protected void adjustZ()
     bbox.transform(getTransform3D());
     
     // Get offset Z of graph view from bounding box and restore original graph Z offset
-    _offsetZ2 = bbox.getZMin(); setOffsetZ(offsetZ); _xform3D = null;
+    _offsetZ2 = bbox.getZMin(); _offsetZ = offsetZ; _xform3D = null;
 }
 
 /**
@@ -459,7 +459,7 @@ protected void rebuildPathsNow()
     if(isAdjustZ()) adjustZ();
     
     // Remove all existing Path3Ds
-    removePaths();
+    removePaths(); _camBounds = null;
     
     // Iterate over shapes and add paths
     for(Shape3D shp : _shapes)
@@ -561,6 +561,26 @@ protected void paintPath3D(Painter aPntr, Path3D aPath3D)
     Rect r = font.getStringBounds(aStr), r2 = aPath3D.getPath().getBounds();
     aPntr.drawString(aStr, r2.x + (r2.width - r.width)/2, r2.y + (r2.height - r.height)/2 + asc);
 }*/
+
+/**
+ * Returns the bounding rect for camera paths.
+ */
+public Rect getCameraBounds()
+{
+    // If already set, just return
+    if(_camBounds!=null) return _camBounds;
+    
+    // Iterate over paths
+    List <Path3D> paths = getPaths();
+    double xmin = Float.MAX_VALUE, ymin = Float.MAX_VALUE, xmax = -xmin, ymax = -ymin;
+    for(Path3D path : paths) { Point3D bb2[] = path.getBBox();
+        xmin = Math.min(xmin, bb2[0].x);
+        ymin = Math.min(ymin, bb2[0].y);
+        xmax = Math.max(xmax, bb2[1].x);
+        ymax = Math.max(ymax, bb2[1].y);
+    }
+    return _camBounds = new Rect(xmin, ymin, xmax - xmin, ymax - ymin);
+} Rect _camBounds;
 
 /**
  * Viewer method.

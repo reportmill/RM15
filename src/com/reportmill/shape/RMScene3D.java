@@ -239,6 +239,20 @@ public void setWidth(double aValue)  { super.setWidth(aValue); _scene.setWidth(a
 public void setHeight(double aValue)  { super.setHeight(aValue); _scene.setHeight(aValue); }
 
 /**
+ * Override to account for Scene3D bounds.
+ */
+public Rect getBoundsMarked()
+{
+    Rect bounds = super.getBoundsMarked();
+    Rect camBnds = _scene.getCameraBounds();
+    if(camBnds.x<bounds.x) bounds.x = camBnds.x;
+    if(camBnds.y<bounds.y) bounds.y = camBnds.y;
+    if(camBnds.getMaxX()>bounds.getMaxX()) bounds.width = camBnds.getMaxX() - bounds.x;
+    if(camBnds.getMaxY()>bounds.getMaxY()) bounds.height = camBnds.getMaxY() - bounds.y;
+    return bounds;
+}
+
+/**
  * Called when scene changes.
  */
 protected void sceneChanged(PropChange aPC)
