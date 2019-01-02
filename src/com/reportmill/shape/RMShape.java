@@ -1715,7 +1715,7 @@ public void paintShapeAll(Painter aPntr)
 /**
  * Basic shape painting - paints shape fill and stroke.
  */
-public void paintShape(Painter aPntr)
+protected void paintShape(Painter aPntr)
 {
     // Get fill/stroke
     RMFill fill = getFill(); RMStroke stroke = getStroke();
@@ -1738,7 +1738,7 @@ public void paintShape(Painter aPntr)
 /**
  * Paints shape children.
  */
-public void paintShapeChildren(Painter aPntr)
+protected void paintShapeChildren(Painter aPntr)
 {
     for(int i=0, iMax=getChildCount(); i<iMax; i++) { RMShape child = getChild(i);
         if(child.isVisible())
@@ -1748,7 +1748,7 @@ public void paintShapeChildren(Painter aPntr)
 /**
  * Paints after (on top) of children.
  */
-public void paintShapeOver(Painter aPntr)
+protected void paintShapeOver(Painter aPntr)
 {
     RMStroke stroke = getStroke();
     if(stroke!=null && isStrokeOnTop()) { //getStroke().paint(aPntr, this);

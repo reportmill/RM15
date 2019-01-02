@@ -428,7 +428,7 @@ public int pageMax()  { return getDocument()==null? 0 : getDocument().getPageCou
 /**
  * Top-level generic shape painting (sets transform, recurses to children, paints this).
  */
-public void paintShape(Painter aPntr)
+protected void paintShape(Painter aPntr)
 {
     // If printing, do normal shape painting and return
     if(aPntr.isPrinting()) { super.paintShape(aPntr); return; }
@@ -493,7 +493,7 @@ public void paintShape(Painter aPntr)
 /**
  * Paints shape children.
  */
-public void paintShapeChildren(Painter aPntr)
+protected void paintShapeChildren(Painter aPntr)
 {
     for(int i=0, iMax=getChildCount(); i<iMax; i++) { RMShape child = getChild(i);
         if(child.isVisible() && isShowing(child))

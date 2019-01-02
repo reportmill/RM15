@@ -380,7 +380,7 @@ public RMShape rpgAll(ReportOwner anOwner, RMShape aParent)  { return new RMTabl
 /**
  * Paints a table shape.
  */
-public void paintShape(Painter aPntr)
+protected void paintShape(Painter aPntr)
 {
     // Call normal paintShape (just return if not editing)
     super.paintShape(aPntr);
@@ -478,7 +478,7 @@ public void paintShape(Painter aPntr)
 /**
  * Paints stroke around table after all children have drawn.
  */
-public void paintShapeOver(Painter aPntr)
+protected void paintShapeOver(Painter aPntr)
 {
     // Do normal version
     super.paintShapeOver(aPntr);

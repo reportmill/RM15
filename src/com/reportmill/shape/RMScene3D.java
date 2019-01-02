@@ -214,7 +214,7 @@ protected void layoutImpl()
 /**
  * Paints shape children.
  */
-public void paintShapeChildren(Painter aPntr)
+protected void paintShapeChildren(Painter aPntr)
 {
     // Paint Scene paths
     _scene.paintPaths(aPntr);

@@ -18,7 +18,7 @@ public boolean acceptsChildren()  { return true; }
 /**
  * Paints label.
  */
-public void paintShape(Painter aPntr)
+protected void paintShape(Painter aPntr)
 {
     // Do normal paint shape
     super.paintShape(aPntr);

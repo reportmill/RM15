@@ -246,7 +246,7 @@ public void clearContents()  { setText(""); setGrouping(null); }
 /**
  * Handles painting a crosstab cell.
  */
-public void paintShape(Painter aPntr)
+protected void paintShape(Painter aPntr)
 {
     // Draw normal text
     super.paintShape(aPntr);

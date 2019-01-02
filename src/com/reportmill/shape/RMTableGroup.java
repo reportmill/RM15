@@ -262,7 +262,7 @@ public void removeTable(RMTable aTable)
 /**
  * Paints table group button after child table has been drawn.
  */
-public void paintShapeOver(Painter aPntr)
+protected void paintShapeOver(Painter aPntr)
 {
     // Do normal version (just return if not editing)
     super.paintShapeOver(aPntr); if(!RMShapePaintProps.isEditing(aPntr)) return;

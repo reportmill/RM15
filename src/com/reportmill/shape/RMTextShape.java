@@ -727,7 +727,7 @@ public boolean isStructured()  { return _parent instanceof RMTableRow && ((RMTab
 /**
  * Paints a text shape.
  */
-public void paintShape(Painter aPntr)
+protected void paintShape(Painter aPntr)
 {
     // Paint normal background
     super.paintShape(aPntr);

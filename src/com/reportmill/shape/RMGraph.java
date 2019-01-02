@@ -518,7 +518,7 @@ public void paintShape(Painter aPntr)  { }
 /**
  * Override to paint GraphArea parts.
  */
-public void paintShapeOver(Painter aPntr)
+protected void paintShapeOver(Painter aPntr)
 {
     // Do normal version
     super.paintShapeOver(aPntr);

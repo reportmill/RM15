@@ -222,7 +222,7 @@ public RMShape rpgAll(ReportOwner anRptOwner, RMShape aParent)
 /**
  * Paint labels shapes.
  */
-public void paintShape(Painter aPntr)
+protected void paintShape(Painter aPntr)
 {
     // Get labels bounds
     Rect bounds = getBoundsInside();

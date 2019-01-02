@@ -191,7 +191,7 @@ public void setWidth(double aWidth)
 /**
  * Paints switch shape.
  */
-public void paintShape(Painter aPntr)
+protected void paintShape(Painter aPntr)
 {
     // If switch shape doesn't draw a stroke, draw a light one to indicate its bounds
     if(getClass()==RMSwitchShape.class && getStroke()==null && RMShapePaintProps.isEditing(aPntr)) {

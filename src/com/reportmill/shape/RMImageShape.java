@@ -205,7 +205,7 @@ public RMShape rpgShape(ReportOwner aRptOwner, RMShape aParent)
 /**
  * Override to paint shape.
  */
-public void paintShape(Painter aPntr)
+protected void paintShape(Painter aPntr)
 {
     super.paintShape(aPntr);
     RMImageData id = getImageData();

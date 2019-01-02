@@ -404,7 +404,7 @@ public boolean childrenSuperSelectImmediately()  { return _structured; }
 /**
  * Paints table row.
  */
-public void paintShape(Painter aPntr)
+protected void paintShape(Painter aPntr)
 {
     // Do normal version (just return if not editing)
     super.paintShape(aPntr); if(!RMShapePaintProps.isEditing(aPntr) || !isStructured()) return;

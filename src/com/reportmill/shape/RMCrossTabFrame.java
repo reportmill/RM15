@@ -107,7 +107,7 @@ private RMParentShape paginateFrame(RMCrossTab ctab)
 /**
  * Paints crosstab.
  */
-public void paintShape(Painter aPntr)
+protected void paintShape(Painter aPntr)
 {
     // Do normal version
     super.paintShape(aPntr);
