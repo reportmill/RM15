@@ -289,11 +289,6 @@ public void setFieldOfView(double aValue)
 public Vector3D getNormal()  { return _normal; }
 
 /**
- * Returns the scene light as a vector.
- */
-public Vector3D getLight()  { return _scene.getLight(); }
-
-/**
  * Returns the transform from scene coords to camera coords.
  */
 public Transform3D getTransform()
@@ -363,7 +358,7 @@ public boolean isFacing(Vector3D aV3D)  { return aV3D.isAway(getNormal(), true);
 /**
  * Returns whether a vector is facing away from camera.
  */
-public boolean isFacingAway(Vector3D aV3D)  { return aV3D.isAligned(getNormal(), true); }
+public boolean isFacingAway(Vector3D aV3D)  { return aV3D.isAligned(getNormal(), false); }
 
 /**
  * Returns whether a Path3d is facing camera.
@@ -414,7 +409,7 @@ protected void rebuildPathsNow()
     if(isAdjustZ()) adjustZ();
     
     // Remove all existing Path3Ds
-    removePaths(); _camBounds = null;
+    removePaths(); _sceneBounds = null;
     
     // Iterate over shapes and add paths
     List <Shape3D> shapes = _scene._shapes;
@@ -433,6 +428,7 @@ protected void addPathsForShape(Shape3D aShape)
 {
     // Get the camera transform & optionally align it to the screen
     Transform3D xform = getTransform();
+    Light light = _scene.getLight();
     Color color = aShape.getColor();
 
     // Iterate over paths
@@ -442,36 +438,17 @@ protected void addPathsForShape(Shape3D aShape)
         path3d = path3d.copyFor(xform);
         
         // Backface culling : Only add paths that face the camera
-        if(!path3d.getNormal().isAligned(getNormal(), true)) {
-            if(color!=null) setRenderColor(path3d, color);
-            addPath(path3d);
-        }
-    }
-}
-
-/**
- * Sets the color for a 3d shape from a base color.
- */
-protected void setRenderColor(Path3D aShape3D, Color aColor)
-{
-    // Get shape3d path3d and normal - If facing away from camera, negate normal
-    Vector3D normal = aShape3D.getNormal();
-    if(normal.isAligned(getNormal(), true))
-        normal.negate();
+        if(isFacingAway(path3d.getNormal())) continue;
         
-    // Get dot product of shape3d surface normal and light source vector
-    double normalDotLight = normal.getDotProduct(getLight());
-    
-    // Get coefficient of ambient (KA) and diffuse (KD) reflection for shading
-    double _ka = .6, _kd = .5;
-    
-    // Calculate color components based on original color, surface normal, reflection constants and light source
-    double r = aColor.getRed()*_ka + aColor.getRed()*_kd*normalDotLight; r = Math.min(r,1);
-    double g = aColor.getGreen()*_ka + aColor.getGreen()*_kd*normalDotLight; g = Math.min(g,1);
-    double b = aColor.getBlue()*_ka + aColor.getBlue()*_kd*normalDotLight; b = Math.min(b,1);
-    
-    // Set new color
-    aShape3D.setColor(new Color(r, g, b, aColor.getAlpha()));    
+        // If color on shape, set color on path for scene lights
+        if(color!=null) {
+            Color rcol = light.getRenderColor(this, path3d, color);
+            path3d.setColor(rcol);
+        }
+        
+        // Add path
+        addPath(path3d);
+    }
 }
 
 /**
@@ -524,10 +501,10 @@ protected void paintPath3D(Painter aPntr, Path3D aPath3D)
 /**
  * Returns the bounding rect for camera paths.
  */
-public Rect getCameraBounds()
+public Rect getSceneBounds()
 {
     // If already set, just return
-    if(_camBounds!=null) return _camBounds;
+    if(_sceneBounds!=null) return _sceneBounds;
     
     // Iterate over paths
     List <Path3D> paths = getPaths();
@@ -538,8 +515,8 @@ public Rect getCameraBounds()
         xmax = Math.max(xmax, bb2[1].x);
         ymax = Math.max(ymax, bb2[1].y);
     }
-    return _camBounds = new Rect(xmin, ymin, xmax - xmin, ymax - ymin);
-} Rect _camBounds;
+    return _sceneBounds = new Rect(xmin, ymin, xmax - xmin, ymax - ymin);
+} Rect _sceneBounds;
 
 /**
  * Viewer method.

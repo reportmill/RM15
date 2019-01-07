@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2010, ReportMill Software. All rights reserved.
+ */
 package com.reportmill.gfx3d;
 import snap.gfx.*;
 

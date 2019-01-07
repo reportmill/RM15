@@ -238,7 +238,7 @@ public void setHeight(double aValue)  { super.setHeight(aValue); _camera.setHeig
 public Rect getBoundsMarked()
 {
     Rect bounds = super.getBoundsMarked();
-    Rect camBnds = _camera.getCameraBounds();
+    Rect camBnds = _camera.getSceneBounds();
     if(camBnds.x<bounds.x) bounds.x = camBnds.x;
     if(camBnds.y<bounds.y) bounds.y = camBnds.y;
     if(camBnds.getMaxX()>bounds.getMaxX()) bounds.width = camBnds.getMaxX() - bounds.x;
