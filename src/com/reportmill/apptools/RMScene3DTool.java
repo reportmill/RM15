@@ -2,7 +2,7 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.apptools;
-import com.reportmill.gfx3d.Trackball;
+import com.reportmill.gfx3d.*;
 import com.reportmill.shape.*;
 import snap.view.ViewEvent;
 
@@ -43,7 +43,7 @@ public void resetUI()
     setViewValue("RollSpinner", Math.round(scene.getRoll3D()));
     
     // Reset scene control
-    _trackball.syncFrom(scene.getScene());
+    _trackball.syncFrom(scene.getCamera());
     
     // Reset Depth slider/text
     setViewValue("DepthSlider", scene.getDepth());
@@ -63,10 +63,8 @@ public void respondUI(ViewEvent anEvent)
     RMScene3D scene = getSelectedShape(); if(scene==null) return;
     
     // Handle RenderingComboBox
-    if(anEvent.equals("RenderingComboBox")) {
-        scene.setPseudo3D(anEvent.getSelIndex()==1);
-        scene.setDefaultViewSettings();
-    }
+    if(anEvent.equals("RenderingComboBox"))
+        setPseudo3D(scene.getCamera(), anEvent.getSelIndex()==1);
     
     // Handle YawSpinner, PitchSpinner, RollSpinner
     if(anEvent.equals("YawSpinner"))
@@ -78,7 +76,7 @@ public void respondUI(ViewEvent anEvent)
 
     // Handle Trackball
     if(anEvent.equals("Trackball"))
-        _trackball.syncTo(scene.getScene());
+        _trackball.syncTo(scene.getCamera());
     
     // Handle DepthSlider and DepthText
     if(anEvent.equals("DepthSlider") || anEvent.equals("DepthText"))
@@ -140,6 +138,20 @@ public void mouseReleased(T aScene3D, ViewEvent anEvent)
     // Forward mouse pressed to scene and consume event
     aScene3D.processEvent(createShapeEvent(aScene3D, anEvent));
     anEvent.consume();
+}
+
+/**
+ * Sets Psuedo3D with some good settings.
+ */
+private void setPseudo3D(Camera aCam, boolean isPseudo3D)
+{
+    // Set defaults for pseudo 3d
+    aCam.setPseudo3D(isPseudo3D);
+    if(isPseudo3D) {
+        aCam.setPseudoSkewX(.3f); aCam.setPseudoSkewY(-.25f); aCam.setDepth(20); aCam.setFocalLength(60*72); }
+    
+    // Set defaults for true 3d
+    else { aCam.setYaw(23); aCam.setPitch(12); aCam.setDepth(100); aCam.setFocalLength(8*72); }    
 }
 
 }

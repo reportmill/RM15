@@ -297,7 +297,7 @@ public RMScene3D get3D()
 
     // Create and return
     RMScene3D p3d = new RMScene3D(); p3d.setDepth(100); p3d.setYaw(8); p3d.setPitch(11); p3d.setFocalLength(8*72);
-    p3d.getScene().addPropChangeListener(pc -> thr3DPropChange(pc));
+    p3d.getCamera().addPropChangeListener(pc -> thr3DPropChange(pc));
     return _3d = p3d;
 }
 

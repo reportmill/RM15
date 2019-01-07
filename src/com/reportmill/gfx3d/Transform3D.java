@@ -11,10 +11,19 @@ public class Transform3D implements Cloneable {
     // All of the transform components
     public double[][] m = new double[][] { { 1, 0, 0, 0 }, { 0, 1, 0, 0 }, { 0, 0, 1, 0 }, { 0, 0, 0, 1 } };
     
-/** Creates a transform3d with the identity matrix. */
-public Transform3D() { }
+/**
+ * Creates a Transform3D with the identity matrix.
+ */
+public Transform3D()  { }
 
-/** Multiplies receiver by given transform. */
+/**
+ * Creates a Transform3D with given translations.
+ */
+public Transform3D(double aX, double aY, double aZ)  { translate(aX, aY, aZ); }
+
+/**
+ * Multiplies receiver by given transform.
+ */
 public Transform3D multiply(Transform3D aTransform)
 {
     // Get this float array, given float array and new float array
@@ -32,7 +41,9 @@ public Transform3D multiply(Transform3D aTransform)
     return fromArray(m3);
 }
 
-/** Translates by given x, y & z. */
+/**
+ * Translates by given x, y & z.
+ */
 public Transform3D translate(double x, double y, double z)
 {
     //m[3][0] += x; m[3][1] += y; m[3][2] += z;
@@ -41,7 +52,9 @@ public Transform3D translate(double x, double y, double z)
     return multiply(rm);
 }
 
-/** Rotate x axis by given degrees. */
+/**
+ * Rotate x axis by given degrees.
+ */
 public Transform3D rotateX(double anAngle)
 {
     Transform3D rm = new Transform3D();
@@ -54,7 +67,9 @@ public Transform3D rotateX(double anAngle)
     return multiply(rm);
 }
 
-/** Rotate y axis by given degrees. */
+/**
+ * Rotate y axis by given degrees.
+ */
 public Transform3D rotateY(double anAngle)
 {
     Transform3D rm = new Transform3D();
@@ -67,7 +82,9 @@ public Transform3D rotateY(double anAngle)
     return multiply(rm);
 }
 
-/** Rotate z axis by given degrees. */
+/**
+ * Rotate z axis by given degrees.
+ */
 public Transform3D rotateZ(double anAngle)
 {
     Transform3D rm = new Transform3D();
@@ -80,7 +97,9 @@ public Transform3D rotateZ(double anAngle)
     return multiply(rm);
 }
 
-/** Rotate about arbitrary axis. */
+/**
+ * Rotate about arbitrary axis.
+ */
 public Transform3D rotate(Vector3D anAxis, double anAngle)
 {
     Transform3D rm = new Transform3D();
@@ -98,7 +117,9 @@ public Transform3D rotate(Vector3D anAxis, double anAngle)
     return multiply(rm);
 }
 
-/** Rotate x,y,z with three Euler angles (same as rotateX(rx).rotateY(ry).rotateZ(rz)) */
+/**
+ * Rotate x,y,z with three Euler angles (same as rotateX(rx).rotateY(ry).rotateZ(rz)).
+ */
 public Transform3D rotate(double rx, double ry, double rz)
 {
     Transform3D rm = new Transform3D();
@@ -126,7 +147,8 @@ public Transform3D rotate(double rx, double ry, double rz)
     return multiply(rm);
 }
 
-/** Returns a matrix whose axes are aligned with the world (screen) coordinate system.
+/**
+ * Returns a matrix whose axes are aligned with the world (screen) coordinate system.
  * All rotations & skews are removed, and perspective is replaced by uniform scaling.
  */
 public Transform3D worldAlign(Point3D originPt)
@@ -247,6 +269,18 @@ public Point3D transform(Point3D aPoint)
 }
 
 /**
+ * Transforms a given point (and returns it as a convenience).
+ */
+public Point3D transformPoint(double aX, double aY, double aZ)
+{
+    double x2 = m[0][0]*aX + m[1][0]*aY + m[2][0]*aZ + m[3][0];
+    double y2 = m[0][1]*aX + m[1][1]*aY + m[2][1]*aZ + m[3][1];
+    double z2 = m[0][2]*aX + m[1][2]*aY + m[2][2]*aZ + m[3][2];
+    double w =  m[0][3]*aX + m[1][3]*aY + m[2][3]*aZ + m[3][3];
+    return new Point3D(x2/w, y2/w, z2/w);
+}
+
+/**
  * Transforms a given vector (and returns it as a convenience).
  */
 public Vector3D transform(Vector3D aVector)
@@ -262,8 +296,7 @@ public Vector3D transform(Vector3D aVector)
  */
 public double[][] toArray()
 {
-    double m2[][] = new double[4][4];
-    for(int i=0; i<4; i++) for(int j=0; j<4; j++) m2[i][j] = m[i][j];
+    double m2[][] = new double[4][4]; for(int i=0; i<4; i++) for(int j=0; j<4; j++) m2[i][j] = m[i][j];
     return m2;
 }
 
@@ -282,7 +315,7 @@ public Transform3D fromArray(double m2[][])
 public Transform3D clone()
 {
     Transform3D copy = new Transform3D();
-    return copy.fromArray(toArray());
+    return copy.fromArray(m);
 }
 
 }

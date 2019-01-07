@@ -510,7 +510,8 @@ public static void sort(List <Path3D> paths)
             if(!path1.getPath().intersects(path2.getPath(),0)) continue;
             
             // If all five tests fail, try next path up from path1
-            path1 = paths.get(--i2); j = -1;
+            if(i2==0) { System.err.println("Path3D.sort: Sort fail."); i = 0; } // Not sure why this can happen
+            else { path1 = paths.get(--i2); j = -1; }
         }
         
         // Move poly

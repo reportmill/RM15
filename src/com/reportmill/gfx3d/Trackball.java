@@ -26,11 +26,14 @@ import snap.web.WebURL;
  */
 public class Trackball extends ParentView {
 
-    // The scene3d drawn by this viewer (contains the trackball's scuffmarks)
+    // The Scene3D used to draw 3d (contains the trackball's scuffmarks)
     Scene3D        _scene;
 
+    // The Camera used to draw 3d (renders scene)
+    Camera         _camera;
+
     // The radius of the trackball sphere, which sits at the origin
-    float          _radius = 36;
+    double         _radius = 36;
    
     // hit test result, for dragging
     int            _hitPart;
@@ -75,8 +78,9 @@ public Trackball()
     // Add trackball image
     addChild(_tball);
     
-    // Create/configure scene
-    _scene = new Scene3D(); _scene.setWidth(_tball.getWidth()); _scene.setHeight(_tball.getHeight()); // set X to 2 ???
+    // Create/configure scene and camera
+    _scene = new Scene3D(); _camera = _scene.getCamera();
+    _camera.setWidth(_tball.getWidth()); _camera.setHeight(_tball.getHeight()); // set X to 2 ???
     
     // Enable mouse/action events
     enableEvents(MousePress, MouseDrag, MouseRelease, Action); //setFill(null);
@@ -84,44 +88,45 @@ public Trackball()
 }
 
 /**
- * Reconfigure scene.
+ * Override to add scuff marks.
  */
-public void configureScene()
+public void setWidth(double aValue)  { super.setWidth(aValue); addScuffMarks(); }
+
+/**
+ * Adds scuffmark polygons at random points on the trackball.
+ */
+protected void addScuffMarks()
 {
-    // Add scuffmark polygons at random points on the trackball
-    Random ran = new Random(); _scene.removeShapes();
-    for(int i=0; i<50; i++) { float th = ran.nextFloat()*360, ph = ran.nextFloat()*360;
-        addScuff(th,ph); }
+    _scene.removeShapes(); Random ran = new Random();
+    for(int i=0; i<50; i++) { double th = ran.nextDouble()*360, ph = ran.nextDouble()*360; addScuffMark(th, ph); }
 }   
 
 /**
  * Adds a polygon to the scene which attempts to represent a scuffmark on the sphere at polar location {theta,phi}
  */
-private void addScuff(float theta, float phi)
+private void addScuffMark(double theta, double phi)
 {
     // Small triangle at the origin to represent a scuff mark
     Path3D path = new Path3D(); path.moveTo(-1,-1,0); path.lineTo(0,1,0); path.lineTo(1,-1,0); path.close();
     
     // translate out to surface of sphere and rotate to latitude, longitude
-    Transform3D transform = new Transform3D();
-    transform.translate(0, 0, _radius);
+    Transform3D transform = new Transform3D(0, 0, _radius);
     transform.rotateY(theta).rotateZ(phi);
     
     // translate to scene origin
-    double midx = _scene.getWidth()/2, midy = _scene.getHeight()/2, midz = _scene.getDepth()/2;
+    double midx = _camera.getWidth()/2, midy = _camera.getHeight()/2, midz = _camera.getDepth()/2;
     transform.translate(midx, midy, midz);
     path.transform(transform);
     
     // If the trackball is shrunk down, draw the scuffmarks a darker color so they'll show up.
-    //if(getZoomFactor()<.75) path.setColor(new Color(0,0,0,.75f)); else
-    path.setColor(SCUFF_COLOR);
+    path.setColor(SCUFF_COLOR); //if(getZoomFactor()<.75) path.setColor(new Color(0,0,0,.75f));
     _scene.addShape(path);
 }
 
 /**
  * Override to paint scene.
  */
-protected void paintAbove(Painter aPntr)  { _scene.paintPaths(aPntr); }
+protected void paintAbove(Painter aPntr)  { _camera.paintPaths(aPntr); }
 
 /**
  * Handle events.
@@ -146,11 +151,11 @@ protected void mousePressed(ViewEvent anEvent)
     if(distance<=INNER_RADIUS) {
         _hitPart = HIT_TRACKBALL; // turn on hilight
         removeChild(_tball); addChild(_tball_lit);
-        _scene.processEvent(anEvent);
+        _camera.processEvent(anEvent);
     }
     
     // Else if in collar, add knob
-    else if(distance<=INNER_RADIUS+COLLAR_THICKNESS && !_scene.isPseudo3D()) {
+    else if(distance<=INNER_RADIUS+COLLAR_THICKNESS && !_camera.isPseudo3D()) {
         _hitPart = HIT_COLLAR;
         addChild(_knob);
         _lastRollAngle = getMouseAngle(p);
@@ -171,13 +176,13 @@ protected void mouseDragged(ViewEvent anEvent)
         double scale = 1; //getZoomFactor(); ???
         Point p = anEvent.getPoint(); p.x /= scale; p.y /= scale;
         double theta = getMouseAngle(p);
-        _scene.setRoll(_scene.getRoll() + Math.toDegrees(theta - _lastRollAngle));
+        _camera.setRoll(_camera.getRoll() + Math.toDegrees(theta - _lastRollAngle));
         _lastRollAngle = theta;
         positionKnob(p);
     }
     
     // Otherwise, forward to scene
-    else _scene.processEvent(anEvent);
+    else _camera.processEvent(anEvent);
     
     // Repaint and fire action event
     repaint();
@@ -190,7 +195,7 @@ protected void mouseDragged(ViewEvent anEvent)
 protected void mouseReleased(ViewEvent anEvent)
 {
     if(_hitPart==HIT_TRACKBALL) {
-        _scene.processEvent(anEvent);
+        _camera.processEvent(anEvent);
         removeChild(_tball_lit); addChild(_tball);
     }
     else if(_hitPart==HIT_COLLAR)
@@ -217,30 +222,20 @@ private void positionKnob(Point p)
 }
 
 /**
- * Sync from given scene to this scene control.
+ * Sync from given camera to this trackball.
  */
-public void syncFrom(Scene3D aScene)  { sync(aScene, _scene); }
+public void syncFrom(Camera aScene)  { sync(aScene, _camera); }
 
 /**
- * Sync to a given scene from this scene control.
+ * Sync to a given camera from this trackball.
  */
-public void syncTo(Scene3D aScene)  { sync(_scene, aScene); }
+public void syncTo(Camera aScene)  { sync(_camera, aScene); }
 
-/** Sync scenes. */    
-private void sync(Scene3D s1, Scene3D s2)
+/** Sync cameras. */    
+private void sync(Camera s1, Camera s2)
 {
     if(s1.isPseudo3D()) { s2.setPseudoSkewX(s1.getPseudoSkewX()); s2.setPseudoSkewY(s1.getPseudoSkewY()); }
     else { s2.setPitch(s1.getPitch()); s2.setYaw(s1.getYaw()); s2.setRoll(s1.getRoll()); }
-}
-
-/**
- * Override set bounds to fix zoom factor.
- */
-public void setWidth(double aValue)
-{
-    if(aValue==getWidth()) return; super.setWidth(aValue); // Do normal version
-    //setZoomFactor(getWidth()/118); // Set zoom factor  ???
-    configureScene();
 }
 
 }

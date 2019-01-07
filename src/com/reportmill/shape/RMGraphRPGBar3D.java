@@ -62,7 +62,7 @@ public RMGraphRPGBar3D(RMGraph aGraph)
     setBounds(_graph.getBounds());
     setOpacity(_graph.getOpacity());
     copy3D(_graph.get3D());
-    getScene().setAdjustZ(true);
+    getCamera().setAdjustZ(true);
 }
 
 /** Returns the RMGraphRPG. */
