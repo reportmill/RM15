@@ -2,30 +2,30 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.out;
+import com.reportmill.gfx3d.*;
 import com.reportmill.graphics.*;
 import com.reportmill.shape.*;
+import java.util.List;
 import snap.gfx.*;
 import snappdf.PDFPage;
+import snappdf.PDFWriter;
 import snappdf.write.*;
 
 /**
- * A custom class.
+ * A class to hold RMShapePdfr subclasses for RMPage, RMTextShape, RMImageShape, RMScene3D.
  */
 public class RMShapePdfrs {
     
-    // RMTextShapePdfr
+    // Shared instances of RMShapePdfr subclasses
     static RMTextShapePdfr     _textShapePdfr = new RMTextShapePdfr();
-
-    // RMImageShapePdfr
     static RMImageShapePdfr    _imgShapePdfr = new RMImageShapePdfr();
-
-    // RMPagePdfr
     static RMPagePdfr          _pageShapePdfr = new RMPagePdfr();
+    static RMScene3DPdfr       _scene3DPdfr = new RMScene3DPdfr();
 
 /**
  * This class generates PDF for an RMText.
  */
-public static class RMTextShapePdfr <T extends RMTextShape> extends RMShapePdfr<T> {
+public static class RMTextShapePdfr <T extends RMTextShape> extends RMShapePdfr <T> {
 
     /** Writes a given RMShape hierarchy to a PDF file (recursively). */
     protected void writeShape(T aTextShape, RMPDFWriter aWriter)
@@ -129,6 +129,50 @@ public static class RMPagePdfr <T extends RMPage> extends RMShapePdfr <T> {
     
     /** Override to suppress grestore. */
     protected void writeShapeAfter(T aShape, RMPDFWriter aWriter)  { }
+}
+
+/**
+ * This class generates PDF for an RMScene3D.
+ */
+public static class RMScene3DPdfr <T extends RMScene3D> extends RMShapePdfr <T> {
+
+    /** Writes a given RMShape hierarchy to a PDF file (recursively). */
+    protected void writeShape(T aScene3D, RMPDFWriter aWriter)
+    {
+        // Do normal version
+        super.writeShape(aScene3D, aWriter);
+        
+        // Write Path3Ds
+        Camera camera = aScene3D.getCamera();
+        List <Path3D> paths = camera.getPaths();
+        for(Path3D path : paths) {
+            writePath(aScene3D, path, aWriter);
+            if(path.getLayers().size()>0) for(Path3D layer : path.getLayers())
+                writePath(aScene3D, layer, aWriter);
+        }
+    }
+    
+    /** Writes a path. */
+    protected void writePath(RMScene3D aScene3D, Path3D aPath, PDFWriter aWriter)
+    {
+        // Get path, fill and stroke
+        Shape path = aPath.getPath();
+        Color fillColor = aPath.getColor(), strokeColor = aPath.getStrokeColor();
+        PDFPageWriter pdfPage = aWriter.getPageWriter();
+        
+        // Get opacity and set if needed
+        double op = aPath.getOpacity();
+        if(op<1) { pdfPage.gsave(); pdfPage.setOpacity(op*aScene3D.getOpacityDeep()); }
+        
+        // Do fill and stroke
+        if(fillColor!=null)
+            SnapPaintPdfr.writeShapeFill(path, fillColor, aWriter);
+        if(strokeColor!=null)
+            SnapPaintPdfr.writeShapeStroke(path, aPath.getStroke(), strokeColor, aWriter);
+            
+        // Reset opacity if needed
+        if(op<1) pdfPage.grestore();
+    }
 }
 
 }

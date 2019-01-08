@@ -8,70 +8,33 @@ import java.util.*;
 import snap.gfx.*;
 import snappdf.*;
 import snappdf.write.PDFPageWriter;
+import snappdf.write.SnapPaintPdfr;
 
 /**
- * This RMObjectPdfr subclass writes PDF for RMFill.
+ * Utility methods to write PDF for RMFill.
  */
 public class RMFillPdfr {
-
-/**
- * Writes a given shape stroke.
- */
-public static void writeShapeStroke(RMShape aShape, RMStroke aStroke, RMPDFWriter aWriter)
-{
-    // Get PDF page and write stroke path
-    PDFPageWriter pdfPage = aWriter.getPageWriter();
-    Shape path = aShape.getPath(), spath = aStroke.getStrokePath(path);
-    pdfPage.writePath(spath);
-    
-    // Set stroke color and width
-    pdfPage.setStrokeColor(aStroke.getColor());
-    pdfPage.setStrokeWidth(aStroke.getWidth());
-    
-    // Write dash array
-    if(aStroke.getDashArray()!=null && aStroke.getDashArray().length>1)
-        pdfPage.append('[').append(RMStroke.getDashArrayString(aStroke.getDashArray(), " ")).append("] ")
-            .append(aStroke.getDashPhase()).appendln(" d");
-    
-    // Write stroke operator
-    pdfPage.appendln("S");
-}
 
 /**
  * Writes a given shape fill.
  */
 public static void writeShapeFill(RMShape aShape, RMFill aFill, RMPDFWriter aWriter)
 {
+    // Handle RMGradientFill and RMImageFill
     if(aFill instanceof RMGradientFill) writeGradientFill(aShape, (RMGradientFill)aFill, aWriter);
     else if(aFill instanceof RMImageFill) writeImageFill(aShape, (RMImageFill)aFill, aWriter);
-    else writeBasicFill(aShape, aFill, aWriter);    
-}
-
-/**
- * Writes PDF for a plain RMFill.
- */
-public static void writeBasicFill(RMShape aShape, RMFill aFill, RMPDFWriter aWriter)
-{
-    // Get shape path and PDF page and write path
-    Shape path = aShape.getPath();
-    PDFPageWriter pdfPage = aWriter.getPageWriter();
-    pdfPage.writePath(path);
     
-    // Set fill color and write fill operator
-    pdfPage.setFillColor(aFill.getColor());
-    pdfPage.append('f');
-    
-    // If path winding rule odd, write odd fill operator
-    //if(path.getWindingRule()==RMPath.WIND_EVEN_ODD) pdfPage.append('*');
-    
-    // End line
-    pdfPage.appendln();
+    // Handle color fill
+    else {
+        Shape path = aShape.getPath();
+        SnapPaintPdfr.writeShapeFill(path, aFill.getColor(), aWriter);
+    }
 }
 
 /** 
  * Writes pdf for the path filled with a shading pattern defined by the RMGradientFill
  */
-public static void writeGradientFill(RMShape aShape, RMGradientFill aFill, RMPDFWriter aWriter)
+public static void writeGradientFill(RMShape aShape, RMGradientFill aFill, PDFWriter aWriter)
 {
     // Get shape path and PDF page and write path
     Shape path = aShape.getPath();

@@ -4,7 +4,7 @@
 package com.reportmill.out;
 import com.reportmill.graphics.*;
 import com.reportmill.shape.*;
-import snap.gfx.Rect;
+import snap.gfx.*;
 import snappdf.write.*;
 
 /**
@@ -84,9 +84,8 @@ protected void writeShape(T aShape, RMPDFWriter aWriter)
         RMFillPdfr.writeShapeFill(aShape, fill, aWriter);
     
     // Get stroke and write pdf if not null
-    RMStroke stroke = aShape.getStroke();
-    if(stroke!=null && !aShape.isStrokeOnTop())
-        RMFillPdfr.writeShapeStroke(aShape, stroke, aWriter);
+    if(aShape.getStroke()!=null && !aShape.isStrokeOnTop())
+        writeShapeStroke(aShape, aWriter);
 }
 
 /**
@@ -107,9 +106,8 @@ protected void writeShapeChildren(RMShape aShape, RMPDFWriter aWriter)
 protected void writeShapeAfter(T aShape, RMPDFWriter aWriter)
 {
     // Get stroke and write pdf if not null
-    RMStroke stroke = aShape.getStroke();
-    if(stroke!=null && aShape.isStrokeOnTop())
-        RMFillPdfr.writeShapeStroke(aShape, stroke, aWriter);
+    if(aShape.getStroke()!=null && aShape.isStrokeOnTop())
+        writeShapeStroke(aShape, aWriter);
         
     // Get pdf page
     PDFPageWriter pwriter = aWriter.getPageWriter();
@@ -129,6 +127,16 @@ protected void writeShapeAfter(T aShape, RMPDFWriter aWriter)
 }
 
 /**
+ * Writes PDF for given RMShape and it's stroke.
+ */
+protected void writeShapeStroke(RMShape aShape, RMPDFWriter aWriter)
+{
+    RMStroke stroke = aShape.getStroke();
+    Shape path = aShape.getPath(), spath = stroke.getStrokePath(path);
+    SnapPaintPdfr.writeShapeStroke(spath, stroke.snap(), stroke.getColor(), aWriter);
+}
+
+/**
  * Returns the shape pdfr for a shape.
  */
 public static RMShapePdfr getPdfr(RMShape aShape)
@@ -136,6 +144,7 @@ public static RMShapePdfr getPdfr(RMShape aShape)
     if(aShape instanceof RMTextShape) return RMShapePdfrs._textShapePdfr;
     if(aShape instanceof RMImageShape) return RMShapePdfrs._imgShapePdfr;
     if(aShape instanceof RMPage) return RMShapePdfrs._pageShapePdfr;
+    if(aShape instanceof RMScene3D) return RMShapePdfrs._scene3DPdfr;
     return _shapePdfr;
 }
 
