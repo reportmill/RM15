@@ -190,6 +190,9 @@ public void setSelectedShapes(List <RMShape> theShapes)
     
     // Fire PropertyChange
     firePropChange(SelectedShapes_Prop, null, theShapes);
+    
+    // Reset EditorPane
+    RMEditorPane ep = getEditorPane(); ep.resetLater();
 }
 
 /**

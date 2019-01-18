@@ -36,9 +36,6 @@ public class RMViewerPane extends ViewOwner {
     // The controls at the bottom of the document
     ViewOwner         _btmToolBar;
     
-    // Listener for Viewer changes
-    PropChangeListener  _viewLsnr = pc -> viewerDidPropChange(pc);
-    
 /**
  * Returns the viewer for this viewer pane.
  */
@@ -49,15 +46,8 @@ public RMViewer getViewer()  { if(_viewer==null) getUI(); return _viewer; }
  */
 protected void setViewer(RMViewer aViewer)
 {
-    // Stop listening to PropChanges on old
-    if(_viewer!=null) _viewer.removePropChangeListener(_viewLsnr);
-    
-    // Set Viewer
     _viewer = aViewer;
     getScrollView().setContent(_viewer);
-    
-    // Start listening to PropChanges
-    _viewer.addPropChangeListener(_viewLsnr);
 }
 
 /**
@@ -161,7 +151,6 @@ protected View createUI()
 {
     // Create and configure viewer
     _viewer = createViewer();
-    _viewer.addPropChangeListener(_viewLsnr); // Listen to PropertyChanges
     _scrollView = new ScrollView(); _scrollView.setFill(new snap.gfx.Color("#c0c0c0"));
 
     _scrollView.setContent(_viewer);
@@ -184,16 +173,6 @@ protected void resetUI()
 {
     if(!ViewUtils.isMouseDown()) getTopToolBar().resetLater();
     if(!ViewUtils.isMouseDown()) getBottomToolBar().resetLater();
-}
-
-/**
- * ResetUI on Viewer PropertyChange.
- */
-protected void viewerDidPropChange(PropChange aPC)
-{
-    String pname = aPC.getPropertyName();
-    if(pname==View.Cursor_Prop || pname==View.Width_Prop || pname==View.Height_Prop) return;
-    resetLater();
 }
 
 }
