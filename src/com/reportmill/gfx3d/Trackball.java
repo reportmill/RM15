@@ -186,7 +186,7 @@ protected void mouseDragged(ViewEvent anEvent)
     
     // Repaint and fire action event
     repaint();
-    fireActionEvent();
+    fireActionEvent(anEvent);
 }
 
 /**
@@ -202,7 +202,7 @@ protected void mouseReleased(ViewEvent anEvent)
         removeChild(_knob);
    
     // Send ViewEvent to owner
-    fireActionEvent();
+    fireActionEvent(anEvent);
 }
 
 /**

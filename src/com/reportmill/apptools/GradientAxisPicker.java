@@ -109,7 +109,7 @@ protected void processEvent(ViewEvent anEvent)
     // Handle MouseReleased: Reset dragging flag, send node event and repaint
     else if(anEvent.isMouseRelease()) {
         _dragging = false;
-        fireActionEvent();
+        fireActionEvent(anEvent);
         repaint();
     }
 }

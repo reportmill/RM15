@@ -95,7 +95,7 @@ public static class OffsetPanel extends View {
             _x2 = (int)e.getX(); _y2 = (int)e.getY();
             
             // Send event, repaint
-            fireActionEvent();
+            fireActionEvent(e);
             repaint();
         }
     }

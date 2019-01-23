@@ -184,7 +184,7 @@ public void deleteColorStop()
     removeStop(_selectedKnob);
     _selectedKnob = -1; // deselect
     resetComponents();
-    getEnv().runLater(() -> fireActionEvent());
+    getEnv().runLater(() -> fireActionEvent(null));
 }
 
 /**
@@ -296,7 +296,7 @@ protected void processEvent(ViewEvent anEvent)
         // A drag after this moves the new stop.
         if ((sindex<0) && _gradientRect.contains(pt)) {
             sindex = addStop(pt, null);
-            fireActionEvent();
+            fireActionEvent(anEvent);
         }
         
         // Create and run the pop-up menu
@@ -316,7 +316,7 @@ protected void processEvent(ViewEvent anEvent)
     else if(anEvent.isMouseDrag()) {
         if(_selectedKnob>=0) {
             adjustColorStop(_selectedKnob, anEvent.getPoint());
-            fireActionEvent();
+            fireActionEvent(anEvent);
         }
     }
     
@@ -348,7 +348,7 @@ protected void processEvent(ViewEvent anEvent)
             addStop(getStopOffset(_dragPoint), color);
             _dragPoint = null;
             resetComponents();
-            fireActionEvent();
+            fireActionEvent(anEvent);
             anEvent.dropComplete();
         } //else dtde.rejectDrop();
     }
@@ -404,7 +404,7 @@ private void colorWellPropertyChange(PropChange aPC)
         int which = _wells.indexOf(cwell); Color color = cwell.getColor();
         setStop(which, getStopOffset(which), color);
         repaint();
-        getEnv().runLater(() -> fireActionEvent());
+        getEnv().runLater(() -> fireActionEvent(null));
     }
 }
 

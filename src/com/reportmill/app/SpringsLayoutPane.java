@@ -112,7 +112,7 @@ public static class AutosizingPanel extends View {
         
         // Set new autosizing string, send node event and repaint
         _autosizing = sb.toString();
-        fireActionEvent();
+        fireActionEvent(anEvent);
         repaint();
     }
     
