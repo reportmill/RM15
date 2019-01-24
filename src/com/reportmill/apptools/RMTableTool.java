@@ -437,9 +437,8 @@ public void runMenuForShape(RMShape aShape, double x, double y)
     RMTableRow tableRow = (RMTableRow)editor.getSuperSelectedShape(); // Get table row
     RMTableRowTool tableRowTool = (RMTableRowTool)editor.getTool(tableRow); // Get table row tool
     Menu pmenu = tableRowTool.getPopupMenu(tableRow); // Fill menu
-    PopupWindow popup = pmenu.getPopup();
     Point point = editor.convertFromShape(x, y, aShape); // Get point in editor
-    popup.show(editor, point.x, point.y); // Show popup menu
+    pmenu.show(editor, point.x, point.y); // Show popup menu
 }
 
 /**

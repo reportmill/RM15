@@ -583,7 +583,7 @@ public void runPopupMenu(ViewEvent anEvent)
     
     // Initialize popup menu items to send Events to menu bar
     pmenu.setOwner(getMenuBar());
-    pmenu.getPopup().show(getEditor(), anEvent.getX(), anEvent.getY());
+    pmenu.show(getEditor(), anEvent.getX(), anEvent.getY());
     anEvent.consume();
 }
 

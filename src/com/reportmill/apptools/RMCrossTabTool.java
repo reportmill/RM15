@@ -356,8 +356,8 @@ public void runContextMenu(ViewEvent anEvent)
     mitem = createMenuItem("Split Cell", "SplitCellMenuItem"); pmenu.addItem(mitem);
     
     // Run menu and consume event
-    PopupWindow popup = pmenu.getPopup(); popup.setOwner(this);
-    popup.show(anEvent.getView(), anEvent.getX(), anEvent.getY());
+    pmenu.setOwner(this);
+    pmenu.show(anEvent.getView(), anEvent.getX(), anEvent.getY());
     anEvent.consume();
 }
 
