@@ -169,23 +169,25 @@ public class APColorPanel extends ColorPanel {
     /** Overrides color panel behavior to order attributes panel visible instead. */
     public void setWindowVisible(boolean aValue)  { setVisibleName(COLOR, true); }
 
-    /** Overrides normal implementation to get color from editor if no color well selected. */
-    public Color getColor()
+    /** Overrides normal implementation to update color from editor if no color well selected. */
+    protected void resetUI()
     {
-        // If color panel has color well, just return normal
-        if(getColorWell()!=null)
-            return super.getColor();
+        // If no ColorWell, get color from editor
+        if(getColorWell()==null) {
+            Color color = RMEditorUtils.getSelectedColor(getEditor());
+            setColor(color);
+        }
         
-        // Get color from editor
-        return RMEditorUtils.getSelectedColor(getEditor());
+        // Do normal version
+        super.resetUI();
     }
 
-    /** Override to forward to editor. */
-    public void setColor(Color aColor)
+    /** Override to forward to editor if no ColorWell. */
+    protected void fireActionEvent(ViewEvent anEvent)
     {
-        super.setColor(aColor);
+        super.fireActionEvent(anEvent);
         if(getColorWell()==null)
-            RMEditorUtils.setSelectedColor(getEditor(), RMColor.get(aColor));
+            RMEditorUtils.setSelectedColor(getEditor(), getColor());
     }
     
     /** Returns the name for this panel. */

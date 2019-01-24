@@ -18,7 +18,7 @@ import snap.view.ViewUtils;
 public class RMEditorUtils {
 
     // The last color set by or returned to the color panel
-    static RMColor    _lastColor = RMColor.black;
+    static Color    _lastColor = Color.BLACK;
 
 /**
  * Groups the given shape list to the given group shape.
@@ -541,7 +541,7 @@ public static void moveToNewLayer(RMEditor anEditor)
 /**
  * Returns the specified type of color (text, stroke or fill) of editor's selected shape.
  */
-public static RMColor getSelectedColor(RMEditor anEditor)
+public static Color getSelectedColor(RMEditor anEditor)
 {
     // Get selected or super selected shape
     RMShape shape = anEditor.getSelectedOrSuperSelectedShape();
@@ -549,7 +549,7 @@ public static RMColor getSelectedColor(RMEditor anEditor)
     // If selected or super selected shape is page that doesn't draw color, return "last color" (otherwise, reset it)
     if((shape instanceof RMPage || shape instanceof RMDocument) && shape.getFill()==null)
         return _lastColor;
-    else _lastColor = RMColor.black;
+    else _lastColor = Color.BLACK;
         
     // If text color and text editing, return color of text editor
     if(anEditor.getTextEditor()!=null)
@@ -562,9 +562,10 @@ public static RMColor getSelectedColor(RMEditor anEditor)
 /**
  * Sets the specified type of color (text, stroke or fill) of editor's selected shape.
  */
-public static void setSelectedColor(RMEditor anEditor, RMColor aColor)
+public static void setSelectedColor(RMEditor anEditor, Color aColor)
 {
     // Get selected or super selected shape
+    RMColor color = RMColor.get(aColor);
     RMShape shape = anEditor.getSelectedOrSuperSelectedShape();
         
     // If editor selected or super selected shape is document or page, set "last color" and return
@@ -584,7 +585,7 @@ public static void setSelectedColor(RMEditor anEditor, RMColor aColor)
         }
         
         // If no command down, set color of text editor
-        else ted.setColor(aColor);
+        else ted.setColor(color);
     }
     
     // If fill color, set selected shapes' fill color
@@ -593,11 +594,11 @@ public static void setSelectedColor(RMEditor anEditor, RMColor aColor)
         // If command-click, set gradient fill
         if(ViewUtils.isMetaDown()) {
             RMColor c1 = shape.getFill()!=null? shape.getColor() : RMColor.clearWhite;
-            shape.setFill(new RMGradientFill(c1, aColor, 0));
+            shape.setFill(new RMGradientFill(c1, color, 0));
         }
         
         // If not command click, just set the color of all the selected shapes
-        else setColor(anEditor, aColor);
+        else setColor(anEditor, color);
     }
 }
 
