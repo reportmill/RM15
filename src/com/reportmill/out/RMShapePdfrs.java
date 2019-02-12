@@ -6,6 +6,7 @@ import com.reportmill.gfx3d.*;
 import com.reportmill.graphics.*;
 import com.reportmill.shape.*;
 import java.util.List;
+import java.util.Map;
 import snap.gfx.*;
 import snappdf.PDFPage;
 import snappdf.PDFWriter;
@@ -172,6 +173,72 @@ public static class RMScene3DPdfr <T extends RMScene3D> extends RMShapePdfr <T> 
             
         // Reset opacity if needed
         if(op<1) pdfPage.grestore();
+    }
+}
+
+/**
+ * Returns a shared ViewShapePdfr.
+ */
+public static ViewShapePdfr getViewShapePdfr()  { return _vspdfr!=null? _vspdfr : (_vspdfr=new ViewShapePdfr()); }
+private static ViewShapePdfr _vspdfr;
+
+/**
+ * This class generates PDF for an ViewShape.
+ */
+public static class ViewShapePdfr <T extends ViewShape> extends RMShapePdfr <T> {
+
+    /** Writes a given RMShape hierarchy to a PDF file (recursively). */
+    protected void writeShape(T aViewShape, RMPDFWriter aWriter)
+    {
+        // Do normal version
+        super.writeShape(aViewShape, aWriter);
+        
+        // Get ViewShape info
+        String name = aViewShape.getName();
+        String type = aViewShape.getViewType(), fieldType = getFieldType(type);
+        boolean isText = type==ViewShape.TextField_Type, isTextMultiline = isText;// && aViewShape.isMultiline();
+        String text = aViewShape.getText(), pdfText = text!=null? '(' + text + ')' : null;
+        boolean isButton = fieldType=="/Btn", isRadio = type==ViewShape.RadioButton_Type;
+        boolean isCheckBox = type==ViewShape.CheckBox_Type;
+        
+        // Get flags field
+        int flags = 0;
+        if(isTextMultiline) flags |= 1<<12;
+        if(isRadio) flags |= 1<<15;
+        else if(isButton && !isCheckBox) flags |= 1<<16;
+        
+        // Get frame
+        Rect frame = aViewShape.localToParent(aViewShape.getBoundsInside(), null).getBounds();
+        frame.setY(aViewShape.getPageShape().getHeight() - frame.getMaxY());
+        
+        // Write annotation
+        PDFAnnotation widget = new PDFAnnotation.Widget(frame, "");
+        PDFPageWriter pwriter = aWriter.getPageWriter();
+        pwriter.addAnnotation(widget);
+        
+        // Set Annotation Flags, Field-Type, name, Caption
+        Map map = widget.getAnnotationMap();
+        map.put("F", 4);
+        map.put("FT", fieldType);
+        map.put("Ff", flags);
+        if(name!=null && name.length()>0) map.put("H", aViewShape.getName());
+        
+        // Set widget text
+        if(text!=null && text.length()>0) {
+            if(isText) map.put("V", pdfText);
+            else map.put("T", pdfText);
+        }
+    }
+    
+    /** Returns the Field Type of Widget annotation. */
+    String getFieldType(String aViewType)
+    {
+        switch(aViewType) {
+            case ViewShape.TextField_Type: return "/Tx";
+            case ViewShape.Button_Type: case ViewShape.RadioButton_Type: case ViewShape.CheckBox_Type: return "/Btn";
+            case ViewShape.ListView_Type: case ViewShape.ComboBox_Type: return "/Ch";
+            default: System.err.println("RMShapePdfrs.ViewShapePdfr: Unknown view type"); return "/Tx";
+        }
     }
 }
 

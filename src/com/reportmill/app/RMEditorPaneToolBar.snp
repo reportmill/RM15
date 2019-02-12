@@ -61,6 +61,7 @@
     <MenuItem Name="AddCrossTabButton" text="Simple Table" image="/com/reportmill/apptools/RMCrossTab.png" />
     <MenuItem Name="AddImagePlaceHolderMenuItem" text="Image Placeholder" image="/com/reportmill/apptools/RMImage.png" />
     <MenuItem Name="AddSubreportMenuItem" text="Subreport" image="/com/reportmill/apptools/RMSubreport.png" />
+    <MenuItem Name="AddWidgetMenuItem" text="Widget" image="ShapeRollScaleSkew.png" />
   </MenuButton>
   <Button Name="ConnectToDataSourceButton" PrefWidth="24" PrefHeight="24" ToolTip="Connect to DataSource" image="DataSource.png" ShowBorder="false" />
 </HBox>

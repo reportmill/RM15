@@ -108,6 +108,7 @@ protected Map <String, Class> createClassMap()
     classMap.put("text", RMTextShape.class);
     classMap.put("linked-text", RMLinkedText.class);
     classMap.put("scene3d", RMScene3D.class);
+    classMap.put("ViewShape", ViewShape.class);
     
     // Graphics
     classMap.put("color", RMColor.class);

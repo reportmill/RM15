@@ -927,8 +927,8 @@ public static RMTool createTool(Class aClass)
     Class tclass = null;
     
     // If class name starts with RM, check tool package for built-in RMShape tools
-    String cname = aClass.getSimpleName();
-    if(cname.startsWith("RM")) {
+    String pname = aClass.getName(), cname = aClass.getSimpleName();
+    if(pname.startsWith("com.reportmill.shape.")) {
         tclass = ClassUtils.getClass("com.reportmill.apptools." + cname + "Tool");
         if(tclass==null && cname.endsWith("Shape"))
             tclass = ClassUtils.getClass("com.reportmill.apptools." + cname.replace("Shape", "Tool"));

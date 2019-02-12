@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TabView MinWidth="120" MinHeight="60">
+  <ColView MinWidth="200" MinHeight="200" Padding="12" Spacing="6" FillWidth="true" title="Main">
+    <Label text="Control Type:" />
+    <ListView Name="TypeListView" MinWidth="120" PrefHeight="60" GrowHeight="true">
+      <LineBorder Color="#c0c0c0" />
+    </ListView>
+    <Label text="Default text:" />
+    <TextView Name="TextView" PrefHeight="100" />
+  </ColView>
+  <ColView MinWidth="200" MinHeight="200" Padding="12" Spacing="6" FillWidth="true" title="TextField">
+    <CheckBox Name="MultilineCheckBox" text="Multi-line Text" />
+  </ColView>
+  <ColView title="Button">
+  </ColView>
+</TabView>

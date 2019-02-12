@@ -884,6 +884,29 @@ public static void addSubreport(RMEditor anEditor)
 }
 
 /**
+ * Adds a widget to the given editor.
+ */
+public static void addWidget(RMEditor anEditor)
+{
+    // Create image shape
+    ViewShape viewShape = new ViewShape();
+    
+    // Get parent and move shape to center
+    RMParentShape parent = anEditor.firstSuperSelectedShapeThatAcceptsChildren();
+    viewShape.setXY((int)(parent.getWidth()/2 - viewShape.getWidth()/2),
+        (int)(parent.getHeight()/2 - viewShape.getHeight()/2));
+
+    // Add shape to parent
+    anEditor.undoerSetUndoTitle("Add Widget");
+    parent.addChild(viewShape);
+
+    // Select shape, set selectTool and repaint
+    anEditor.setSelectedShape(viewShape);
+    anEditor.setCurrentToolToSelectTool();
+    anEditor.repaint();
+}
+
+/**
  * Runs the dataset key panel to add a table, graph, crosstab or labels to given editor.
  */
 public static void runDatasetKeyPanel(RMEditor anEditor, String aKeyPath)
