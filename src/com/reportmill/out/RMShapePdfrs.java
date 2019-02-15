@@ -41,7 +41,7 @@ public static class RMTextShapePdfr <T extends RMTextShape> extends RMShapePdfr 
         aWriter.getPDFFile().setVersion(1.4f);
         
         // Get TextShape info
-        String name = aTextShape.getName(); if(name==null) name = "Text Box " + pwriter.getAnnotationCount();
+        String name = aTextShape.getName(); if(name==null) name = "Text Box " + aWriter.getAcroFormFieldCount();
         String pdfName = name!=null && name.length()>0? '(' + name + ')' : null;
         String text = aTextShape.getText(), pdfText = text!=null && text.length()>0? '(' + text + ')' : null;
         
@@ -56,7 +56,7 @@ public static class RMTextShapePdfr <T extends RMTextShape> extends RMShapePdfr 
         pwriter.addAnnotation(widget);
         
         // Set Annotation Flags, Field-Type
-        Map map = widget.getAnnotationMap(); //map.put("P", xrefs.getRefString(pwriter));
+        Map map = widget.getAnnotationMap(); map.put("P", aWriter.getXRefTable().getRefString(pwriter));
         map.put("F", 4); map.put("FT", "/Tx"); // Makes widget printable textfield
         if(aTextShape.isMultiline()) map.put("Ff", 1<<12);
         
@@ -239,7 +239,7 @@ public static class ViewShapePdfr <T extends ViewShape> extends RMShapePdfr <T> 
         aWriter.getPDFFile().setVersion(1.4f);
         
         // Get ViewShape info
-        String name = aViewShape.getName(); if(name==null) name = "Text Box " + pwriter.getAnnotationCount();
+        String name = aViewShape.getName(); if(name==null) name = "Text Box " + aWriter.getAcroFormFieldCount();
         String pdfName = name!=null && name.length()>0? '(' + name + ')' : null;
         String type = aViewShape.getViewType(), fieldType = getFieldType(type);
         boolean isText = type==ViewShape.TextField_Type, isTextMultiline = isText && aViewShape.isMultiline();
