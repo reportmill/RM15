@@ -20,6 +20,9 @@ import snap.viewx.ExceptionReporter;
  * 
  */
 public class App {
+    
+    // Whether app is in process of quiting
+    static boolean _quiting;
 
 /**
  * This is the static main method, called by Java when launching with com.reportmill.App.
@@ -55,6 +58,7 @@ public App(String args[])
 public static void quitApp()
 {
     // Get open editor panes
+    if(_quiting) return; _quiting = true;
     RMEditorPane epanes[] = WindowView.getOpenWindowOwners(RMEditorPane.class);
 
     // Iterate over open Editors to see if any have unsaved changes
@@ -75,7 +79,7 @@ public static void quitApp()
     }
 
     // If user hit Cancel, just go away
-    if(answer==2) return;
+    if(answer==2) { _quiting = false; return; }
     
     // Disable welcome panel
     boolean old = Welcome.getShared().isEnabled(); Welcome.getShared().setEnabled(false);
@@ -84,7 +88,7 @@ public static void quitApp()
     if(answer==0)
         for(RMEditorPane epane : epanes)
             if(!epane.close()) {
-                Welcome.getShared().setEnabled(old); return; }
+                Welcome.getShared().setEnabled(old); _quiting = false; return; }
 
     // Flush Properties to registry and exit
     try { Prefs.get().flush(); } catch(Exception e) { e.printStackTrace(); }
@@ -116,7 +120,11 @@ private static class AppleAppHandler implements PreferencesHandler, QuitHandler,
     }
 
     /** Handle QuitRequest. */
-    public void handleQuitRequestWith(QuitEvent arg0, QuitResponse arg1)  { App.quitApp(); }
+    public void handleQuitRequestWith(QuitEvent arg0, QuitResponse arg1)
+    {
+        App.quitApp();
+        if(_quiting) arg1.cancelQuit();
+    }
 }
 
 }
