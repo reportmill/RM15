@@ -2,7 +2,6 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.app;
-import com.reportmill.graphics.*;
 import snap.gfx.*;
 import snap.view.*;
 import snap.viewx.ColorPanel;

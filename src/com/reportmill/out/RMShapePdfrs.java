@@ -5,11 +5,9 @@ package com.reportmill.out;
 import com.reportmill.gfx3d.*;
 import com.reportmill.graphics.*;
 import com.reportmill.shape.*;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import snap.gfx.*;
-import snappdf.PDFPage;
-import snappdf.PDFWriter;
+import snappdf.*;
 import snappdf.write.*;
 
 /**
@@ -33,7 +31,50 @@ public static class RMTextShapePdfr <T extends RMTextShape> extends RMShapePdfr 
     {
         // Do normal version
         super.writeShape(aTextShape, aWriter);
-        PDFWriterText.writeText(aWriter, aTextShape.getTextBox());
+        
+        // If not editable, just write out text and return
+        if(!aTextShape.isEditable()) {
+            PDFWriterText.writeText(aWriter, aTextShape.getTextBox()); return; }
+        
+        // Writing PDF Widget Annotation: Get pdf page object and bump PDF version to 1.4
+        PDFPageWriter pwriter = aWriter.getPageWriter();
+        aWriter.getPDFFile().setVersion(1.4f);
+        
+        // Get TextShape info
+        String name = aTextShape.getName(); if(name==null) name = "Text Box " + pwriter.getAnnotationCount();
+        String pdfName = name!=null && name.length()>0? '(' + name + ')' : null;
+        String text = aTextShape.getText(), pdfText = text!=null && text.length()>0? '(' + text + ')' : null;
+        
+        // Get ViewShape frame in PDF page coords (minus text insets)
+        Rect frame = aTextShape.localToParent(aTextShape.getBoundsInside(), null).getBounds();
+        frame.y = aTextShape.getPageShape().getHeight() - frame.getMaxY();
+        Insets ins = aTextShape.getMargin(); frame.x += ins.left; frame.y += ins.bottom;
+        frame.width -= ins.getWidth(); frame.height -= ins.getHeight();
+        
+        // Create and add annotation to page
+        PDFAnnotation widget = new PDFAnnotation.Widget(frame, "");
+        pwriter.addAnnotation(widget);
+        
+        // Set Annotation Flags, Field-Type
+        Map map = widget.getAnnotationMap(); //map.put("P", xrefs.getRefString(pwriter));
+        map.put("F", 4); map.put("FT", "/Tx"); // Makes widget printable textfield
+        if(aTextShape.isMultiline()) map.put("Ff", 1<<12);
+        
+        // Get font name and set in Default Appearance
+        Font font = aTextShape.getFont();
+        PDFFontEntry fontEntry = aWriter.getFontEntry(font, 0);
+        String fontName = '/' + fontEntry.getPDFName(); int fontSize = (int)font.getSize();
+        map.put("DA", "(0 0 0 rg " + fontName + ' ' + fontSize + " Tf)");
+        
+        // Set Widget Name, alt name, value, default value and fonts dict
+        if(pdfName!=null) map.put("T", pdfName); // Name
+        if(pdfName!=null) map.put("TU", pdfName); // Alternate name (ToolTip)
+        if(pdfText!=null) { map.put("V", pdfText); map.put("DV", pdfText); } // Value/Default value
+        
+        // Set Widget Default Resources dict
+        Object fonts = aWriter.getFonts(), fontsXRef = aWriter.getXRefTable().getRefString(fonts);
+        Map drDict = Collections.singletonMap("Font", fontsXRef);
+        map.put("DR", drDict);
     }
 }
 
@@ -193,41 +234,62 @@ public static class ViewShapePdfr <T extends ViewShape> extends RMShapePdfr <T> 
         // Do normal version
         super.writeShape(aViewShape, aWriter);
         
+        // Get pdf page object and bump PDF version to 1.4
+        PDFPageWriter pwriter = aWriter.getPageWriter();
+        aWriter.getPDFFile().setVersion(1.4f);
+        
         // Get ViewShape info
-        String name = aViewShape.getName();
+        String name = aViewShape.getName(); if(name==null) name = "Text Box " + pwriter.getAnnotationCount();
+        String pdfName = name!=null && name.length()>0? '(' + name + ')' : null;
         String type = aViewShape.getViewType(), fieldType = getFieldType(type);
-        boolean isText = type==ViewShape.TextField_Type, isTextMultiline = isText;// && aViewShape.isMultiline();
-        String text = aViewShape.getText(), pdfText = text!=null? '(' + text + ')' : null;
+        boolean isText = type==ViewShape.TextField_Type, isTextMultiline = isText && aViewShape.isMultiline();
+        String text = aViewShape.getText(), pdfText = text!=null && text.length()>0? '(' + text + ')' : null;
         boolean isButton = fieldType=="/Btn", isRadio = type==ViewShape.RadioButton_Type;
         boolean isCheckBox = type==ViewShape.CheckBox_Type;
         
         // Get flags field
-        int flags = 0;
-        if(isTextMultiline) flags |= 1<<12;
-        if(isRadio) flags |= 1<<15;
-        else if(isButton && !isCheckBox) flags |= 1<<16;
+        int flags = 0; if(isTextMultiline) flags |= 1<<12;
+        if(isRadio) flags |= 1<<15; else if(isButton && !isCheckBox) flags |= 1<<16;
         
-        // Get frame
+        // Get ViewShape frame in PDF page coords (minus text insets)
         Rect frame = aViewShape.localToParent(aViewShape.getBoundsInside(), null).getBounds();
         frame.setY(aViewShape.getPageShape().getHeight() - frame.getMaxY());
+        if(isText) { Insets ins = new Insets(2); frame.x += ins.left; frame.y += ins.bottom;
+            frame.width -= ins.getWidth(); frame.height -= ins.getHeight(); }
         
-        // Write annotation
+        // Create and add annotation to page
         PDFAnnotation widget = new PDFAnnotation.Widget(frame, "");
-        PDFPageWriter pwriter = aWriter.getPageWriter();
         pwriter.addAnnotation(widget);
         
-        // Set Annotation Flags, Field-Type, name, Caption
-        Map map = widget.getAnnotationMap();
-        map.put("F", 4);
-        map.put("FT", fieldType);
-        map.put("Ff", flags);
-        if(name!=null && name.length()>0) map.put("H", aViewShape.getName());
+        // Set Annotation Flags, Field-Type
+        Map map = widget.getAnnotationMap(); //map.put("P", xrefs.getRefString(pwriter));
+        map.put("F", 4); map.put("FT", fieldType); // Makes widget printable and field type
+        if(flags!=0) map.put("Ff", flags);
         
-        // Set widget text
-        if(text!=null && text.length()>0) {
-            if(isText) map.put("V", pdfText);
-            else map.put("T", pdfText);
-        }
+        // Get font name and set in Default Appearance
+        Font font = aViewShape.getFont();
+        PDFFontEntry fontEntry = aWriter.getFontEntry(font, 0);
+        String fontName = '/' + fontEntry.getPDFName(); int fontSize = (int)font.getSize();
+        map.put("DA", "(0 0 0 rg " + fontName + ' ' + fontSize + " Tf)");
+        
+        // Set Widget Name, alt name, value, default value and fonts dict
+        if(pdfName!=null) map.put("T", pdfName); // Name
+        if(pdfName!=null) map.put("TU", pdfName); // Alternate name (ToolTip)
+        if(pdfText!=null) { map.put("V", pdfText); map.put("DV", pdfText); } // Value/Default value
+        
+        // Set Widget Default Resources dict
+        Object fonts = aWriter.getFonts(), fontsXRef = aWriter.getXRefTable().getRefString(fonts);
+        Map drDict = Collections.singletonMap("Font", fontsXRef);
+        map.put("DR", drDict);
+        
+        // Write Appearance Dictionary
+        /*Map apnDict = new HashMap(8); apnDict.put("Type", "/XObject"); apnDict.put("Subtype", "/Form");
+        apnDict.put("BBox", "[0 0 " + frame.width + " " + frame.height + "]");
+        apnDict.put("Resources", xrefs.addObject(pwriter.getResourcesDict()));
+        String str = fieldType + " BMC\nEMC"; byte strBytes[] = str.getBytes();
+        PDFStream formStream = new PDFStream(strBytes, apnDict); Object formStreamXRef = xrefs.addObject(formStream);
+        Map apDict = Collections.singletonMap("N", formStreamXRef); Object apDictXRef = xrefs.addObject(apDict);
+        map.put("AP", apDict);*/
     }
     
     /** Returns the Field Type of Widget annotation. */

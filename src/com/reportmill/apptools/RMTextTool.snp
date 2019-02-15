@@ -63,4 +63,8 @@
       <binding aspect="Selected" key="SelectedShapes.PerformsWrap" />
     </CheckBox>
   </SpringView>
+  <ColView Padding="20,10,10,10" Spacing="5" title="PDF">
+    <CheckBox Name="EditableCheckBox" text="Editable" />
+    <CheckBox Name="MultilineCheckBox" text="Multiline" />
+  </ColView>
 </TabView>

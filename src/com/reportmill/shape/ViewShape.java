@@ -15,9 +15,13 @@ public class ViewShape extends RMShape {
     // The text associated with the view
     String            _text;
     
+    // Whether view is multi line
+    boolean           _multiline;
+    
     // Constants for properties
     static final String Text_Prop = "Text";
     static final String View_Prop = "View";
+    static final String Multiline_Prop = "Multiline";
 
     // Constants for View types
     public static final String TextField_Type = "TextField";
@@ -120,10 +124,21 @@ public void setText(String aString)
 }
 
 /**
+ * Returns whether view is multiline (text).
+ */
+public boolean isMultiline()  { return _multiline; }
+
+/**
+ * Sets whether view is multiline (text).
+ */
+public void setMultiline(boolean aValue)  { _multiline = aValue; }
+
+/**
  * Override to paint shape.
  */
 protected void paintShape(Painter aPntr)
 {
+    super.paintShape(aPntr);
     ViewUtils.paintAll(_view, aPntr);
 }
 
@@ -164,6 +179,7 @@ public XMLElement toXML(XMLArchiver anArchiver)
     XMLElement e = super.toXML(anArchiver); e.setName("ViewShape");
     e.add("ViewType", getViewType());
     if(getText()!=null && getText().length()>0) e.add(Text_Prop, getText());
+    if(isMultiline()) e.add(Multiline_Prop, true);
     return e;
 }
 
@@ -175,6 +191,7 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
     super.fromXML(anArchiver, anElement);
     if(anElement.hasAttribute("ViewType")) setViewType(anElement.getAttributeValue("ViewType"));
     if(anElement.hasAttribute(Text_Prop)) setText(anElement.getAttributeValue(Text_Prop));
+    if(anElement.hasAttribute(Multiline_Prop)) setMultiline(anElement.getAttributeBoolValue(Multiline_Prop));
     return this;
 }
 

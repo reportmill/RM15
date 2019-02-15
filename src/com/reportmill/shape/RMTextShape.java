@@ -45,6 +45,12 @@ public class RMTextShape extends RMRectShape {
     
     // Whether text should draw box around itself even if there's no stroke
     boolean                _drawsSelectionRect;
+    
+    // PDF option: Whether text box is editable in PDF
+    boolean                _editable;
+    
+    // PDF option: Whether text is multiline when editable in PDF
+    boolean                _multiline;
 
     // The linked text shape for rendering overflow, if there is one
     RMLinkedText           _linkedText;
@@ -65,6 +71,10 @@ public class RMTextShape extends RMRectShape {
     public static final byte WRAP_NONE = 0;
     public static final byte WRAP_BASIC = 1;
     public static final byte WRAP_SCALE = 2;
+    
+    // Constants for properties
+    public static final String Editable_Prop = "Editable";
+    public static final String Multiline_Prop = "Multiline";
     
 /**
  * Creates an empty text instance.
@@ -303,6 +313,32 @@ public boolean getDrawsSelectionRect()  { return _drawsSelectionRect; }
  * Sets whether text should always draw at least a light-gray border (useful when editing).
  */
 public void setDrawsSelectionRect(boolean aValue)  { _drawsSelectionRect = aValue; }
+
+/**
+ * Returns whether text box is editable in PDF.
+ */
+public boolean isEditable()  { return _editable; }
+
+/**
+ * Sets whether text box is editable in PDF.
+ */
+public void setEditable(boolean aValue)
+{
+    firePropChange(Editable_Prop, _editable, _editable = aValue);
+}
+
+/**
+ * Returns whether text is multiline when editable in PDF.
+ */
+public boolean isMultiline()  { return _multiline; }
+
+/**
+ * Sets whether text is multiline when editable in PDF.
+ */
+public void setMultiline(boolean aValue)
+{
+    firePropChange(Multiline_Prop, _multiline, _multiline = aValue);
+}
 
 /**
  * Returns the char spacing at char 0.
@@ -861,6 +897,10 @@ public XMLElement toXML(XMLArchiver anArchiver)
         pathShapeElement.add(pathShapeElementZero);
     }
     
+    // Archive PDF options
+    if(isEditable()) e.add(Editable_Prop, true);
+    if(isMultiline()) e.add(Multiline_Prop, true);
+    
     // Return element for this shape
     return e;
 }
@@ -905,6 +945,10 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
         RMShape pathShape = (RMShape)anArchiver.fromXML(pathShapeElementZero, null);
         setPathShape(pathShape);
     }
+    
+    // Unarchive PDF options
+    if(anElement.hasAttribute(Editable_Prop)) setEditable(anElement.getAttributeBoolValue(Editable_Prop));
+    if(anElement.hasAttribute(Multiline_Prop)) setMultiline(anElement.getAttributeBoolValue(Multiline_Prop));
     
     // Return this shape
     return this;
