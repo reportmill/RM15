@@ -180,7 +180,7 @@ public static void previewXML(RMEditorPane anEP)
 public static void saveAsPDF(RMEditorPane anEP)
 {
     RMEditor editor = anEP.getEditor();
-    String path = FilePanel.showOpenPanel(editor, "PDF file (.pdf)", "pdf");
+    String path = FilePanel.showOpenPanel(editor, "PDF file (.pdf)", "pdf"); if(path==null) return;
     editor.flushEditingChanges();
     editor.getDoc().writePDF(path);
 }

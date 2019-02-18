@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<SpringView width="350" height="360" PrefWidth="350" PrefHeight="360">
+<TabView PrefWidth="350" PrefHeight="360" GrowHeight="true">
   <font name="Arial" size="12" />
-  <TabView width="350" height="360">
-    <SpringView x="11" y="33" width="329" height="314" PrefWidth="329" PrefHeight="314" Visible="false" GrowWidth="true" GrowHeight="true" title="License">
-      <CheckBox Name="EnableExceptionsCheckBox" x="40" y="130" width="250" height="24" text="Enable Exception Reporting" />
-      <TextField Name="LicenseText" x="94" y="50" width="210" height="24" GrowWidth="true" />
-      <Label x="10" y="50" width="88" height="24" text="License Key:" />
-    </SpringView>
-    <SpringView x="11" y="33" width="329" height="314" PrefWidth="329" PrefHeight="314" Visible="false" GrowWidth="true" GrowHeight="true" title="Formats">
-      <Label x="10" y="20" width="150" height="20" text="Number Formats:" />
-      <Button Name="ResetNumbersButton" x="120" y="20" width="40" height="18" text="Reset" />
-      <TextView Name="NumberFormatsText" x="10" y="40" width="150" height="200" />
-      <Label x="170" y="20" width="150" height="20" text="Date Formats:" />
-      <Button Name="ResetDatesButton" x="280" y="20" width="40" height="18" text="Reset" />
-      <TextView Name="DateFormatsText" x="170" y="40" width="150" height="200" />
-    </SpringView>
-  </TabView>
-</SpringView>
+  <ColView Align="TOP_CENTER" Padding="50,5,5,5" Spacing="40" title="License">
+    <RowView Spacing="10">
+      <Label text="License Key:" />
+      <TextField Name="LicenseText" PrefWidth="210" />
+    </RowView>
+    <CheckBox Name="EnableExceptionsCheckBox" text="Enable Exception Reporting" />
+  </ColView>
+  <RowView Padding="15,5,10,5" Spacing="10" FillHeight="true" title="Formats">
+    <ColView PrefWidth="150" GrowWidth="true" Spacing="4" FillWidth="true">
+      <RowView>
+        <Label text="Number Formats:" />
+        <Button Name="ResetNumbersButton" PrefWidth="40" PrefHeight="18" LeanX="RIGHT" text="Reset" />
+      </RowView>
+      <TextView Name="NumberFormatsText" GrowHeight="true" />
+    </ColView>
+    <ColView PrefWidth="150" GrowWidth="true" Spacing="4" FillWidth="true">
+      <RowView>
+      <Label text="Date Formats:" />
+      <Button Name="ResetDatesButton" PrefWidth="40" PrefHeight="18" LeanX="RIGHT" text="Reset" />
+      </RowView>
+      <TextView Name="DateFormatsText" GrowHeight="true" />
+    </ColView>
+  </RowView>
+</TabView>
