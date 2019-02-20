@@ -40,7 +40,7 @@
   </HBox>
   <Separator PrefWidth="16" PrefHeight="18" Vertical="true" />
   <ComboBox name="FontFaceComboBox" MinWidth="80" PrefHeight="22" ShowTextField="true" ShowButton="false" FilterList="true" />
-  <Separator PrefWidth="1" PrefHeight="18" Vertical="true" Visible="false" />
+  <Label PrefWidth="1" PrefHeight="8" />
   <ComboBox name="FontSizeComboBox" MinWidth="35" PrefHeight="22" ShowTextField="true" ShowButton="false" />
   <Button Name="FontSizeUpButton" PrefWidth="22" PrefHeight="22" ToolTip="Increase Font Size" image="Format_IncreaseFont.png" ShowBorder="false" />
   <Button Name="FontSizeDownButton" PrefWidth="22" PrefHeight="22" ToolTip="Decrease Font Size" image="Format_DecreaseFont.png" ShowBorder="false" />
