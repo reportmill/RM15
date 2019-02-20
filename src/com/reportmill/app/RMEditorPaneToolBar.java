@@ -50,6 +50,7 @@ protected void initUI()
     _fontSizeComboBox = getView("FontSizeComboBox", ComboBox.class);
     Object sizes[] = { 6, 8, 9, 10, 11, 12, 14, 16, 18, 22, 24, 36, 48, 64, 72, 96, 128, 144 };
     _fontSizeComboBox.setItems(sizes);
+    _fontSizeComboBox.setItemTextFunction(i -> SnapUtils.stringValue(i) + " pt");
 }
 
 /**
@@ -85,7 +86,8 @@ protected void resetUI()
         
     // Reset FontFaceComboBox, FontSizeComboBox
     _fontFaceComboBox.setSelItem(font.getFamily());
-    _fontSizeComboBox.setText(StringUtils.toString(font.getSize()) + " pt");
+    String fstext = _fontSizeComboBox.getText(font.getSize());
+    _fontSizeComboBox.setText(fstext);
         
     // Reset BoldButton, ItalicButton, UnderlineButton
     setViewValue("BoldButton", font.isBold());
