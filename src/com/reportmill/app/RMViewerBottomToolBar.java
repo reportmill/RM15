@@ -25,6 +25,16 @@ public RMViewerBottomToolBar(RMViewerPane aViewerPane)  { _viewerPane = aViewerP
 public RMViewerPane getViewerPane()  { return _viewerPane; }
 
 /**
+ * Override to swap top level RowView for subclass to manually centers PageNavBox under viewer.
+ */
+protected View createUI()
+{
+    RowView rowView = (RowView)super.createUI();
+    RowView rowView2 = new RMVRowView(rowView);
+    return rowView2;
+}
+
+/**
  * Initialize UI panel.
  */
 protected void initUI()
@@ -64,11 +74,14 @@ protected void resetUI()
     String pageText = "" + (viewer.getSelPageIndex()+1) + " of " + viewer.getPageCount();
     setViewValue("PageText", pageText);
     
-    // Reset pageforward enabled
+    // Reset PageNavBox.Visible and enabled states for page back/forward buttons 
     setViewEnabled("PageBackButton", viewer.getSelPageIndex()>0);
     setViewEnabled("PageBackAllButton", viewer.getSelPageIndex()>0);
     setViewEnabled("PageForwardButton", viewer.getSelPageIndex()<viewer.getPageCount()-1);
     setViewEnabled("PageForwardAllButton", viewer.getSelPageIndex()<viewer.getPageCount()-1);
+    
+    // Update PageNavBox.Visible
+    getView("PageNavBox").setVisible(viewer.getDoc().getPageCount()>1);
 }
 
 /**
@@ -131,6 +144,30 @@ private static Image getImage(Shape aShape)
 {
     Image img = Image.get(14,22,true); Painter pntr = img.getPainter(); pntr.setColor(Color.DARKGRAY);
     pntr.fill(aShape); pntr.flush(); return img;
+}
+
+/**
+ * A custom RowView subclass to center PageNavBox under viewer.
+ */
+public class RMVRowView extends RowView {
+    
+    /** Copy settings from given RowView. */
+    public RMVRowView(RowView aRV) {
+         setPrefHeight(aRV.getPrefHeight()); setPadding(aRV.getPadding()); setChildren(aRV.getChildren());
+    }
+    
+    /** Override to center PageNavBox under Viewer. */
+    protected void layoutImpl()
+    {
+        View pageNavBox = getView("PageNavBox");
+        if(pageNavBox.isVisible()) {
+            RMViewer viewer = getViewerPane().getViewer();
+            View spacerLabel = getView("SpacerLabel"); if(spacerLabel.getX()==0) super.layoutImpl();
+            double w0 = viewer.getParent().getWidth(), w1 = pageNavBox.getPrefWidth();
+            double x0 = spacerLabel.getX(), x1 = Math.round((w0 - w1)/2); spacerLabel.setPrefWidth(x1 - x0);
+        }
+        super.layoutImpl();
+    }
 }
 
 }

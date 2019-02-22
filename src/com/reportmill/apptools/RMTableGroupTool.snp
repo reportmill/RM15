@@ -14,14 +14,8 @@
   <Button Name="KeysButton" x="210" y="5" width="60" height="20" text="Keys..." />
   <TreeView Name="TablesTree" x="5" y="30" width="265" height="215" />
   <Label x="5" y="275" width="40" height="20" text="Key:" />
-  <TextField Name="DatasetKeyText" x="45" y="275" width="225" height="20">
-    <binding aspect="Text" key="MainTable.DatasetKey" />
-  </TextField>
-  <CheckBox Name="StartOnNewPageCheckBox" x="57" y="300" width="200" height="20" text="Start on new page">
-    <binding aspect="Selected" key="MainTable.StartingPageBreak" />
-  </CheckBox>
+  <TextField Name="DatasetKeyText" x="45" y="275" width="225" height="20" />
+  <CheckBox Name="StartOnNewPageCheckBox" x="57" y="300" width="200" height="20" text="Start on new page" />
   <Label x="5" y="250" width="40" height="20" text="Name:" />
-  <TextField Name="MainTableNameText" x="45" y="250" width="225" height="20">
-    <binding aspect="Text" key="MainTable.Name" />
-  </TextField>
+  <TextField Name="MainTableNameText" x="45" y="250" width="225" height="20" />
 </SpringView>

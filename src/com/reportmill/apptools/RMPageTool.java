@@ -39,7 +39,11 @@ public void resetUI()
 {
     // Get currently selected page (just return if null)
     RMPage page = getSelectedShape(); if(page==null) return;
-        
+    
+    // Update DatasetKeyText, PaintBackCheckBox
+    setViewValue("DatasetKeyText", page.getDatasetKey());
+    setViewValue("PaintBackCheckBox", page.getPaintBackground());
+
     // Update AddButton, RemoveButton, RenameButton, MergeButton enabled state
     setViewEnabled("AddButton", page.getLayerCount()>0);
     setViewEnabled("RemoveButton", page.getLayerCount()>1);
@@ -59,10 +63,12 @@ public void respondUI(ViewEvent anEvent)
     // Get currently selected page (just return if null)
     RMPage page = getSelectedShape(); if(page==null) return;
 
-    // Handle DatasetKeyText
-    if(anEvent.equals("DatasetKeyText") && anEvent.isDragDropEvent())
+    // Handle DatasetKeyText, PaintBackCheckBox
+    if(anEvent.equals("DatasetKeyText"))
         page.setDatasetKey(anEvent.getStringValue().replace("@", ""));
-    
+    if(anEvent.equals("PaintBackCheckBox"))
+        page.setPaintBackground(anEvent.getBoolValue());
+
     // Handle AddButton
     if(anEvent.equals("AddButton"))
         page.addLayerNamed("Layer " + (page.getLayerCount() + 1));

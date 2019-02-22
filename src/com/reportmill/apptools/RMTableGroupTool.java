@@ -32,6 +32,7 @@ public void resetUI()
 {
     // Get currently selected table group (just return if null)
     RMTableGroup tableGroup = getSelectedShape(); if(tableGroup==null) return;
+    RMTable mainTable = tableGroup.getMainTable();
     
     // Create root node for table group and add child tables to it
     TreeView tablesTree = getView("TablesTree", TreeView.class);
@@ -39,6 +40,11 @@ public void resetUI()
     tablesTree.setItems(tableGroup.getChildTables());
     tablesTree.expandAll();
     tablesTree.setSelItem(getMainTable());
+    
+    // Update DatasetKeyText, StartOnNewPageCheckBox, MainTableNameText
+    setViewValue("DatasetKeyText", mainTable.getDatasetKey());
+    setViewValue("StartOnNewPageCheckBox", mainTable.getStartingPageBreak());
+    setViewValue("MainTableNameText", mainTable.getName());
 }
 
 /**
@@ -50,9 +56,13 @@ public void respondUI(ViewEvent anEvent)
     RMTableGroup tableGroup = getSelectedShape(); if(tableGroup==null) return;
     RMTable mainTable = tableGroup.getMainTable();
     
-    // Handle DatasetKeyText
-    if(anEvent.equals("DatasetKeyText") && anEvent.isDragDropEvent())
-        mainTable.setDatasetKey(anEvent.getStringValue().replace("@", ""));
+    // Handle DatasetKeyText, StartOnNewPageCheckBox, MainTableNameText
+    if(anEvent.equals("DatasetKeyText")) { String value = anEvent.getStringValue().replace("@", "");
+        mainTable.setDatasetKey(value); }
+    if(anEvent.equals("StartOnNewPageCheckBox"))
+        mainTable.setStartingPageBreak(anEvent.getBoolValue());
+    if(anEvent.equals("MainTableNameText"))
+        mainTable.setName(anEvent.getStringValue());
     
     // Handle MainTableNameText
     if(anEvent.equals("MainTableNameText") && anEvent.isDragDropEvent())

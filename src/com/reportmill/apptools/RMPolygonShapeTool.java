@@ -102,7 +102,7 @@ public void mousePressed(ViewEvent anEvent)
     Point point = getEditorEvents().getEventPointInDoc(!smoothPath);
 
     // Register all selectedShapes dirty because their handles will probably need to be wiped out
-    getEditor().getSelectedShapes().forEach(i -> i.repaint());
+    for(RMShape shp : getEditor().getSelectedShapes()) shp.repaint(); // Was shapes.forEach(i -> i.repaint())
 
     // If this is the first mouseDown of a new path, create path and add moveTo. Otherwise add lineTo to current path
     if(_path==null) { _path = new Path(); _path.moveTo(point.x, point.y); }

@@ -19,11 +19,25 @@ public String getWindowTitle()  { return "Subreport"; }
 public Class getShapeClass()  { return RMSubreport.class; }
 
 /**
+ * Reset UI.
+ */
+protected void resetUI()
+{
+    RMSubreport shape = getSelectedShape(); if(shape==null) return;
+
+    // Update SubNameText
+    setViewValue("SubNameText", shape.getSubreportName());
+}
+
+/**
  * Event handling from select tool for super selected shapes.
  */
 protected void respondUI(ViewEvent anEvent)
 {
     RMSubreport shape = getSelectedShape(); if(shape==null) return;
+
+    // Handle SubNameText
+    if(anEvent.equals("SubNameText")) shape.setSubreportName(anEvent.getStringValue());
     
     // Open doc
     if(anEvent.equals("OpenInEditorButton") && shape.getSubreportName()!=null) {

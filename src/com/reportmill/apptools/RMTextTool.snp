@@ -14,23 +14,13 @@
     <RadioButton Name="ShrinkRadio" x="4" y="239" width="130" height="20" LeanY="BOTTOM" text="Shrink Text to Fit" ToggleGroup="bg3" />
     <RadioButton Name="PaginateRadio" x="4" y="259" width="130" height="20" LeanY="BOTTOM" text="Paginate (if in page)" ToggleGroup="bg3" />
     <Label x="121" y="199" width="120" height="20" LeanX="RIGHT" LeanY="BOTTOM" text="Misc. Options:" />
-    <CheckBox Name="ShowBorderCheckBox" x="123" y="219" width="140" height="20" LeanX="RIGHT" LeanY="BOTTOM" text="Always Show Border">
-      <binding aspect="Selected" key="SelectedShapes.DrawsSelectionRect" />
-    </CheckBox>
-    <CheckBox Name="CoalesceNewlinesCheckBox" x="123" y="239" width="140" height="20" LeanX="RIGHT" LeanY="BOTTOM" text="Coalesce Newlines">
-      <binding aspect="Selected" key="SelectedShapes.CoalesceNewlines" />
-    </CheckBox>
+    <CheckBox Name="ShowBorderCheckBox" x="123" y="219" width="140" height="20" LeanX="RIGHT" LeanY="BOTTOM" text="Always Show Border" />
+    <CheckBox Name="CoalesceNewlinesCheckBox" x="123" y="239" width="140" height="20" LeanX="RIGHT" LeanY="BOTTOM" text="Coalesce Newlines" />
     <Label x="6" y="152" width="108" height="20" LeanY="BOTTOM" text="Margin (Tp,Lt,Bm,Rt):" />
-    <TextField x="2" y="172" width="117" height="22" LeanY="BOTTOM">
-      <binding aspect="Text" key="SelectedShapes.MarginString" />
-    </TextField>
+    <TextField Name="MarginText" x="2" y="172" width="117" height="22" LeanY="BOTTOM" />
     <Label x="133" y="152" width="99" height="20" LeanX="RIGHT" LeanY="BOTTOM" text="Rounding Radius:" />
-    <ThumbWheel Name="RoundingThumb" x="129" y="175" width="51" height="16" LeanX="RIGHT" LeanY="BOTTOM" max="20" absmin="0" round="1">
-      <binding aspect="Value" key="SelectedShapes.Radius" />
-    </ThumbWheel>
-    <TextField Name="RoundingText" x="183" y="172" width="49" height="22" LeanX="RIGHT" LeanY="BOTTOM">
-      <binding aspect="Text" key="SelectedShapes.Radius" />
-    </TextField>
+    <ThumbWheel Name="RoundingThumb" x="129" y="175" width="51" height="16" LeanX="RIGHT" LeanY="BOTTOM" max="20" absmin="0" round="1" />
+    <TextField Name="RoundingText" x="183" y="172" width="49" height="22" LeanX="RIGHT" LeanY="BOTTOM" />
   </SpringView>
   <SpringView x="11" y="30" width="254" height="282" PrefWidth="254" PrefHeight="282" GrowWidth="true" GrowHeight="true" title="Advanced">
     <ThumbWheel Name="CharSpacingThumb" x="4" y="23" width="180" height="16" type="linear" min="-10" max="10" round="0.1" />
@@ -59,9 +49,7 @@
       <MenuItem Name="TurnToCharsShapeMenuItem" text="Turn to Chars Shape" />
       <MenuItem Name="LinkedTextMenuItem" text="Create Linked Text" />
     </MenuButton>
-    <CheckBox Name="PerformWrapCheckBox" x="4" y="250" width="250" height="20" LeanX="RIGHT" LeanY="BOTTOM" text="Wrap text around peers">
-      <binding aspect="Selected" key="SelectedShapes.PerformsWrap" />
-    </CheckBox>
+    <CheckBox Name="PerformWrapCheckBox" x="4" y="250" width="250" height="20" LeanX="RIGHT" LeanY="BOTTOM" text="Wrap text around peers" />
   </SpringView>
   <ColView Padding="20,10,10,10" Spacing="5" title="PDF">
     <CheckBox Name="EditableCheckBox" text="Editable" />

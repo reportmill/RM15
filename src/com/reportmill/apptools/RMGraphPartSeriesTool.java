@@ -32,10 +32,11 @@ public void resetUI()
     // Get the selected series shape
     RMGraphPartSeries series = getSelectedShape(); if(series==null) return;
     
-    // Update TitleText, SeriesText, LabelRollSpinner
+    // Update TitleText, SeriesText, LabelRollSpinner, LabelPositionsList
     setViewValue("TitleText", series.getTitle());
     setViewValue("SeriesText", series.getLabelShape(series.getPosition()).getText());
-    setViewValue("LabelRollSpinner", series.getRoll());    
+    setViewValue("LabelRollSpinner", series.getRoll());
+    setViewSelItem("LabelPositionsList", series.getPosition());
 }
 
 /**
@@ -46,10 +47,11 @@ public void respondUI(ViewEvent anEvent)
     // Get the selected series shape
     RMGraphPartSeries series = getSelectedShape(); if(series==null) return;
     
-    // Handle TitleText, SeriesText, LabelRollSpinner
+    // Handle TitleText, SeriesText, LabelRollSpinner, LabelPositionsList
     if(anEvent.equals("TitleText")) series.setTitle(anEvent.getStringValue());
     if(anEvent.equals("SeriesText")) series.getLabelShape(series.getPosition()).setText(anEvent.getStringValue());
     if(anEvent.equals("LabelRollSpinner")) series.setRoll(anEvent.getFloatValue());
+    if(anEvent.equals("LabelPositionsList")) series.setPosition(LabelPos.valueOf(anEvent.getStringValue()));
     
     // Rebuild Graph
     RMGraph graph = (RMGraph)series.getParent();

@@ -19,16 +19,10 @@
     <Label x="5" y="5" width="120" height="20" text="Table Row Version Key:" />
     <TextView Name="VersionKeyText" x="5" y="25" width="246" height="60" FireActionOnEnterKey="true" FireActionOnFocusLost="true" />
     <Label x="5" y="90" width="174" height="20" text="Page Break Expression:" />
-    <TextView Name="PageBreakKeyText" x="5" y="110" width="246" height="60" FireActionOnEnterKey="true" FireActionOnFocusLost="true" >
-      <binding aspect="Text" key="SelectedShapes.PageBreakKey" />
-    </TextView>
+    <TextView Name="PageBreakKeyText" x="5" y="110" width="246" height="60" FireActionOnEnterKey="true" FireActionOnFocusLost="true" />
   </SpringView>
   <SpringView width="254" height="282" PrefWidth="254" PrefHeight="282" title="Layout">
-    <CheckBox x="5" y="10" width="242" height="22" text="Delete vertical spans of hidden shapes">
-      <binding aspect="Selected" key="SelectedShapes.DeleteVerticalSpansOfHiddenShapes" />
-    </CheckBox>
-    <CheckBox x="5" y="35" width="242" height="22" text="Shift shapes below hidden shapes up">
-      <binding aspect="Selected" key="SelectedShapes.ShiftShapesBelowHiddenShapesUp" />
-    </CheckBox>
+    <CheckBox Name="DeleteVSpansCheckBox" x="5" y="10" width="242" height="22" text="Delete vertical spans of hidden shapes" />
+    <CheckBox Name="ShiftShapesCheckBox" x="5" y="35" width="242" height="22" text="Shift shapes below hidden shapes up" />
   </SpringView>
 </TabView>

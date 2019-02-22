@@ -14,11 +14,7 @@
   <Button Name="RemoveButton" x="186" y="86" width="89" height="25" text="Remove" />
   <Button Name="RenameButton" x="186" y="115" width="89" height="25" text="Rename" />
   <Button Name="MergeButton" x="186" y="144" width="89" height="25" text="Merge" />
-  <CheckBox x="54" y="184" width="138" height="22" text="Paint Background">
-    <binding aspect="Selected" key="SelectedShapes.PaintBackground" />
-  </CheckBox>
+  <CheckBox Name="PaintBackCheckBox" x="54" y="184" width="138" height="22" text="Paint Background" />
   <Label x="5" y="5" width="68" height="18" text="Dataset Key:" />
-  <TextField Name="DatasetKeyText" x="73" y="4" width="196" height="20">
-    <binding aspect="Text" key="SelectedShape.DatasetKey" />
-  </TextField>
+  <TextField Name="DatasetKeyText" x="73" y="4" width="196" height="20" />
 </SpringView>

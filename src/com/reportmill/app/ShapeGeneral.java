@@ -47,6 +47,11 @@ public void resetUI()
     String pname = _bindingsTable.getSelItem();
     Binding binding = shape.getBinding(pname);
     setViewValue("BindingsText", binding!=null? binding.getKey() : null);
+    
+    // Reset NameText, LockedCheckBox, UrlText
+    setViewValue("NameText", shape.getName());
+    setViewValue("LockedCheckBox", shape.isLocked());
+    setViewValue("UrlText", shape.getURL());
 }
 
 /**
@@ -92,6 +97,14 @@ public void respondUI(ViewEvent anEvent)
             if(key!=null) shp.addBinding(pname, key);
             else shp.removeBinding(pname);
     }
+    
+    // Handle NameText, LockedCheckBox, UrlText
+    if(anEvent.equals("NameText")) { String value = anEvent.getStringValue();
+        for(RMShape shp : shapes) shp.setName(value); }
+    if(anEvent.equals("LockedCheckBox")) { boolean value = anEvent.getBoolValue();
+        for(RMShape shp : shapes) shp.setLocked(value); }
+    if(anEvent.equals("UrlText")) { String value = anEvent.getStringValue();
+        for(RMShape shp : shapes) shp.setURL(value); }
 }
 
 /**

@@ -59,8 +59,11 @@ public void resetUI()
     setViewValue("MinSplitHeightText", getUnitsFromPoints(trow.getMinSplitHeight()));
     setViewValue("MinRemainderHeightText", getUnitsFromPoints(trow.getMinSplitRemainderHeight()));
     
-    // Update VersionKeyText
+    // Update VersionKeyText, PageBreakKeyText, DeleteVSpansCheckBox, ShiftShapesCheckBox
     setViewValue("VersionKeyText", trow.getVersionKey());
+    setViewValue("PageBreakKeyText", trow.getPageBreakKey());
+    setViewValue("DeleteVSpansCheckBox", trow.getDeleteVerticalSpansOfHiddenShapes());
+    setViewValue("ShiftShapesCheckBox", trow.getShiftShapesBelowHiddenShapesUp());
 }
 
 /**
@@ -101,9 +104,12 @@ public void respondUI(ViewEvent anEvent)
     if(anEvent.equals("MinRemainderHeightText"))
         trow.setMinSplitRemainderHeight(getPointsFromUnits(anEvent.getFloatValue()));
 
-    // Handle VersionKeyText
-    if(anEvent.equals("VersionKeyText"))
-        trow.setVersionKey(StringUtils.delete(anEvent.getStringValue(), "@"));
+    // Handle VersionKeyText, PageBreakKeyText, DeleteVSpansCheckBox, ShiftShapesCheckBox
+    if(anEvent.equals("VersionKeyText")) { String value = anEvent.getStringValue().replace("@", "");
+        trow.setVersionKey(value); }
+    if(anEvent.equals("PageBreakKeyText")) trow.setPageBreakKey(anEvent.getStringValue());
+    if(anEvent.equals("DeleteVSpansCheckBox")) trow.setDeleteVerticalSpansOfHiddenShapes(anEvent.getBoolValue());
+    if(anEvent.equals("ShiftShapesCheckBox")) trow.setShiftShapesBelowHiddenShapesUp(anEvent.getBoolValue());
         
     // Handle PopupMenu
     if(anEvent.equals("SetVersionMenuItem")) setVersionFromMenu(anEvent.getText());

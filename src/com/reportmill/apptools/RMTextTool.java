@@ -95,6 +95,16 @@ public void resetUI()
     //double fsize = 12;
     //for(int i=0,iMax=xstring.getRunCount();i<iMax;i++) fsize = Math.min(fsize, xstring.getRun(i).getFont().getSize());
     //_textArea.setFontScale(fsize<12? 12/fsize : 1);
+    
+    // Update MarginText, RoundingThumb, RoundingText
+    setViewValue("MarginText", text.getMarginString());
+    setViewValue("RoundingThumb", text.getRadius());
+    setViewValue("RoundingText", text.getRadius());
+
+    // Update ShowBorderCheckBox, CoalesceNewlinesCheckBox, PerformWrapCheckBox
+    setViewValue("ShowBorderCheckBox", text.getDrawsSelectionRect());
+    setViewValue("CoalesceNewlinesCheckBox", text.getCoalesceNewlines());
+    setViewValue("PerformWrapCheckBox", text.getPerformsWrap());
 
     // Update PaginateRadio, ShrinkRadio, GrowRadio
     setViewValue("PaginateRadio", text.getWraps()==RMTextShape.WRAP_BASIC);
@@ -142,7 +152,7 @@ public void respondUI(ViewEvent anEvent)
     List <RMTextShape> texts = (List)getSelectedShapes();
     
     // Register repaint for texts
-    texts.forEach(i -> i.repaint());
+    for(RMShape txt : texts) txt.repaint(); //texts.forEach(i -> i.repaint());
     
     // Handle TextArea: Send KeyEvents to Editor.TextEditor (and update its selection after MouseEvents)
     /*if(anEvent.getTarget()==_textArea) {
@@ -178,6 +188,19 @@ public void respondUI(ViewEvent anEvent)
     // If RoundingThumb or RoundingText, make sure shapes have stroke
     if(anEvent.equals("RoundingThumb") || anEvent.equals("RoundingText"))
         for(RMTextShape t : texts) t.setStroke(new RMStroke());
+
+    // Handle MarginText, RoundingThumb, RoundingText
+    if(anEvent.equals("MarginText")) for(RMTextShape txt : texts) txt.setMarginString(anEvent.getStringValue());
+    if(anEvent.equals("RoundingThumb")) for(RMTextShape txt : texts) txt.setRadius(anEvent.getFloatValue());
+    if(anEvent.equals("RoundingText")) for(RMTextShape txt : texts) txt.setRadius(anEvent.getFloatValue());
+
+    // Handle ShowBorderCheckBox, CoalesceNewlinesCheckBox, PerformWrapCheckBox
+    if(anEvent.equals("ShowBorderCheckBox"))
+        for(RMTextShape txt : texts) txt.setDrawsSelectionRect(anEvent.getBoolValue());
+    if(anEvent.equals("CoalesceNewlinesCheckBox"))
+        for(RMTextShape txt : texts) txt.setCoalesceNewlines(anEvent.getBoolValue());
+    if(anEvent.equals("PerformWrapCheckBox"))
+        for(RMTextShape txt : texts) txt.setPerformsWrap(anEvent.getBoolValue());
 
     // Handle PaginateRadio, ShrinkRadio, GrowRadio
     if(anEvent.equals("PaginateRadio")) for(RMTextShape txt : texts) txt.setWraps(RMTextShape.WRAP_BASIC);
@@ -289,7 +312,7 @@ public void mouseMoved(T aShape, ViewEvent anEvent)
 public void mousePressed(ViewEvent anEvent)
 {
     // Register all selectedShapes dirty because their handles will probably need to be wiped out
-    getEditor().getSelectedShapes().forEach(i -> i.repaint());
+    for(RMShape shp : getEditor().getSelectedShapes()) shp.repaint();
 
     // Get shape hit by down point
     _downShape = getEditor().getShapeAtPoint(anEvent.getX(),anEvent.getY());

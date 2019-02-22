@@ -5,18 +5,12 @@
     <font name="Arial" size="11" />
     <HBox PrefWidth="250" Spacing="5">
       <Label text="Name:" />
-      <TextField Name="NameText" GrowWidth="true">
-        <binding aspect="Text" key="SelectedShapes.Name" />
-      </TextField>
+      <TextField Name="NameText" GrowWidth="true" />
     </HBox>
-    <CheckBox Name="LockedCheckBox" text="Locked">
-      <binding aspect="Selected" key="SelectedShapes.Locked" />
-    </CheckBox>
+    <CheckBox Name="LockedCheckBox" text="Locked" />
     <VBox LeanY="BOTTOM">
       <Label text="URL:" />
-      <TextView Name="UrlText" PrefWidth="250" PrefHeight="136" FireActionOnEnterKey="true" FireActionOnFocusLost="true">
-        <binding aspect="Text" key="SelectedShapes.URL" />
-      </TextView>
+      <TextView Name="UrlText" PrefWidth="250" PrefHeight="136" FireActionOnEnterKey="true" FireActionOnFocusLost="true" />
     </VBox>
   </VBox>
   <VBox Padding="16,8,8,8" Spacing="3" FillWidth="true" title="Bindings">

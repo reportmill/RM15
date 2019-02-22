@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<SpringView width="500" height="22" PrefWidth="500" PrefHeight="22">
-  <TextField Name="ZoomText" x="2" y="2" width="80" height="18" Align="CENTER" LeanY="BOTTOM" text="100%" />
-  <MenuButton Name="ZoomMenuButton" x="82" y="2" width="20" height="18" LeanY="BOTTOM" ShowBorder="false">
+<RowView PrefHeight="22" Padding="0,0,0,2">
+  <TextField Name="ZoomText" PrefWidth="80" PrefHeight="18" Align="CENTER" text="100%" />
+  <MenuButton Name="ZoomMenuButton" PrefWidth="20" PrefHeight="18" ShowBorder="false">
     <MenuItem Name="ZoomToActualSizeMenuItem" text="Actual Size" />
     <MenuItem Name="ZoomToFitMenuItem" text="Zoom to Fit" />
     <MenuItem Name="ZoomAsNeededMenuItem" text="Zoom as Needed" />
@@ -15,12 +15,12 @@
     <MenuItem Name="ZoomMenuItem" text="300%" />
     <MenuItem Name="ZoomMenuItem" text="400%" />
   </MenuButton>
-  <SpringView x="180" y="2" width="136" height="20" PrefWidth="136" PrefHeight="20" LeanX="CENTER" LeanY="BOTTOM">
-    <binding aspect="Visible" key="ViewerPane.Viewer.Doc.PageCount&gt;1" />
-    <Button Name="PageBackAllButton" width="16" height="18" ShowBorder="false" />
-    <Button Name="PageBackButton" x="16" width="18" height="18" ShowBorder="false" />
-    <TextField Name="PageText" x="34" width="68" height="18" Align="CENTER" text="1 of 1" />
-    <Button Name="PageForwardButton" x="102" width="18" height="18" ShowBorder="false" />
-    <Button Name="PageForwardAllButton" x="120" width="16" height="18" ShowBorder="false" />
-  </SpringView>
-</SpringView>
+  <Label Name="SpacerLabel" PrefWidth="150" PrefHeight="8" />
+  <RowView Name="PageNavBox">
+    <Button Name="PageBackAllButton" PrefWidth="16" PrefHeight="18" ShowBorder="false" />
+    <Button Name="PageBackButton" PrefWidth="18" PrefHeight="18" ShowBorder="false" />
+    <TextField Name="PageText" PrefWidth="68" PrefHeight="18" Align="CENTER" text="1 of 1" />
+    <Button Name="PageForwardButton" PrefWidth="18" PrefHeight="18" ShowBorder="false" />
+    <Button Name="PageForwardAllButton" PrefWidth="16" PrefHeight="18" ShowBorder="false" />
+  </RowView>
+</RowView>

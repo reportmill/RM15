@@ -53,7 +53,7 @@ public void mousePressed(ViewEvent anEvent)
     RMEditor editor = getEditor();
 
     // Call setNeedsRepaint on superSelectedShapes to wipe out handles
-    editor.getSuperSelectedShapes().forEach(i -> i.repaint());
+    for(RMShape shp : editor.getSuperSelectedShapes()) shp.repaint();
 
     // See if tool wants to handle this one
     RMTool toolShared = editor.getTool(editor.getSelectedOrSuperSelectedShapes());
