@@ -345,8 +345,8 @@ public void syncStructureWithShape(RMParentShape aShape)
     if(aShape.getChildCount()>0 && aShape.getChildCount()==getChildCount()) {
         
         // Get shape children sorted by x
-        List <RMShape> children = RMSort.sortedList(_children, "getFrameX");
-        List <RMShape> schildren = RMSort.sortedList(aShape.getChildren(), "getFrameX");
+        List <RMShape> children = RMShapeUtils.getShapesSortedByFrameX(_children);
+        List <RMShape> schildren = RMShapeUtils.getShapesSortedByFrameX(aShape.getChildren());
 
         // Iterate over children an align
         for(int i=0, iMax=children.size(); i<iMax; i++) { RMShape child = children.get(i), schild = schildren.get(i);
@@ -412,7 +412,7 @@ protected void paintShape(Painter aPntr)
     // Iterate over children sorted by X and draw divider lines
     aPntr.setColor(Color.DARKGRAY); aPntr.setStroke(Stroke.Stroke1); aPntr.setAntialiasing(false);    
     Rect bounds = getBoundsInside();
-    List <RMShape> children = RMSort.sortedList(getChildren(), "getFrameX");
+    List <RMShape> children = RMShapeUtils.getShapesSortedByFrameX(getChildren());
     for(RMShape child : children)
         aPntr.drawLine(child.getX(), bounds.y, child.getX(), bounds.getMaxY());
     aPntr.setAntialiasing(true);
