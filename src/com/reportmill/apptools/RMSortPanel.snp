@@ -14,7 +14,7 @@
     <SwitchView Name="SortPanel" y="21" width="264" height="55" GrowWidth="true" GrowHeight="true">
       <SpringView Name="Sort" width="264" height="55" PrefWidth="264" PrefHeight="55" GrowWidth="true" GrowHeight="true">
         <TableView Name="SortsTable" x="1" width="264" height="55" GrowWidth="true" GrowHeight="true" ShowHeader="false" RowHeight="20">
-          <TableCol GrowWidth="true" ItemKey="Key" />
+          <TableCol GrowWidth="true" />
           <TableCol PrefWidth="28" />
         </TableView>
       </SpringView>

@@ -145,14 +145,25 @@ public void respondUI(ViewEvent anEvent)
  */
 public void configureLayersTable(ListCell <RMPageLayer> aCell)
 {
-    if(aCell.getCol()!=1) return;
-    RMPage page = getSelectedShape(); if(page==null) return; int index = aCell.getRow();
-    RMPageLayer layer = index>=0 && index<page.getLayerCount()? page.getLayer(index) : null;
-    int state = layer!=null? layer.getLayerState() : -1;
-    if(state==RMPageLayer.StateVisible) aCell.setImage(_visibleIcon);
-    else if(state==RMPageLayer.StateInvisible) aCell.setImage(_invisibleIcon);
-    else if(state==RMPageLayer.StateLocked) aCell.setImage(_lockedIcon);
-    aCell.setText(null);
+    // Get page, cell row/col, page layer
+    //RMPage page = getSelectedShape(); if(page==null) return;
+    //int row = aCell.getRow(), col = aCell.getCol(); if(row<0 || row>=page.getLayerCount()) return;
+    RMPageLayer layer = aCell.getItem(); if(layer==null) return; //page.getLayer(row);
+    int col = aCell.getCol();
+
+    // Handle column 0 (layer name)
+    if(col==0) {
+        aCell.setText(layer.getName());
+    }
+    
+    // Handle column 1 (layer state image)
+    if(col==1) {
+        int state = layer!=null? layer.getLayerState() : -1;
+        if(state==RMPageLayer.StateVisible) aCell.setImage(_visibleIcon);
+        else if(state==RMPageLayer.StateInvisible) aCell.setImage(_invisibleIcon);
+        else if(state==RMPageLayer.StateLocked) aCell.setImage(_lockedIcon);
+        aCell.setText(null);
+    }
 }
 
 /**

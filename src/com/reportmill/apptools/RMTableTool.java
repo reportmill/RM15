@@ -232,11 +232,22 @@ public RMGrouping getGrouping()
  */
 public void configureGroupingTable(ListCell <RMGrouping> aCell)
 {
+    // Get table and grouping
     RMTable table = getTable(); if(table==null) return;
     RMGrouping grouping = aCell.getItem(); if(grouping==null) return;
-    if(aCell.getCol()==0) { aCell.setToolTip(aCell.getText()); return; }
-    aCell.setImage(table.getPageBreakGroupIndex()==aCell.getRow()? PageBreakIcon : NoPageBreakIcon);
-    aCell.setText(null);
+    int row = aCell.getRow(), col = aCell.getCol();
+    
+    // Handle column 0
+    if(col==0) { String key = grouping.getKey();
+        aCell.setText(key);
+        aCell.setToolTip(key);
+    }
+    
+    // Handle column 1
+    else {
+        aCell.setImage(table.getPageBreakGroupIndex()==row? PageBreakIcon : NoPageBreakIcon);
+        aCell.setText(null);
+    }
 }
 
 /**

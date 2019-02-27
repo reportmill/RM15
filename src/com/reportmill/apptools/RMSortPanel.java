@@ -213,11 +213,22 @@ public void setSelectedPane(int anIndex)  { setViewValue("SortPanel", anIndex); 
  */
 public void configureSortsTable(ListCell <RMSort> aCell)
 {
+    // Get sort
     RMSort sort = aCell.getItem(); if(sort==null) return;
-    if(aCell.getCol()==0) { aCell.setToolTip(sort.getKey()); return; }
-    if(sort.getOrder()==RMSort.ORDER_ASCEND) aCell.setImage(SortAscIcon);
-    else aCell.setImage(SortDescIcon);
-    aCell.setText(null);
+    int col = aCell.getCol();
+    
+    // Handle column 0
+    if(col==0) { String key = sort.getKey();
+        aCell.setText(key);
+        aCell.setToolTip(key);
+    }
+        
+    // Handle column 1
+    if(col==1) {
+        if(sort.getOrder()==RMSort.ORDER_ASCEND) aCell.setImage(SortAscIcon);
+        else aCell.setImage(SortDescIcon);
+        aCell.setText(null);
+    }
 }
 
 }

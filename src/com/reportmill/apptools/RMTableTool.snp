@@ -12,7 +12,7 @@
     <MenuItem Name="MoveGroupDownMenuItem" text="Move Group Down" />
   </MenuButton>
   <TableView Name="GroupingTable" x="4" y="72" width="267" height="75" ShowHeader="false" RowHeight="20">
-    <TableCol GrowWidth="true" ItemKey="Key" />
+    <TableCol GrowWidth="true" />
     <TableCol PrefWidth="28" />
   </TableView>
   <CheckBox Name="HeaderCheckBox" x="25" y="150" width="70" height="16" text="Header" />

@@ -3,11 +3,9 @@
  */
 package com.reportmill.apptools;
 import com.reportmill.app.*;
-import com.reportmill.base.*;
 import com.reportmill.shape.*;
 import com.reportmill.graphics.*;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 import snap.gfx.*;
 import snap.util.*;
@@ -442,7 +440,7 @@ public void processKeyEvent(T aTextShape, ViewEvent anEvent)
         
         // Get structured text table row, child table rows and index of child
         RMParentShape tableRow = aTextShape.getParent();
-        List children = RMSort.sortedList(tableRow.getChildren(), "getX");
+        List children = RMShapeUtils.getShapesSortedByX(tableRow.getChildren());
         int index = children.indexOf(aTextShape);
         
         // If shift is down, get index to the left, wrapped, otherwise get index to the right, wrapped
@@ -478,7 +476,7 @@ private void moveTableColumn(ViewEvent anEvent)
     
     // Handle MouseDragged: layout children by X (if outside row, skip drag shape)
     if(anEvent.isMouseDrag()) {
-        List <RMShape> children = new ArrayList(tableRow.getChildren()); RMSort.sort(children, "Frame.X"); float x = 0;
+        List <RMShape> children = RMShapeUtils.getShapesSortedByFrameX(tableRow.getChildren()); float x = 0;
         for(RMShape child : children) {
             if(child==shape) { if(inRow) child.setX(point.x-child.getWidth()/2); else { child.setX(9999); continue; }}
             else child.setX(x); x += child.getWidth(); }
