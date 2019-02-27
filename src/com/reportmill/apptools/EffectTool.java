@@ -6,7 +6,6 @@ import com.reportmill.app.*;
 import com.reportmill.shape.*;
 import java.util.*;
 import snap.gfx.*;
-import snap.util.ClassUtils;
 
 /**
  * Provides a tool for editing RMFills.
@@ -76,19 +75,19 @@ public EffectTool getTool(Object anObj)
  */
 static EffectTool getToolImpl(Class aClass)
 {
-    // Get class name
-    String cname = aClass.getSimpleName();
+    if(aClass==ShadowEffect.class) return new ShadowEffectTool();
+    if(aClass==ReflectEffect.class) return new ReflectEffectTool();
+    if(aClass==BlurEffect.class) return new BlurEffectTool();
+    System.err.println("EffectTool.getToolImpl: Can't find tool for: " + aClass);
+    return new EffectTool();
     
     // Look for tool class in reportmill.apptools
-    Class tclass = ClassUtils.getClass("com.reportmill.apptools." + cname + "Tool");
-    
+    //String cname = aClass.getSimpleName();
+    //Class cls = ClassUtils.getClass("com.reportmill.apptools." + cname + "Tool");
     // If tool class found, instantiate tool class
-    if(tclass!=null)
-        try { return (EffectTool)tclass.newInstance(); }
-        catch(Exception ie) { ie.printStackTrace(); }
-        
+    //if(cls!=null) try { return (EffectTool)cls.newInstance(); } catch(Exception ie) { ie.printStackTrace(); }
     // Otherwise, get tool for super class
-    return getToolImpl(aClass.getSuperclass());
+    //return getToolImpl(aClass.getSuperclass());
 }
 
 }
