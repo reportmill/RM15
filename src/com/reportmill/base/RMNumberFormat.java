@@ -64,7 +64,7 @@ public RMNumberFormat()
 {
     // If DefaultLocale, create and set DecimalFormatSymbols
     if(_defaultLocale!=null)
-        _fmt.setDecimalFormatSymbols(new DecimalFormatSymbols(_defaultLocale));
+        setDecimalFormatSymbols(new DecimalFormatSymbols(_defaultLocale));
     
     // Get FormatSymbols
     _fmtSyms = _fmt.getDecimalFormatSymbols();
@@ -214,7 +214,7 @@ public void setThousandsSeparator(String aValue)
     if(aValue!=null && aValue.length()>0) {
         char c = aValue.charAt(0);
         _fmtSyms.setGroupingSeparator(c);
-        _fmt.setDecimalFormatSymbols(_fmtSyms);
+        setDecimalFormatSymbols(_fmtSyms);
         _fmt.setGroupingUsed(true);
         _fmt.setGroupingSize(3);
     }
@@ -234,7 +234,7 @@ public void setDecimalSeparator(String aValue)
     if(aValue!=null && aValue.length()>0) {
         char c = aValue.charAt(0);
         _fmtSyms.setDecimalSeparator(c);
-        _fmt.setDecimalFormatSymbols(_fmtSyms);
+        setDecimalFormatSymbols(_fmtSyms);
     }
 }
 
@@ -329,7 +329,7 @@ public void setPattern(String aFormat)
         _fmtSyms = _fmt.getDecimalFormatSymbols();
         if(dsep>0 && dsep!='.') _fmtSyms.setDecimalSeparator(dsep);
         if(gsep>0 && gsep!=',') _fmtSyms.setGroupingSeparator(gsep);
-        _fmt.setDecimalFormatSymbols(_fmtSyms);
+        setDecimalFormatSymbols(_fmtSyms);
     }
     
     // If that failed, re-throw exception
@@ -376,7 +376,8 @@ private Number getNumber(Object anObj)
     }
 
     // For legacy reasons, percent formats are divided by 100. Java formats don't do this - maybe it can go one day.
-    if(_fmt.getPositiveSuffix().indexOf('%') >= 0)
+    String str = _fmt.getPositiveSuffix(); if(str==null) str = ""; // For TeaVM
+    if(str.indexOf('%') >= 0)
         num = num.doubleValue()/100;
         
     // Return number
@@ -401,6 +402,11 @@ public Number parse(String aStr)
     try { return _fmt.parse(aStr); }
     catch(Exception e) { return null; }
 }
+
+/**
+ * For TeaVM.
+ */
+void setDecimalFormatSymbols(DecimalFormatSymbols aDFS)  { _fmt.setDecimalFormatSymbols(aDFS); }
 
 /**
  * Standard equals implementation.
