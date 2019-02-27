@@ -6,7 +6,6 @@ import com.reportmill.app.*;
 import com.reportmill.graphics.*;
 import com.reportmill.shape.*;
 import java.util.*;
-import snap.util.*;
 import snap.view.*;
 import snap.viewx.ColorWell;
 import snap.web.WebURL;
@@ -23,8 +22,8 @@ public class RMFillTool extends RMEditorPane.SupportPane {
     static RMStroke     _strokes[] = { new RMStroke(), new RMBorderStroke() };
     
     // List of known fills
-    static RMImageFill  _imageFill = new RMImageFill(WebURL.getURL(RMFillTool.class, "pkg.images/Clouds.jpg"), true);
-    static RMFill       _fills[] = { new RMFill(), new RMGradientFill(), _imageFill };
+    static RMFill       _fill0, _fill1;
+    static RMImageFill  _imageFill;
 
 /**
  * Creates a new RMFillTool panel.
@@ -88,12 +87,18 @@ public RMStroke getStroke(int anIndex)  { return _strokes[anIndex]; }
 /**
  * Returns the number of known fills.
  */
-public int getFillCount()  { return _fills.length; }
+public int getFillCount()  { return 3; }
 
 /**
  * Returns an individual fill at given index.
  */
-public RMFill getFill(int anIndex)  { return _fills[anIndex]; }
+public RMFill getFill(int anIndex)
+{
+    if(anIndex==0) return _fill0!=null? _fill0 : (_fill0 = new RMFill());
+    if(anIndex==1) return _fill1!=null? _fill1 : (_fill1 = new RMGradientFill());
+    if(_imageFill==null) _imageFill = new RMImageFill(WebURL.getURL(getClass(), "pkg.images/Clouds.jpg"), true);
+    return _imageFill;
+}
 
 /**
  * Returns the currently selected shape's stroke.
@@ -157,35 +162,28 @@ public RMFillTool getTool(Object anObj)
  */
 static RMFillTool getToolImpl(Class aClass)
 {
-    // Get class name
-    String cname = aClass.getSimpleName();
-    
-    // Declare variable for tool class
-    Class tclass = null;
+    if(aClass==RMStroke.class) return new RMStrokeTool();
+    if(aClass==RMBorderStroke.class) return new RMBorderStrokeTool();
+    if(aClass==RMFill.class) return new RMFillTool();
+    if(aClass==RMGradientFill.class) return new RMGradientFillTool();
+    if(aClass==RMImageFill.class) return new RMImageFillTool();
+    System.err.println("RMFillTool.getToolImp: No tool class for " + aClass);
+    return new RMFillTool();
     
     // If shape class starts with RM, check panels package for built-in fill tools
-    if(cname.startsWith("RM"))
-        tclass = ClassUtils.getClass("com.reportmill.apptools." + cname + "Tool");
-    
+    //String cname = aClass.getSimpleName(); Class tclass = null;
+    //if(cname.startsWith("RM")) tclass = ClassUtils.getClass("com.reportmill.apptools." + cname + "Tool");
     // If not found, try looking in same package for shape class plus "Tool"
-    if(tclass==null)
-        tclass = ClassUtils.getClass(aClass.getName() + "Tool", aClass);
-    
+    //if(tclass==null) tclass = ClassUtils.getClass(aClass.getName() + "Tool", aClass);
     // If not found and class ends in "Fill", try looking in same package for class that ends with "Tool" instead
-    if(tclass==null && cname.endsWith("Fill"))
-        tclass = ClassUtils.getClass(StringUtils.replace(aClass.getName(), "Fill", "Tool"), aClass);
-    
+    //if(tclass==null && cname.endsWith("Fill"))
+    //    tclass = ClassUtils.getClass(StringUtils.replace(aClass.getName(), "Fill", "Tool"), aClass);
     // If not found, try looking for inner class named "Tool"
-    if(tclass==null)
-        tclass = ClassUtils.getClass(aClass.getName() + "$" + "Tool", aClass);
-    
+    //if(tclass==null) tclass = ClassUtils.getClass(aClass.getName() + "$" + "Tool", aClass);
     // If tool class found, instantiate tool class
-    if(tclass!=null)
-        try { return (RMFillTool)tclass.newInstance(); }
-        catch(Exception ie) { ie.printStackTrace(); }
-        
+    //if(tclass!=null) try { return (RMFillTool)tclass.newInstance(); } catch(Exception e) { e.printStackTrace(); }
     // Otherwise, get tool for super class
-    return getToolImpl(aClass.getSuperclass());
+    //return getToolImpl(aClass.getSuperclass());
 }
 
 }

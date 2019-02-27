@@ -98,7 +98,7 @@ public void resetUI()
     setViewValue("NullStringText", doc.getNullString());
     
     // Repaint PageSizeView
-    getView("PageSizeView").repaint();
+    getView("PageSizeView", PageSizeView.class).repaint();
 }
 
 /**

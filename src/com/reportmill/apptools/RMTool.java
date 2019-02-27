@@ -907,13 +907,17 @@ protected ViewEvent createShapeEvent(RMShape s, ViewEvent e)  { return getEditor
  */
 public Image getImage()
 {
+    // If already set, just return
+    if(_image!=null) return _image;
+    
     for(Class c=getClass(); c!=RMTool.class; c=c.getSuperclass()) {
         String name = c.getSimpleName().replace("Tool", "") + ".png";
-        Image image = Image.get(c, name);
-        if(image!=null) return image;
+        _image = Image.get(c, name);
+        if(_image!=null) return _image;
     }
-    return Image.get(RMTool.class, "RMShape.png");
+    return _image = Image.get(RMTool.class, "RMShape.png");
 }
+Image _image;
 
 /**
  * Returns the specific tool for a given shape.
@@ -921,45 +925,63 @@ public Image getImage()
 public static RMTool createTool(Class aClass)
 {
     // Handle root
+    if(aClass==RMCrossTab.class) return new RMCrossTabTool();
+    if(aClass==RMCrossTabDivider.class) return new RMCrossTabDividerTool();
+    if(aClass==RMCrossTabFrame.class) return new RMCrossTabFrameTool();
+    if(aClass==RMDocument.class) return new RMDocumentTool();
+    if(aClass==RMEditorShape.class) return new RMTool();
+    if(aClass==RMGraph.class) return new RMGraphTool();
+    if(aClass==RMGraphLegend.class) return new RMGraphLegendTool();
+    if(aClass==RMGraphPartBars.class) return new RMGraphPartBarsTool();
+    if(aClass==RMGraphPartLabelAxis.class) return new RMGraphPartLabelAxisTool();
+    if(aClass==RMGraphPartPie.class) return new RMGraphPartPieTool();
+    if(aClass==RMGraphPartSeries.class) return new RMGraphPartSeriesTool();
+    if(aClass==RMGraphPartValueAxis.class) return new RMGraphPartValueAxisTool();
+    if(aClass==RMImageShape.class) return new RMImageTool();
+    if(aClass==RMLabel.class) return new RMLabelTool();
+    if(aClass==RMLabels.class) return new RMLabelsTool();
+    if(aClass==RMLineShape.class) return new RMLineShapeTool();
+    if(aClass==RMOvalShape.class) return new RMOvalShapeTool();
+    if(aClass==RMPage.class) return new RMPageTool();
+    if(aClass==RMParentShape.class) return new RMParentShapeTool();
+    if(aClass==RMPolygonShape.class) return new RMPolygonShapeTool();
+    if(aClass==RMRectShape.class) return new RMRectShapeTool();
+    if(aClass==RMScene3D.class) return new RMScene3DTool();
     if(aClass==RMShape.class) return new RMTool();
-    
-    // Declare variable for tool class
-    Class tclass = null;
+    if(aClass==RMSpringShape.class) return new RMSpringShapeTool();
+    if(aClass==RMSwitchShape.class) return new RMSwitchShapeTool();
+    if(aClass==RMSubreport.class) return new RMSubreportTool();
+    if(aClass==RMTable.class) return new RMTableTool();
+    if(aClass==RMTableGroup.class) return new RMTableGroupTool();
+    if(aClass==RMTableRow.class) return new RMTableRowTool();
+    if(aClass==RMTextShape.class) return new RMTextTool();
+    if(aClass==RMViewerShape.class) return new RMTool();
+    if(aClass==ViewShape.class) return new ViewShapeTool();
+    System.out.println("RMTool.createTool: " + aClass.getName());
+    return new RMTool();
     
     // If class name starts with RM, check tool package for built-in RMShape tools
-    String pname = aClass.getName(), cname = aClass.getSimpleName();
+    /*Class cls = null; String pname = aClass.getName(), cname = aClass.getSimpleName();
     if(pname.startsWith("com.reportmill.shape.")) {
-        tclass = ClassUtils.getClass("com.reportmill.apptools." + cname + "Tool");
-        if(tclass==null && cname.endsWith("Shape"))
-            tclass = ClassUtils.getClass("com.reportmill.apptools." + cname.replace("Shape", "Tool"));
-    }
-
+        cls = ClassUtils.getClass("com.reportmill.apptools." + cname + "Tool");
+        if(cls==null && cname.endsWith("Shape"))
+            cls = ClassUtils.getClass("com.reportmill.apptools." + cname.replace("Shape", "Tool")); }*/
     // If not found, try looking in same package for shape class plus "Tool"
-    if(tclass==null)
-        tclass = ClassUtils.getClass(aClass.getName() + "Tool", aClass);
-    
+    //if(cls==null) cls = ClassUtils.getClass(aClass.getName() + "Tool", aClass);
     // If not found and class ends in "Shape", try looking in same package for class that ends with "Tool" instead
-    if(tclass==null && cname.endsWith("Shape"))
-        tclass = ClassUtils.getClass(StringUtils.replace(aClass.getName(), "Shape", "Tool"), aClass);
-    
+    //if(cls==null && cname.endsWith("Shape"))
+    //    cls = ClassUtils.getClass(StringUtils.replace(aClass.getName(), "Shape", "Tool"), aClass);
     // If not found and class is some external shapes package, look in external tools package
-    if(tclass==null && aClass.getName().indexOf(".shape.")>0) {
+    /*if(cls==null && aClass.getName().indexOf(".shape.")>0) {
         String classPath = StringUtils.replace(aClass.getName(), ".shape.", ".tool.");
         String classPath2 = StringUtils.delete(classPath, "Shape") + "Tool";
-        tclass = ClassUtils.getClass(classPath2, aClass);
-    }
-    
+        cls = ClassUtils.getClass(classPath2, aClass); }*/
     // If not found, try looking for inner class named "Tool"
-    if(tclass==null)
-        tclass = ClassUtils.getClass(aClass.getName() + "$" + "Tool", aClass);
-    
+    //if(cls==null) cls = ClassUtils.getClass(aClass.getName() + "$" + "Tool", aClass);
     // If tool class found, instantiate tool class
-    if(tclass!=null)
-        try { return (RMTool)tclass.newInstance(); }
-        catch(Exception e) { throw new RuntimeException(e); }
-        
+    //if(cls!=null) try { return (RMTool)cls.newInstance(); } catch(Exception e) { throw new RuntimeException(e); }
     // Otherwise, get tool for super class
-    return createTool(aClass.getSuperclass());
+    //return createTool(aClass.getSuperclass());
 }
 
 }
