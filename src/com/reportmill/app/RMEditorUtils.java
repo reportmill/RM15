@@ -315,7 +315,7 @@ public static void equallySpaceRow(RMEditor anEditor)
     if(anEditor.getSelectedShapeCount()==0) { anEditor.beep(); return; }
     
     // Get selectedShapes sorted by minXInParentBounds
-    List <RMShape> shapes = RMSort.sortedList(anEditor.getSelectedShapes(), "getFrameX");
+    List <RMShape> shapes = RMShapeUtils.getShapesSortedByFrameX(anEditor.getSelectedShapes());
     float spaceBetweenShapes = 0;
 
     // Calculate average space between shapes
@@ -343,7 +343,7 @@ public static void equallySpaceColumn(RMEditor anEditor)
     if(anEditor.getSelectedShapeCount()==0) { anEditor.beep(); return; }
     
     // Get selectedShapes sorted by minXInParentBounds
-    List <RMShape> shapes = RMSort.sortedList(anEditor.getSelectedShapes(), "getFrameY");
+    List <RMShape> shapes = RMShapeUtils.getShapesSortedByFrameY(anEditor.getSelectedShapes());
     float spaceBetweenShapes = 0;
 
     // Calculate average space between shapes
