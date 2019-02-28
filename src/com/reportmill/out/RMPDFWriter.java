@@ -18,6 +18,9 @@ public class RMPDFWriter extends PDFWriter {
     // Map of unique image datas
     List <RMImageData>          _imageDatas = new ArrayList();
     
+    // Map of unique PDF datas
+    List <RMPDFData>            _pdfDatas = new ArrayList();
+    
 /**
  * Returns a PDF byte array for a given RMDocument.
  */
@@ -159,6 +162,26 @@ public RMImageData getUniqueImageData(RMImageData anImageData)
 }
 
 /**
+ * Adds an image data (uniqued) to file reference table, if not already present. 
+ */
+public void addPDFData(RMPDFData aPD, String aName)
+{
+    // If not present, unique, add to xref table and add to image refs
+    if(!_images.containsKey(aName))
+        _images.put(aName, _xtable.addObject(getUniquePDFData(aPD)));
+}
+
+/**
+ * Returns a unique image data for given image data.
+ */
+public RMPDFData getUniquePDFData(RMPDFData aPD)
+{
+    int index = _pdfDatas.indexOf(aPD);
+    if(index<0) _pdfDatas.add(index = _pdfDatas.size(), aPD);
+    return _pdfDatas.get(index);
+}
+
+/**
  * Writes any kind of object to the PDF buffer.
  */
 public void writeXRefEntry(Object anObj)
@@ -166,6 +189,10 @@ public void writeXRefEntry(Object anObj)
     // Handle RMImageData
     if(anObj instanceof RMImageData)
         writeImageData((RMImageData)anObj);
+        
+    // Handle RMImageData
+    else if(anObj instanceof RMPDFData) { RMPDFData pdata = (RMPDFData)anObj;
+        PDFWriterPDF.writePDF(this, pdata.getPDFFile(), pdata.getPageIndex()); }
         
     // Otherwise, do normal version
     else super.writeXRefEntry(anObj);

@@ -143,6 +143,7 @@ public static RMShapePdfr getPdfr(RMShape aShape)
 {
     if(aShape instanceof RMTextShape) return RMShapePdfrs._textShapePdfr;
     if(aShape instanceof RMImageShape) return RMShapePdfrs._imgShapePdfr;
+    if(aShape instanceof RMPDFShape) return RMShapePdfrs.getPDFShapePdfr();
     if(aShape instanceof RMPage) return RMShapePdfrs._pageShapePdfr;
     if(aShape instanceof RMScene3D) return RMShapePdfrs._scene3DPdfr;
     if(aShape instanceof ViewShape) return RMShapePdfrs.getViewShapePdfr();

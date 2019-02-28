@@ -104,17 +104,12 @@ public static class RMImageShapePdfr <T extends RMImageShape> extends RMShapePdf
         // Add image data
         aWriter.addImageData(idata);
     
-        // Get PDF page
+        // Get PDF page and gsave
         PDFPageWriter pdfPage = aWriter.getPageWriter();
-        
-        // Gsave
         pdfPage.gsave();
         
         // If pdf image, reset gstate defaults
-        if(pdfImage) {
-            pdfPage.setLineCap(0);
-            pdfPage.setLineJoin(0);
-        }
+        if(pdfImage) { pdfPage.setLineCap(0); pdfPage.setLineJoin(0); }
         
         // Apply clip if needed
         if(anImageShape.getRadius()>.001) {
@@ -127,23 +122,61 @@ public static class RMImageShapePdfr <T extends RMImageShape> extends RMShapePdf
         double width = bounds.getWidth(), height = bounds.getHeight();
     
         // pdfImage writes out scale of imageBounds/imageSize
-        if(pdfImage) {
-            width /= idata.getImageWidth();
-            height /= idata.getImageHeight();
-        }
+        if(pdfImage) { width /= idata.getImageWidth(); height /= idata.getImageHeight(); }
     
         // Apply CTM - image coords are flipped from page coords ( (0,0) at upper-left )
         pdfPage.writeTransform(width, 0, 0, -height, bounds.getX(), bounds.getMaxY());
         
-        // Do image
+        // Do image and grestore
         pdfPage.appendln("/" + iname + " Do");
-            
-        // Grestore
         pdfPage.grestore();
         
         // If image has alpha, declare output to be PDF-1.4
         if(idata.hasAlpha() && idata.getSamplesPerPixel()==4)
             aWriter.getPDFFile().setVersion(1.4f);
+    }
+}
+
+/**
+ * PDF writer for RMPDFShape.
+ */
+public static class RMPDFShapePdfr <T extends RMPDFShape> extends RMShapePdfr <T> {
+
+    /** Override to write ImageData. */
+    protected void writeShape(T aPDFShape, RMPDFWriter aWriter)
+    {
+        // Do normal version
+        super.writeShape(aPDFShape, aWriter);
+        
+        // Get PDF data (just return if missing or invalid)
+        RMPDFData pdata = aPDFShape.getPDFData(); if(pdata==null) return;
+        
+        // Get pdf page (just return if no page contents - which is apparently legal)
+        PDFPage page = pdata.getPDFFile().getPage(pdata.getPageIndex()); if(page.getPageContentsStream()==null) return;
+        String iname = String.valueOf(System.identityHashCode(page)); //aWriter.getImageName(pdata);
+    
+        // Add pdf data
+        aWriter.addPDFData(pdata, iname);
+    
+        // Get PDF page, gsave and reset gstate defaults
+        PDFPageWriter pdfPage = aWriter.getPageWriter();
+        pdfPage.gsave();
+        pdfPage.setLineCap(0);
+        pdfPage.setLineJoin(0);
+        
+        // Apply clip if needed
+        //if(aPDFShape.getRadius()>.1) { Shape p = aPDFShape.getPath(); pdfPage.writePath(p); pdfPage.append("W n "); }
+        
+        // Get image bounds width and height divided by PDF size (pdfImage writes out scale of imageBounds/imageSize)
+        Rect bounds = aPDFShape.getImageBounds();
+        double width = bounds.width/pdata.getWidth(), height = bounds.height/pdata.getHeight();
+    
+        // Apply CTM - image coords are flipped from page coords ( (0,0) at upper-left )
+        pdfPage.writeTransform(width, 0, 0, -height, bounds.x, bounds.getMaxY());
+        
+        // Do image and grestore
+        pdfPage.appendln("/" + iname + " Do");
+        pdfPage.grestore();
     }
 }
 
@@ -216,12 +249,6 @@ public static class RMScene3DPdfr <T extends RMScene3D> extends RMShapePdfr <T> 
         if(op<1) pdfPage.grestore();
     }
 }
-
-/**
- * Returns a shared ViewShapePdfr.
- */
-public static ViewShapePdfr getViewShapePdfr()  { return _vspdfr!=null? _vspdfr : (_vspdfr=new ViewShapePdfr()); }
-private static ViewShapePdfr _vspdfr;
 
 /**
  * This class generates PDF for an ViewShape.
@@ -303,5 +330,17 @@ public static class ViewShapePdfr <T extends ViewShape> extends RMShapePdfr <T> 
         }
     }
 }
+
+/**
+ * Returns a shared RMPDFShapePdfr.
+ */
+public static RMPDFShapePdfr getPDFShapePdfr()  { return _pspdfr!=null? _pspdfr : (_pspdfr=new RMPDFShapePdfr()); }
+private static RMPDFShapePdfr _pspdfr;
+
+/**
+ * Returns a shared ViewShapePdfr.
+ */
+public static ViewShapePdfr getViewShapePdfr()  { return _vspdfr!=null? _vspdfr : (_vspdfr=new ViewShapePdfr()); }
+private static ViewShapePdfr _vspdfr;
 
 }

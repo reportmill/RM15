@@ -6,18 +6,17 @@ import com.reportmill.base.RMKeyChain;
 import com.reportmill.graphics.*;
 import snap.gfx.*;
 import snap.util.*;
-import snap.web.WebURL;
 
 /**
  * This class is a shape representation of an image.
  */
-public class RMImageShape extends RMRectShape {
+public class RMPDFShape extends RMRectShape {
     
     // The key used to get image data during RPG
     String             _key;
     
-    // The image data
-    RMImageData        _imageData;
+    // The pdf data
+    RMPDFData          _pdfData;
     
     // The page index
     int                _pageIndex;
@@ -35,14 +34,14 @@ public class RMImageShape extends RMRectShape {
     String             _iname;
     
 /**
- * Creates an RMImageShape.
+ * Creates a RMPDFShape.
  */
-public RMImageShape()  { }
+public RMPDFShape()  { }
 
 /**
- * Creates an RMImageShape from the image source provided.
+ * Creates a RMPDFShape from the image source provided.
  */
-public RMImageShape(Object aSource)  { setImageData(aSource); setBestSize(); }
+public RMPDFShape(Object aSource)  { setPDFData(aSource); setBestSize(); }
 
 /**
  * Returns the report key used to load an image if none is provided.
@@ -60,23 +59,23 @@ public void setKey(String aString)
 /**
  * Returns the image data.
  */
-public RMImageData getImageData()  { return _imageData; }
+public RMPDFData getPDFData()  { return _pdfData; }
 
 /**
  * Sets the image data.
  */
-public void setImageData(RMImageData anImageData)
+public void setPDFData(RMPDFData aPD)
 {
-    RMImageData idata = anImageData!=RMImageData.EMPTY? anImageData : null; if(idata==getImageData()) return;
-    _imageData = idata;
-    setPageIndex(idata.getPageIndex());
+    RMPDFData pdata = aPD; //aPD!=RMImageData.EMPTY? aPD : null; if(pdata==getPDFData()) return;
+    _pdfData = pdata;
+    setPageIndex(pdata.getPageIndex());
     if(getParent()!=null) getParent().relayout(); repaint();
 }
 
 /**
  * Sets the image data from given source.
  */
-public void setImageData(Object aSource)  { setImageData(RMImageData.getImageData(aSource)); }
+public void setPDFData(Object aSource)  { setPDFData(RMPDFData.getPDFData(aSource)); }
 
 /**
  * Returns the page index.
@@ -88,10 +87,10 @@ public int getPageIndex()  { return _pageIndex; }
  */
 public void setPageIndex(int anIndex)
 {
-    int index = anIndex; if(getImageData()!=null) index = MathUtils.clamp(index, 0, getImageData().getPageCount()-1);
+    int index = anIndex; if(getPDFData()!=null) index = MathUtils.clamp(index, 0, getPDFData().getPageCount()-1);
     if(index==getPageIndex()) return;
     firePropChange("PageIndex", _pageIndex, _pageIndex = index);
-    if(getImageData()!=null) setImageData(getImageData().getPage(_pageIndex));
+    if(getPDFData()!=null) setPDFData(getPDFData().getPage(_pageIndex));
 }
 
 /**
@@ -161,8 +160,8 @@ public void setPreserveRatio(boolean aValue)
  */
 protected double getPrefWidthImpl(double aHeight)
 {
-    RMImageData id = getImageData(); if(id==null) return 0;
-    double pw = id.getImageWidth(), ph = id.getImageHeight();
+    RMPDFData id = getPDFData(); if(id==null) return 0;
+    double pw = id.getWidth(), ph = id.getHeight();
     if(aHeight>0 && getPreserveRatio() && ph>aHeight) pw = aHeight*pw/ph;
     return pw;
 }
@@ -172,8 +171,8 @@ protected double getPrefWidthImpl(double aHeight)
  */
 protected double getPrefHeightImpl(double aWidth)
 {
-    RMImageData id = getImageData(); if(id==null) return 0;
-    double pw = id.getImageWidth(), ph = id.getImageHeight();
+    RMPDFData id = getPDFData(); if(id==null) return 0;
+    double pw = id.getWidth(), ph = id.getHeight();
     if(aWidth>0 && getPreserveRatio() && pw>aWidth) ph = aWidth*ph/pw;
     return ph;
 }
@@ -184,32 +183,32 @@ protected double getPrefHeightImpl(double aWidth)
 public RMShape rpgShape(ReportOwner aRptOwner, RMShape aParent)
 {
     // Do normal version
-    RMImageShape clone = (RMImageShape)super.rpgShape(aRptOwner, aParent);
+    RMPDFShape clone = (RMPDFShape)super.rpgShape(aRptOwner, aParent);
     
     // If key: Evaluate key for image and set
     String key = getKey();
     if(key!=null && key.length()>0) {
-        
-        // Get key value
         Object value = RMKeyChain.getValue(aRptOwner, getKey());
         if(value instanceof RMKeyChain) value = ((RMKeyChain)value).getValue();
-        WebURL url = WebURL.getURL(value); if(url!=null) value = url;
-        
-        // If PDF data, return PDFShape
-        if(url!=null && url.getPath().toLowerCase().endsWith("pdf") ||
-            value instanceof byte[] && RMPDFData.canRead((byte[])value))
-                return RMPDFShape.rpgShape(aRptOwner, aParent, this, value);
-                
-        // Otherwise set new image data
-        clone.setImageData(value);
+        clone.setPDFData(value);
     }
 
-    // This prevents RMImageShape from growing to actual image size in report
-    // Probably need a GrowShapeToFit attribute to allow RPG image shape to grow
+    // This prevents RMPDFShape from growing to actual image size in report
+    // Probably need a GrowShapeToFit attribute to allow RPG shape to grow
     clone.setPrefHeight(getHeight()*getScaleY());
     
     // Return clone
     return clone;
+}
+
+/**
+ * Report generation method from RMImageShape that got PDF data.
+ */
+static RMShape rpgShape(ReportOwner aRptOwner, RMShape aParent, RMImageShape aShape, Object aSource)
+{
+    RMPDFShape pshape = new RMPDFShape(); pshape.copyShape(aShape);
+    pshape.setPDFData(aSource); pshape.setPrefHeight(pshape.getHeight()*pshape.getScaleY());
+    return pshape;
 }
 
 /**
@@ -218,8 +217,7 @@ public RMShape rpgShape(ReportOwner aRptOwner, RMShape aParent)
 protected void paintShape(Painter aPntr)
 {
     super.paintShape(aPntr);
-    RMImageData id = getImageData();
-    if(id==null) { if(getFill()!=null || !RMShapePaintProps.isEditing(aPntr)) return; else id = RMImageData.EMPTY; }
+    RMPDFData id = getPDFData(); //if(id==null) paintLabel(); return;
     Rect ibounds = getImageBounds();
     aPntr.clip(getPath());
     id.paint(aPntr, ibounds.getX(), ibounds.getY(), ibounds.getWidth(), ibounds.getHeight());
@@ -231,12 +229,12 @@ protected void paintShape(Painter aPntr)
 public Rect getImageBounds()
 {
     // Get image data and padding
-    RMImageData id = getImageData(); if(id==null) id = RMImageData.EMPTY;
+    RMPDFData id = getPDFData(); //if(id==null) id = RMImageData.EMPTY;
     int pd = getPadding();
     
     // Get width/height for shape, image and padded area
     double sw = getWidth(), sh = getHeight();
-    double iw = id.getImageWidth(), ih = id.getImageHeight();
+    double iw = id.getWidth(), ih = id.getHeight();
     double pw = sw - pd*2, ph = sh - pd*2; if(pw<0) pw = 0; if(ph<0) ph = 0;
     
     // Get image bounds width/height, ShrinkToFit if greater than available space (with PreserveRatio, if set)
@@ -263,8 +261,8 @@ public XMLElement toXML(XMLArchiver anArchiver)
     if(_iname!=null) e.add("ImageName", _iname);
     
     // Archive ImageData
-    else if(_imageData!=null) {
-        String resName = anArchiver.addResource(_imageData.getBytes(), _imageData.getName());
+    else if(_pdfData!=null) {
+        String resName = anArchiver.addResource(_pdfData.getBytes(), _pdfData.getName());
         e.add("resource", resName);
     }
     
@@ -295,10 +293,9 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
     String rname = anElement.getAttributeValue("resource");
     if(rname!=null) {
         byte bytes[] = anArchiver.getResource(rname); // Get resource bytes
-        if(RMPDFData.canRead(bytes)) return new RMPDFShape().fromXML(anArchiver, anElement);
-        _imageData = RMImageData.getImageData(bytes); // Create new image data
+        _pdfData = RMPDFData.getPDFData(bytes); // Create new image data
         int page = anElement.getAttributeIntValue("PageIndex"); // Unarchive page number
-        if(page>0 && _imageData!=null) _imageData = _imageData.getPage(page); // reset page
+        if(page>0 && _pdfData!=null) _pdfData = _pdfData.getPage(page); // reset page
     }
     
     // Unarchive ImageName
@@ -306,7 +303,7 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
     if(_iname!=null) {
         Image img = Image.get(anArchiver.getSourceURL(), _iname);
         if(img!=null)
-            _imageData = RMImageData.getImageData(img.getBytes());
+            _pdfData = RMPDFData.getPDFData(img.getBytes());
     }
     
     // Unarchive Key, Padding, GrowToFit, PreserveRatio
@@ -322,21 +319,6 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
             "BottomLeft", "BottomCenter", "BottomRight" };
         int i = ArrayUtils.indexOf(s, as);
         if(i>=0) setAlignment(Pos.values()[i]);
-    }
-    
-    // Legacy: If Fill is ImageFill and no ImageData+Key or ImageFill.ImageData, set ImageData from IFill and clear fill
-    if(getFill() instanceof RMImageFill) { RMImageFill ifill = (RMImageFill)getFill();
-        XMLElement fill = anElement.get("fill"); RMImageData idata = ifill.getImageData();
-        if(getImageData()==null && !ifill.isTiled()) { // && getKey()==null) {
-            int fs = fill.getAttributeIntValue("fillstyle", 0); // Stretch=0, Tile=1, Fit=2, FitIfNeeded=3
-            if(fs==0) { setImageData(idata); setFill(null); setGrowToFit(true); setPreserveRatio(false); }
-            else if(fs==2) { setImageData(idata); setFill(null); setGrowToFit(true); setPreserveRatio(true); }
-            else if(fs==3) { setImageData(idata); setFill(null); setGrowToFit(false); setPreserveRatio(true); }
-            double x = fill.getAttributeFloatValue("x"); if(x!=0) setAlignmentX(x<0? AlignX.Left : AlignX.Right);
-            double y = fill.getAttributeFloatValue("y"); if(y!=0) setAlignmentY(y<0? AlignY.Top : AlignY.Bottom);
-        }
-        else if(idata==RMImageData.EMPTY) setFill(null);
-        setPadding(fill.getAttributeIntValue("margin"));
     }
     
     // Return

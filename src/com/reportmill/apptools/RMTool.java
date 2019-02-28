@@ -905,19 +905,20 @@ protected ViewEvent createShapeEvent(RMShape s, ViewEvent e)  { return getEditor
 /**
  * Returns the image used to represent shapes that this tool represents.
  */
-public Image getImage()
+public Image getImage()  { return _image!=null? _image : (_image=getImageImpl()); } Image _image;
+
+/**
+ * Returns the image used to represent shapes that this tool represents.
+ */
+protected Image getImageImpl()
 {
-    // If already set, just return
-    if(_image!=null) return _image;
-    
     for(Class c=getClass(); c!=RMTool.class; c=c.getSuperclass()) {
         String name = c.getSimpleName().replace("Tool", "") + ".png";
-        _image = Image.get(c, name);
-        if(_image!=null) return _image;
+        Image img = Image.get(c, name);
+        if(img!=null) return img;
     }
-    return _image = Image.get(RMTool.class, "RMShape.png");
+    return Image.get(RMTool.class, "RMShape.png");
 }
-Image _image;
 
 /**
  * Returns the specific tool for a given shape.
@@ -944,6 +945,7 @@ public static RMTool createTool(Class aClass)
     if(aClass==RMOvalShape.class) return new RMOvalShapeTool();
     if(aClass==RMPage.class) return new RMPageTool();
     if(aClass==RMParentShape.class) return new RMParentShapeTool();
+    if(aClass==RMPDFShape.class) return new RMPDFShapeTool();
     if(aClass==RMPolygonShape.class) return new RMPolygonShapeTool();
     if(aClass==RMRectShape.class) return new RMRectShapeTool();
     if(aClass==RMScene3D.class) return new RMScene3DTool();

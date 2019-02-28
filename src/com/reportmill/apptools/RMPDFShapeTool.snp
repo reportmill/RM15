@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SpringView x="1" y="1" width="275" height="325" PrefWidth="275" PrefHeight="325">
+  <Label x="10" y="10" width="30" height="20" text="Key:" />
+  <TextField Name="KeyText" x="40" y="10" width="172" height="20">
+    <LineBorder Color="#c0c0c0" />
+  </TextField>
+  <Button Name="KeysButton" x="215" y="10" width="55" height="20" text="Keys">
+    <font name="Arial" size="10" />
+  </Button>
+  <Label x="10" y="35" width="40" height="20" text="Page:" />
+  <TextField Name="PageText" x="50" y="35" width="72" height="20" Align="CENTER">
+    <LineBorder Color="#c0c0c0" />
+  </TextField>
+  <Label x="10" y="60" width="50" height="20" text="Padding:" />
+  <TextField Name="PaddingText" x="60" y="60" width="72" height="20" Align="CENTER">
+    <LineBorder Color="#c0c0c0" />
+  </TextField>
+  <CheckBox Name="GrowToFitCheckBox" x="10" y="85" width="200" height="20" text="Grow to Fit" />
+  <CheckBox Name="PreserveRatioCheckBox" x="10" y="110" width="200" height="20" text="Preserve Aspect Ratio" />
+  <TextArea Name="TypeLabel" x="10" y="140" width="255" height="40" Editable="false" />
+  <Button Name="SaveButton" x="10" y="300" width="100" height="20" text="Save...">
+    <font name="Arial" size="10" />
+  </Button>
+</SpringView>
