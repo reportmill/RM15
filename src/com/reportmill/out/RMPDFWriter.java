@@ -134,10 +134,8 @@ public byte[] getBytes(RMDocument aDoc)
  */
 public String getImageName(RMImageData anImageData)
 {
-    if(anImageData instanceof RMImageDataPDF) { RMImageDataPDF pidata = (RMImageDataPDF)anImageData;
-        PDFPage page = pidata.getPDFFile().getPage(pidata.getPageIndex());
-        return System.identityHashCode(page) + ""; }
-    return System.identityHashCode(anImageData.getImage()) + "";
+    Object img = anImageData.getImage();
+    return String.valueOf(System.identityHashCode(img));
 }
 
 /**
@@ -187,8 +185,10 @@ public RMPDFData getUniquePDFData(RMPDFData aPD)
 public void writeXRefEntry(Object anObj)
 {
     // Handle RMImageData
-    if(anObj instanceof RMImageData)
-        writeImageData((RMImageData)anObj);
+    if(anObj instanceof RMImageData) { RMImageData idata = (RMImageData)anObj;
+        if(!idata.isValid()) { System.err.println("RMPDFWriter.writeImageData: Invalid image"); return; }
+        PDFWriterImage.writeImage(this, idata.getImage());
+    }
         
     // Handle RMImageData
     else if(anObj instanceof RMPDFData) { RMPDFData pdata = (RMPDFData)anObj;
@@ -196,23 +196,6 @@ public void writeXRefEntry(Object anObj)
         
     // Otherwise, do normal version
     else super.writeXRefEntry(anObj);
-}
-
-/**
- * Writes an ImageData to PDF buffer.
- */
-public void writeImageData(RMImageData anImageData)
-{
-    // If image data invalid, complain and return
-    if(!anImageData.isValid()) {
-        System.err.println("RMPDFWriter.writeImageData: Invalid image"); return; }
-    
-    // If PDF image data, get PDFFile and page index and write
-    if(anImageData instanceof RMImageDataPDF) { RMImageDataPDF pidata = (RMImageDataPDF)anImageData;
-        PDFWriterPDF.writePDF(this, pidata.getPDFFile(), pidata.getPageIndex()); }
-        
-    // Otherwise, do normal version
-    else PDFWriterImage.writeImage(this, anImageData.getImage());
 }
 
 }

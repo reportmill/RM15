@@ -213,7 +213,7 @@ public static RMShape getTransferPDF(Clipboard aCB)
 {
     if(!aCB.hasData("application/pdf")) return null;
     byte bytes[] = aCB.getDataBytes("application/pdf");
-    return bytes!=null? new RMImageShape(bytes) : null;
+    return bytes!=null? new RMPDFShape(bytes) : null;
 }
 
 }

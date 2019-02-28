@@ -78,6 +78,7 @@ static EffectTool getToolImpl(Class aClass)
     if(aClass==ShadowEffect.class) return new ShadowEffectTool();
     if(aClass==ReflectEffect.class) return new ReflectEffectTool();
     if(aClass==BlurEffect.class) return new BlurEffectTool();
+    if(aClass==EmbossEffect.class) return new EmbossEffectTool();
     System.err.println("EffectTool.getToolImpl: Can't find tool for: " + aClass);
     return new EffectTool();
     

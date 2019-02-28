@@ -161,29 +161,12 @@ public static void writeImageFill(RMImageFill anImageFill, Shape aPath, Rect bou
     RMImageData idata = anImageFill.getImageData(); if(idata==null || !idata.isValid()) return;
     String iname = aWriter.getImageName(idata);
     
-    // Get whether image fill is for pdf image (and just return if no page contents - which is apparently legal)
-    boolean pdfImage = idata instanceof RMImageDataPDF;
-    if(pdfImage) {
-        RMImageDataPDF pdata = (RMImageDataPDF)idata;
-        PDFPage page = pdata.getPDFFile().getPage(idata.getPageIndex());
-        if(page.getPageContentsStream()==null)
-            return;
-    }
-
     // Add image data
     aWriter.addImageData(idata);
 
-    // Get PDF page
+    // Get PDF page and gsave
     PDFPageWriter pdfPage = aWriter.getPageWriter();
-    
-    // Gsave
     pdfPage.gsave();
-    
-    // If pdf image, reset gstate defaults
-    if(pdfImage) {
-        pdfPage.setLineCap(0);
-        pdfPage.setLineJoin(0);
-    }
     
     // If path was provided, clip to it
     if(aPath!=null) {
@@ -235,30 +218,19 @@ public static void writeImageFill(RMImageFill anImageFill, Shape aPath, Rect bou
                 
                 // Gsave, scale CTM, Do image and Grestore
                 pdfPage.gsave();
-                if(pdfImage) pdfPage.writeTransform(1, 0, 0, -1, x, height + y);
-                else pdfPage.writeTransform(width, 0, 0, -height, x, height + y);
+                pdfPage.writeTransform(width, 0, 0, -height, x, height + y);
                 pdfPage.appendln("/" + iname + " Do");
                 pdfPage.grestore();
             }
         }
     }
 
-    // All other fillStyles just smack image in imageBounds
+    // All other fillStyles smack image in imageBounds:
+    // Apply CTM (image coords flipped from page coords - (0,0) at upper-left)
     else {
-        
-        // Get image bounds width and height
+        double x = anImageFill.getX() + bounds.x, y = anImageFill.getY() + bounds.getMaxY();
         double width = bounds.width, height = bounds.height;
-
-        // pdfImage writes out scale of imageBounds/imageSize
-        if(pdfImage) {
-            width /= anImageFill.getImageWidth();
-            height /= anImageFill.getImageHeight();
-        }
-    
-        // Apply CTM - image coords are flipped from page coords ( (0,0) at upper-left )
-        pdfPage.writeTransform(width, 0, 0, -height, anImageFill.getX()+bounds.x, anImageFill.getY()+bounds.getMaxY());
-        
-        // Do image
+        pdfPage.writeTransform(width, 0, 0, -height, x, y);
         pdfPage.appendln("/" + iname + " Do");
     }
         

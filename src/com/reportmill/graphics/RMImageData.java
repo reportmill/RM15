@@ -29,12 +29,6 @@ public class RMImageData implements Cloneable {
     // The image bytes uncompressed
     byte                _bytesDecoded[];
     
-    // The image page index (if from multi-page image type like PDF)
-    int                 _pageIndex;
-    
-    // The image page count (if from multi-page image type like PDF)
-    int                 _pageCount = 1;
-    
     // The image type ("gif", "jpg", "png", etc.)
     String              _type = "";
     
@@ -69,47 +63,6 @@ public class RMImageData implements Cloneable {
     public static RMImageData EMPTY = getImageData(WebURL.getURL(RMImageData.class, "DefaultImage.png"));
     
 /**
- * Returns an image data loaded from aSource. If image type supports multiple pages, page index can be specified.
- */
-public static synchronized RMImageData getImageData(Object aSource)
-{
-    // If source is null, return EMPTY, if image data, return it dereferencing given page
-    if(aSource==null) return EMPTY;
-    if(aSource instanceof RMImageData) return (RMImageData)aSource;
-    
-    // Handle Image (only happens from RMEffectPdfr?)
-    if(aSource instanceof Image) {
-        RMImageData idata = new RMImageData(); idata.setSource(aSource, 0); return idata; }
-    
-    // Get source url
-    WebURL url = WebURL.getURL(aSource);
-    
-    // Iterate over image list and see if any match source
-    for(int i=_cache.size()-1; i>0; i--) { RMImageData idata = _cache.get(i).get();
-        
-        // If null, remove weak reference and continue)
-        if(idata==null) { _cache.remove(i); continue; }
-        
-        // If source matches cached source, return
-        if(url!=null && url.equals(idata.getSourceURL()) || aSource==idata.getSource()) {
-            idata.refresh();
-            return idata;
-        }
-    }
-    
-    // Get bytes for source
-    byte bytes[] = url!=null? url.getBytes() : SnapUtils.getBytes(aSource);
-    if(bytes==null)
-        return null;
-    
-    // Create new ImageData, add to cache (as WeakReference) and return
-    RMImageData idata = RMImageDataPDF.canRead(bytes)? new RMImageDataPDF() : new RMImageData();
-    idata.setSource(url!=null? url : bytes, 0);
-    _cache.add(new WeakReference(idata));
-    return idata;
-}
-
-/**
  * Returns the original source for the image (byte[], File, InputStream or whatever).
  */
 public Object getSource()  { return _source; }
@@ -117,26 +70,16 @@ public Object getSource()  { return _source; }
 /**
  * Sets the source.
  */
-protected void setSource(Object aSource, int aPageIndex)
+protected void setSource(Object aSource)
 {
     // Get URL, source, modified time
     WebURL url = WebURL.getURL(aSource);
-    _source = url!=null? url : aSource;
+    _source = url!=null? url : aSource; if(_source==null) return;
     _modTime = url!=null? url.getLastModTime() : System.currentTimeMillis();
 
-    // Handle Image (only happens from RMEffectPdfr?)
-    if(aSource instanceof Image) {
-        _image = (Image)aSource; _type = _image.hasAlpha()? "png" : "jpg";
-        _width = (int)_image.getWidth(); _height = (int)_image.getHeight();
-        _hasAlpha = _image.hasAlpha(); _spp = _hasAlpha? 4 : 3; _bps = 8;  _bytes = null;
-    }
-    
     // Otherwise, assume source can provide bytes
-    else if(aSource!=null) {
-        _bytes = url!=null? url.getBytes() : SnapUtils.getBytes(aSource); // Get bytes
-        _pageIndex = aPageIndex;  // Set PageIndex
-        readBasicInfo(); _image = null; // Get reader and clear image
-    }
+    _bytes = url!=null? url.getBytes() : SnapUtils.getBytes(aSource); // Get bytes
+    readBasicInfo(); _image = null; // Get reader and clear image
 }
 
 /**
@@ -152,7 +95,7 @@ public void readBasicInfo()
     // Set image type
     _type = ImageUtils.getImageType(getBytes());
     
-    // Special case jpg, since PDF & Flash can make do with raw file data and _pw, _ph & _bps
+    // Special case jpg, since PDF can embed raw file data and _pw, _ph & _bps
     if(_type.equals("jpg")) {
         ImageUtils.ImageInfo info = ImageUtils.getInfoJPG(getBytes());
         _width = info.width; _height = info.height;
@@ -185,7 +128,7 @@ public void readBasicInfo()
 public String getName()  { return "" + System.identityHashCode(this); }
 
 /**
- * Returns the type for the image (one of gif, jpg, png, pdf, etc.).
+ * Returns the type for the image (one of gif, jpg, png, etc.).
  */
 public String getType()  { return _type; }
 
@@ -242,35 +185,33 @@ public int getBytesPerRow()  { return (getWidth()*getBitsPerPixel()+7)/8; }
 /**
  * Returns the buffered image for image data.
  */
-public Image getImage()  { return _image!=null? _image : (_image=createImage()); }
-
-/**
- * Creates the image for this ImageData.
- */
-public Image createImage()  { return Image.get(getBytes()); }
+public Image getImage()
+{
+    if(_image!=null) return _image;
+    return _image = Image.get(getBytes());
+}
 
 /**
  * Returns the original bytes for the image (loaded from the source).
  */
-public byte[] getBytes()  { return _bytes!=null? _bytes : (_bytes=createBytes()); }
-
-/**
- * Creates bytes from the image (loaded from the source).
- */
-protected byte[] createBytes()  { return getSource() instanceof Image? getImage().getBytes() : null; }
+public byte[] getBytes()
+{
+    if(_bytes!=null) return _bytes;
+    byte bytes[] = _image!=null? _image.getBytes() : null;
+    return _bytes = bytes;
+}
 
 /**
  * Returns the decoded image bytes for the image.
  */
-public byte[] getBytesDecoded()  { return _bytesDecoded!=null? _bytesDecoded : (_bytesDecoded=createBytesDecoded()); }
-
-/**
- * Creates the decoded bytes for the image data.
- */
-protected byte[] createBytesDecoded()
+public byte[] getBytesDecoded()
 {
-    try { return getImage().getBytesRGBA(); }
-    catch(Exception e) { _valid = false; return new byte[_height*getBytesPerRow()]; }
+    // If already set, just return
+    if(_bytesDecoded!=null) return _bytesDecoded;
+
+    // Get bytes decoded and return
+    try { return _bytesDecoded = getImage().getBytesRGBA(); }
+    catch(Exception e) { _valid = false; return _bytesDecoded = new byte[_height*getBytesPerRow()]; }
 }
 
 /**
@@ -289,21 +230,6 @@ public byte[] getColorMap()  { return _colorMap; }
 public int getAlphaColorIndex()  { return _transparentColorIndex; }
 
 /**
- * Returns the page index for the image.
- */
-public int getPageIndex()  { return _pageIndex; }
-
-/**
- * Returns the total number of pages for the image.
- */
-public int getPageCount()  { return _pageCount; }
-
-/**
- * Returns the image data for an alternate page.
- */
-public RMImageData getPage(int aPage)  { return this; }
-
-/**
  * Returns whether the image was loaded successfully.
  */
 public boolean isValid()  { return _valid; }
@@ -316,7 +242,7 @@ protected void refresh()
     WebURL url = getSourceURL();
     long modTime = url!=null? url.getLastModTime() : 0;
     if(modTime>_modTime) {
-        setSource(url, _pageIndex); System.out.println("Refreshed ImageData"); }
+        setSource(url); System.out.println("Refreshed ImageData"); }
 }
 
 /**
@@ -328,10 +254,8 @@ public boolean equals(Object anObj)
     if(anObj==this) return true;
     RMImageData other = anObj instanceof RMImageData? (RMImageData)anObj : null; if(other==null) return false;
     
-    // Check bytes (use method in case images source was java Image and bytes need to be generated), PageIndex
-    if(!ArrayUtils.equals(other.getBytes(), getBytes())) return false;
-    if(other._pageIndex!=_pageIndex) return false;
-    return true; // Return true since all checks passed
+    // Check bytes
+    return ArrayUtils.equals(other.getBytes(), getBytes());
 }
 
 /**
@@ -367,20 +291,55 @@ public String toString()
 {
     String str = getClass().getSimpleName() + " { ";
     str += "Type=" + getType() + ", Width=" + getWidth() + ", Height=" + getHeight();
-    if(getPageCount()>0) str += ", Page=" + getPageIndex();
     if(getSourceURL()!=null) str += ", URL=" + getSourceURL();
     str += " }";
     return str;
 }
 
 /**
- * Returns whether given extension is supported.
+ * Returns an image data loaded from aSource. If image type supports multiple pages, page index can be specified.
  */
-public static boolean canRead(String anExt)  { return Image.canRead(anExt) || RMImageDataPDF.canRead(anExt); }
+public static synchronized RMImageData getImageData(Object aSource)
+{
+    // If source is null, return EMPTY, if image data, return it dereferencing given page
+    if(aSource==null) return EMPTY;
+    if(aSource instanceof RMImageData) return (RMImageData)aSource;
+    
+    // Handle Image - I don't think anything does this anymore
+    if(aSource instanceof Image) return getImageData((Image)aSource);
+    
+    // Get source url
+    WebURL url = WebURL.getURL(aSource);
+    
+    // Iterate over image list and see if any match source
+    for(int i=_cache.size()-1; i>0; i--) { RMImageData idata = _cache.get(i).get();
+        
+        // If null, remove weak reference and continue)
+        if(idata==null) { _cache.remove(i); continue; }
+        
+        // If source matches cached source, return
+        if(url!=null && url.equals(idata.getSourceURL()) || aSource==idata.getSource()) {
+            idata.refresh();
+            return idata;
+        }
+    }
+    
+    // Get bytes for source
+    byte bytes[] = url!=null? url.getBytes() : SnapUtils.getBytes(aSource);
+    if(bytes==null)
+        return null;
+    
+    // Create new ImageData, add to cache (as WeakReference) and return
+    RMImageData idata = new RMImageData(); idata.setSource(url!=null? url : bytes);
+    _cache.add(new WeakReference(idata));
+    return idata;
+}
 
-/**
- * Returns whether image reader can read the file provided in the byte array.
- */
-public static boolean canRead(byte bytes[])  { return Image.canRead(bytes) || RMImageDataPDF.canRead(bytes); }
+/** Returns an image data loaded from Image. */
+private static RMImageData getImageData(Image img) {System.out.println("RMImageData.init(img): Never gets called");
+    RMImageData idata = new RMImageData(); idata._image = img; idata._type = img.hasAlpha()? "png" : "jpg";
+    idata._width = (int)img.getWidth(); idata._height = (int)img.getHeight();
+    idata._hasAlpha = img.hasAlpha(); idata._spp = idata._hasAlpha? 4 : 3; idata._bps = 8; return idata;
+}
 
 }

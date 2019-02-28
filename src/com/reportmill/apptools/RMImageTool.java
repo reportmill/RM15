@@ -40,9 +40,8 @@ public void resetUI()
     RMImageShape image = getSelectedShape(); if(image==null) return;
     RMImageData idata = image.getImageData();
     
-    // Reset KeyText, PageText, MarginsText, GrowToFitCheckBox, PreserveRatioCheckBox
+    // Reset KeyText, MarginsText, GrowToFitCheckBox, PreserveRatioCheckBox
     setViewValue("KeyText", image.getKey());
-    setViewValue("PageText", image.getPageIndex()+1);
     setViewValue("PaddingText", StringUtils.toString(getUnitsFromPoints(image.getPadding())));
     setViewValue("GrowToFitCheckBox", image.isGrowToFit());
     setViewValue("PreserveRatioCheckBox", image.getPreserveRatio());
@@ -80,10 +79,6 @@ public void respondUI(ViewEvent anEvent)
     if(anEvent.equals("KeysButton"))
         getEditorPane().getAttributesPanel().setVisibleName(AttributesPanel.KEYS);
 
-    // Handle PageText
-    if(anEvent.equals("PageText"))
-        image.setPageIndex(anEvent.getIntValue()-1);
-    
     // Handle PaddingText
     if(anEvent.equals("PaddingText"))
         for(RMImageShape im : images) im.setPadding(anEvent.getIntValue());

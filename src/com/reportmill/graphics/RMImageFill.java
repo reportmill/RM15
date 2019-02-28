@@ -178,10 +178,8 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
     // Unarchive ImageName: get resource bytes, page and set ImageData
     String iname = anElement.getAttributeValue("resource");
     if(iname!=null) {
-        byte bytes[] = anArchiver.getResource(iname); // Get resource bytes
-        _idata = RMImageData.getImageData(bytes); // Create new image data
-        int page = anElement.getAttributeIntValue("page"); // Unarchive page number
-        if(page>0 && _idata!=null) _idata = _idata.getPage(page);
+        byte bytes[] = anArchiver.getResource(iname);
+        _idata = RMImageData.getImageData(bytes);
     }
     
     // Unarchive Tile, legacy FillStyle (Stretch=0, Tile=1, Fit=2, FitIfNeeded=3)

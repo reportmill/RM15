@@ -33,8 +33,8 @@ public RMDocument getDoc(Object aSource, RMDocument aBaseDoc)
         throw new RuntimeException("RMArchiver.getDoc: Cannot read source: " + (url!=null? url : aSource));
     
     // If PDF, return PDF Doc
-    if(bytes!=null && RMImageDataPDF.canRead(bytes))
-        return getDocPDF(url!=null? url : bytes, aBaseDoc);
+    if(bytes!=null && RMPDFData.canRead(bytes))
+        return RMPDFShape.getDocPDF(url!=null? url : bytes, aBaseDoc);
 
     // Create archiver, read, set source and return
     setRootObject(aBaseDoc);
@@ -43,28 +43,6 @@ public RMDocument getDoc(Object aSource, RMDocument aBaseDoc)
     
     // Set Source URL and return
     doc.setSourceURL(getSourceURL());
-    return doc;
-}
-
-/**
- * Creates a new document from a PDF source.
- */
-private RMDocument getDocPDF(Object aSource, RMDocument aBaseDoc)
-{
-    // Get/create new document (with no pages)
-    RMDocument doc = aBaseDoc!=null? aBaseDoc : new RMDocument();
-    while(doc.getPageCount()>0) doc.removePage(0);
-    
-    // Get image data for source and iterate over each PDF page and create/add document page
-    RMImageData imageData = RMImageData.getImageData(aSource);
-    for(int i=0, iMax=imageData.getPageCount(); i<iMax; i++) { RMImageData pageData = imageData.getPage(i);
-        RMPage page = doc.addPage();
-        page.setSize(pageData.getImageWidth(), pageData.getImageHeight());
-        page.addChild(new RMImageShape(pageData));
-        if(i==0) doc.setSize(page.getWidth(), page.getHeight());
-    }
-    
-    // Return doc
     return doc;
 }
 

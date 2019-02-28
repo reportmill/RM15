@@ -206,7 +206,8 @@ public RMShape rpgShape(ReportOwner aRptOwner, RMShape aParent)
  */
 static RMShape rpgShape(ReportOwner aRptOwner, RMShape aParent, RMImageShape aShape, Object aSource)
 {
-    RMPDFShape pshape = new RMPDFShape(); pshape.copyShape(aShape);
+    RMPDFShape pshape = new RMPDFShape(); pshape.copyShape(aShape); pshape.setGrowToFit(aShape.isGrowToFit());
+    pshape.setPreserveRatio(aShape.getPreserveRatio()); pshape.setPadding(aShape.getPadding());
     pshape.setPDFData(aSource); pshape.setPrefHeight(pshape.getHeight()*pshape.getScaleY());
     return pshape;
 }
@@ -323,6 +324,27 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
     
     // Return
     return this;
+}
+
+/**
+ * Creates a new document from a PDF source.
+ */
+public static RMDocument getDocPDF(Object aSource, RMDocument aBaseDoc)
+{
+    // Get/create new document (with no pages)
+    RMDocument doc = aBaseDoc!=null? aBaseDoc : new RMDocument();
+    while(doc.getPageCount()>0) doc.removePage(0);
+    
+    // Get image data for source and iterate over each PDF page and create/add document page
+    RMPDFData pdata = RMPDFData.getPDFData(aSource);
+    for(int i=0, iMax=pdata.getPageCount(); i<iMax; i++) { RMPDFData pd = pdata.getPage(i);
+        RMPage page = doc.addPage(); page.setSize(pd.getWidth(), pd.getHeight());
+        page.addChild(new RMPDFShape(pd));
+        if(i==0) doc.setSize(page.getWidth(), page.getHeight());
+    }
+    
+    // Return doc
+    return doc;
 }
 
 }

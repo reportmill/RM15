@@ -93,23 +93,12 @@ public static class RMImageShapePdfr <T extends RMImageShape> extends RMShapePdf
         RMImageData idata = anImageShape.getImageData(); if(idata==null || !idata.isValid()) return;
         String iname = aWriter.getImageName(idata);
         
-        // Get whether image fill is for pdf image (and just return if no page contents - which is apparently legal)
-        boolean pdfImage = idata instanceof RMImageDataPDF;
-        if(pdfImage) { RMImageDataPDF pdata = (RMImageDataPDF)idata;
-            PDFPage page = pdata.getPDFFile().getPage(idata.getPageIndex());
-            if(page.getPageContentsStream()==null)
-                return;
-        }
-    
         // Add image data
         aWriter.addImageData(idata);
     
         // Get PDF page and gsave
         PDFPageWriter pdfPage = aWriter.getPageWriter();
         pdfPage.gsave();
-        
-        // If pdf image, reset gstate defaults
-        if(pdfImage) { pdfPage.setLineCap(0); pdfPage.setLineJoin(0); }
         
         // Apply clip if needed
         if(anImageShape.getRadius()>.001) {
@@ -120,9 +109,6 @@ public static class RMImageShapePdfr <T extends RMImageShape> extends RMShapePdf
         // Get image bounds width and height
         Rect bounds = anImageShape.getImageBounds();
         double width = bounds.getWidth(), height = bounds.getHeight();
-    
-        // pdfImage writes out scale of imageBounds/imageSize
-        if(pdfImage) { width /= idata.getImageWidth(); height /= idata.getImageHeight(); }
     
         // Apply CTM - image coords are flipped from page coords ( (0,0) at upper-left )
         pdfPage.writeTransform(width, 0, 0, -height, bounds.getX(), bounds.getMaxY());

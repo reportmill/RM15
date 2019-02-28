@@ -773,6 +773,9 @@ public void dropFiles(RMShape aShape, ViewEvent anEvent)
  */
 private Point dropFile(RMShape aShape, ClipboardData aFile, Point aPoint)
 {
+    // If file not loaded, come back when it is
+    if(!aFile.isLoaded()) { aFile.addLoadListener(f -> dropFile(aShape, aFile, aPoint)); return aPoint; }
+        
     // Get path and extension (set to empty string if null)
     String ext = aFile.getExtension(); if(ext==null) return aPoint; ext = ext.toLowerCase();
 
@@ -781,8 +784,12 @@ private Point dropFile(RMShape aShape, ClipboardData aFile, Point aPoint)
         getEditorPane().setDataSource(aFile.getSourceURL(), aPoint.getX(), aPoint.getY());
 
     // If image file, add image shape
-    else if(RMImageData.canRead(ext))
+    else if(Image.canRead(ext))
         runLater(() -> dropImageFile(aShape, aFile, aPoint));
+
+    // If PDF file, add image shape
+    else if(RMPDFData.canRead(ext))
+        runLater(() -> dropPDFFile(aShape, aFile, aPoint));
 
     // If reportmill file, addReportFile
     else if(ext.equals("rpt")) dropReportFile(aShape, aFile, aPoint);
@@ -827,41 +834,58 @@ private void dropImageFile(RMShape aShape, ClipboardData aFile, Point aPoint)
     Point point = editor.convertToShape(aPoint.x, aPoint.y, parent);
     
     // Create new image shape
-    RMImageShape imageShape = new RMImageShape(imgSrc);
+    RMImageShape imgShape = new RMImageShape(imgSrc);
     
-    // If image not PDF and is bigger than hit shape, shrink down
-    if(!imageShape.getImageData().getType().equals("pdf"))
-        if(imageShape.getWidth()>parent.getWidth() || imageShape.getHeight()>parent.getHeight()) {
-            double w = imageShape.getWidth();
-            double h = imageShape.getHeight();
-            double w2 = w>h? 320 : 320/h*w;
-            double h2 = h>w? 320 : 320/w*h;
-            imageShape.setSize(w2, h2);
-        }
+    // If image is bigger than hit shape, shrink down
+    if(imgShape.getWidth()>parent.getWidth() || imgShape.getHeight()>parent.getHeight()) {
+        double w = imgShape.getWidth(), h = imgShape.getHeight();
+        double w2 = w>h? 320 : 320/h*w, h2 = h>w? 320 : 320/w*h;
+        imgShape.setSize(w2, h2);
+    }
 
     // Set bounds centered around point (or centered on page if image covers 75% of page or more)
-    if(imageShape.getWidth()/editor.getWidth()>.75f || imageShape.getHeight()/editor.getHeight()>.75)
-        imageShape.setXY(0, 0);
-    else imageShape.setXY(point.x - imageShape.getWidth()/2, point.y - imageShape.getHeight()/2);
+    imgShape.setXY(point.x - imgShape.getWidth()/2, point.y - imgShape.getHeight()/2);
+    if(imgShape.getWidth()/editor.getWidth()>.75f || imgShape.getHeight()/editor.getHeight()>.75) imgShape.setXY(0, 0);
 
     // Add imageShape with undo
     editor.undoerSetUndoTitle("Add Image");
-    parent.addChild(imageShape);
+    parent.addChild(imgShape);
     
     // Select imageShape and SelectTool
-    editor.setSelectedShape(imageShape);
+    editor.setSelectedShape(imgShape);
     editor.setCurrentToolToSelectTool();
+}
+
+/**
+ * Called to handle an PDF file drop on the editor.
+ */
+private void dropPDFFile(RMShape aShape, ClipboardData aFile, Point aPoint)
+{
+    // Get image source
+    Object imgSrc = aFile.getSourceURL()!=null? aFile.getSourceURL() : aFile.getBytes();
     
-    // If image not loaded, resize when loaded
-    Image img = imageShape.getImageData().getImage();
-    if(!img.isLoaded()) {
-        img.addPropChangeListener(pce -> {
-            double mx = imageShape.getX() + imageShape.getWidth()/2, my = imageShape.getY() + imageShape.getHeight()/2;
-            double w = img.getWidth(), h = img.getHeight();
-            Rect rect = new Rect(mx-w/2,my-h/2,w,h); rect.snap();
-            imageShape.setBounds(rect);
-        });
-    }
+    // If image hit a real shape, see if user wants it to be a texture
+    RMEditor editor = getEditor();
+    RMShape shape = aShape; while(!editor.getTool(shape).getAcceptsChildren(shape)) shape = shape.getParent();
+    
+    // Get parent to add image shape to and drop point in parent coords
+    RMParentShape parent = shape instanceof RMParentShape? (RMParentShape)shape : shape.getParent();
+    Point point = editor.convertToShape(aPoint.x, aPoint.y, parent);
+    
+    // Create new PDF shape
+    RMPDFShape pdfShape = new RMPDFShape(imgSrc);
+    
+    // Create new PDF shape and set bounds centered around point (or at page origin if covers 75% of page or more)
+    pdfShape.setXY(point.x - pdfShape.getWidth()/2, point.y - pdfShape.getHeight()/2);
+    if(pdfShape.getWidth()/editor.getWidth()>.75f || pdfShape.getHeight()/editor.getHeight()>.75) pdfShape.setXY(0, 0);
+
+    // Add imageShape with undo
+    editor.undoerSetUndoTitle("Add Image");
+    parent.addChild(pdfShape);
+    
+    // Select imageShape and SelectTool
+    editor.setSelectedShape(pdfShape);
+    editor.setCurrentToolToSelectTool();
 }
 
 /**

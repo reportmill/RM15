@@ -19,9 +19,6 @@ public class RMImageShape extends RMRectShape {
     // The image data
     RMImageData        _imageData;
     
-    // The page index
-    int                _pageIndex;
-    
     // The padding
     int                _padding;
     
@@ -69,7 +66,6 @@ public void setImageData(RMImageData anImageData)
 {
     RMImageData idata = anImageData!=RMImageData.EMPTY? anImageData : null; if(idata==getImageData()) return;
     _imageData = idata;
-    setPageIndex(idata.getPageIndex());
     if(getParent()!=null) getParent().relayout(); repaint();
 }
 
@@ -77,22 +73,6 @@ public void setImageData(RMImageData anImageData)
  * Sets the image data from given source.
  */
 public void setImageData(Object aSource)  { setImageData(RMImageData.getImageData(aSource)); }
-
-/**
- * Returns the page index.
- */
-public int getPageIndex()  { return _pageIndex; }
-
-/**
- * Sets the page index.
- */
-public void setPageIndex(int anIndex)
-{
-    int index = anIndex; if(getImageData()!=null) index = MathUtils.clamp(index, 0, getImageData().getPageCount()-1);
-    if(index==getPageIndex()) return;
-    firePropChange("PageIndex", _pageIndex, _pageIndex = index);
-    if(getImageData()!=null) setImageData(getImageData().getPage(_pageIndex));
-}
 
 /**
  * Returns the padding.
@@ -268,8 +248,7 @@ public XMLElement toXML(XMLArchiver anArchiver)
         e.add("resource", resName);
     }
     
-    // Archive PageIndex, Key, Padding, Alignment, GrowToFit, PreserveRatio
-    if(_pageIndex>0) e.add("PageIndex", _pageIndex);
+    // Archive Key, Padding, Alignment, GrowToFit, PreserveRatio
     if(_key!=null && _key.length()>0) e.add("key", _key);
     if(_padding>0) e.add("Padding", _padding);
     if(getAlignment()!=Pos.CENTER) e.add("Alignment", getAlignment());
@@ -288,17 +267,12 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
     // Unarchive basic shape attributes
     super.fromXML(anArchiver, anElement);
     
-    // Unarchive PageIndex
-    if(anElement.hasAttribute("PageIndex")) setPageIndex(anElement.getAttributeIntValue("PageIndex"));
-    
-    // Unarchive Image resource: get resource bytes, page and set ImageData
+    // Unarchive Image resource: get resource bytes and set ImageData (if PDF - swap out RMPDFShape)
     String rname = anElement.getAttributeValue("resource");
     if(rname!=null) {
-        byte bytes[] = anArchiver.getResource(rname); // Get resource bytes
+        byte bytes[] = anArchiver.getResource(rname);
         if(RMPDFData.canRead(bytes)) return new RMPDFShape().fromXML(anArchiver, anElement);
-        _imageData = RMImageData.getImageData(bytes); // Create new image data
-        int page = anElement.getAttributeIntValue("PageIndex"); // Unarchive page number
-        if(page>0 && _imageData!=null) _imageData = _imageData.getPage(page); // reset page
+        _imageData = RMImageData.getImageData(bytes);
     }
     
     // Unarchive ImageName

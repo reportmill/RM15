@@ -197,6 +197,19 @@ public RMPDFData clone()
 }
 
 /**
+ * Standard toString implementation.
+ */
+public String toString()
+{
+    String str = getClass().getSimpleName() + " { ";
+    str += "Width=" + getWidth() + ", Height=" + getHeight();
+    if(getPageCount()>0) str += ", Page=" + getPageIndex();
+    if(getSourceURL()!=null) str += ", URL=" + getSourceURL();
+    str += " }";
+    return str;
+}
+
+/**
  * Returns whether PDF image reader can read files with given extension.
  */    
 public static boolean canRead(String anExt)  { return anExt!=null && anExt.toLowerCase().equals("pdf"); }

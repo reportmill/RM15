@@ -82,7 +82,7 @@ public void respondUI(ViewEvent anEvent)
     
     // Handle GrowToFitCheckBox, PreserveRatioCheckBox
     if(anEvent.equals("GrowToFitCheckBox")) for(RMPDFShape im : images) im.setGrowToFit(anEvent.getBoolValue());
-    //if(anEvent.equals("PreserveRatioCheckBox"))for(RMPDFShape im:images) im.setPreserveRatio(anEvent.getBoolValue());
+    if(anEvent.equals("PreserveRatioCheckBox")) for(RMPDFShape im:images) im.setPreserveRatio(anEvent.getBoolValue());
     
     // Handle SaveButton
     if(anEvent.equals("SaveButton")) {

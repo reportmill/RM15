@@ -2,7 +2,6 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.out;
-import com.reportmill.graphics.RMImageFill;
 import com.reportmill.shape.*;
 import snap.gfx.*;
 
@@ -31,13 +30,9 @@ public static void writeBlurEffect(RMShape aShape, BlurEffect aBlur, RMPDFWriter
     // If radius is less than 1, do default drawing and return
     if(aBlur.getRadius()<1) { RMShapePdfr.getPdfr(aShape).writeShapeAll(aShape, aWriter); return; }
     
-    // Get effect image and image fill
-    Image effImg = getEffectImage(aShape);
-    RMImageFill ifill = new RMImageFill(effImg);
-    
-    // Get bounds for image fill and write
-    Rect bounds = new Rect(-aBlur.getRadius()*2,-aBlur.getRadius()*2,effImg.getWidth(),effImg.getHeight());
-    RMFillPdfr.writeImageFill(ifill, null, bounds, aWriter);
+    // Get effect image and x/y and write
+    Image effImg = getEffectImage(aShape); double xy = -aBlur.getRadius()*2;
+    aWriter.getPageWriter().writeImage(effImg, xy, xy);
 }
 
 /**
@@ -45,14 +40,10 @@ public static void writeBlurEffect(RMShape aShape, BlurEffect aBlur, RMPDFWriter
  */
 public static void writeShadowEffect(RMShape aShape, ShadowEffect aShadow, RMPDFWriter aWriter)
 {
-    // Get effect image and image fill
+    // Get effect image and x/y and write
     Image effImg = getEffectImage(aShape);
-    RMImageFill ifill = new RMImageFill(effImg);
-    
-    // Get bounds for image fill and write
     double rad = aShadow.getRadius(), x = -rad*2 + aShadow.getDX(), y = -rad*2 + aShadow.getDY();
-    Rect bounds = new Rect(x, y, effImg.getWidth(), effImg.getHeight());
-    RMFillPdfr.writeImageFill(ifill, null, bounds, aWriter);
+    aWriter.getPageWriter().writeImage(effImg, x, y);
     
     // Do normal pdf write
     RMShapePdfr.getPdfr(aShape).writeShapeAll(aShape, aWriter);
@@ -66,14 +57,10 @@ private static void writeRefectionEffect(RMShape aShape, ReflectEffect aReflect,
     // If valid reflection and fade heights, do reflection
     if(aReflect.getReflectHeight()>0 && aReflect.getFadeHeight()>0) {
     
-        // Get reflection image for shape and fill
-        Image refImg = getEffectImage(aShape);
-        RMImageFill ifill = new RMImageFill(refImg);
-        
-        // Get bounds of reflected image and write
-        Rect bounds = aShape.getBoundsStroked();
-        bounds = new Rect(bounds.getX(), bounds.getMaxY() + aReflect.getGap(), refImg.getWidth(), refImg.getHeight());
-        RMFillPdfr.writeImageFill(ifill, null, bounds, aWriter);
+        // Get effect image and x/y and write
+        Image effImg = getEffectImage(aShape);
+        Rect bounds = aShape.getBoundsStroked(); double x = bounds.x, y = bounds.getMaxY() + aReflect.getGap();
+        aWriter.getPageWriter().writeImage(effImg, x, y);
     }
     
     // Do normal write pdf
@@ -85,13 +72,9 @@ private static void writeRefectionEffect(RMShape aShape, ReflectEffect aReflect,
  */
 private static void writeEmbossEffect(RMShape aShape, EmbossEffect anEmboss, RMPDFWriter aWriter)
 {
-    // Get effect image and image fill
-    Image effectImage = getEffectImage(aShape);
-    RMImageFill ifill = new RMImageFill(effectImage);
-    
-    // Get bounds for image fill and write
-    Rect bounds = new Rect(0, 0, effectImage.getWidth(), effectImage.getHeight());
-    RMFillPdfr.writeImageFill(ifill, null, bounds, aWriter);
+    // Get effect image and write
+    Image effImage = getEffectImage(aShape);
+    aWriter.getPageWriter().writeImage(effImage, 0, 0);
 }
     
 /**
