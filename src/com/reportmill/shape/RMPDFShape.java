@@ -8,11 +8,11 @@ import snap.gfx.*;
 import snap.util.*;
 
 /**
- * This class is a shape representation of an image.
+ * This class is a shape representation of a PDF page.
  */
 public class RMPDFShape extends RMRectShape {
     
-    // The key used to get image data during RPG
+    // The key used to get pdf data during RPG
     String             _key;
     
     // The pdf data
@@ -24,14 +24,11 @@ public class RMPDFShape extends RMRectShape {
     // The padding
     int                _padding;
     
-    // Whether to grow image to fit available area if shape larger than image.
+    // Whether to grow page to fit available area if shape larger than page.
     boolean            _growToFit = true;
     
-    // Whether to preserve the natural width to height ratio of image
+    // Whether to preserve the natural width to height ratio of page
     boolean            _preserveRatio = true;
-    
-    // The image name, if image read from external file
-    String             _iname;
     
 /**
  * Creates a RMPDFShape.
@@ -39,41 +36,38 @@ public class RMPDFShape extends RMRectShape {
 public RMPDFShape()  { }
 
 /**
- * Creates a RMPDFShape from the image source provided.
+ * Creates a RMPDFShape from the PDF file source provided.
  */
 public RMPDFShape(Object aSource)  { setPDFData(aSource); setBestSize(); }
 
 /**
- * Returns the report key used to load an image if none is provided.
+ * Returns the report key used to load PDF data if not provided.
  */
 public String getKey()  { return _key; }
 
 /**
- * Sets the report key used to load an image if none is provided.
+ * Sets the report key used to load PDF data if not provided.
  */
-public void setKey(String aString)
-{
-    firePropChange("Key", _key, _key = aString);
-}
+public void setKey(String aString)  { firePropChange("Key", _key, _key = aString); }
 
 /**
- * Returns the image data.
+ * Returns the PDF data.
  */
 public RMPDFData getPDFData()  { return _pdfData; }
 
 /**
- * Sets the image data.
+ * Sets the PDF data.
  */
 public void setPDFData(RMPDFData aPD)
 {
-    RMPDFData pdata = aPD; //aPD!=RMImageData.EMPTY? aPD : null; if(pdata==getPDFData()) return;
-    _pdfData = pdata;
-    setPageIndex(pdata.getPageIndex());
+    if(aPD==getPDFData()) return;
+    _pdfData = aPD;
+    setPageIndex(aPD.getPageIndex());
     if(getParent()!=null) getParent().relayout(); repaint();
 }
 
 /**
- * Sets the image data from given source.
+ * Sets the PDF data from given source.
  */
 public void setPDFData(Object aSource)  { setPDFData(RMPDFData.getPDFData(aSource)); }
 
@@ -128,12 +122,12 @@ public AlignY getAlignmentY()  { return _alignY; } AlignY _alignY = AlignY.Middl
 public void setAlignmentY(AlignY anAlignY)  { _alignY = anAlignY; }
 
 /**
- * Returns whether to grow image to fit available area if shape larger than image.
+ * Returns whether to grow page to fit available area if shape larger than page.
  */
 public boolean isGrowToFit()  { return _growToFit; }
 
 /**
- * Sets whether to grow image to fit available area if shape larger than image.
+ * Sets whether to grow page to fit available area if shape larger than page.
  */
 public void setGrowToFit(boolean aValue)
 {
@@ -142,12 +136,12 @@ public void setGrowToFit(boolean aValue)
 }
 
 /**
- * Returns whether to preserve the natural width to height ratio of image.
+ * Returns whether to preserve the natural width to height ratio of page.
  */
 public boolean getPreserveRatio()  { return _preserveRatio; }
 
 /**
- * Sets whether to preserve the natural width to height ratio of image.
+ * Sets whether to preserve the natural width to height ratio of page.
  */
 public void setPreserveRatio(boolean aValue)
 {
@@ -185,7 +179,7 @@ public RMShape rpgShape(ReportOwner aRptOwner, RMShape aParent)
     // Do normal version
     RMPDFShape clone = (RMPDFShape)super.rpgShape(aRptOwner, aParent);
     
-    // If key: Evaluate key for image and set
+    // If key: Evaluate key for PDF data and set
     String key = getKey();
     if(key!=null && key.length()>0) {
         Object value = RMKeyChain.getValue(aRptOwner, getKey());
@@ -193,7 +187,7 @@ public RMShape rpgShape(ReportOwner aRptOwner, RMShape aParent)
         clone.setPDFData(value);
     }
 
-    // This prevents RMPDFShape from growing to actual image size in report
+    // This prevents RMPDFShape from growing to actual PDF page size in report
     // Probably need a GrowShapeToFit attribute to allow RPG shape to grow
     clone.setPrefHeight(getHeight()*getScaleY());
     
@@ -218,10 +212,10 @@ static RMShape rpgShape(ReportOwner aRptOwner, RMShape aParent, RMImageShape aSh
 protected void paintShape(Painter aPntr)
 {
     super.paintShape(aPntr);
-    RMPDFData id = getPDFData(); //if(id==null) paintLabel(); return;
+    RMPDFData pd = getPDFData(); if(pd==null) { System.out.println("RMPDFShape.paint: Need empty impl"); return; }
     Rect ibounds = getImageBounds();
     aPntr.clip(getPath());
-    id.paint(aPntr, ibounds.getX(), ibounds.getY(), ibounds.getWidth(), ibounds.getHeight());
+    pd.paint(aPntr, ibounds.x, ibounds.y, ibounds.width, ibounds.height);
 }
 
 /**
@@ -229,11 +223,11 @@ protected void paintShape(Painter aPntr)
  */
 public Rect getImageBounds()
 {
-    // Get image data and padding
-    RMPDFData id = getPDFData(); //if(id==null) id = RMImageData.EMPTY;
+    // Get PDF data and padding
+    RMPDFData id = getPDFData();
     int pd = getPadding();
     
-    // Get width/height for shape, image and padded area
+    // Get width/height for shape, page and padded area
     double sw = getWidth(), sh = getHeight();
     double iw = id.getWidth(), ih = id.getHeight();
     double pw = sw - pd*2, ph = sh - pd*2; if(pw<0) pw = 0; if(ph<0) ph = 0;
@@ -258,11 +252,8 @@ public XMLElement toXML(XMLArchiver anArchiver)
     // Archive basic shape attributes and reset element name to image-shape
     XMLElement e = super.toXML(anArchiver); e.setName("image-shape");
     
-    // Archive ImageName, if image read from external file
-    if(_iname!=null) e.add("ImageName", _iname);
-    
-    // Archive ImageData
-    else if(_pdfData!=null) {
+    // Archive PDFData
+    if(_pdfData!=null) {
         String resName = anArchiver.addResource(_pdfData.getBytes(), _pdfData.getName());
         e.add("resource", resName);
     }
@@ -290,21 +281,13 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
     // Unarchive PageIndex
     if(anElement.hasAttribute("PageIndex")) setPageIndex(anElement.getAttributeIntValue("PageIndex"));
     
-    // Unarchive Image resource: get resource bytes, page and set ImageData
+    // Unarchive PDF file resource: get resource bytes, page and set PDF data
     String rname = anElement.getAttributeValue("resource");
     if(rname!=null) {
-        byte bytes[] = anArchiver.getResource(rname); // Get resource bytes
-        _pdfData = RMPDFData.getPDFData(bytes); // Create new image data
-        int page = anElement.getAttributeIntValue("PageIndex"); // Unarchive page number
-        if(page>0 && _pdfData!=null) _pdfData = _pdfData.getPage(page); // reset page
-    }
-    
-    // Unarchive ImageName
-    _iname = anElement.getAttributeValue("ImageName");
-    if(_iname!=null) {
-        Image img = Image.get(anArchiver.getSourceURL(), _iname);
-        if(img!=null)
-            _pdfData = RMPDFData.getPDFData(img.getBytes());
+        byte bytes[] = anArchiver.getResource(rname);
+        _pdfData = RMPDFData.getPDFData(bytes);
+        int page = anElement.getAttributeIntValue("PageIndex");
+        if(page>0 && _pdfData!=null) _pdfData = _pdfData.getPage(page);
     }
     
     // Unarchive Key, Padding, GrowToFit, PreserveRatio
@@ -335,7 +318,7 @@ public static RMDocument getDocPDF(Object aSource, RMDocument aBaseDoc)
     RMDocument doc = aBaseDoc!=null? aBaseDoc : new RMDocument();
     while(doc.getPageCount()>0) doc.removePage(0);
     
-    // Get image data for source and iterate over each PDF page and create/add document page
+    // Get PDF data for source and iterate over each PDF page and create/add document page
     RMPDFData pdata = RMPDFData.getPDFData(aSource);
     for(int i=0, iMax=pdata.getPageCount(); i<iMax; i++) { RMPDFData pd = pdata.getPage(i);
         RMPage page = doc.addPage(); page.setSize(pd.getWidth(), pd.getHeight());
