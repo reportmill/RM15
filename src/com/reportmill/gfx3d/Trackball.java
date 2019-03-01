@@ -2,11 +2,9 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.gfx3d;
-import com.reportmill.gfx3d.*;
 import java.util.Random;
 import snap.gfx.*;
 import snap.view.*;
-import snap.web.WebURL;
 
 /**
  * This class implements the trackball widget.  It is an optional replacement for the Scene3DControl.
@@ -42,9 +40,9 @@ public class Trackball extends ParentView {
     double         _lastRollAngle;
 
     // The trackball image, highlight image and knob image
-    ImageView      _tball = new ImageView(WebURL.getURL(getClass(), "pkg.images/Trackball.png"));
-    ImageView      _tball_lit = new ImageView(WebURL.getURL(getClass(), "pkg.images/Trackball_lit.png"));
-    ImageView      _knob = new ImageView(WebURL.getURL(getClass(), "pkg.images/Trackball_knob.png"));
+    ImageView      _tball = new ImageView(Image.get(getClass(), "pkg.images/Trackball.png"));
+    ImageView      _tball_lit = new ImageView(Image.get(getClass(), "pkg.images/Trackball_lit.png"));
+    ImageView      _knob = new ImageView(Image.get(getClass(), "pkg.images/Trackball_knob.png"));
    
     // Location of the important parts of the control image
     static final float LEFT_EDGE = 2;
@@ -56,6 +54,7 @@ public class Trackball extends ParentView {
     static final float KNOB_WIDTH = 14;
     static final float KNOB_CENTER_X = 9;
     static final float KNOB_CENTER_Y = 11;
+    static final float IMAGE_SIZE = 118;
    
     // Possible hit test results
     static final int HIT_NONE = 0;
@@ -71,26 +70,26 @@ public class Trackball extends ParentView {
 public Trackball()
 {
     // Fix image sizes
-    _tball.setSize(_tball.getPrefWidth(), _tball.getPrefHeight());
-    _tball_lit.setSize(_tball_lit.getPrefWidth(), _tball_lit.getPrefHeight());
-    _knob.setSize(_knob.getPrefWidth(), _knob.getPrefHeight());
+    _tball.setSize(IMAGE_SIZE, IMAGE_SIZE);
+    _tball_lit.setSize(IMAGE_SIZE, IMAGE_SIZE);
+    _knob.setSize(20, 20);
     
     // Add trackball image
     addChild(_tball);
     
     // Create/configure scene and camera
     _scene = new Scene3D(); _camera = _scene.getCamera();
-    _camera.setWidth(_tball.getWidth()); _camera.setHeight(_tball.getHeight()); // set X to 2 ???
+    _camera.setWidth(IMAGE_SIZE); _camera.setHeight(IMAGE_SIZE); // set X to 2 ???
     
     // Enable mouse/action events
     enableEvents(MousePress, MouseDrag, MouseRelease, Action); //setFill(null);
-    setPrefSize(_tball.getPrefWidth(), _tball.getPrefHeight());
+    setPrefSize(IMAGE_SIZE, IMAGE_SIZE);
 }
 
 /**
  * Override to add scuff marks.
  */
-public void setWidth(double aValue)  { super.setWidth(aValue); addScuffMarks(); }
+public void setWidth(double aValue)  { if(aValue==getWidth()) return; super.setWidth(aValue); addScuffMarks(); }
 
 /**
  * Adds scuffmark polygons at random points on the trackball.

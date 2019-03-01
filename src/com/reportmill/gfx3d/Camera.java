@@ -43,7 +43,7 @@ public class Camera {
     boolean        _adjustZ;
     
     // Perspective
-    double         _focalLength = 60*72;
+    double         _focalLen = 60*72;
     
     // Whether to do simple 3d rendering effect by skewing geometry a little bit
     boolean        _pseudo3D;
@@ -180,15 +180,15 @@ public void setRoll(double aValue)
 /**
  * Returns the focal length of the camera (derived from the field of view and with view size).
  */
-public double getFocalLength()  { return _focalLength; }
+public double getFocalLength()  { return _focalLen; }
 
 /**
  * Sets the focal length of the camera. Two feet is normal (1728 points).
  */
 public void setFocalLength(double aValue)
 {
-    if(aValue==_focalLength) return;
-    firePropChange("FocalLength", _focalLength, _focalLength = aValue);
+    if(aValue==_focalLen) return;
+    firePropChange("FocalLength", _focalLen, _focalLen = aValue);
     rebuildPaths(); _xform3D = null;
 }
 
@@ -268,7 +268,7 @@ public void setPseudoSkewY(double anAngle)
 public double getFieldOfView()
 {
     double height = Math.max(getWidth(), getHeight());
-    double fieldOfView = Math.toDegrees(Math.atan(height/(2*_focalLength)));
+    double fieldOfView = Math.toDegrees(Math.atan(height/(2*_focalLen)));
     return fieldOfView*2;
 }
 
@@ -311,7 +311,7 @@ public Transform3D getTransform()
     Transform3D t = new Transform3D(-midx, -midy, -midz);
     t.rotate(_pitch, _yaw, _roll);
     t.translate(0, 0, getOffsetZ() - _offsetZ2);
-    t.perspective(getFocalLength());
+    if(_focalLen>0) t.perspective(getFocalLength());
     t.translate(midx, midy, midz);
     return _xform3D = t;
 }
@@ -321,18 +321,18 @@ public Transform3D getTransform()
  */
 protected void adjustZ()
 {
-    // Cache and clear scene3D Z offset and bar view Z offset
-    double offsetZ = getOffsetZ(); _offsetZ = _offsetZ2 = 0; _xform3D = null;
+    // Cache and clear Z offset and second Z offset
+    double offZ = getOffsetZ(),  _offsetZ = _offsetZ2 = 0; _xform3D = null;
     
     // Get bounding box in camera coords with no Z offset
-    double width = getWidth(), height = getHeight(), depth = getDepth();
-    Path3D bbox = new Path3D(); bbox.moveTo(0, 0, 0); bbox.lineTo(0, 0, depth); bbox.lineTo(width, 0, depth);
-    bbox.lineTo(width, 0, 0); bbox.lineTo(0, 0, 0); bbox.lineTo(0, height, 0);
-    bbox.lineTo(0, height, depth); bbox.lineTo(width, height, depth); bbox.lineTo(width, height, 0); bbox.close();
+    double w = getWidth(), h = getHeight(), d = getDepth();
+    Path3D bbox = new Path3D(); bbox.moveTo(0, 0, 0); bbox.lineTo(0, 0, d); bbox.lineTo(w, 0, d);
+    bbox.lineTo(w, 0, 0); bbox.lineTo(w, h, 0); bbox.lineTo(w, h, d); bbox.lineTo(0, h, d); bbox.lineTo(0, h, 0);
     bbox.transform(getTransform());
     
-    // Get offset Z of graph view from bounding box and restore original graph Z offset
-    _offsetZ2 = bbox.getZMin(); _offsetZ = offsetZ; _xform3D = null;
+    // Get second offset Z from bounding box and restore original Z offset
+    _offsetZ2 = bbox.getZMin(); _offsetZ = offZ; _xform3D = null;
+    if(Math.abs(_offsetZ2)>w) _offsetZ2 = w*MathUtils.sign(_offsetZ2); // Something is brokey
 }
 
 /**

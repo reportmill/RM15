@@ -42,12 +42,15 @@ public Stroke getStroke()  { return _stroke; }
 /**
  * Sets the stroke of shape.
  */
-public void setStroke(Stroke aStroke)  { _stroke = aStroke; }
+public void setStroke(Stroke aStroke)
+{
+    _stroke = aStroke;
+}
 
 /**
  * Returns the stroke color of shape.
  */
-public void setStroke(Color aColor, double aWidth)  { setStrokeColor(aColor); setStroke(new Stroke(aWidth)); }
+public void setStroke(Color aColor, double aWidth) { setStrokeColor(aColor); setStroke(Stroke.getStrokeRound(aWidth)); }
 
 /**
  * Returns the stroke color of shape.

@@ -3,7 +3,6 @@
  */
 package com.reportmill.gfx3d;
 import snap.gfx.*;
-import snap.util.SnapUtils;
 import java.util.*;
 
 /**
@@ -468,8 +467,9 @@ public Path3D clone()
     Path3D clone = null; try { clone = (Path3D)super.clone(); }
     catch(Exception e) { throw new RuntimeException(e); }
     clone._elements = new ArrayList(_elements);
-    clone._points = SnapUtils.cloneDeep(_points);
-    clone._layers = _layers!=null? SnapUtils.cloneDeep(_layers) : null;
+    clone._points = new ArrayList(_points.size()); for(Point3D p : _points) clone._points.add(p.clone());
+    if(_layers!=null) {
+        clone._layers = new ArrayList(_layers.size()); for(Path3D p : _layers) clone._layers.add(p.clone()); }
     return clone;
 }
 
