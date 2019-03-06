@@ -3,6 +3,7 @@
  */
 package com.reportmill.app;
 import com.reportmill.base.ReportMill;
+import snap.util.SnapUtils;
 import snap.view.*;
 import snap.viewx.*;
 import snap.web.WebURL;
@@ -109,6 +110,7 @@ public void respondUI(ViewEvent anEvent)
         epane.getInspectorPanel().showDocumentInspector();
         RMEditorPane ep = epane; runLater(() -> ep.getWindow().toFront());
         close();  // Close welcome panel
+        runLater(() -> new SamplesPane().showSamples(ep));
     }
             
     // Handle OpenButton
@@ -159,7 +161,7 @@ public RMEditorPane newEditorPane()
     
     // Otherwise, return new pane with UI loaded
     RMEditorPane ep = new RMEditorPane();
-    ep.getUI().setGrowWidth(true); // So it will expand to page in browser
+    if(SnapUtils.isTeaVM) ep.getUI().getWindow().setMaximized(true);
     return ep;
 }
 

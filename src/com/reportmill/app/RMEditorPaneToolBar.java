@@ -181,6 +181,9 @@ protected void respondUI(ViewEvent anEvent)
         RMEditorUtils.setFormat(editor, nfmt);
     }
     
+    if(anEvent.equals("ShowSamplesButton"))
+        new SamplesPane().showSamples(epane);
+    
     // Handle Preview/Edit button and PreviewMenuItem
     if(anEvent.equals("PreviewEditButton") || anEvent.equals("PreviewMenuItem")) {
         
