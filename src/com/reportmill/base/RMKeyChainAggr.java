@@ -80,8 +80,14 @@ private synchronized static Method getAggrMethod(String aName)
  */
 private static Method getAggrMethodImpl(String aName)
 {
-    try { return RMKeyChainAggr.class.getMethod(aName, _argClasses); } catch(Exception e) { }
-    for(Class cls : RMKeyChainFuncs._funcClasses) try { return cls.getMethod(aName,_argClasses); } catch(Exception e) {}
+    // Lookup method on RMKeyChainAggr.class
+    Method meth = ClassUtils.getMethod(RMKeyChainAggr.class, aName, _argClasses); if(meth!=null) return meth;
+    
+    // Lookup method on registered classes
+    for(Class cls : RMKeyChainFuncs._funcClasses) { meth = ClassUtils.getMethod(cls, aName, _argClasses);
+        if(meth!=null) return meth; }
+        
+    // Return null method placeholder, since method not found
     return _emptyMeth;
 }
 

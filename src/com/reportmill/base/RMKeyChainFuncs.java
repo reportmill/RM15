@@ -94,8 +94,14 @@ public Object invoke(Object anObj) throws InvocationTargetException, IllegalAcce
  */
 private static Method getMethod(String aName, Class ... argClasses)
 {
-    try { return RMKeyChainFuncs.class.getMethod(aName, argClasses); } catch(Exception e) { }
-    for(Class cls : _funcClasses) try { return cls.getMethod(aName, argClasses); } catch(Exception e) { }
+    // Lookup method on RMKeyChainFuncs.class
+    Method meth = ClassUtils.getMethod(RMKeyChainFuncs.class, aName, argClasses); if(meth!=null) return meth;
+    
+    // Lookup method on registered classes
+    for(Class cls : _funcClasses) { meth = ClassUtils.getMethod(cls, aName, argClasses);
+        if(meth!=null) return meth; }
+        
+    // Return null, since method not found
     return null;
 }
 
