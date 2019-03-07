@@ -14,8 +14,6 @@ import snap.util.*;
  * </pre></blockquote><p>
  * This class also provides useful static methods for comparison and sorting:
  * <p><blockquote><pre>
- *   RMSort.sort(myList, "getTitle"); // Sort myList by its contents' getTitle method (alphabetically)
- *   RMSort.sort(myList, bestRevenueFirst); // Sort myList by its contents' getRevenue method (largest first)
  *   List mySortList = new ArrayList();
  *   mySortList.add(bestRevenueFirst);
  *   mySortList.add(titleFirst);
@@ -178,63 +176,11 @@ public static int Compare(Object anObj1, Object anObj2)
 }
 
 /**
- * Returns the given list sorted by the given key.
- */
-public static void sort(List aList, String aKey)  { Collections.sort(aList, new RMSort(aKey)); }
-
-/**
- * Returns the given list sorted by the given sort.
- */
-public static void sort(List aList, RMSort aSort)  { Collections.sort(aList, aSort); }
-
-/**
- * Returns the given list sorted by the given key.
- */
-public static void sort(List aList, String ... theKeys)
-{
-    List <RMSort> sorts = new ArrayList(theKeys.length);
-    for(String key : theKeys) sorts.add(new RMSort(key));
-    sort(aList, sorts);
-}
-
-/**
- * Returns the given list sorted by the given sort.
- */
-public static void sort(List aList, RMSort ... theSorts)  { sort(aList, Arrays.asList(theSorts)); }
-
-/**
  * Returns the given list sorted by the given list of sorts.
  */
-public static void sort(List aList, List aSortList)  { Collections.sort(aList, new RMSortsComparator(aSortList)); }
-
-/**
- * Returns a new sorted list from given collection.
- */
-public static <T extends Comparable<? super T>> List <T> sortedList(Collection <T> aCollection)
+public static void sort(List aList, List <RMSort> aSortList)
 {
-    List <T> list = new ArrayList(aCollection);
-    Collections.sort(list);
-    return list;
-}
-
-/**
- * Returns a new list from the given list sorted by the given key.
- */
-public static <T> Vector <T> sortedList(Collection <T> aCollection, String aKey)
-{
-    Vector <T> list = new Vector(aCollection);
-    sort(list, aKey);
-    return list;
-}
-
-/**
- * Returns a new list from the given list sorted by the given key.
- */
-public static <T> Vector <T> sortedList(Collection <T> aCollection, String ... theKeys)
-{
-    Vector <T> list = new Vector(aCollection);
-    sort(list, theKeys);
-    return list;
+    Collections.sort(aList, new RMSortsComparator(aSortList));
 }
 
 /**
@@ -243,16 +189,16 @@ public static <T> Vector <T> sortedList(Collection <T> aCollection, String ... t
 private static class RMSortsComparator implements Comparator {
 
     // The list of sorts
-    List  _sorts;
+    List <RMSort> _sorts;
 
     // Creates a new RMSortsComparator
-    public RMSortsComparator(List aSortList)  { _sorts = aSortList; }
+    public RMSortsComparator(List <RMSort> aSortList)  { _sorts = aSortList; }
 
     // Compares two objects with sorts list
     public int compare(Object obj1, Object obj2)
     {
         // Iterate over sorts: Compare and if not equal, return result
-        for(int i=0, iMax=_sorts.size(); i<iMax; i++) { RMSort sort = (RMSort)_sorts.get(i);
+        for(int i=0, iMax=_sorts.size(); i<iMax; i++) { RMSort sort = _sorts.get(i);
             int compare = sort.compare(obj1, obj2);
             if(compare!=0)
                 return compare;
@@ -270,8 +216,7 @@ public boolean equals(Object anObj)
 {
     // Check identity, and class and get other
     if(anObj==this) return true;
-    if(!(anObj instanceof RMSort)) return false;
-    RMSort other = (RMSort)anObj;
+    RMSort other = anObj instanceof RMSort? (RMSort)anObj : null; if(other==null) return false;
     
     // Check Key, Order
     if(!SnapUtils.equals(other._key, _key)) return false;
@@ -282,9 +227,9 @@ public boolean equals(Object anObj)
 /**
  * Standard clone implementation.
  */
-public Object clone()
+public RMSort clone()
 {
-    try { return super.clone(); }
+    try { return (RMSort)super.clone(); }
     catch(CloneNotSupportedException e) { return null; }
 }
 

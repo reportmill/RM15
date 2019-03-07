@@ -2,8 +2,6 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.shape;
-import com.reportmill.base.RMKeyChain;
-import com.reportmill.base.RMSort;
 import java.util.*;
 import java.util.List;
 import snap.gfx.*;
@@ -194,7 +192,7 @@ public void setNumberOfColumns(int aCount)
     if(aCount<1) aCount = 1;
 
     // Get average width of children
-    float width = getChildCount()==0? 120 : RMKeyChain.getFloatValue(getChildren(), "average.Width");
+    double width = getChildCount()==0? 120 : RMShapeUtils.getAverageWidth(getChildren());
     
     // Iterate over missing children range and add children
     for(int i=getChildCount(); i<aCount; i++) {
@@ -560,7 +558,7 @@ protected void fromXMLShape(XMLArchiver anArchiver, XMLElement anElement)
 protected void fromXMLChildren(XMLArchiver anArchiver, XMLElement anElement)
 {
     super.fromXMLChildren(anArchiver, anElement);
-    if(isStructured()) RMSort.sort(_children, "X");
+    if(isStructured()) RMShapeUtils.sortByX(_children);
 }
 
 /**

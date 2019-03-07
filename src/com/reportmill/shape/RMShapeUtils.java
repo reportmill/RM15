@@ -11,6 +11,94 @@ import snap.gfx.*;
 public class RMShapeUtils {
 
 /**
+ * Returns the average width of shapes.
+ */
+public static double getAverageWidth(List <RMShape> theShapes)
+{
+    double w = 0; for(RMShape s : theShapes) w += s.getWidth();
+    return w/theShapes.size();
+}
+
+/**
+ * Returns the average width of shapes.
+ */
+public static double getMaxFrameMaxY(List <RMShape> theShapes)
+{
+    double my = 0; for(RMShape s : theShapes) if(s.isVisible()) my = Math.max(my, s.getFrameMaxY());
+    return my;
+}
+
+/**
+ * Sorts given list of shapes by X.
+ */
+public static void sortByX(List <RMShape> theShapes)
+{
+    Collections.sort(theShapes, (s0,s1) -> compareShapeX(s0,s1));
+}
+
+/**
+ * Returns a copy of given list of shapes sorted by X.
+ */
+public static List <RMShape> getShapesSortedByX(List <RMShape> theShapes)
+{
+    return getShapesSorted(theShapes, (s0,s1) -> compareShapeX(s0,s1));
+}
+
+/**
+ * Returns a copy of given list of shapes sorted by FrameX.
+ */
+public static List <RMShape> getShapesSortedByFrameX(List <RMShape> theShapes)
+{
+    return getShapesSorted(theShapes, (s0,s1) -> compareShapeFrameX(s0,s1));
+}
+
+/**
+ * Returns a copy of given list of shapes sorted by FrameY.
+ */
+public static List <RMShape> getShapesSortedByFrameY(List <RMShape> theShapes)
+{
+    return getShapesSorted(theShapes, (s0,s1) -> compareShapeFrameY(s0,s1));
+}
+
+/**
+ * Returns a copy of given list of shapes sorted by FrameY.
+ */
+public static List <RMShape> getShapesSortedByFrameYFrameX(List <RMShape> theShapes)
+{
+    return getShapesSorted(theShapes, (s0,s1) -> compareShapeFrameYFrameX(s0,s1));
+}
+
+/**
+ * Returns a copy of given list of shapes sorted by shape Index.
+ */
+public static List <RMShape> getShapesSortedByIndex(List <RMShape> theShapes)
+{
+    return getShapesSorted(theShapes, (s0,s1) -> compareShapeIndex(s0,s1));
+}
+
+/**
+ * Returns a copy of given list of shapes sorted by Comparator.
+ */
+public static List <RMShape> getShapesSorted(List <RMShape> theShapes, Comparator <RMShape> aComp)
+{
+    List <RMShape> shapes = new ArrayList(theShapes);
+    Collections.sort(shapes, aComp);
+    return shapes;
+}
+
+/** Compare methods for Shape X, FrameX, FrameY, FrameYFrameX, Index */
+private static int compareShapeX(RMShape s0, RMShape s1)
+{ double v0 = s0.getX(), v1 = s1.getX(); return v0<v1? -1 : v0>v1? 1 : 0; }
+private static int compareShapeFrameX(RMShape s0, RMShape s1)
+{ double v0 = s0.getFrameX(), v1 = s1.getFrameX(); return v0<v1? -1 : v0>v1? 1 : 0; }
+private static int compareShapeFrameY(RMShape s0, RMShape s1)
+{ double v0 = s0.getFrameY(), v1 = s1.getFrameY(); return v0<v1? -1 : v0>v1? 1 : 0; }
+private static int compareShapeFrameYFrameX(RMShape s0, RMShape s1)
+{ int c = compareShapeFrameY(s0,s1); if(c==0) c = compareShapeFrameX(s0,s1); return c; }
+private static int compareShapeIndex(RMShape s0, RMShape s1)
+{ int v0 = s0.indexOf(), v1 = s1.indexOf(); return v0<v1? -1 : v0>v1? 1 : 0; }
+
+/**
  * Returns the bounds of a given subset of this shape's children.
  */
 public static Rect getBoundsOfChildren(RMShape aShape, List <? extends RMShape> aList)
@@ -31,44 +119,6 @@ public static Rect getBoundsOfChildren(RMShape aShape, List <? extends RMShape> 
     // Return frame
     return rect;
 }
-
-/**
- * Returns a copy of given list of shapes, with shapes sorted by X.
- */
-public static List <RMShape> getShapesSortedByX(List <RMShape> theShapes)
-{
-    List <RMShape> shapes = new ArrayList(theShapes);
-    Collections.sort(shapes, (s0,s1) -> compareShapeX(s0,s1));
-    return shapes;
-}
-
-/**
- * Returns a copy of given list of shapes, with shapes sorted by FrameX.
- */
-public static List <RMShape> getShapesSortedByFrameX(List <RMShape> theShapes)
-{
-    List <RMShape> shapes = new ArrayList(theShapes);
-    Collections.sort(shapes, (s0,s1) -> compareShapeFrameX(s0,s1));
-    return shapes;
-}
-
-/**
- * Returns a copy of given list of shapes, with shapes sorted by FrameY.
- */
-public static List <RMShape> getShapesSortedByFrameY(List <RMShape> theShapes)
-{
-    List <RMShape> shapes = new ArrayList(theShapes);
-    Collections.sort(shapes, (s0,s1) -> compareShapeFrameY(s0,s1));
-    return shapes;
-}
-
-/** Compare method for Shape.FrameX, Shape.FrameY. */
-private static int compareShapeX(RMShape s0, RMShape s1)
-{ double v0 = s0.getX(), v1 = s1.getX(); return v0<v1? -1 : v0>v1? 1 : 0; }
-private static int compareShapeFrameX(RMShape s0, RMShape s1)
-{ double v0 = s0.getFrameX(), v1 = s1.getFrameX(); return v0<v1? -1 : v0>v1? 1 : 0; }
-private static int compareShapeFrameY(RMShape s0, RMShape s1)
-{ double v0 = s0.getFrameY(), v1 = s1.getFrameY(); return v0<v1? -1 : v0>v1? 1 : 0; }
 
 /**
  * Returns a polygon shape by combining paths of given shapes.

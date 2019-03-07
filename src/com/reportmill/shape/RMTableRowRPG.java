@@ -4,7 +4,6 @@
 package com.reportmill.shape;
 import com.reportmill.base.RMGroup;
 import com.reportmill.base.RMKeyChain;
-import com.reportmill.base.RMSort;
 import java.util.*;
 import snap.gfx.Rect;
 import snap.util.MathUtils;
@@ -195,11 +194,9 @@ public void shiftShapesBelowHiddenShapesUp()
     boolean vsbl = true;
     for(int i=0, iMax=getChildCount(); i<iMax && vsbl; i++) vsbl = getChild(i).isVisible(); if(vsbl) return;
     
-    // Get max frame y
-    float maxFrameY = RMKeyChain.getFloatValue(getChildren(), "max.FrameMaxY");
-    
-    // Get shapes sorted by FrameY and FrameX
-    List <RMShape> shapes = RMSort.sortedList(getChildren(), "FrameY", "FrameX");
+    // Get max FrameMaxY and shapes sorted by FrameY and FrameX
+    double maxFrameY = RMShapeUtils.getMaxFrameMaxY(getChildren());
+    List <RMShape> shapes = RMShapeUtils.getShapesSortedByFrameYFrameX(getChildren());
     
     // Shift shapes for each hidden shape (from bottom up)
     for(int i=shapes.size()-1; i>=0; i--) { RMShape shape = shapes.get(i);
@@ -208,7 +205,7 @@ public void shiftShapesBelowHiddenShapesUp()
     }
     
     // Get new max frame y and remove bottom of shape
-    float maxFrameY2 = RMKeyChain.getFloatValue(getChildren(), "max(Visible? FrameMaxY : 0)");
+    double maxFrameY2 = RMShapeUtils.getMaxFrameMaxY(getChildren());
     if(!MathUtils.equals(maxFrameY, maxFrameY2))
         setHeight(getHeight() + maxFrameY2 - maxFrameY);
     

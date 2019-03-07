@@ -2,7 +2,6 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.out;
-import com.reportmill.base.RMSort;
 import com.reportmill.shape.*;
 import java.util.*;
 
@@ -53,7 +52,7 @@ static void appendDelimited(StringBuffer aSB, RMShape aShape, String fieldD, Str
     if(aShape instanceof RMTableRowRPG && aShape.getChildCount()>0) {
         
         // Get sorted children
-        List <RMShape> children = RMSort.sortedList(aShape.getChildren(), "FrameX");
+        List <RMShape> children = RMShapeUtils.getShapesSortedByFrameX(aShape.getChildren());
 
         // Iterate over children
         for(int i=0, iMax=children.size(); i<iMax; i++) { RMShape child = children.get(i);

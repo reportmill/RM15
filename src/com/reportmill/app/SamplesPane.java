@@ -37,6 +37,7 @@ public class SamplesPane extends ViewOwner {
  */
 public void showSamples(RMEditorPane anEP)
 {
+    anEP.setEditing(true);
     _epane = anEP;
     ChildView aView = (ChildView)anEP.getUI();
 
@@ -172,11 +173,13 @@ static Size getDocSize(int anIndex)
 /**
  * Loads the thumbnail image for each sample in background thread.
  */
-void loadImagesInBackground()
-{
-    // If app thread, come back in background thread
-    if(isEventThread()) { new Thread(() -> loadImagesInBackground()).start(); return; }
+void loadImagesInBackground()  { new Thread(() -> loadImages()).start(); }
     
+/**
+ * Loads the thumbnail image for each sample in background thread.
+ */
+void loadImages()
+{
     // Iterate over sample names and load/set images
     for(int i=0; i<SALL.length; i++) { int index = i;
         Image img = getDocImage(i);

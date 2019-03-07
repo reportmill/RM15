@@ -4,7 +4,6 @@
 package com.reportmill.app;
 import com.reportmill.apptools.*;
 import com.reportmill.base.RMFormat;
-import com.reportmill.base.RMSort;
 import com.reportmill.graphics.*;
 import com.reportmill.shape.*;
 import java.util.*;
@@ -25,7 +24,7 @@ public class RMEditorUtils {
  * If given shapes list is null, use editor selected shapes.
  * If given group shape is null, create new generic group shape.
  */
-public static void groupShapes(RMEditor anEditor, List <? extends RMShape> theShapes, RMParentShape aGroupShape)
+public static void groupShapes(RMEditor anEditor, List <RMShape> theShapes, RMParentShape aGroupShape)
 {
     // If shapes not provided, use editor selected shapes
     if(theShapes==null)
@@ -38,7 +37,7 @@ public static void groupShapes(RMEditor anEditor, List <? extends RMShape> theSh
     anEditor.undoerSetUndoTitle("Group");
 
     // Get copy of shapes, sorted by their original index in parent
-    List <? extends RMShape> shapes = RMSort.sortedList(theShapes, "indexOf");
+    List <RMShape> shapes = RMShapeUtils.getShapesSortedByIndex(theShapes);
     
     // Get parent
     RMParentShape parent = shapes.get(0).getParent();

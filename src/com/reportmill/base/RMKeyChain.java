@@ -407,10 +407,6 @@ public static Number getNumberValue(Object anObj, Object aKeyChain)
 public static int getIntValue(Object anObj, Object aKeyChain)
 { return SnapUtils.intValue(getValue(anObj, aKeyChain)); }
 
-/** Convenience - returns a float for an object and key chain. */
-public static float getFloatValue(Object anObj, Object aKeyChain)
-{ return SnapUtils.floatValue(getValue(anObj, aKeyChain)); }
-
 /** Convenience - returns a double for an object and key chain. */
 public static double getDoubleValue(Object anObj, Object aKeyChain)
 { return SnapUtils.doubleValue(getValue(anObj, aKeyChain)); }
