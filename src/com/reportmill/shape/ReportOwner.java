@@ -176,6 +176,15 @@ public Object getKeyChainValue(Object aRoot, RMKeyChain aKeyChain)
                 return val;
         }
         
+        // Check for "Root" key (evaluates key remainder on DataStack root)
+        if(op==RMKeyChain.Op.Chain) { String key = aKeyChain.getChildString(0);
+            if(key.equals("Root")) {
+                Object dso = _dataStack.get(0), val = RMKeyChain.getValue(aRoot, dso, aKeyChain.subchain(1));
+                if(val!=null)
+                    return val;
+            }
+        }
+        
         // Try to evaluate KeyChain against DataStack objects
         for(int i=_dataStack.size()-1; i>=0; i--) { Object dso = _dataStack.get(i);
             Object val = RMKeyChain.getValue(aRoot, dso, aKeyChain);

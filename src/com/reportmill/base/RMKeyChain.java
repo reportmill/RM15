@@ -567,9 +567,12 @@ public static void setValueSilent(Object anObj, String aKey, Object aValue)
  */
 public String toString()
 {
+    // Get op (just return ValueString if Key or Literal)
+    Op op = getOp(); if(op==Op.Key || op==Op.Literal) return getValueString();
+    
+    // Otherwise, build string in StringBuffer
     StringBuffer sb = new StringBuffer(); int cc = getChildCount();
-    switch(getOp()) {
-        case Key: case Literal: sb.append(getValue()); break;
+    switch(op) {
         case Add: sb.append(getChild(0)).append('+').append(getChild(1)); break;
         case Subtract: sb.append(getChild(0)).append('-').append(getChild(1)); break;
         case Multiply: sb.append(getChild(0)).append('*').append(getChild(1)); break;
