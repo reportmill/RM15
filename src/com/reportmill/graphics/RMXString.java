@@ -280,14 +280,12 @@ public RMXString substring(int aStart, int aEnd)  { return new RMXString(_rtext.
  */
 public void coalesceNewlines()
 {
-    // Get string
+    // Iterate over occurrences of adjacent newlines (from back to font) and remove redundant newline chars
     String string = toString();
-    
-    // Iterate over occurrences of adjacent newlines (from back of string to font) and replace with single newline
     for(int start=string.lastIndexOf("\n\n"); start>=0; start=string.lastIndexOf("\n\n", start)) {
-        int end = start + 2;
+        int end = start + 1;
         while(start>0 && string.charAt(start-1)=='\n') start--;
-        replaceChars("\n", start, end);
+        removeChars(start, end);
         string = toString();
     }
     

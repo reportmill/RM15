@@ -16,8 +16,8 @@ import snap.view.*;
  */
 public class RMTextTool <T extends RMTextShape> extends RMTool <T> {
     
-    // The TextView
-    TextView          _textView;
+    // The TextArea
+    TextArea          _textArea;
     
     // The shape hit by text tool on mouse down
     RMShape           _downShape;
@@ -43,11 +43,13 @@ public class RMTextTool <T extends RMTextShape> extends RMTool <T> {
 protected void initUI()
 {
     // Get the TextView and register to update selection
-    _textView = getView("TextView", TextView.class);
-    _textView.getTextArea().addPropChangeListener(pce -> {
-        RMEditor ed = getEditor(); TextArea tarea = _textView.getTextArea();
-        RMTextEditor ted = ed.getTextEditor(); if(ted!=null) ted.setSel(tarea.getSelStart(),tarea.getSelEnd());
+    TextView textView = getView("TextView", TextView.class);
+    _textArea = textView.getTextArea();
+    _textArea.addPropChangeListener(pce -> {
+        RMEditor ed = getEditor();
+        RMTextEditor ted = ed.getTextEditor(); if(ted!=null) ted.setSel(_textArea.getSelStart(), _textArea.getSelEnd());
         RMTextShape text = getSelectedShape(); if(text!=null) text.repaint();
+        ViewUtils.runOnMouseUp(() -> getEditorPane().resetLater()); resetLater();
     }, TextArea.Selection_Prop);
     
     // Configure the format
@@ -55,7 +57,7 @@ protected void initUI()
 }
 
 /**
- * Refreshes UI controls from currently selected text shape.
+ * Refresh UI from currently selected text shape.
  */
 public void resetUI()
 {
@@ -64,7 +66,8 @@ public void resetUI()
     RMTextShape text = getSelectedShape(); if(text==null) return;
     
     // Get paragraph from text
-    RMParagraph pgraph = text.getXString().getParagraphAt(0);
+    int selStart = 0; if(_textArea.isFocused()) selStart = _textArea.getSelStart();
+    RMParagraph pgraph = text.getXString().getParagraphAt(selStart);
     
     // If editor is text editing, get paragraph from text editor instead
     RMTextEditor ted = editor.getTextEditor();
@@ -81,13 +84,13 @@ public void resetUI()
     setViewValue("AlignBottomButton", text.getAlignmentY()==RMTypes.AlignY.Bottom); // Update AlignBottomButton
     
     // Set TextView RichText and selection
-    _textView.getTextArea().setRichText(text.getRichText()); //if(!_textArea.isFocusOwner())?
-    if(ted!=null) _textView.setSel(ted.getSelStart(),ted.getSelEnd());
+    _textArea.setRichText(text.getRichText()); //if(!_textArea.isFocusOwner())?
+    if(ted!=null) _textArea.setSel(ted.getSelStart(),ted.getSelEnd());
 
     // Get text's background color and set in TextArea if found
     Color color = null; for(RMShape shape=text; color==null && shape!=null;) {
         if(shape.getFill()==null) shape = shape.getParent(); else color = shape.getFill().getColor(); }
-    _textView.getTextArea().setFill(color==null? Color.WHITE : color);
+    _textArea.setFill(color==null? Color.WHITE : color);
     
     // Get xstring font size and scale up to 12pt if any string run is smaller
     //double fsize = 12;
