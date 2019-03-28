@@ -36,30 +36,28 @@ protected void initUI()  { enableEvents("KeyText", DragDrop); }
  */
 public void resetUI()
 {    
-    // Get selected image, image fill, image data and fill style (just return if null)
-    RMImageShape image = getSelectedShape(); if(image==null) return;
-    RMImageData idata = image.getImageData();
+    // Get selected image shape and image (just return if null)
+    RMImageShape imgShp = getSelectedShape(); if(imgShp==null) return;
+    Image img = imgShp.getImage();
     
     // Reset KeyText, MarginsText, GrowToFitCheckBox, PreserveRatioCheckBox
-    setViewValue("KeyText", image.getKey());
-    setViewValue("PaddingText", StringUtils.toString(getUnitsFromPoints(image.getPadding())));
-    setViewValue("GrowToFitCheckBox", image.isGrowToFit());
-    setViewValue("PreserveRatioCheckBox", image.getPreserveRatio());
+    setViewValue("KeyText", imgShp.getKey());
+    setViewValue("PaddingText", StringUtils.toString(getUnitsFromPoints(imgShp.getPadding())));
+    setViewValue("GrowToFitCheckBox", imgShp.isGrowToFit());
+    setViewValue("PreserveRatioCheckBox", imgShp.getPreserveRatio());
     
     // Reset RoundingThumb and RoundingText
-    setViewValue("RoundingThumb", image.getRadius());
-    setViewValue("RoundingText", image.getRadius());
+    setViewValue("RoundingThumb", imgShp.getRadius());
+    setViewValue("RoundingText", imgShp.getRadius());
     
     // Reset TypeLabel
-    if(idata==null || idata==RMImageData.EMPTY) setViewValue("TypeLabel", "");
-    else setViewValue("TypeLabel", "Type: " + idata.getType() + "\nSize: " + idata.getWidth() + "x" + idata.getHeight()+
-        " (" + (int)(image.getWidth()/idata.getWidth()*image.getScaleX()*100) + "%)");
+    if(img==null) setViewValue("TypeLabel", "");
+    else setViewValue("TypeLabel", "Type: " + img.getType() + "\nSize: " + img.getPixWidth() + "x" + img.getPixHeight()+
+        " (" + (int)(imgShp.getWidth()/img.getWidth()*imgShp.getScaleX()*100) + "%)");
     
-    // Reset SaveButton enabled
-    setViewEnabled("SaveButton", idata!=null);
-    
-    // Reset JPEGButton enabled
-    setViewEnabled("JPEGButton", idata!=null && !idata.getType().equals("jpg"));
+    // Reset SaveButton, JPEGButton enabled
+    setViewEnabled("SaveButton", img!=null);
+    setViewEnabled("JPEGButton", img!=null && !img.getType().equals("jpg"));
 }
 
 /**
@@ -67,13 +65,13 @@ public void resetUI()
  */
 public void respondUI(ViewEvent anEvent)
 {
-    // Get selected image and images (just return if null)
-    RMImageShape image = getSelectedShape(); if(image==null) return;
+    // Get selected image shape and image shapes (just return if null)
+    RMImageShape imgShp = getSelectedShape(); if(imgShp==null) return;
     List <RMImageShape> images = (List)getSelectedShapes();
 
     // Handle KeyText
     if(anEvent.equals("KeyText"))
-        image.setKey(StringUtils.delete(anEvent.getStringValue(), "@"));
+        imgShp.setKey(StringUtils.delete(anEvent.getStringValue(), "@"));
         
     // Handle KeysButton
     if(anEvent.equals("KeysButton"))
@@ -91,7 +89,7 @@ public void respondUI(ViewEvent anEvent)
     
     // Handle Rounding Radius Thumb & Text
     if(anEvent.equals("RoundingThumb") || anEvent.equals("RoundingText")) {
-        image.undoerSetUndoTitle("Rounding Change");
+        imgShp.undoerSetUndoTitle("Rounding Change");
         float value = anEvent.getFloatValue();
         for(RMImageShape im : images) {
             im.setRadius(value);
@@ -102,18 +100,17 @@ public void respondUI(ViewEvent anEvent)
     
     // Handle SaveButton
     if(anEvent.equals("SaveButton")) {
-        RMImageData idata = image.getImageData(); if(idata==null) return;
-        String type = idata.getType(); if(StringUtils.length(type)==0) return;
+        Image img = imgShp.getImage(); if(img==null) return;
+        String type = img.getType(); if(StringUtils.length(type)==0) return;
         String path = FilePanel.showSavePanel(getEditor(), type.toUpperCase() + " File", type); if(path==null) return;
-        SnapUtils.writeBytes(idata.getBytes(), path);
+        SnapUtils.writeBytes(img.getBytes(), path);
     }
     
     // Handle JPEGButton
     if(anEvent.equals("JPEGButton")) {
-        RMImageData idata = image.getImageData(); if(idata==null) return;
-        Image img = idata.getImage(); if(img==null) return;
+        Image img = imgShp.getImage(); if(img==null) return;
         byte jpegBytes[] = img.getBytesJPEG();
-        image.setImageData(jpegBytes);
+        imgShp.setImageData(jpegBytes);
     }
 }
 

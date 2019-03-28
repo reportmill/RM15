@@ -55,6 +55,11 @@ public void setKey(String aString)
 }
 
 /**
+ * Returns the image.
+ */
+public Image getImage()  { return _imageData!=null? _imageData.getImage() : null; }
+
+/**
  * Returns the image data.
  */
 public RMImageData getImageData()  { return _imageData; }
@@ -142,7 +147,7 @@ public void setPreserveRatio(boolean aValue)
 protected double getPrefWidthImpl(double aHeight)
 {
     RMImageData id = getImageData(); if(id==null) return 0;
-    double pw = id.getImageWidth(), ph = id.getImageHeight();
+    double pw = id.getWidth(), ph = id.getHeight();
     if(aHeight>0 && getPreserveRatio() && ph>aHeight) pw = aHeight*pw/ph;
     return pw;
 }
@@ -153,7 +158,7 @@ protected double getPrefWidthImpl(double aHeight)
 protected double getPrefHeightImpl(double aWidth)
 {
     RMImageData id = getImageData(); if(id==null) return 0;
-    double pw = id.getImageWidth(), ph = id.getImageHeight();
+    double pw = id.getWidth(), ph = id.getHeight();
     if(aWidth>0 && getPreserveRatio() && pw>aWidth) ph = aWidth*ph/pw;
     return ph;
 }
@@ -200,9 +205,17 @@ protected void paintShape(Painter aPntr)
     super.paintShape(aPntr);
     RMImageData id = getImageData();
     if(id==null) { if(getFill()!=null || !RMShapePaintProps.isEditing(aPntr)) return; else id = RMImageData.EMPTY; }
-    Rect ibounds = getImageBounds();
+    
+    // Get image
+    Image image = id.getImage();
+    if(image==null) image = RMImageData.EMPTY.getImage(); if(image==null) return;
+    Rect ibnds = getImageBounds();
+    
+    // Draw image transformed to bounds
     aPntr.clip(getPath());
-    id.paint(aPntr, ibounds.getX(), ibounds.getY(), ibounds.getWidth(), ibounds.getHeight());
+    double sx = ibnds.width/image.getPixWidth(), sy = ibnds.height/image.getPixHeight();
+    Transform transform = new Transform(sx, 0, 0, sy, ibnds.x, ibnds.y);
+    aPntr.drawImage(image, transform);
 }
 
 /**
@@ -216,7 +229,7 @@ public Rect getImageBounds()
     
     // Get width/height for shape, image and padded area
     double sw = getWidth(), sh = getHeight();
-    double iw = id.getImageWidth(), ih = id.getImageHeight();
+    double iw = id.getWidth(), ih = id.getHeight();
     double pw = sw - pd*2, ph = sh - pd*2; if(pw<0) pw = 0; if(ph<0) ph = 0;
     
     // Get image bounds width/height, ShrinkToFit if greater than available space (with PreserveRatio, if set)

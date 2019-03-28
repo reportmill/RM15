@@ -38,7 +38,6 @@ public static class RMTextShapePdfr <T extends RMTextShape> extends RMShapePdfr 
         
         // Writing PDF Widget Annotation: Get pdf page object and bump PDF version to 1.4
         PDFPageWriter pwriter = aWriter.getPageWriter();
-        aWriter.getPDFFile().setVersion(1.4f);
         
         // Get TextShape info
         String name = aTextShape.getName(); if(name==null) name = "Text Box " + aWriter.getAcroFormFieldCount();
@@ -89,8 +88,8 @@ public static class RMImageShapePdfr <T extends RMImageShape> extends RMShapePdf
         // Do normal version
         super.writeShape(anImageShape, aWriter);
         
-        // Get image fill and image data (just return if missing or invalid)
-        RMImageData idata = anImageShape.getImageData(); if(idata==null || !idata.isValid()) return;
+        // Get image fill and image data (just return if missing)
+        RMImageData idata = anImageShape.getImageData(); if(idata==null) return;
         String iname = aWriter.getImageName(idata);
         
         // Add image data
@@ -116,10 +115,6 @@ public static class RMImageShapePdfr <T extends RMImageShape> extends RMShapePdf
         // Do image and grestore
         pdfPage.appendln("/" + iname + " Do");
         pdfPage.grestore();
-        
-        // If image has alpha, declare output to be PDF-1.4
-        if(idata.hasAlpha() && idata.getSamplesPerPixel()==4)
-            aWriter.getPDFFile().setVersion(1.4f);
     }
 }
 
@@ -247,10 +242,6 @@ public static class ViewShapePdfr <T extends ViewShape> extends RMShapePdfr <T> 
         // Do normal version
         super.writeShape(aViewShape, aWriter);
         
-        // Get pdf page object and bump PDF version to 1.4
-        PDFPageWriter pwriter = aWriter.getPageWriter();
-        aWriter.getPDFFile().setVersion(1.4f);
-        
         // Get ViewShape info
         String name = aViewShape.getName(); if(name==null) name = "Text Box " + aWriter.getAcroFormFieldCount();
         String pdfName = name!=null && name.length()>0? '(' + name + ')' : null;
@@ -272,6 +263,7 @@ public static class ViewShapePdfr <T extends ViewShape> extends RMShapePdfr <T> 
         
         // Create and add annotation to page
         PDFAnnotation widget = new PDFAnnotation.Widget(frame, "");
+        PDFPageWriter pwriter = aWriter.getPageWriter();
         pwriter.addAnnotation(widget);
         
         // Set Annotation Flags, Field-Type

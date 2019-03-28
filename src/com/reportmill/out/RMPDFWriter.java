@@ -186,9 +186,7 @@ public void writeXRefEntry(Object anObj)
 {
     // Handle RMImageData
     if(anObj instanceof RMImageData) { RMImageData idata = (RMImageData)anObj;
-        if(!idata.isValid()) { System.err.println("RMPDFWriter.writeImageData: Invalid image"); return; }
-        PDFWriterImage.writeImage(this, idata.getImage());
-    }
+        PDFWriterImage.writeImage(this, idata.getImage()); }
         
     // Handle RMImageData
     else if(anObj instanceof RMPDFData) { RMPDFData pdata = (RMPDFData)anObj;

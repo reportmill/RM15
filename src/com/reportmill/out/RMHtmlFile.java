@@ -227,17 +227,17 @@ private static class RMShapeHpr <T extends RMShape> extends RMHtmlHelper<T> {
     {
         // Handle RMImageFill
         if(aFill instanceof RMImageFill) { RMImageFill ifill = (RMImageFill)aFill;
-            RMImageData idata = ifill.getImageData();
-            String id = imageName(aFile, aShape, idata);
+            Image img = ifill.getImage();
+            String id = imageName(aFile, aShape, img);
             XMLElement fxml = new XMLElement("pattern");
             fxml.add("id", id);
-            fxml.add("width", ifill.isTiled()? idata.getImageWidth() : aShape.getWidth());
-            fxml.add("height", ifill.isTiled()? idata.getImageHeight() : aShape.getHeight());
+            fxml.add("width", ifill.isTiled()? img.getWidth() : aShape.getWidth());
+            fxml.add("height", ifill.isTiled()? img.getHeight() : aShape.getHeight());
             fxml.add("patternUnits", "userSpaceOnUse");
             XMLElement ixml = new XMLElement("image");
             ixml.add("xlink:href", aFile._imageRoot + '/' + id);
-            ixml.add("width", ifill.isTiled()? idata.getImageWidth() : aShape.getWidth());
-            ixml.add("height", ifill.isTiled()? idata.getImageHeight() : aShape.getHeight());
+            ixml.add("width", ifill.isTiled()? img.getWidth() : aShape.getWidth());
+            ixml.add("height", ifill.isTiled()? img.getHeight() : aShape.getHeight());
             if(!ifill.isTiled()) ixml.add("preserveAspectRatio", "none");
             fxml.addElement(ixml);
             anXML.addElement(fxml);
@@ -311,10 +311,10 @@ private static class RMShapeHpr <T extends RMShape> extends RMHtmlHelper<T> {
     public void writeClose(T aShape, RMHtmlFile aWriter, XMLElement anXML)  { }
     
     /** Returns a unique image name for a shape with an image fill. */
-    protected String imageName(RMHtmlFile aWriter, RMShape aShape, RMImageData anImageData)
+    protected String imageName(RMHtmlFile aWriter, RMShape aShape, Image anImage)
     {
         // See if imageBytes are already in _files, if so return respective key
-        byte imageBytes[] = anImageData.getBytes();
+        byte imageBytes[] = anImage.getBytes();
         for(String key : aWriter._files.keySet()) {
             byte bytes[] = aWriter._files.get(key);
             if(ArrayUtils.equals(imageBytes, bytes))
@@ -323,7 +323,7 @@ private static class RMShapeHpr <T extends RMShape> extends RMHtmlHelper<T> {
     
         // Get name from aShape (or use sequential name: img0, img1, etc...)
         String name = aShape.getName(); if(name==null) name = "img" + aWriter._files.size();
-        String filename = aWriter._imageRoot + name + "." + anImageData.getType();
+        String filename = aWriter._imageRoot + name + "." + anImage.getType();
         aWriter._files.put(filename, imageBytes);
         return filename;
     }
@@ -412,13 +412,13 @@ private static class RMImageShapeHpr <T extends RMImageShape> extends RMShapeHpr
         
         // Create image element, configure and add to parent XML element
         XMLElement ixml = new XMLElement("image");
-        RMImageData idata = anImageShape.getImageData(); if(idata==null || !idata.isValid()) return;
+        Image img = anImageShape.getImage(); if(img==null) return;
         Rect bounds = anImageShape.getImageBounds();
         if(bounds.getX()!=0) ixml.add("x", bounds.getX());
         if(bounds.getY()!=0) ixml.add("y", bounds.getY());
         ixml.add("width", bounds.getWidth());
         ixml.add("height", bounds.getHeight());
-        ixml.add("xlink:href", aWriter._imageRoot + '/' + imageName(aWriter, anImageShape, idata));
+        ixml.add("xlink:href", aWriter._imageRoot + '/' + imageName(aWriter, anImageShape, img));
         if(!anImageShape.getPreserveRatio()) ixml.add("preserveAspectRatio", "none");
         anXML.addElement(ixml);
     }

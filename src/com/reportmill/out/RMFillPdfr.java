@@ -157,11 +157,9 @@ public static void writeImageFill(RMShape aShape, RMImageFill anImageFill, RMPDF
  */
 public static void writeImageFill(RMImageFill anImageFill, Shape aPath, Rect bounds, RMPDFWriter aWriter)
 {
-    // Get image fill and image data (just return if missing or invalid)
-    RMImageData idata = anImageFill.getImageData(); if(idata==null || !idata.isValid()) return;
+    // Get image (just return if missing) and image name and add image to writer
+    RMImageData idata = anImageFill.getImageData(); if(idata==null) return;
     String iname = aWriter.getImageName(idata);
-    
-    // Add image data
     aWriter.addImageData(idata);
 
     // Get PDF page and gsave
@@ -236,9 +234,6 @@ public static void writeImageFill(RMImageFill anImageFill, Shape aPath, Rect bou
         
     // Grestore
     pdfPage.grestore();
-    
-    // If image has alpha, declare output to be PDF-1.4
-    if(idata.hasAlpha() && idata.getSamplesPerPixel()==4) aWriter.getPDFFile().setVersion(1.4f);
 }
 
 }

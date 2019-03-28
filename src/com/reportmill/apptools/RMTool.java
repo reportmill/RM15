@@ -856,7 +856,7 @@ private void dropImageFile(RMShape aShape, ClipboardData aFile, Point aPoint)
     editor.setCurrentToolToSelectTool();
     
     // If image not loaded, resize when loaded
-    Image img = imgShape.getImageData().getImage();
+    Image img = imgShape.getImage();
     if(!img.isLoaded()) {
         img.addPropChangeListener(pce -> {
             double dw = img.getWidth() - imgShape.getWidth(), dh = img.getHeight() - imgShape.getHeight();

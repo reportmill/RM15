@@ -52,12 +52,12 @@ public RMImageData getImageData()  { return _idata; }
 /**
  * Returns the actual display width of the image in printer's points using the image DPI if available.
  */
-public double getImageWidth()  { return _idata.getImageWidth(); }
+public double getImageWidth()  { return _idata.getWidth(); }
 
 /**
  * Returns the actual display height of the image in printer's points using the image DPI if available.
  */
-public double getImageHeight()  { return _idata.getImageHeight(); }
+public double getImageHeight()  { return _idata.getHeight(); }
 
 /**
  * Returns the X location (offset) of the image fill image.
@@ -187,7 +187,7 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
     if(anElement.hasAttribute("fillstyle")) tiled = anElement.getAttributeIntValue("fillstyle")==1;
     
     // Unarchive X, Y
-    double x = 0, y = 0, w = _idata.getImageWidth(), h = _idata.getImageHeight();
+    double x = 0, y = 0, w = _idata.getWidth(), h = _idata.getHeight();
     if(anElement.hasAttribute("x")) x = anElement.getAttributeFloatValue("x");
     if(anElement.hasAttribute("y")) y = anElement.getAttributeFloatValue("y");
     

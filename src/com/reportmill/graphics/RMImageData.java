@@ -12,7 +12,7 @@ import snap.web.WebURL;
  * This class manages image data. Each instance holds the raw image data and provides methods to return
  * attributes of the decoded image.
  */
-public class RMImageData implements Cloneable {
+public class RMImageData {
 
     // The object that provided image bytes
     Object              _source;
@@ -20,41 +20,14 @@ public class RMImageData implements Cloneable {
     // The time the source was last modified (in milliseconds since 1970)
     long                _modTime;
 
-    // The AWT version of this image
+    // The platform native version of this image
     Image               _image;
 
     // The original file bytes
     byte                _bytes[];
     
-    // The image bytes uncompressed
-    byte                _bytesDecoded[];
-    
-    // The image type ("gif", "jpg", "png", etc.)
-    String              _type = "";
-    
-    // The image pixels wide/high
-    int                 _width, _height;
-    
-    // The image DPI vertical/horizontal
-    double               _dpiX, _dpiY;
-    
-    // The image samples per pixel
-    int                 _spp;
-    
-    // The image bits per sample
-    int                 _bps;
-    
-    // Whether image has alpha
-    boolean             _hasAlpha;
-    
-    // The image color map (if indexed color)
-    byte                _colorMap[];
-    
-    // The image transparent color index (if indexed color with alpha index)
-    int                 _transparentColorIndex = -1;
-    
-    // Whether this image is valid
-    boolean             _valid = true;
+    // The image points wide/high
+    double              _width, _height;
     
     // The cache used to hold application instances
     static List <WeakReference<RMImageData>>  _cache = new ArrayList();
@@ -78,8 +51,8 @@ protected void setSource(Object aSource)
     _modTime = url!=null? url.getLastModTime() : System.currentTimeMillis();
 
     // Otherwise, assume source can provide bytes
-    _bytes = url!=null? url.getBytes() : SnapUtils.getBytes(aSource); // Get bytes
-    readBasicInfo(); _image = null; // Get reader and clear image
+    _bytes = url!=null? url.getBytes() : SnapUtils.getBytes(aSource); _image = null;
+    readBasicInfo();
 }
 
 /**
@@ -90,97 +63,37 @@ public WebURL getSourceURL()  { return _source instanceof WebURL? (WebURL)_sourc
 /**
  * Reads basic image info.
  */
-public void readBasicInfo()
+void readBasicInfo()
 {
-    // Set image type
-    _type = ImageUtils.getImageType(getBytes());
-    
     // Special case jpg, since PDF can embed raw file data and _pw, _ph & _bps
-    if(_type.equals("jpg")) {
+    String type = ImageUtils.getImageType(getBytes());
+    if(type.equals("jpg")) {
         ImageUtils.ImageInfo info = ImageUtils.getInfoJPG(getBytes());
-        _width = info.width; _height = info.height;
-        _spp = info.spp; _bps = info.bps; _dpiX = info.dpiX; _dpiY = info.dpiY;
+        _width = info.width*(72d/info.dpiX);
+        _height = info.height*(72d/info.dpiY);
         return;
     }
     
-    // Read image
+    // Get basic info from image
     Image img = getImage();
-    
-    // Get basic info from image (width, height, samples per pixel, bits per sample)
     _width = (int)img.getWidth();
     _height = (int)img.getHeight();
-    
-    // Get samples per pixel and bits per sample from color model
-    _spp = img.getSamplesPerPixel();
-    _bps = 8; // Only support 8 bit samples (expand everything)
-    if(_spp==2) // Grayscale/alpha unsupported, expand to RGB
-        _spp = 4;
-    _hasAlpha = img.hasAlpha();
-
-    // Specail handling of IndexColorModel
-    if(img.isIndexedColor()) {
-        _spp = 1; _colorMap = img.getColorMap(); _transparentColorIndex = img.getAlphaColorIndex(); }
 }
 
 /**
  * Returns the name for the image (assigned from our hashCode).
  */
-public String getName()  { return "" + System.identityHashCode(this); }
+public String getName()  { return String.valueOf(System.identityHashCode(this)); }
 
 /**
- * Returns the type for the image (one of gif, jpg, png, etc.).
+ * Returns the actual display width of the image in printer points.
  */
-public String getType()  { return _type; }
+public double getWidth()  { return _width; }
 
 /**
- * Returns the number of pixels horizontally.
+ * Returns the actual display height of the image in printer points.
  */
-public int getWidth()  { return _width; }
-
-/**
- * Returns the number of pixels vertically.
- */
-public int getHeight()  { return _height; }
-
-/**
- * Returns the actual display width of the image in printer's points using the image DPI if available.
- */
-public double getImageWidth()  { return _dpiX>0? _width*(72f/_dpiX) : _width; }
-
-/**
- * Returns the actual display height of the image in printer's points using the image DPI if available.
- */
-public double getImageHeight()  { return _dpiY>0? _height*(72f/_dpiY) : _height; }
-
-/**
- * Returns whether the image is non-grayscale.
- */
-public boolean isColor()  { return isIndexedColor() || _spp>2; }
-
-/**
- * Returns whether image has transparency.
- */
-public boolean hasAlpha()  { return _hasAlpha; }
-
-/**
- * Returns the number of samples per pixel (RGB=3, RGBA=4, GrayScale=1, etc.).
- */
-public int getSamplesPerPixel()  { return _spp; }
-
-/**
- * Returns the number of bits per sample (eg, 24 bit RGB image is 8 bits per sample).
- */
-public int getBitsPerSample()  { return _bps; }
-
-/**
- * Returns the number of bits per pixel (derived from bits per sample and samples per pixel).
- */
-public int getBitsPerPixel()  { return getBitsPerSample()*getSamplesPerPixel(); }
-
-/**
- * Returns the number of bytes per row (derived from width and bits per pixel).
- */
-public int getBytesPerRow()  { return (getWidth()*getBitsPerPixel()+7)/8; }
+public double getHeight()  { return _height; }
 
 /**
  * Returns the buffered image for image data.
@@ -202,39 +115,6 @@ public byte[] getBytes()
 }
 
 /**
- * Returns the decoded image bytes for the image.
- */
-public byte[] getBytesDecoded()
-{
-    // If already set, just return
-    if(_bytesDecoded!=null) return _bytesDecoded;
-
-    // Get bytes decoded and return
-    try { return _bytesDecoded = getImage().getBytesRGBA(); }
-    catch(Exception e) { _valid = false; return _bytesDecoded = new byte[_height*getBytesPerRow()]; }
-}
-
-/**
- * Returns whether image uses a color map.
- */
-public boolean isIndexedColor()  { return _colorMap!=null; }
-
-/**
- * Color map support: returns the bytes of color map from a color map image.
- */
-public byte[] getColorMap()  { return _colorMap; }
-
-/**
- * Color map support: returns the index of the transparent color in a color map image.
- */
-public int getAlphaColorIndex()  { return _transparentColorIndex; }
-
-/**
- * Returns whether the image was loaded successfully.
- */
-public boolean isValid()  { return _valid; }
-
-/**
  * Refreshes data from source.
  */
 protected void refresh()
@@ -250,51 +130,15 @@ protected void refresh()
  */
 public boolean equals(Object anObj)
 {
-    // Check identity and get other
     if(anObj==this) return true;
     RMImageData other = anObj instanceof RMImageData? (RMImageData)anObj : null; if(other==null) return false;
-    
-    // Check bytes
     return ArrayUtils.equals(other.getBytes(), getBytes());
-}
-
-/**
- * Standard clone implementation.
- */
-public RMImageData clone()
-{
-    try { return (RMImageData)super.clone(); }
-    catch(Exception e) { e.printStackTrace(); return null; }
-}
-
-/**
- * Draws image data in given rect.
- */
-public void paint(Painter aPntr, double x, double y, double w, double h)
-{
-    // Get image
-    Image image = getImage();
-    if(image==null) image = EMPTY.getImage();
-    
-    // If image is non-null, draw it
-    if(image!=null) {
-        double sx = w/image.getPixWidth(), sy = h/image.getPixHeight();
-        Transform transform = new Transform(sx, 0, 0, sy, x, y);
-        aPntr.drawImage(image, transform);
-    }
 }
 
 /**
  * Standard toString implementation.
  */
-public String toString()
-{
-    String str = getClass().getSimpleName() + " { ";
-    str += "Type=" + getType() + ", Width=" + getWidth() + ", Height=" + getHeight();
-    if(getSourceURL()!=null) str += ", URL=" + getSourceURL();
-    str += " }";
-    return str;
-}
+public String toString()  { return "RMImageData: URL=" + getSourceURL(); }
 
 /**
  * Returns an image data loaded from aSource. If image type supports multiple pages, page index can be specified.
@@ -337,9 +181,9 @@ public static synchronized RMImageData getImageData(Object aSource)
 
 /** Returns an image data loaded from Image. */
 private static RMImageData getImageData(Image img) {System.out.println("RMImageData.init(img): Never gets called");
-    RMImageData idata = new RMImageData(); idata._image = img; idata._type = img.hasAlpha()? "png" : "jpg";
-    idata._width = (int)img.getWidth(); idata._height = (int)img.getHeight();
-    idata._hasAlpha = img.hasAlpha(); idata._spp = idata._hasAlpha? 4 : 3; idata._bps = 8; return idata;
+    RMImageData idata = new RMImageData(); idata._image = img;
+    idata._width = img.getPixWidth(); idata._height = img.getPixHeight();
+    return idata;
 }
 
 }

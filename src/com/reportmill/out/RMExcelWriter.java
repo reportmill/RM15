@@ -242,27 +242,25 @@ private void append(RMExcelSheet rmSheet, HSSFShapeContainer aParent, RMShape aS
     if(aShape instanceof RMLineShape)
         newShape = rmSheet.addLine(aShape, aParent);
 
-    // Handle RMImage (creates a new picture every time!!)
-    else if(aShape instanceof RMImageShape) { RMImageShape imageShape = (RMImageShape)aShape;
+    // Handle RMImageShape (creates a new picture every time!!)
+    else if(aShape instanceof RMImageShape) { RMImageShape imgShape = (RMImageShape)aShape;
 
         // Get image data (if not available or invalid, just return)
-        RMImageData imageData = imageShape.getImageData();
-        if(imageData==null || !imageData.isValid()) {
-            System.err.println("Error retreiving image data"); return; }
+        Image img = imgShape.getImage(); if(img==null) return;
         
-        String type = imageData.getType();
+        String type = img.getType();
         int poiType = 0;
         if (type.equalsIgnoreCase("png"))
             poiType = HSSFWorkbook.PICTURE_TYPE_PNG;
         else if (type.equalsIgnoreCase("jpg") || type.equalsIgnoreCase("jpeg")) 
             poiType = HSSFWorkbook.PICTURE_TYPE_JPEG;
         else {
-            System.err.println("Image type \""+type+"\" not supported in Excel files.  Image should be either png or jpg format");
+            System.err.println("Image type \"" + type + "\" not supported in Excel files. Should be png or jpg.");
             return;
         }
         
         // Add picture
-        int pindex = _workbook.addPicture(imageData.getBytes(), poiType);
+        int pindex = _workbook.addPicture(img.getBytes(), poiType);
         newShape = rmSheet.addNewShape(aShape, aParent);
         ((HSSFPicture)newShape).setPictureIndex(pindex);
     }
