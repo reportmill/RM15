@@ -15,9 +15,6 @@ import snappdf.write.*;
  */
 public class RMPDFWriter extends PDFWriter {
 
-    // Map of unique image datas
-    List <RMImageData>          _imageDatas = new ArrayList();
-    
     // Map of unique PDF datas
     List <RMPDFData>            _pdfDatas = new ArrayList();
     
@@ -52,7 +49,7 @@ public byte[] getBytes(RMDocument aDoc)
 
     // Add fonts and images to xref
     _xtable.addObject(getFonts());
-    _xtable.addObject(_images);
+    _xtable.addObject(getImageRefs());
     
     // Tell acrobat reader not to scale when printing by default (only works in PDF 1.6, but is harmless in < 1.6)
     _pfile._catalogDict.put("ViewerPreferences", PDFWriter.getViewerPreferencesDefault());
@@ -130,43 +127,14 @@ public byte[] getBytes(RMDocument aDoc)
 }
 
 /**
- * Returns the name for the image data
- */
-public String getImageName(RMImageData anImageData)
-{
-    Object img = anImageData.getImage();
-    return String.valueOf(System.identityHashCode(img));
-}
-
-/**
- * Adds an image data (uniqued) to file reference table, if not already present. 
- */
-public void addImageData(RMImageData anImageData)
-{
-    // If not present, unique, add to xref table and add to image refs
-    String name = getImageName(anImageData);
-    if(!_images.containsKey(name))
-        _images.put(name, _xtable.addObject(getUniqueImageData(anImageData)));
-}
-
-/**
- * Returns a unique image data for given image data.
- */
-public RMImageData getUniqueImageData(RMImageData anImageData)
-{
-    int index = _imageDatas.indexOf(anImageData);
-    if(index<0) _imageDatas.add(index = _imageDatas.size(), anImageData);
-    return _imageDatas.get(index);
-}
-
-/**
  * Adds an image data (uniqued) to file reference table, if not already present. 
  */
 public void addPDFData(RMPDFData aPD, String aName)
 {
     // If not present, unique, add to xref table and add to image refs
-    if(!_images.containsKey(aName))
-        _images.put(aName, _xtable.addObject(getUniquePDFData(aPD)));
+    Map <String,String> imageRefs = getImageRefs();
+    if(!imageRefs.containsKey(aName))
+        imageRefs.put(aName, _xtable.addObject(getUniquePDFData(aPD)));
 }
 
 /**
@@ -184,12 +152,8 @@ public RMPDFData getUniquePDFData(RMPDFData aPD)
  */
 public void writeXRefEntry(Object anObj)
 {
-    // Handle RMImageData
-    if(anObj instanceof RMImageData) { RMImageData idata = (RMImageData)anObj;
-        PDFWriterImage.writeImage(this, idata.getImage()); }
-        
-    // Handle RMImageData
-    else if(anObj instanceof RMPDFData) { RMPDFData pdata = (RMPDFData)anObj;
+    // Handle RMPDFData
+    if(anObj instanceof RMPDFData) { RMPDFData pdata = (RMPDFData)anObj;
         PDFWriterPDF.writePDF(this, pdata.getPDFFile(), pdata.getPageIndex()); }
         
     // Otherwise, do normal version

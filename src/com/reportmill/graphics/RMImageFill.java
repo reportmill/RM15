@@ -35,8 +35,8 @@ public RMImageFill(Object aSource)  { this(aSource, false); }
 public RMImageFill(Object aSource, boolean isTiled)
 {
     _idata = RMImageData.getImageData(aSource);
-    if(isTiled) _snap = new ImagePaint(_idata.getImage());
-    else _snap = new ImagePaint(_idata.getImage(), new Rect(0,0,1,1), false);
+    if(isTiled) _snap = new ImagePaint(getImage());
+    else _snap = new ImagePaint(getImage(), new Rect(0,0,1,1), false);
 }
 
 /**
@@ -126,6 +126,17 @@ public RMImageFill copyForScale(double aScaleX, double aScaleY)
 }
 
 /**
+ * Creates a new image fill identical to this image fill, but with new value for given attribute.
+ */
+public RMImageFill copyTiled(boolean isTiled)
+{
+    RMImageFill copy = (RMImageFill)clone();
+    if(isTiled) copy._snap = new ImagePaint(getImage());
+    else copy._snap = new ImagePaint(getImage(), new Rect(0,0,1,1), false);
+    return copy;
+}
+
+/**
  * Returns the snap version of this fill.
  */
 public Paint snap()  { return _snap; }
@@ -196,8 +207,8 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
     double sy = anElement.getAttributeFloatValue("scale-y", 1);
         
     // Create Snap ImagePaint
-    if(tiled) _snap = new ImagePaint(_idata.getImage(), new Rect(x,y,w*sx,h*sx), true);
-    else _snap = new ImagePaint(_idata.getImage(), new Rect(0,0,sx,sy), false);
+    if(tiled) _snap = new ImagePaint(getImage(), new Rect(x,y,w*sx,h*sx), true);
+    else _snap = new ImagePaint(getImage(), new Rect(0,0,sx,sy), false);
     return this;
 }
 

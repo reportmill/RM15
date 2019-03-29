@@ -42,7 +42,7 @@ public void respondUI(ViewEvent anEvent)
     
     // Handle TiledCheckBox
     if(anEvent.equals("TiledCheckBox"))
-        fill = new RMImageFill(fill.getImageData(), anEvent.getBooleanValue());
+        fill = fill.copyTiled(anEvent.getBoolValue());//new RMImageFill(fill.getImageData(), anEvent.getBooleanValue());
     
     // Handle XSpinner, YSpinner, ScaleXSpinner, ScaleYSpinner
     if(anEvent.equals("XSpinner"))

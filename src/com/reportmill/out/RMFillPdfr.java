@@ -158,9 +158,9 @@ public static void writeImageFill(RMShape aShape, RMImageFill anImageFill, RMPDF
 public static void writeImageFill(RMImageFill anImageFill, Shape aPath, Rect bounds, RMPDFWriter aWriter)
 {
     // Get image (just return if missing) and image name and add image to writer
-    RMImageData idata = anImageFill.getImageData(); if(idata==null) return;
-    String iname = aWriter.getImageName(idata);
-    aWriter.addImageData(idata);
+    Image img = anImageFill.getImage(); if(img==null) return;
+    String iname = aWriter.getImageName(img);
+    aWriter.addImage(img);
 
     // Get PDF page and gsave
     PDFPageWriter pdfPage = aWriter.getPageWriter();

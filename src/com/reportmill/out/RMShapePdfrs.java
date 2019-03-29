@@ -88,12 +88,10 @@ public static class RMImageShapePdfr <T extends RMImageShape> extends RMShapePdf
         // Do normal version
         super.writeShape(anImageShape, aWriter);
         
-        // Get image fill and image data (just return if missing)
-        RMImageData idata = anImageShape.getImageData(); if(idata==null) return;
-        String iname = aWriter.getImageName(idata);
-        
-        // Add image data
-        aWriter.addImageData(idata);
+        // Get image data (just return if missing) and image name and add image
+        Image img = anImageShape.getImage(); if(img==null) return;
+        String iname = aWriter.getImageName(img);
+        aWriter.addImage(img);
     
         // Get PDF page and gsave
         PDFPageWriter pdfPage = aWriter.getPageWriter();
