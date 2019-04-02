@@ -4,20 +4,21 @@
 package com.reportmill.graphics;
 import snap.gfx.*;
 import snap.util.*;
+import snap.web.WebURL;
 
 /**
  * This class is used to fill a shape's path with an image.
  */
 public class RMImageFill extends RMFill {
 
-    // Image data
-    RMImageData        _idata = RMImageData.EMPTY;
+    // An ImageRef reference to uniqued image
+    ImageRef           _iref;
     
     // The snap ImagePaint
-    ImagePaint         _snap = EMPTY;
+    ImagePaint         _snap;
     
-    // Shared Empty paint
-    static ImagePaint EMPTY = new ImagePaint(RMImageData.EMPTY.getImage());
+    // An image placeholder for missing images
+    static Image       _emptyImage;
     
 /**
  * Creates a plain image fill.
@@ -34,30 +35,28 @@ public RMImageFill(Object aSource)  { this(aSource, false); }
  */
 public RMImageFill(Object aSource, boolean isTiled)
 {
-    _idata = RMImageData.getImageData(aSource);
+    setImageForSource(aSource);
     if(isTiled) _snap = new ImagePaint(getImage());
     else _snap = new ImagePaint(getImage(), new Rect(0,0,1,1), false);
 }
 
 /**
- * Returns the image data associated with this image fill.
+ * Returns the image associated with this image fill.
  */
-public Image getImage()  { return _idata.getImage(); }
+public Image getImage()  { return _iref!=null? _iref.getImage() : null; }
 
 /**
- * Returns the image data associated with this image fill.
+ * Returns the ImageRef reference to uniqued image.
  */
-public RMImageData getImageData()  { return _idata; }
+public ImageRef getImageRef()  { return _iref; }
 
 /**
- * Returns the actual display width of the image in printer's points using the image DPI if available.
+ * Sets the image from given source.
  */
-public double getImageWidth()  { return _idata.getWidth(); }
-
-/**
- * Returns the actual display height of the image in printer's points using the image DPI if available.
- */
-public double getImageHeight()  { return _idata.getHeight(); }
+protected void setImageForSource(Object aSource)
+{
+    _iref = ImageRef.getImageRef(aSource);
+}
 
 /**
  * Returns the X location (offset) of the image fill image.
@@ -149,7 +148,7 @@ public boolean equals(Object anObj)
     // Check identity and super and get other
     if(anObj==this) return true;
     RMImageFill other = anObj instanceof RMImageFill? (RMImageFill)anObj : null; if(other==null) return false;
-    if(!SnapUtils.equals(_idata, other._idata)) return false;
+    if(other._iref!=_iref) return false;
     return _snap.equals(other._snap);
 }
 
@@ -161,9 +160,10 @@ public XMLElement toXML(XMLArchiver anArchiver)
     // Archive basic fill attributes and set type
     XMLElement e = super.toXML(anArchiver); e.add("type", "image");
 
-    // Archive ImageData
-    if(_idata.getBytes()!=null && _idata!=RMImageData.EMPTY) {
-        String resName = anArchiver.addResource(_idata.getBytes(), _idata.getName());
+    // Archive Image bytes
+    Image img = getImage();
+    if(img!=null) {
+        String resName = anArchiver.addResource(img.getBytes(), getImageRef().getName());
         e.add("resource", resName);
     }
     
@@ -186,11 +186,11 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
     // Unarchive basic fill attributes
     super.fromXML(anArchiver, anElement);
     
-    // Unarchive ImageName: get resource bytes, page and set ImageData
+    // Unarchive ImageName: get resource bytes, page and set ImageRef
     String iname = anElement.getAttributeValue("resource");
     if(iname!=null) {
         byte bytes[] = anArchiver.getResource(iname);
-        _idata = RMImageData.getImageData(bytes);
+        setImageForSource(bytes);
     }
     
     // Unarchive Tile, legacy FillStyle (Stretch=0, Tile=1, Fit=2, FitIfNeeded=3)
@@ -198,7 +198,7 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
     if(anElement.hasAttribute("fillstyle")) tiled = anElement.getAttributeIntValue("fillstyle")==1;
     
     // Unarchive X, Y
-    double x = 0, y = 0, w = _idata.getWidth(), h = _idata.getHeight();
+    double x = 0, y = 0;
     if(anElement.hasAttribute("x")) x = anElement.getAttributeFloatValue("x");
     if(anElement.hasAttribute("y")) y = anElement.getAttributeFloatValue("y");
     
@@ -207,9 +207,22 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
     double sy = anElement.getAttributeFloatValue("scale-y", 1);
         
     // Create Snap ImagePaint
-    if(tiled) _snap = new ImagePaint(getImage(), new Rect(x,y,w*sx,h*sx), true);
-    else _snap = new ImagePaint(getImage(), new Rect(0,0,sx,sy), false);
+    Image img = getImage(); if(img==null) img = getEmptyImage();
+    if(tiled) _snap = new ImagePaint(img, new Rect(x,y,img.getWidth()*sx,img.getHeight()*sx), true);
+    else _snap = new ImagePaint(img, new Rect(0,0,sx,sy), false);
+    
+    // Return this fill
     return this;
+}
+
+/**
+ * Returns an image place holder for missing images.
+ */
+public static Image getEmptyImage()
+{
+    if(_emptyImage!=null) return _emptyImage;
+    WebURL url = WebURL.getURL(RMImageFill.class, "DefaultImage.png");
+    return _emptyImage = Image.get(url);
 }
 
 }

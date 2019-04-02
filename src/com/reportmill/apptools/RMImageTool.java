@@ -110,7 +110,7 @@ public void respondUI(ViewEvent anEvent)
     if(anEvent.equals("JPEGButton")) {
         Image img = imgShp.getImage(); if(img==null) return;
         byte jpegBytes[] = img.getBytesJPEG();
-        imgShp.setImageData(jpegBytes);
+        imgShp.setImageForSource(jpegBytes);
     }
 }
 

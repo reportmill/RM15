@@ -82,7 +82,7 @@ public static class RMTextShapePdfr <T extends RMTextShape> extends RMShapePdfr 
  */
 public static class RMImageShapePdfr <T extends RMImageShape> extends RMShapePdfr <T> {
 
-    /** Override to write ImageData. */
+    /** Override to write Image. */
     protected void writeShape(T anImageShape, RMPDFWriter aWriter)
     {
         // Do normal version
@@ -121,7 +121,7 @@ public static class RMImageShapePdfr <T extends RMImageShape> extends RMShapePdf
  */
 public static class RMPDFShapePdfr <T extends RMPDFShape> extends RMShapePdfr <T> {
 
-    /** Override to write ImageData. */
+    /** Override to write PDF XObject form do. */
     protected void writeShape(T aPDFShape, RMPDFWriter aWriter)
     {
         // Do normal version

@@ -13,11 +13,11 @@ import snap.web.WebURL;
  */
 public class RMImageShape extends RMRectShape {
     
-    // The key used to get image data during RPG
+    // The key used to get image during RPG
     String             _key;
     
-    // The image data
-    RMImageData        _imageData;
+    // An ImageRef reference to uniqued image
+    ImageRef           _imgRef;
     
     // The padding
     int                _padding;
@@ -39,7 +39,7 @@ public RMImageShape()  { }
 /**
  * Creates an RMImageShape from the image source provided.
  */
-public RMImageShape(Object aSource)  { setImageData(aSource); setBestSize(); }
+public RMImageShape(Object aSource)  { setImageForSource(aSource); setBestSize(); }
 
 /**
  * Returns the report key used to load an image if none is provided.
@@ -55,29 +55,33 @@ public void setKey(String aString)
 }
 
 /**
- * Returns the image.
+ * Returns the ImageRef reference to uniqued image.
  */
-public Image getImage()  { return _imageData!=null? _imageData.getImage() : null; }
+public ImageRef getImageRef()  { return _imgRef; }
 
 /**
- * Returns the image data.
+ * Sets the ImageRef reference to uniqued image.
  */
-public RMImageData getImageData()  { return _imageData; }
-
-/**
- * Sets the image data.
- */
-public void setImageData(RMImageData anImageData)
+protected void setImageRef(ImageRef anImageRef)
 {
-    RMImageData idata = anImageData!=RMImageData.EMPTY? anImageData : null; if(idata==getImageData()) return;
-    _imageData = idata;
+    if(anImageRef==getImageRef()) return;
+    _imgRef = anImageRef;
     if(getParent()!=null) getParent().relayout(); repaint();
 }
 
 /**
- * Sets the image data from given source.
+ * Returns the image.
  */
-public void setImageData(Object aSource)  { setImageData(RMImageData.getImageData(aSource)); }
+public Image getImage()  { return _imgRef!=null? _imgRef.getImage() : null; }
+
+/**
+ * Sets the image from given source.
+ */
+public void setImageForSource(Object aSource)
+{
+    ImageRef iref = ImageRef.getImageRef(aSource);
+    setImageRef(iref);
+}
 
 /**
  * Returns the padding.
@@ -146,8 +150,8 @@ public void setPreserveRatio(boolean aValue)
  */
 protected double getPrefWidthImpl(double aHeight)
 {
-    RMImageData id = getImageData(); if(id==null) return 0;
-    double pw = id.getWidth(), ph = id.getHeight();
+    Image img = getImage(); if(img==null) return 0;
+    double pw = img.getWidth(), ph = img.getHeight();
     if(aHeight>0 && getPreserveRatio() && ph>aHeight) pw = aHeight*pw/ph;
     return pw;
 }
@@ -157,8 +161,8 @@ protected double getPrefWidthImpl(double aHeight)
  */
 protected double getPrefHeightImpl(double aWidth)
 {
-    RMImageData id = getImageData(); if(id==null) return 0;
-    double pw = id.getWidth(), ph = id.getHeight();
+    Image img = getImage(); if(img==null) return 0;
+    double pw = img.getWidth(), ph = img.getHeight();
     if(aWidth>0 && getPreserveRatio() && pw>aWidth) ph = aWidth*ph/pw;
     return ph;
 }
@@ -185,8 +189,8 @@ public RMShape rpgShape(ReportOwner aRptOwner, RMShape aParent)
             value instanceof byte[] && RMPDFData.canRead((byte[])value))
                 return RMPDFShape.rpgShape(aRptOwner, aParent, this, value);
                 
-        // Otherwise set new image data
-        clone.setImageData(value);
+        // Otherwise set new image
+        clone.setImageForSource(value);
     }
 
     // This prevents RMImageShape from growing to actual image size in report
@@ -202,20 +206,22 @@ public RMShape rpgShape(ReportOwner aRptOwner, RMShape aParent)
  */
 protected void paintShape(Painter aPntr)
 {
+    // Do normal version
     super.paintShape(aPntr);
-    RMImageData id = getImageData();
-    if(id==null) { if(getFill()!=null || !RMShapePaintProps.isEditing(aPntr)) return; else id = RMImageData.EMPTY; }
     
-    // Get image
-    Image image = id.getImage();
-    if(image==null) image = RMImageData.EMPTY.getImage(); if(image==null) return;
-    Rect ibnds = getImageBounds();
+    // Get image (use empty placeholder image if null and editing)
+    Image img = getImage();
+    if(img==null) {
+        if(!RMShapePaintProps.isEditing(aPntr)) return;
+        img = RMImageFill.getEmptyImage(); if(img==null) return;
+    }
     
     // Draw image transformed to bounds
     aPntr.clip(getPath());
-    double sx = ibnds.width/image.getPixWidth(), sy = ibnds.height/image.getPixHeight();
+    Rect ibnds = getImageBounds();
+    double sx = ibnds.width/img.getPixWidth(), sy = ibnds.height/img.getPixHeight();
     Transform transform = new Transform(sx, 0, 0, sy, ibnds.x, ibnds.y);
-    aPntr.drawImage(image, transform);
+    aPntr.drawImage(img, transform);
 }
 
 /**
@@ -223,13 +229,13 @@ protected void paintShape(Painter aPntr)
  */
 public Rect getImageBounds()
 {
-    // Get image data and padding
-    RMImageData id = getImageData(); if(id==null) id = RMImageData.EMPTY;
+    // Get image and padding
+    Image img = getImage(); if(img==null) img = RMImageFill.getEmptyImage();
     int pd = getPadding();
     
     // Get width/height for shape, image and padded area
     double sw = getWidth(), sh = getHeight();
-    double iw = id.getWidth(), ih = id.getHeight();
+    double iw = img.getWidth(), ih = img.getHeight();
     double pw = sw - pd*2, ph = sh - pd*2; if(pw<0) pw = 0; if(ph<0) ph = 0;
     
     // Get image bounds width/height, ShrinkToFit if greater than available space (with PreserveRatio, if set)
@@ -255,9 +261,9 @@ public XMLElement toXML(XMLArchiver anArchiver)
     // Archive ImageName, if image read from external file
     if(_iname!=null) e.add("ImageName", _iname);
     
-    // Archive ImageData
-    else if(_imageData!=null) {
-        String resName = anArchiver.addResource(_imageData.getBytes(), _imageData.getName());
+    // Archive Image
+    else if(getImage()!=null) {
+        String resName = anArchiver.addResource(getImage().getBytes(), getImageRef().getName());
         e.add("resource", resName);
     }
     
@@ -280,12 +286,12 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
     // Unarchive basic shape attributes
     super.fromXML(anArchiver, anElement);
     
-    // Unarchive Image resource: get resource bytes and set ImageData (if PDF - swap out RMPDFShape)
+    // Unarchive Image resource: get resource bytes and set Image (if PDF - swap out RMPDFShape)
     String rname = anElement.getAttributeValue("resource");
     if(rname!=null) {
         byte bytes[] = anArchiver.getResource(rname);
         if(RMPDFData.canRead(bytes)) return new RMPDFShape().fromXML(anArchiver, anElement);
-        _imageData = RMImageData.getImageData(bytes);
+        _imgRef = ImageRef.getImageRef(bytes);
     }
     
     // Unarchive ImageName
@@ -293,7 +299,7 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
     if(_iname!=null) {
         Image img = Image.get(anArchiver.getSourceURL(), _iname);
         if(img!=null)
-            _imageData = RMImageData.getImageData(img.getBytes());
+            _imgRef = ImageRef.getImageRef(img.getSource());
     }
     
     // Unarchive Key, Padding, GrowToFit, PreserveRatio
@@ -311,18 +317,18 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
         if(i>=0) setAlignment(Pos.values()[i]);
     }
     
-    // Legacy: If Fill is ImageFill and no ImageData+Key or ImageFill.ImageData, set ImageData from IFill and clear fill
+    // Legacy: If Fill is ImageFill and no ImageRef+Key or ImageFill.ImageRef, set ImageRef from IFill and clear fill
     if(getFill() instanceof RMImageFill) { RMImageFill ifill = (RMImageFill)getFill();
-        XMLElement fill = anElement.get("fill"); RMImageData idata = ifill.getImageData();
-        if(getImageData()==null && !ifill.isTiled()) { // && getKey()==null) {
+        XMLElement fill = anElement.get("fill"); ImageRef iref = ifill.getImageRef();
+        if(getImageRef()==null && !ifill.isTiled()) { // && getKey()==null) {
             int fs = fill.getAttributeIntValue("fillstyle", 0); // Stretch=0, Tile=1, Fit=2, FitIfNeeded=3
-            if(fs==0) { setImageData(idata); setFill(null); setGrowToFit(true); setPreserveRatio(false); }
-            else if(fs==2) { setImageData(idata); setFill(null); setGrowToFit(true); setPreserveRatio(true); }
-            else if(fs==3) { setImageData(idata); setFill(null); setGrowToFit(false); setPreserveRatio(true); }
+            if(fs==0) { setImageRef(iref); setFill(null); setGrowToFit(true); setPreserveRatio(false); }
+            else if(fs==2) { setImageRef(iref); setFill(null); setGrowToFit(true); setPreserveRatio(true); }
+            else if(fs==3) { setImageRef(iref); setFill(null); setGrowToFit(false); setPreserveRatio(true); }
             double x = fill.getAttributeFloatValue("x"); if(x!=0) setAlignmentX(x<0? AlignX.Left : AlignX.Right);
             double y = fill.getAttributeFloatValue("y"); if(y!=0) setAlignmentY(y<0? AlignY.Top : AlignY.Bottom);
         }
-        else if(idata==RMImageData.EMPTY) setFill(null);
+        else if(iref==null) setFill(null);
         setPadding(fill.getAttributeIntValue("margin"));
     }
     

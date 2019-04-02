@@ -203,8 +203,8 @@ public static void writeImageFill(RMImageFill anImageFill, Shape aPath, Rect bou
     if(anImageFill.isTiled()) {
         
         // Get image width/height, which becomes scale of image coords (except PDF images write out scale of 1x1)
-        double width = anImageFill.getImageWidth();
-        double height = anImageFill.getImageHeight();
+        double width = img.getWidth();
+        double height = img.getHeight();
         
         // Get starting x and y
         double startX = bounds.x + anImageFill.getX(); while(startX>bounds.x) startX -= width;
