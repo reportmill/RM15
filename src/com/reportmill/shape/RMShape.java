@@ -27,7 +27,7 @@ import snap.view.*;
  *   shape.setOpacity(.667f);
  * </pre></blockquote>
  */
-public class RMShape extends SnapObject implements Cloneable, RMTypes, Archivable {
+public class RMShape extends SnapObject implements Cloneable, RMTypes, Archivable, Key.GetSet {
 
     // X location of shape
     double         _x = 0;
@@ -71,6 +71,28 @@ public class RMShape extends SnapObject implements Cloneable, RMTypes, Archivabl
     // A shared/root RMSharedMap (cloned to turn on shared flag)
     static final RMSharedMap SHARED_MAP = new RMSharedMap().clone();
     
+    // Constants for properties
+    public static final String X_Prop = "X";
+    public static final String Y_Prop = "Y";
+    public static final String Width_Prop = "Width";
+    public static final String Height_Prop = "Height";
+    public static final String Roll_Prop = "Roll";
+    public static final String ScaleX_Prop = "ScaleX";
+    public static final String ScaleY_Prop = "ScaleY";
+    public static final String SkewX_Prop = "SkewX";
+    public static final String SkewY_Prop = "SkewY";
+    public static final String Stroke_Prop = "Stroke";
+    public static final String Fill_Prop = "Fill";
+    public static final String Effect_Prop = "Effect";
+    public static final String Opacity_Prop = "Opacity";
+    public static final String Name_Prop = "Name";
+    public static final String Visible_Prop = "Visible";
+    public static final String Locked_Prop = "Locked";
+    public static final String MinWidth_Prop = "MinWidth";
+    public static final String MinHeight_Prop = "MinHeight";
+    public static final String PrefWidth_Prop = "PrefWidth";
+    public static final String PrefHeight_Prop = "PrefHeight";
+    
 /**
  * Returns raw x location of shape. Developers should use the more common getX, which presents positive x.
  */
@@ -108,7 +130,7 @@ public void setX(double aValue)
 {
     if(_x==aValue) return;
     repaint();
-    firePropChange("X", _x, _x = aValue);
+    firePropChange(X_Prop, _x, _x = aValue);
     repaint();
 }
 
@@ -124,7 +146,7 @@ public void setY(double aValue)
 {
     if(_y==aValue) return;
     repaint();
-    firePropChange("Y", _y, _y = aValue);
+    firePropChange(Y_Prop, _y, _y = aValue);
     repaint();
 }
 
@@ -140,7 +162,7 @@ public void setWidth(double aValue)
 {
     double old = getWidth(); if(aValue==old) return;
     if(old>aValue) repaint();
-    firePropChange("Width", _width, _width = aValue);
+    firePropChange(Width_Prop, _width, _width = aValue);
     if(old<aValue) repaint();
 }
 
@@ -156,7 +178,7 @@ public void setHeight(double aValue)
 {
     double old = getHeight(); if(aValue==old) return;
     if(old>aValue) repaint();
-    firePropChange("Height", _height, _height = aValue);
+    firePropChange(Height_Prop, _height, _height = aValue);
     if(old<aValue) repaint();
 }
 
@@ -439,7 +461,7 @@ public void setRoll(double aValue)
 {
     aValue = Math.round(aValue*100)/100d; if(aValue==getRoll()) return;
     repaint();
-    firePropChange("Roll", getRSS()[0], _rss[0] = aValue);
+    firePropChange(Roll_Prop, getRSS()[0], _rss[0] = aValue);
     repaint();
 }
 
@@ -455,7 +477,7 @@ public void setScaleX(double aValue)
 {
     double old = getScaleX(); aValue = Math.round(aValue*100)/100d; if(aValue==old) return;
     if(old>aValue) repaint();
-    firePropChange("ScaleX", old, getRSS()[1] = aValue);
+    firePropChange(ScaleX_Prop, old, getRSS()[1] = aValue);
     if(old<aValue) repaint();
 }
 
@@ -471,7 +493,7 @@ public void setScaleY(double aValue)
 {
     double old = getScaleY(); aValue = Math.round(aValue*100)/100d; if(aValue==old) return;
     if(old>aValue) repaint();
-    firePropChange("ScaleY", old, getRSS()[2] = aValue);
+    firePropChange(ScaleY_Prop, old, getRSS()[2] = aValue);
     if(old<aValue) repaint();
 }
 
@@ -492,7 +514,7 @@ public void setSkewX(double aValue)
 {
     aValue = Math.round(aValue*100)/100d; if(aValue==getSkewX()) return;
     repaint();
-    firePropChange("SkewX", getRSS()[3], _rss[3] = aValue);
+    firePropChange(SkewX_Prop, getRSS()[3], _rss[3] = aValue);
     repaint();
 }
 
@@ -508,7 +530,7 @@ public void setSkewY(double aValue)
 {
     aValue = Math.round(aValue*100)/100d; if(aValue==getSkewY()) return;
     repaint();
-    firePropChange("SkewY", getRSS()[4], _rss[4] = aValue);
+    firePropChange(SkewY_Prop, getRSS()[4], _rss[4] = aValue);
     repaint();
 }
 
@@ -539,7 +561,7 @@ public void setStroke(RMStroke aStroke)
 {
     if(SnapUtils.equals(getStroke(), aStroke)) return;
     repaint();
-    firePropChange("Stroke", _stroke, _stroke = aStroke);
+    firePropChange(Stroke_Prop, _stroke, _stroke = aStroke);
 }
 
 /**
@@ -559,7 +581,7 @@ public void setFill(RMFill aFill)
 {
     if(SnapUtils.equals(getFill(), aFill)) return;
     repaint();
-    firePropChange("Fill", _fill, _fill = aFill);
+    firePropChange(Fill_Prop, _fill, _fill = aFill);
 }
 
 /**
@@ -574,7 +596,7 @@ public void setEffect(Effect anEffect)
 {
     if(SnapUtils.equals(getEffect(), anEffect)) return;
     repaint();
-    firePropChange("Effect", _effect, _effect = anEffect); _pdvr1 = _pdvr2 = null;
+    firePropChange(Effect_Prop, _effect, _effect = anEffect); _pdvr1 = _pdvr2 = null;
 }
 
 /**
@@ -634,7 +656,7 @@ public void setOpacity(double aValue)
 {
     if(aValue==getOpacity()) return; // If value already set, just return
     repaint(); // Register repaint
-    firePropChange("Opacity", _opacity, _opacity = aValue);
+    firePropChange(Opacity_Prop, _opacity, _opacity = aValue);
 }
 
 /**
@@ -658,7 +680,7 @@ public boolean isVisible()  { return _visible; }
 public void setVisible(boolean aValue)
 {
     if(isVisible()==aValue) return;
-    firePropChange("Visible", _visible, _visible = aValue);
+    firePropChange(Visible_Prop, _visible, _visible = aValue);
 }
 
 /**
@@ -834,7 +856,7 @@ public void setLocked(boolean aValue)
 {
     if(aValue==isLocked()) return;
     Object oldVal = put("Locked", aValue);
-    firePropChange("Locked", oldVal, aValue);
+    firePropChange(Locked_Prop, oldVal, aValue);
 }
 
 /**
@@ -1106,12 +1128,12 @@ public Transform getTransform()
 /**
  * Returns whether shape minimum width is set.
  */
-public boolean isMinWidthSet()  { return get("MinWidth")!=null; }
+public boolean isMinWidthSet()  { return get(MinWidth_Prop)!=null; }
 
 /**
  * Returns the shape minimum width.
  */
-public double getMinWidth()  { Double w = (Double)get("MinWidth"); return w!=null? w : 0; }
+public double getMinWidth()  { Double w = (Double)get(MinWidth_Prop); return w!=null? w : 0; }
 
 /**
  * Sets the shape minimum width.
@@ -1119,18 +1141,18 @@ public double getMinWidth()  { Double w = (Double)get("MinWidth"); return w!=nul
 public void setMinWidth(double aWidth)
 {
     double w = aWidth<=0? 0 : aWidth; if(w==getMinWidth()) return;
-    firePropChange("MinWidth", put("MinWidth", w), w);
+    firePropChange(MinWidth_Prop, put(MinWidth_Prop, w), w);
 }
 
 /**
  * Returns whether shape minimum height is set.
  */
-public boolean isMinHeightSet()  { return get("MinHeight")!=null; }
+public boolean isMinHeightSet()  { return get(MinHeight_Prop)!=null; }
 
 /**
  * Returns the shape minimum height.
  */
-public double getMinHeight()  { Double h = (Double)get("MinHeight"); return h!=null? h : 0; }
+public double getMinHeight()  { Double h = (Double)get(MinHeight_Prop); return h!=null? h : 0; }
 
 /**
  * Sets the shape minimum height.
@@ -1138,7 +1160,7 @@ public double getMinHeight()  { Double h = (Double)get("MinHeight"); return h!=n
 public void setMinHeight(double aHeight)
 {
     double h = aHeight<=0? 0 : aHeight; if(h==getMinHeight()) return;
-    firePropChange("MinHeight", put("MinHeight", h), h);
+    firePropChange(MinHeight_Prop, put(MinHeight_Prop, h), h);
 }
 
 /**
@@ -1149,14 +1171,14 @@ public void setMinSize(double aWidth, double aHeight)  { setMinWidth(aWidth); se
 /**
  * Returns whether shape preferred width is set.
  */
-public boolean isPrefWidthSet()  { return get("PrefWidth")!=null; }
+public boolean isPrefWidthSet()  { return get(PrefWidth_Prop)!=null; }
 
 /**
  * Returns the shape preferred width.
  */
 public double getPrefWidth()
 {
-    Double v = (Double)get("PrefWidth"); if(v!=null) return v;
+    Double v = (Double)get(PrefWidth_Prop); if(v!=null) return v;
     return getPrefWidthImpl(-1);
 }
 
@@ -1166,20 +1188,20 @@ public double getPrefWidth()
 public void setPrefWidth(double aWidth)
 {
     double w = aWidth<=0? 0 : aWidth; if(w==getPrefWidth()) return;
-    firePropChange("PrefWidth", put("PrefWidth", w), w);
+    firePropChange(PrefWidth_Prop, put(PrefWidth_Prop, w), w);
 }
 
 /**
  * Returns whether shape preferred height is set.
  */
-public boolean isPrefHeightSet()  { return get("PrefHeight")!=null; }
+public boolean isPrefHeightSet()  { return get(PrefHeight_Prop)!=null; }
 
 /**
  * Returns the shape preferred height.
  */
 public double getPrefHeight()
 {
-    Double v = (Double)get("PrefHeight"); if(v!=null) return v;
+    Double v = (Double)get(PrefHeight_Prop); if(v!=null) return v;
     return getPrefHeightImpl(-1);
 }
 
@@ -1189,7 +1211,7 @@ public double getPrefHeight()
 public void setPrefHeight(double aHeight)
 {
     double h = aHeight<=0? 0 : aHeight; if(h==getPrefHeight()) return;
-    firePropChange("PrefHeight", put("PrefHeight", h), h);
+    firePropChange(PrefHeight_Prop, put(PrefHeight_Prop, h), h);
 }
 
 /**
@@ -1346,7 +1368,7 @@ public Entity getDatasetEntity()
  */
 public String[] getPropNames()
 {
-    return new String[] { "Visible", "X", "Y", "Width", "Height", "Roll", "ScaleX", "ScaleY",
+    return new String[] { Visible_Prop, X_Prop, Y_Prop, Width_Prop, Height_Prop, Roll_Prop, ScaleX_Prop, ScaleY_Prop,
         "Font", "TextColor", "FillColor", "StrokeColor", "URL" };
 }
 
@@ -1770,6 +1792,69 @@ public boolean isStrokeOnTop()  { return false; }
 public Shape getClipShape()  { return null; }
 
 /**
+ * Returns the value for given key.
+ */
+public Object getKeyValue(String aPropName)
+{
+    // Handle properties
+    switch(aPropName) {
+        case X_Prop: return getX();
+        case Y_Prop: return getY();
+        case Width_Prop: return getWidth();
+        case Height_Prop: return getHeight();
+        case Roll_Prop: return getRoll();
+        case ScaleX_Prop: return getScaleX();
+        case ScaleY_Prop: return getScaleY();
+        case Stroke_Prop: return getStroke();
+        case Fill_Prop: return getFill();
+        case Effect_Prop: return getEffect();
+        case Opacity_Prop: return getOpacity();
+        case Name_Prop: return getName();
+        case Visible_Prop: return isVisible();
+        case Locked_Prop: return isLocked();
+        case MinWidth_Prop: return getMinWidth();
+        case MinHeight_Prop: return getMinHeight();
+        case PrefWidth_Prop: return getPrefWidth();
+        case PrefHeight_Prop: return getPrefHeight();
+        default: break;
+    }
+    
+    // Use key chain evaluator to get value
+    return Key.getValue(this, aPropName);
+}
+
+/**
+ * Sets the value for given key.
+ */
+public void setKeyValue(String aPropName, Object aValue)
+{
+    // Handle properties
+    switch(aPropName) {
+        case X_Prop: setX(SnapUtils.doubleValue(aValue)); break;
+        case Y_Prop: setY(SnapUtils.doubleValue(aValue)); break;
+        case Width_Prop: setWidth(SnapUtils.doubleValue(aValue)); break;
+        case Height_Prop: setHeight(SnapUtils.doubleValue(aValue)); break;
+        case Roll_Prop: setRoll(SnapUtils.doubleValue(aValue)); break;
+        case ScaleX_Prop: setScaleX(SnapUtils.doubleValue(aValue)); break;
+        case ScaleY_Prop: setScaleY(SnapUtils.doubleValue(aValue)); break;
+        //case PrefWidth_Prop: setPrefWidth(SnapUtils.doubleValue(aValue)); break;
+        //case PrefHeight_Prop: setPrefHeight(SnapUtils.doubleValue(aValue)); break;
+        case Stroke_Prop: setStroke(aValue instanceof RMStroke? (RMStroke)aValue : null); break;
+        case Fill_Prop: setFill(aValue instanceof RMFill? (RMFill)aValue : null); break;
+        case Effect_Prop: setEffect(aValue instanceof Effect? (Effect)aValue : null); break;
+        case Opacity_Prop: setOpacity(SnapUtils.doubleValue(aValue)); break;
+        case Name_Prop: setName(SnapUtils.stringValue(aValue)); break;
+        case Visible_Prop: setVisible(SnapUtils.boolValue(aValue)); break;
+        case Locked_Prop: setLocked(SnapUtils.boolValue(aValue)); break;
+        case MinWidth_Prop: setMinWidth(SnapUtils.doubleValue(aValue)); break;
+        case MinHeight_Prop: setMinHeight(SnapUtils.doubleValue(aValue)); break;
+        case PrefWidth_Prop: setPrefWidth(SnapUtils.doubleValue(aValue)); break;
+        case PrefHeight_Prop: setPrefHeight(SnapUtils.doubleValue(aValue)); break;
+        default: Key.setValueSafe(this, aPropName, aValue);
+    }
+}
+
+/**
  * XML Archival.
  */
 public XMLElement toXML(XMLArchiver anArchiver)
@@ -1809,10 +1894,10 @@ public XMLElement toXML(XMLArchiver anArchiver)
     if(getURL()!=null && getURL().length()>0) e.add("url", getURL());
     
     // Archive MinWidth, MinHeight, PrefWidth, PrefHeight
-    if(isMinWidthSet()) e.add("MinWidth", getMinWidth());
-    if(isMinHeightSet()) e.add("MinHeight", getMinHeight());
-    if(isPrefWidthSet()) e.add("PrefWidth", getPrefWidth());
-    if(isPrefHeightSet()) e.add("PrefHeight", getPrefHeight());
+    if(isMinWidthSet()) e.add(MinWidth_Prop, getMinWidth());
+    if(isMinHeightSet()) e.add(MinHeight_Prop, getMinHeight());
+    if(isPrefWidthSet()) e.add(PrefWidth_Prop, getPrefWidth());
+    if(isPrefHeightSet()) e.add(PrefHeight_Prop, getPrefHeight());
     
     // Archive Autosizing
     if(!getAutosizing().equals(getAutosizingDefault())) e.add("asize", getAutosizing());
@@ -1879,10 +1964,10 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
     setURL(anElement.getAttributeValue("url"));
     
     // Unarchive MinWidth, MinHeight, PrefWidth, PrefHeight
-    if(anElement.hasAttribute("MinWidth")) setMinWidth(anElement.getAttributeFloatValue("MinWidth"));
-    if(anElement.hasAttribute("MinHeight")) setMinHeight(anElement.getAttributeFloatValue("MinHeight"));
-    if(anElement.hasAttribute("PrefWidth")) setPrefWidth(anElement.getAttributeFloatValue("PrefWidth"));
-    if(anElement.hasAttribute("PrefHeight")) setPrefHeight(anElement.getAttributeFloatValue("PrefHeight"));
+    if(anElement.hasAttribute(MinWidth_Prop)) setMinWidth(anElement.getAttributeFloatValue(MinWidth_Prop));
+    if(anElement.hasAttribute(MinHeight_Prop)) setMinHeight(anElement.getAttributeFloatValue(MinHeight_Prop));
+    if(anElement.hasAttribute(PrefWidth_Prop)) setPrefWidth(anElement.getAttributeFloatValue(PrefWidth_Prop));
+    if(anElement.hasAttribute(PrefHeight_Prop)) setPrefHeight(anElement.getAttributeFloatValue(PrefHeight_Prop));
     
     // Unarchive Autosizing
     String asize = anElement.getAttributeValue("asize");

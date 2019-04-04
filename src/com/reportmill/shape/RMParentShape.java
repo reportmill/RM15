@@ -10,7 +10,7 @@ import snap.util.*;
 /**
  * A shape implementation that can have children.
  */
-public class RMParentShape extends RMShape {
+public class RMParentShape extends RMShape implements PropChange.DoChange {
 
     // The children of this shape
     List <RMShape> _children = new ArrayList();
@@ -27,6 +27,9 @@ public class RMParentShape extends RMShape {
     // A listener to catch child DeepChange (for editor undo)
     DeepChangeListener  _childDCL;
     
+    // Constants for properties
+    public static final String Child_Prop = "Child";
+
 /**
  * Returns the number of children associated with this shape.
  */
@@ -65,7 +68,7 @@ public void addChild(RMShape aChild, int anIndex)
         aChild.addPropChangeListener(_childPCL); aChild.addDeepChangeListener(_childDCL); }
     
     // Fire property change
-    firePropChange("Child", null, aChild, anIndex);
+    firePropChange(Child_Prop, null, aChild, anIndex);
     
     // Register to layout this shape and parents and repaint
     relayout(); relayoutParent(); repaint(); setNeedsLayoutDeep(true);
@@ -88,7 +91,7 @@ public RMShape removeChild(int anIndex)
     relayout(); relayoutParent(); repaint();
     
     // Fire property change and return
-    firePropChange("Child", child, null, anIndex);
+    firePropChange(Child_Prop, child, null, anIndex);
     return child;
 }
 
@@ -531,6 +534,29 @@ public RMParentShape cloneDeep()
     RMParentShape clone = clone();
     for(int i=0, iMax=getChildCount(); i<iMax; i++) clone.addChild(getChild(i).cloneDeep());
     return clone;
+}
+
+/**
+ * Returns the value for given key.
+ */
+public Object getKeyValue(String aPropName)
+{
+    if(aPropName==Child_Prop) return null;
+    else return super.getKeyValue(aPropName);
+}
+
+/**
+ * Sets the value for given key.
+ */
+public void doChange(PropChange aPC, Object oldVal, Object newVal)
+{
+    String pname = aPC.getPropName();
+    if(pname==Child_Prop) {
+        RMShape oldC = (RMShape)oldVal, newC = (RMShape)newVal; int ind = aPC.getIndex();
+        if(oldC==null) addChild(newC, ind);
+        else removeChild(ind);
+    }
+    else setKeyValue(pname, newVal);
 }
 
 /**
