@@ -961,6 +961,7 @@ public static RMTool createTool(Class aClass)
 {
     // Handle root
     if(aClass==RMCrossTab.class) return new RMCrossTabTool();
+    if(aClass==RMCrossTabCell.class) return new RMCrossTabCellTool();
     if(aClass==RMCrossTabDivider.class) return new RMCrossTabDividerTool();
     if(aClass==RMCrossTabFrame.class) return new RMCrossTabFrameTool();
     if(aClass==RMDocument.class) return new RMDocumentTool();

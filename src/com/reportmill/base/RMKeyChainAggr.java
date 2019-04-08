@@ -28,7 +28,14 @@ public static Object getValue(Object aRoot, List aList, RMKeyChain aKeyChain)
     
     // Handle Key: if aggregate method, return result of aggregate with tail
     if(kchain.getOp()==RMKeyChain.Op.Key) {
+        
+        // Get key and try to invoke built-in aggr
         String key = kchain.getChildString(0);
+        Object value = invokeBuiltIn(key, aList, tail);
+        if(value!="NOT_FOUND")
+            return value;
+
+        // Look for aggr method in registered classes
         Method method = getAggrMethod(key);
         if(method!=null) {
             try { return method.invoke(null, aList, tail); }
@@ -38,19 +45,24 @@ public static Object getValue(Object aRoot, List aList, RMKeyChain aKeyChain)
     
     // Handle FunctionCall: if aggregate method, return result of aggregate with args (eval tail too, if present) 
     else if(kchain.getOp()==RMKeyChain.Op.FunctionCall) {
+        
+        // Get key and FunctionCall args (simplify for common case of arg count zero or 1) try to invoke built-in aggr
         String key = kchain.getChildString(0);
+        RMKeyChain args = kchain.getChildKeyChain(1);
+        if(args.getChildCount()==0) args = null;
+        else if(args.getChildCount()==1) args = args.getChildKeyChain(0);
+        
+        // Try to ivoke built-in aggr
+        Object val = invokeBuiltIn(key, aList, args);
+        if(val!="NOT_FOUND")
+            return tail!=null? RMKeyChain.getValue(aRoot, val, tail) : val;
+        
+        // Look for aggr method in registered classes
         Method method = getAggrMethod(key);
         if(method!=null) {
-            
-            // Get FunctionCall args (simplify for common case of arg count zero or 1)
-            RMKeyChain args = kchain.getChildKeyChain(1);
-            if(args.getChildCount()==0) args = null;
-            else if(args.getChildCount()==1) args = args.getChildKeyChain(0);
-            
-            // Invoke aggregate with args, then return value or continue on with tail if present
-            Object value = null; try { value = method.invoke(null, aList, args); }
-            catch(Exception e) { System.err.println("RMKeyChainAggr: Failed to eval " + kchain); }
-            return tail!=null? RMKeyChain.getValue(aRoot, value, tail) : value;
+            try { val = method.invoke(null, aList, args); }
+            catch(Exception e) { System.err.println("RMKeyChainAggr: Failed to eval " + kchain); val = null; }
+            return tail!=null? RMKeyChain.getValue(aRoot, val, tail) : val;
         }
     }
     
@@ -63,6 +75,32 @@ public static Object getValue(Object aRoot, List aList, RMKeyChain aKeyChain)
     
     // Return value
     return value;
+}
+
+/**
+ * Tries to invoke built-in function.
+ */
+private static Object invokeBuiltIn(String aKey, List aList, RMKeyChain aKeyChain)
+{
+    // Check built-in aggrs. If found, call.
+    switch(aKey) {
+        case "total": return total(aList, aKeyChain);
+        case "total2": return total2(aList, aKeyChain);
+        case "totalX": return totalX(aList, aKeyChain);
+        case "count": return count(aList, aKeyChain);
+        case "countDeep": return countDeep(aList, aKeyChain);
+        case "countUnique": return countUnique(aList, aKeyChain);
+        case "average": return average(aList, aKeyChain);
+        case "averageX": return averageX(aList, aKeyChain);
+        case "min": return min(aList, aKeyChain);
+        case "max": return max(aList, aKeyChain);
+        case "get": return get(aList, aKeyChain);
+        case "filter": return filter(aList, aKeyChain);
+        case "group": return group(aList, aKeyChain);
+        case "join": return join(aList, aKeyChain);
+        case "listOf": return listOf(aList, aKeyChain);
+        default: return "NOT_FOUND";
+    }
 }
 
 /**
@@ -80,11 +118,8 @@ private synchronized static Method getAggrMethod(String aName)
  */
 private static Method getAggrMethodImpl(String aName)
 {
-    // Lookup method on RMKeyChainAggr.class
-    Method meth = ClassUtils.getMethod(RMKeyChainAggr.class, aName, _argClasses); if(meth!=null) return meth;
-    
     // Lookup method on registered classes
-    for(Class cls : RMKeyChainFuncs._funcClasses) { meth = ClassUtils.getMethod(cls, aName, _argClasses);
+    for(Class cls : RMKeyChainFuncs._funcClasses) { Method meth = ClassUtils.getMethod(cls, aName, _argClasses);
         if(meth!=null) return meth; }
         
     // Return null method placeholder, since method not found

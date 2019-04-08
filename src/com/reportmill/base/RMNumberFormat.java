@@ -65,6 +65,8 @@ public RMNumberFormat()
     // If DefaultLocale, create and set DecimalFormatSymbols
     if(_defaultLocale!=null)
         setDecimalFormatSymbols(new DecimalFormatSymbols(_defaultLocale));
+    else if(SnapUtils.isTeaVM)
+        _fmt = (DecimalFormat)NumberFormat.getInstance(Locale.ENGLISH);
     
     // Get FormatSymbols
     _fmtSyms = _fmt.getDecimalFormatSymbols();
@@ -406,7 +408,11 @@ public Number parse(String aStr)
 /**
  * For TeaVM.
  */
-void setDecimalFormatSymbols(DecimalFormatSymbols aDFS)  { _fmt.setDecimalFormatSymbols(aDFS); }
+void setDecimalFormatSymbols(DecimalFormatSymbols aDFS)
+{
+    if(SnapUtils.isTeaVM) return;
+    _fmt.setDecimalFormatSymbols(aDFS);
+}
 
 /**
  * Standard equals implementation.

@@ -23,7 +23,7 @@
   <ToggleButton Name="CommaButton" PrefWidth="22" PrefHeight="22" ToolTip="Comma Format" image="Format_Comma.png" ShowBorder="false" />
   <Button Name="DecimalAddButton" PrefWidth="22" PrefHeight="22" ToolTip="Add Decimal" image="Format_DecimalAdd.png" ShowBorder="false" />
   <Button Name="DecimalRemoveButton" PrefWidth="22" PrefHeight="22" ToolTip="Remove Decimal" image="Format_DecimalRemove.png" ShowBorder="false" />
-  <Button Name="ShowSamplesButton" PrefWidth="60" PrefHeight="22" LeanX="CENTER" text="Samples" ToolTip="Show Samples" />
+  <Button Name="SamplesButton" PrefWidth="60" PrefHeight="22" LeanX="CENTER" text="Samples" ToolTip="Show Samples" />
   <Button Name="PreviewHTMLButton" PrefWidth="22" PrefHeight="22" LeanX="RIGHT" ToolTip="Preview HTML" image="Preview_HTML.png" ShowBorder="false" />
   <Button Name="PreviewPDFButton" PrefWidth="22" PrefHeight="22" ToolTip="Preview PDF" image="Preview_PDF.png" ShowBorder="false" />
 </HBox>

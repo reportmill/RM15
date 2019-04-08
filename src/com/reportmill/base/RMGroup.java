@@ -25,12 +25,6 @@ public class RMGroup extends ArrayList implements RMKey.Get, RMKeyChain.Get {
     // Whether group is a Top N Other aggregated group
     boolean   _isTopNOthers;
     
-    // The page start group
-    RMGroup   _pageStartGroup;
-    
-    // The page end group
-    RMGroup   _pageEndGroup;
-    
 /**
  * Creates an empty group.
  */
@@ -91,26 +85,6 @@ public boolean isTopNOthers()  { return _isTopNOthers; }
  * Sets whether this group is made up of the remainders from a TopN sort.
  */
 public void setTopNOthers(boolean aFlag)  { _isTopNOthers = aFlag; }
-
-/**
- * Returns the child group for the most recent page start.
- */
-public RMGroup getPageStartGroup()  { return _pageStartGroup; }
-
-/**
- * Sets the child group for the most recent page start.
- */
-public void setPageStartGroup(RMGroup aGroup)  { _pageStartGroup = aGroup; }
-
-/**
- * Returns the child group for the most recent page end.
- */
-public RMGroup getPageEndGroup()  { return _pageEndGroup; }
-
-/**
- * Sets the child group for the most recent page end.
- */
-public void setPageEndGroup(RMGroup aGroup)  { _pageEndGroup = aGroup; }
 
 /**
  * Returns the index of this group in its parent.
@@ -533,8 +507,7 @@ public Object getKeyValue(String aKey)
     }
     
     // Page key should reference special group constrained to page start/end
-    if(aKey.equals("Page"))
-        return subgroup(getPageStartGroup(), getPageEndGroup());
+    if(aKey.equals("Page")) return this;
     
     // Get first child sample (the first real, non-group child)
     Object sample = getFirstSample();
@@ -609,7 +582,14 @@ public boolean equals(Object anObj)  { return anObj==this; }
 /**
  * Standard clone implementation.
  */
-public RMGroup clone()  { return (RMGroup)super.clone(); }
+public RMGroup clone()
+{
+    //return (RMGroup)super.clone(); TeaVM doesn't like this
+    RMGroup copy = new RMGroup((List)this);
+    copy._key = _key; copy._value = _value; copy._parent = _parent;
+    copy._isLeaf = _isLeaf; copy._isTopNOthers = _isTopNOthers;
+    return copy;
+}
 
 /**
  * Clone deep implementation - clones this group and any child groups.
@@ -661,15 +641,16 @@ public String toString()
 public static class Running extends RMGroup {
     
     // Original group that we are a subset of
-    RMGroup _sourceGroup;
+    RMGroup  _sourceGroup;
+    
+    // The page start/end groups
+    RMGroup  _pageStartGroup, _pageEndGroup;
     
     /** Creates a Running group for parent group and start/end groups on page. */
     public Running(RMGroup aSourceGroup, RMGroup thePageStartGroup, RMGroup thePageEndGroup)
     {
         // Store original group and start/end groups
-        _sourceGroup = aSourceGroup;
-        setPageStartGroup(thePageStartGroup);
-        setPageEndGroup(thePageEndGroup);
+        _sourceGroup = aSourceGroup; _pageStartGroup = thePageStartGroup; _pageEndGroup = thePageEndGroup;
         
         // Add all children from group start to page end
         RMGroup subgroup = _sourceGroup.subgroup(null, thePageEndGroup);
@@ -690,11 +671,11 @@ public static class Running extends RMGroup {
         
         // Page key should reference special group constrained to page start/end
         if(aKey.equals("Page"))
-            return _sourceGroup.subgroup(getPageStartGroup(), getPageEndGroup());
+            return _sourceGroup.subgroup(_pageStartGroup, _pageEndGroup);
         
         // Running key should reference special group from beginning to page end
         if(aKey.equals("Running") && _sourceGroup.getParent()!=null)
-            return _sourceGroup.getParent().subgroup(null, getPageEndGroup());
+            return _sourceGroup.getParent().subgroup(null, _pageEndGroup);
         
         // Every thing else should be handled normally
         return super.getKeyValue(aKey);
