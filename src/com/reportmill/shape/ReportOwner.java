@@ -27,6 +27,9 @@ public class ReportOwner implements RMKeyChain.Get {
     // Objects from user's dataset to be queried for key substitution
     List             _dataStack = new ArrayList();
     
+    // The list of objects passed to generateReport, if called with just a list
+    List             _defaultList;
+    
     // Shapes that contain page keys
     List             _pageRefShapes = new ArrayList();
     
@@ -88,9 +91,9 @@ public void addModelObject(Object anObj)
     // if object is ResultSet, convert to List of Maps
     if(obj instanceof java.sql.ResultSet) obj = RMSQLUtils.getMaps((java.sql.ResultSet)obj, 0);
 
-    // If object is List, replace with a Map pointing to object list with default object list key
-    if(obj instanceof List)
-        _model.put("RMDefaultObjectList", obj);
+    // If object is List, make it DefaultList
+    if(obj instanceof List) //_model.put("RMDefaultObjectList", obj);
+        _defaultList = (List)obj;
         
     // If object is Map, replace any ResultSets with List
     else if(obj instanceof Map) { Map map = (Map)obj; map = RMSQLUtils.getMapsDeep(map, 2);
@@ -99,7 +102,7 @@ public void addModelObject(Object anObj)
     // If ReportMill.Listener set Listener
     else if(obj instanceof ReportMill.Listener) _listener = (ReportMill.Listener)obj;
         
-    // Add objects and userInfo to dataBearingObjects
+    // Add objects and userInfo to DataStack
     else if(obj!=null)
         pushDataStack(obj);
     
@@ -212,16 +215,16 @@ public Object getKeyChainValue(Object aRoot, RMKeyChain aKeyChain)
  */
 public List getKeyChainListValue(String aKeyChain)
 {
-    // Call RMKeyChain.getListValue on DataStack and Model, last to first
+    // Call RMKeyChain.getListValue on DataStack first item
     List list = RMKeyChain.getListValue(peekDataStack(), aKeyChain);
-    if(list==null)
+    
+    // If list not found, call RMKeyChain.getListValue on Model
+    if(list==null && peekDataStack()!=_model)
         list = RMKeyChain.getListValue(_model, aKeyChain);
-    
-    // If no list, return default objects list (if available)
-    if(list==null && !SnapUtils.equals(aKeyChain, "RMDefaultObjectList"))
-        return getKeyChainListValue("RMDefaultObjectList");
-    
-    // Return list
+        
+    // If list not found, use DefaultList (might also be null). Return list.
+    if(list==null)
+        list = _defaultList;
     return list;
 }
 
