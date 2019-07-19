@@ -79,6 +79,9 @@ public class RMDocument extends RMParentShape {
     // Whether output file formats should compress (PDF really)
     boolean           _compress = true;
     
+    // A map for extra document metadata (added to PDF)
+    Map <String,String>  _metadata;
+    
     // The ReportOwner that created this document (if from RPG)
     ReportOwner       _reportOwner;
     
@@ -490,6 +493,26 @@ public boolean getCompress()  { return _compress; }
 public void setCompress(boolean aValue)  { _compress = aValue; }
 
 /**
+ * Returns map of metadata.
+ */
+public Map <String,String> getMetadata()  { return _metadata!=null? _metadata : Collections.EMPTY_MAP; }
+
+/**
+ * Returns a metadata value.
+ */
+public String getMetaValue(String aKey)  { return _metadata!=null? _metadata.get(aKey) : null; }
+
+/**
+ * Sets a metadata value.
+ */
+public void setMetaValue(String aKey, Object aValue)
+{
+    if(_metadata==null) _metadata = new HashMap();
+    if(aValue==null) _metadata.remove(aKey);
+    else _metadata.put(aKey, aValue.toString());
+}
+
+/**
  * Returns the document as an XML byte array.
  */
 public byte[] getBytes()  { return getXML().getBytes(); }
@@ -644,7 +667,8 @@ public RMDocument generateReport(Object theObjects, Object theUserInfo, boolean 
     if(theUserInfo!=null) ro.addModelObject(theUserInfo);
     ro.setPaginate(aPaginateFlag && isPaginate());
     ro.setNullString(getNullString());
-    return ro.generateReport();
+    RMDocument rpt = ro.generateReport();
+    return rpt;
 }
 
 /**
@@ -775,7 +799,10 @@ public XMLElement getXML()
  */
 public RMDocument clone()
 {
-    RMDocument clone = (RMDocument)super.clone(); clone._reportOwner = null; return clone;
+    RMDocument clone = (RMDocument)super.clone();
+    if(_metadata!=null) clone._metadata = new HashMap(_metadata);
+    clone._reportOwner = null;
+    return clone;
 }
 
 /**

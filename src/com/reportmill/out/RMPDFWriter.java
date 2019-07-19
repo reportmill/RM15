@@ -35,7 +35,11 @@ public byte[] getBytes(RMDocument aDoc)
     _xtable = _pfile._xtable = new PDFXTable(null);
     
     // Init and add info dict to xref
-    _pfile._infoDict.put("CreationDate", new SimpleDateFormat("(dd MMM yyy HH:mm)").format(new Date()));
+    //_pfile._infoDict.put("CreationDate", new SimpleDateFormat("(dd MMM yyy HH:mm)").format(new Date()));
+    _pfile._infoDict.put("CreationDate", "(D:" + new SimpleDateFormat("yyyMMddHHmmss").format(new Date()) + ")");
+    if(aDoc.getMetadata().size()>0)
+        for(Map.Entry<String,String> entry : aDoc.getMetadata().entrySet())
+            _pfile._infoDict.put(entry.getKey(), "(" + entry.getValue() + ")");
     _xtable.addObject(_pfile._infoDict);
 
     // Init and add catalog to xref
