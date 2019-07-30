@@ -1805,6 +1805,8 @@ public Object getKeyValue(String aPropName)
         case Roll_Prop: return getRoll();
         case ScaleX_Prop: return getScaleX();
         case ScaleY_Prop: return getScaleY();
+        case SkewX_Prop: return getSkewX();
+        case SkewY_Prop: return getSkewY();
         case Stroke_Prop: return getStroke();
         case Fill_Prop: return getFill();
         case Effect_Prop: return getEffect();
@@ -1816,11 +1818,8 @@ public Object getKeyValue(String aPropName)
         case MinHeight_Prop: return getMinHeight();
         case PrefWidth_Prop: return getPrefWidth();
         case PrefHeight_Prop: return getPrefHeight();
-        default: break;
+        default: return Key.getValueImpl(this, aPropName);
     }
-    
-    // Use key chain evaluator to get value
-    return Key.getValue(this, aPropName);
 }
 
 /**
@@ -1837,8 +1836,8 @@ public void setKeyValue(String aPropName, Object aValue)
         case Roll_Prop: setRoll(SnapUtils.doubleValue(aValue)); break;
         case ScaleX_Prop: setScaleX(SnapUtils.doubleValue(aValue)); break;
         case ScaleY_Prop: setScaleY(SnapUtils.doubleValue(aValue)); break;
-        //case PrefWidth_Prop: setPrefWidth(SnapUtils.doubleValue(aValue)); break;
-        //case PrefHeight_Prop: setPrefHeight(SnapUtils.doubleValue(aValue)); break;
+        case SkewX_Prop: setSkewX(SnapUtils.doubleValue(aValue)); break;
+        case SkewY_Prop: setSkewY(SnapUtils.doubleValue(aValue)); break;
         case Stroke_Prop: setStroke(aValue instanceof RMStroke? (RMStroke)aValue : null); break;
         case Fill_Prop: setFill(aValue instanceof RMFill? (RMFill)aValue : null); break;
         case Effect_Prop: setEffect(aValue instanceof Effect? (Effect)aValue : null); break;
@@ -1850,7 +1849,7 @@ public void setKeyValue(String aPropName, Object aValue)
         case MinHeight_Prop: setMinHeight(SnapUtils.doubleValue(aValue)); break;
         case PrefWidth_Prop: setPrefWidth(SnapUtils.doubleValue(aValue)); break;
         case PrefHeight_Prop: setPrefHeight(SnapUtils.doubleValue(aValue)); break;
-        default: Key.setValueSafe(this, aPropName, aValue);
+        default: Key.setValueReflectSafe(this, aPropName, aValue);
     }
 }
 

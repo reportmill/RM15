@@ -426,14 +426,6 @@ public static List getListValue(Object anObj, Object aKeyChain)
 }
 
 /**
- * Returns a key value if it is of given class (otherwise null).
- */
-public static <T> T getValue(Object anObj, Object aKeyChain, Class <T> aClass)
-{
-    return ClassUtils.getInstance(getValue(anObj, aKeyChain), aClass);
-}
-
-/**
  * Returns whether given key has a Page/PageMax key reference.
  */
 public boolean hasPageReference()
@@ -483,84 +475,6 @@ public static String getError()  { return KeyChain.getError(); }
  * Returns the last error encountered by the key chain parser and resets parser.
  */
 public static String getAndResetError()  { return KeyChain.getAndResetError(); }
-
-/**
- * Sets the given value for the given key chain + property.
- * This is a real bogus loser implementation.
- */
-public static void setValue(Object anObj, Object aKeyChain, Object aValue)
-{
-    setValue(anObj, getKeyChain(aKeyChain), aValue);
-}
-
-/**
- * Sets the given value for the given key chain + property.
- * This is a real bogus loser implementation that only supports Op.Key and Op.Chain.
- */
-public static void setValue(Object anObj, RMKeyChain aKeyChain, Object aValue)
-{
-    // Get real object and key
-    Object obj = anObj;
-    RMKeyChain kchain = aKeyChain;
-    
-    // Handle Chain: Evaluate down chain to get last object & KeyChain
-    if(kchain.getOp()==Op.Chain) { int cc = aKeyChain.getChildCount();
-        RMKeyChain kc = new RMKeyChain(Op.Chain); for(int i=0;i<cc-1;i++) kc.addChild(aKeyChain.getChild(i));
-        obj = getValue(anObj, kc);
-        kchain = aKeyChain.getChildKeyChain(cc-1);
-    }
-    
-    // If not Key, just return
-    if(kchain.getOp()!=Op.Key)  { System.err.println("RMKeyChain.setValue: Last op not key."); return; }
-    
-    // If object is Enum, do weird setEnumValue() instead
-    if(obj instanceof Enum) { setEnumValue(anObj, aKeyChain); return; }
-    
-    // Get key and set
-    String key = kchain.getChildString(0);
-    try { RMKey.setValue(obj, key, aValue); }
-    catch(Exception e)  { throw new RuntimeException(e); }
-}
-
-/**
- * Sets the given value for the given key chain + property.
- * This is a real bogus loser implementation.
- */
-public static void setEnumValue(Object anObj, RMKeyChain aKeyChain)
-{
-    if(aKeyChain.getOp()!=Op.Chain) return;
-    Object obj = anObj;
-    int ccount = aKeyChain.getChildCount();
-    for(int i=0, iMax=ccount-2; i<iMax; i++) { RMKeyChain child = aKeyChain.getChildKeyChain(i);
-        obj = getValue(anObj, obj, child); }
-
-    // Get KeyChain.Key for enum, get current enum, get new enum and set
-    RMKeyChain kchain = aKeyChain.getChildKeyChain(ccount-2);
-    Enum enum1 = (Enum)getValue(obj, kchain);
-    Enum enum2 = Enum.valueOf(enum1.getClass(), aKeyChain.getChildKeyChain(ccount-1).getValueString());
-    setValue(obj, kchain, enum2);
-}
-
-/**
- * Sets the value but only prints a warning if it fails.
- */
-public static void setValueSafe(Object anObj, String aKey, Object aValue)
-{
-    try { setValue(anObj, aKey, aValue); }
-    catch(Exception e) { Class cls = ClassUtils.getClass(anObj);
-        String msg = (cls!=null? cls.getSimpleName() : "null") + " " + aKey + " " + aValue;
-        System.err.println("RMKeyChain.setValue (" + msg + ") failed: " + e);
-    }
-}
-
-/**
- * Tries to set value in given object, ignoring failure exceptions.
- */
-public static void setValueSilent(Object anObj, String aKey, Object aValue)
-{
-    try { setValue(anObj, aKey, aValue); }
-    catch(Exception e) { }
-}
 
 /**
  * Returns a string representation of the key chain.
