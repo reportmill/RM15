@@ -202,6 +202,7 @@ public static Object getShapesFromClipboard(RMEditor anEditor, Clipboard aCB)
  */
 public static RMShape getTransferText(Clipboard aCB) 
 {
+    if(!aCB.hasString()) return null;
     String str = aCB.getString();
     return str!=null? new RMTextShape(str) : null;
 }
