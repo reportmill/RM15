@@ -135,7 +135,8 @@ public static class RMFormatStub implements Archivable {
         String type = anElmnt.getAttributeValue("type","");
         if(type.equals("number")) return anArchiver.fromXML(anElmnt, RMNumberFormat.class,null);
         if(type.equals("date")) return anArchiver.fromXML(anElmnt, RMDateFormat.class, null);
-        System.err.println("RMFormatStub: Unknown format type " + type); return null;
+        if(type.length()>0) System.err.println("RMFormatStub: Unknown format type " + type);
+        return null;
     }
 }
 
