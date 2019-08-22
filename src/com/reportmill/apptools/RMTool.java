@@ -858,7 +858,7 @@ private void dropImageFile(RMShape aShape, ClipboardData aFile, Point aPoint)
     // If image not loaded, resize when loaded
     Image img = imgShape.getImage();
     if(!img.isLoaded()) {
-        img.addPropChangeListener(pce -> {
+        img.addLoadListener(() -> {
             double dw = img.getWidth() - imgShape.getWidth(), dh = img.getHeight() - imgShape.getHeight();
             Rect bnds = imgShape.getBounds(); bnds.inset(-dw/2, -dh/2); bnds.snap();
             imgShape.setBounds(bnds);
