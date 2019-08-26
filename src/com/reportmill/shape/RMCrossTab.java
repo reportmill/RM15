@@ -488,6 +488,11 @@ public RMShape divideShapeFromTop(double anAmount)
 }
 
 /**
+ * Override to trigger layout.
+ */
+public void setStroke(RMStroke aStroke)  { super.setStroke(aStroke); relayout(); }
+
+/**
  * Standard clone implementation.
  */
 public RMCrossTab clone()

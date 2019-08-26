@@ -20,7 +20,7 @@ public class RMCrossTabCol implements Cloneable, XMLArchiver.Archivable {
     List <RMCrossTabCell>     _cells = new ArrayList();
     
     // The dividers between this column and the next
-    List <RMCrossTabDivider>  _dividers = new ArrayList(), _dvdrPool = new ArrayList();
+    List <RMCrossTabDivider>  _dividers = new ArrayList();
 
 /**
  * Returns the index of this column in the table.
@@ -127,7 +127,7 @@ public List <RMCrossTabDivider> getDividers()
     
     // Get/create first divider, init Bounds and Start and add
     int column = getIndex();
-    RMCrossTabDivider divider = getDividerFromPool();
+    RMCrossTabDivider divider = createDivider();
     divider.setBounds(Math.round(getMaxX()), 0, 0, _table.getHeight()); divider._start = 0;
     _dividers.add(divider);
     
@@ -162,9 +162,9 @@ public List <RMCrossTabDivider> getDividers()
             
             // If divider is null, get/create a new one
             if(divider==null) {
-                divider = getDividerFromPool(); // Get/create new divider
-                divider.setBounds(getMaxX(), cellY, 0, _table.getHeight() - cellY); // Init divider bounds
-                divider._start = i; _dividers.add(divider); // Initialize divider start row and add to list
+                divider = createDivider();
+                divider.setBounds(getMaxX(), cellY, 0, _table.getHeight() - cellY);
+                _dividers.add(divider); divider._start = i;
             }
         }
     }
@@ -177,12 +177,17 @@ public List <RMCrossTabDivider> getDividers()
 /**
  * Resets dividers so they will be recalculated.
  */
-public void resetDividers()  { _dvdrPool.addAll(_dividers); _dividers.clear(); }
+public void resetDividers()  { _dividers.clear(); }
 
 /**
- * Returns a divider from the pool of recently used dividers (or creates a new one).
+ * Creates divider.
  */
-RMCrossTabDivider getDividerFromPool() { return _dvdrPool.size()>0? _dvdrPool.remove(0) : new RMCrossTabDivider(this); }
+protected RMCrossTabDivider createDivider()
+{
+    RMCrossTabDivider div = new RMCrossTabDivider(this);
+    if(_table.getStroke()!=null) div.setStroke(_table.getStroke());
+    return div;
+}
 
 /**
  * Returns a basic clone of this object.
@@ -192,7 +197,7 @@ public RMCrossTabCol clone()
     RMCrossTabCol clone = null;
     try { clone = (RMCrossTabCol)super.clone(); } catch(CloneNotSupportedException e) { }
     clone._cells = new ArrayList();
-    clone._dividers = new ArrayList(); clone._dvdrPool = new ArrayList(); // Set new Dividers/DividerPool lists
+    clone._dividers = new ArrayList();
     return clone;
 }
   
