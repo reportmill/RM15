@@ -1335,7 +1335,7 @@ public boolean intersects(Shape aPath)
     bounds.inset(-lineWidth/2, -lineWidth/2);
 
     // If paths don't even intersect bounds, just return false
-    if(!aPath.getBounds().intersectsEvenIfEmpty(bounds))
+    if(!aPath.getBounds().intersectsRect(bounds))
         return false;
     
     // Get shape in bounds and return whether shape intersects given path

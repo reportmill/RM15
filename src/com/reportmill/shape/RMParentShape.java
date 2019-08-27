@@ -382,7 +382,7 @@ public List <RMShape> getChildrenIntersecting(Shape aPath)
         if(!child.isHittable()) continue;
         
         // If child frame doesn't intersect path, just continue
-        if(!child.getFrame().intersectsEvenIfEmpty(aPath.getBounds()))
+        if(!child.getFrame().intersectsRect(aPath.getBounds()))
             continue;
         
         // Get path converted to child and if child intersects path, add child to hit list

@@ -237,7 +237,7 @@ public void shiftShapesBelowHiddenRect(List <RMShape> theShapes, Rect aRect)
         Rect shapeRect = shape.getFrame();
         
         // If shape rect is below, add it to floating rects and expand below rect
-        if(belowRect.intersectsEvenIfEmpty(shapeRect)) {
+        if(belowRect.intersectsRect(shapeRect)) {
             floatingRects.add(shapeRect);
             floatingRectShapes.add(shape);
             belowRect.union(shapeRect);
@@ -257,7 +257,7 @@ public void shiftShapesBelowHiddenRect(List <RMShape> theShapes, Rect aRect)
     // Iterate over floating rects
     for(int i=0, iMax=floatingRects.size(); i<iMax; i++) { Rect floatingRect = floatingRects.get(i);
         for(Rect staticRect : staticRects) {
-            if(floatingRect.intersectsEvenIfEmpty(staticRect)) {
+            if(floatingRect.intersectsRect(staticRect)) {
                 floatingRects.remove(i);
                 floatingRectShapes.remove(i);
                 floatingRect.y += height; floatingRect.height -= height;
