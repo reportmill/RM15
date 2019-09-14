@@ -323,7 +323,8 @@ public void mousePressed(ViewEvent anEvent)
     
     // Create default text instance and set initial bounds to reasonable value
     RMTextShape tshape = new RMTextShape(); _shape = tshape;
-    _shape.setFrame(getDefaultBounds((RMTextShape)_shape, _downPoint));
+    Rect defaultBounds = getDefaultBounds(tshape, _downPoint);
+    _shape.setFrame(defaultBounds);
     
     // Add shape to superSelectedShape (within an undo grouping) and superSelect
     getEditor().undoerSetUndoTitle("Add Text");
@@ -348,17 +349,20 @@ public void mouseDragged(ViewEvent anEvent)
     Point point = getEditorEvents().getEventPointInShape(true);
     point = _shape.localToParent(point);
     
-    // Get new bounds rect from down point and drag point
-    Rect rect = Rect.get(point, _downPoint);
-    
-    // Get text default bounds
+    // Get text default bounds and effective down point
     RMTextShape tshape = (RMTextShape)_shape;
     Rect defaultBounds = getDefaultBounds(tshape, _downPoint);
+    Point downPoint = defaultBounds.getPoint(Pos.TOP_LEFT);
 
-    // If drag rect less than default bounds, reset, otherwise set text bounds to drag rect
-    if(rect.getWidth()<defaultBounds.getWidth() || rect.getHeight()<defaultBounds.getHeight()) {
-        rect = defaultBounds; _updatingMinHeight = 0; }
-    else _updatingMinHeight = rect.getHeight();
+    // Get new bounds rect from default bounds and drag point (make sure min height is default height)
+    Rect rect = Rect.get(downPoint, point);
+    rect.width = Math.max(rect.width, defaultBounds.width);
+    rect.height = Math.max(rect.height, defaultBounds.height);
+    
+    // Set UpdatingMinHeight to drag rect height, but if text rect unreasonably thin, reset to 0
+    _updatingMinHeight = rect.height;
+    if(rect.width<=30)
+        _updatingMinHeight = 0;
     
     // Set new shape bounds
     _shape.setFrame(rect);
@@ -373,8 +377,8 @@ public void mouseReleased(ViewEvent e)
     Point upPoint = getEditorEvents().getEventPointInShape(true);
     upPoint = _shape.localToParent(upPoint);
     
-    // If upRect is really small, see if the user meant to conver a shape to text instead
-    if(Math.abs(_downPoint.getX() - upPoint.getX())<=3 && Math.abs(_downPoint.getY() - upPoint.getY())<=3) {
+    // If upRect is really small, see if the user meant to convert a shape to text instead
+    if(Math.abs(_downPoint.x - upPoint.x)<=3 && Math.abs(_downPoint.y - upPoint.y)<=3) {
         
         // If hit shape is text, just super-select that text and return
         if(_downShape instanceof RMTextShape) {
@@ -551,22 +555,22 @@ protected void richTextDidPropChange(PropChange aPC)
     if(_updatingSize) {
         
         // Get TextShape
-        RMTextShape _textShape = getSelectedShape(); if(_textShape==null) return;
+        RMTextShape textShape = getSelectedShape(); if(textShape==null) return;
     
         // Get preferred text shape width
-        double maxWidth = _updatingMinHeight==0? _textShape.getParent().getWidth() - _textShape.getX() :
-            _textShape.getWidth();
-        double prefWidth = _textShape.getPrefWidth(); if(prefWidth>maxWidth) prefWidth = maxWidth;
+        double maxWidth = _updatingMinHeight==0? textShape.getParent().getWidth() - textShape.getX() :
+            textShape.getWidth();
+        double prefWidth = textShape.getPrefWidth(); if(prefWidth>maxWidth) prefWidth = maxWidth;
 
         // If width gets updated, get & set desired width (make sure it doesn't go beyond page border)
         if(_updatingMinHeight==0)
-            _textShape.setWidth(prefWidth);
+            textShape.setWidth(prefWidth);
 
         // If PrefHeight or current height is greater than UpdatingMinHeight (which won't be zero if user drew a
         //  text box to enter text), set Height to PrefHeight
-        double prefHeight = _textShape.getPrefHeight();
-        if(prefHeight>_updatingMinHeight || _textShape.getHeight()>_updatingMinHeight)
-            _textShape.setHeight(Math.max(prefHeight, _updatingMinHeight));
+        double prefHeight = textShape.getPrefHeight();
+        if(prefHeight>_updatingMinHeight || textShape.getHeight()>_updatingMinHeight)
+            textShape.setHeight(Math.max(prefHeight, _updatingMinHeight));
     }
 }
 
@@ -834,6 +838,7 @@ public String getWindowTitle()  { return "Text Inspector"; }
 public boolean shouldConvertToText(RMShape aShape)
 {
     if(aShape instanceof RMImageShape) return false;
+    if(aShape instanceof RMPDFShape) return false;
     if(aShape.isLocked()) return false;
     return aShape instanceof RMRectShape || aShape instanceof RMOvalShape ||
         aShape instanceof RMPolygonShape;
@@ -882,15 +887,21 @@ public void convertToText(RMShape aShape, String aString)
  */
 private static Rect getDefaultBounds(RMTextShape aText, Point aPoint)
 {
-    // Get text font (or default font, if not available)
+    // Get text font (or default font, if not available) and margin
     RMFont font = aText.getFont(); if(font==null) font = RMFont.getDefaultFont();
+    Insets margin = aText.getMargin();
     
-    // Get bounds and return integral bounds
-    double x = aPoint.getX() - aText.getMarginLeft();
-    double y = aPoint.getY() - font.getAscent() - aText.getMarginTop();
-    double w = aPoint.getX() + 4 + aText.getMarginRight() - x;
-    double h = aPoint.getY() + font.getDescent() + aText.getMarginBottom() - y;
-    Rect rect = new Rect(x,y,w,h); rect.snap(); return rect;
+    // Default width is a standard char plus margin, default height is font line height plus margin
+    double w = Math.round(font.charAdvance('x') + margin.getWidth());
+    double h = Math.round(font.getLineHeight() + margin.getHeight());
+    
+    // Get bounds x/y from given (cursor) point and size
+    double x = Math.round(aPoint.x - w/2) + 1;
+    double y = Math.round(aPoint.y - h/2) - 1;
+    
+    // Return integral bounds rect
+    Rect rect = new Rect(x, y, w, h); rect.snap();
+    return rect;
 }
 
 /**
