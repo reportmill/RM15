@@ -222,10 +222,12 @@ public static Image createImage(RMShape aShape, Color aColor)
         return Image.get(1,1,false);
     
     // Create new image
-    Image img = Image.get(w, h, aColor==null || aColor.getAlphaInt()!=255);
+    Image img = Image.getImageForSizeAndScale(w, h, aColor==null || aColor.getAlphaInt()!=255, 2);
     
     // Create painter and configure
-    Painter pntr = img.getPainter(); pntr.setImageQuality(1);
+    Painter pntr = img.getPainter();
+    pntr.setPrinting(true);
+    pntr.setImageQuality(1);
     
     // Fill background
     if(aColor!=null) {
@@ -234,7 +236,6 @@ public static Image createImage(RMShape aShape, Color aColor)
     // Paint shape and return image
     layoutDeep(aShape);
     paintShape(pntr, aShape, new Rect(0,0,w,h), 1);
-    pntr.flush();
     return img;
 }
 
