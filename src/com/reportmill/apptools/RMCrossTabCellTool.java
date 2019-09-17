@@ -6,7 +6,7 @@ import com.reportmill.app.*;
 import com.reportmill.base.RMGrouping;
 import com.reportmill.shape.*;
 import java.util.List;
-import snap.gfx.Point;
+import snap.gfx.*;
 import snap.util.*;
 import snap.view.*;
 
@@ -246,9 +246,14 @@ public void processKeyEvent(T aCell, ViewEvent anEvent)
 public int getHandleCount(T aShape)  { return 0; }
 
 /**
- * Returns whether to draw bounds rect.
+ * Override to suppress normal TextTool painting.
  */
-public boolean drawBoundsRect(RMTextShape aText)  { return false; }
+public void paintHandles(T aText, Painter aPntr, boolean isSuperSelected)  { }
+
+/**
+ * Override to suppress normal TextTool painting.
+ */
+public void paintBoundsRect(RMTextShape aText, Painter aPntr) { }
 
 /**
  * Override normal implementation to handle KeysPanel drop.
