@@ -37,9 +37,6 @@ public class RMEditor extends RMViewer implements DeepChangeListener {
     // A shape to be drawn if set to drag-over shape during drag and drop
     Shape               _dragShape;
     
-    // Whether editor is in mouse loop
-    boolean             _isMouseDown;
-    
     // The select tool
     RMSelectTool        _selectTool;
     
@@ -103,11 +100,6 @@ public boolean isEditing()  { return _editing; }
  * Sets whether viewer is really doing editing.
  */
 public void setEditing(boolean aFlag)  { _editing = aFlag; }
-
-/**
- * Returns whether the editor is in mouse drag loop.
- */
-public boolean isMouseDown()  { return _isMouseDown; }
 
 /**
  * Creates the Painter.Props object to provide shape selection information.

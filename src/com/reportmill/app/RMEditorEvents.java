@@ -67,9 +67,6 @@ public void mousePressed(ViewEvent anEvent)
     // If in preview mode, call normal version
     if(editor.isPreview() && !getOverridePreview()) { super.mousePressed(anEvent); return; }
     
-    // Set Editor.MouseDown attribute
-    editor._isMouseDown = true;
-    
     // Cache current event
     _currentEvent = anEvent;
     
@@ -98,11 +95,6 @@ public void mouseDragged(ViewEvent anEvent)
     // If in preview mode, call normal version
     if(editor.isPreview() && !getOverridePreview()) { super.mouseDragged(anEvent); return; }
     
-    // If drag event is within 10 pts or 1/100 sec of down event, skip it so user clicks don't annoyingly move things
-    //if(_currentEvent!=null && _currentEvent.isMousePressed())
-    //    if(Math.abs(anEvent.getX()-_currentEvent.getX())<10 && Math.abs(anEvent.getY()-_currentEvent.getY())<10)
-    //        if(anEvent.getWhen()-_currentEvent.getWhen()<125) return;
-
     // Cache current event
     _currentEvent = anEvent;
     
@@ -128,9 +120,6 @@ public void mouseReleased(ViewEvent anEvent)
     
     // If in preview mode, call normal version
     if(editor.isPreview() && !getOverridePreview()) { super.mouseReleased(anEvent); return; }
-    
-    // Clear Editor.MouseDown attribute
-    editor._isMouseDown = false;
     
     // Cache current event, forward mouse released to current tool, clear current event
     _currentEvent = anEvent;
