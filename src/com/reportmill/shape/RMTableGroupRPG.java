@@ -41,7 +41,9 @@ public RMShape rpgAll()
 {
     // If not paginating, set height arbitrarily large
     if(!_rptOwner.getPaginate()) {
-        _prefHeight = getHeight(); setHeight(Float.MAX_VALUE); }
+        _paginating = false;
+        _prefHeight = getHeight(); setHeight(Float.MAX_VALUE);
+    }
     
     // Initialize ChildTables/Groups
     _childTables = new HashMap(); _groups = new HashMap();
@@ -84,7 +86,7 @@ public RMShape rpgAll()
 }
 
 /**
- * Creates a page.
+ * Override to create RMTableGroupRPG instead of RMTableRPG.
  */
 protected RMTableRPG createPage()
 {
@@ -94,9 +96,9 @@ protected RMTableRPG createPage()
 }
 
 /**
- * A hook to add extra rows or such at bottom of table.
+ * Override to add rows for child tables.
  */
-protected boolean addRowsExtra(RMGroup aGroup, RMTableRowRPG aParentRPG, RMTableRowRPG theLastRow)
+protected boolean addChildTableRows(RMGroup aGroup, RMTableRowRPG aParentRPG, RMTableRowRPG theLastRow)
 {
     // Get current child table
     List <RMTable> ctables = _tgroup.getChildTables(_table); if(ctables==null || ctables.size()==0) return true;

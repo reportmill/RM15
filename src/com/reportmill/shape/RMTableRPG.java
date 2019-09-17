@@ -17,6 +17,9 @@ public class RMTableRPG extends RMParentShape {
    // The Table
    RMTable           _table;
    
+   // Whether table should paginate
+   boolean           _paginating = true;
+   
    // The last row added to page
    RMTableRowRPG     _lastRow;
    
@@ -51,7 +54,7 @@ public RMShape rpgAll()
 {
     // If not paginating, set height arbitrarily large
     if(!_rptOwner.getPaginate()) {
-        _prefHeight = getHeight(); setHeight(Float.MAX_VALUE); } //setAutosizing("--~,-~-");
+        _paginating = false; _prefHeight = getHeight(); setHeight(Float.MAX_VALUE); } //setAutosizing("--~,-~-");
     
     // Do report generation for table
     rpgTable(_table);
@@ -79,7 +82,7 @@ public RMShape rpgAll()
 protected void rpgTable(RMTable aTable)
 {
     // Get grouped objects
-    RMGroup group = getGroup(aTable); //_rptOwner.pushDataStack(group);
+    RMGroup group = getGroup(aTable);
     
     // Add Rows for group
     RMTableRPG page = this; while(page._nextPage!=null) page = page._nextPage; page._table = aTable;
@@ -90,7 +93,7 @@ protected void rpgTable(RMTable aTable)
     }
     
     // Move rows for last page to bottom
-    page.moveRowsToBottom(); //_rptOwner.popDataStack();
+    page.moveRowsToBottom();
 }
 
 /**
@@ -142,7 +145,9 @@ protected boolean addRows(RMGroup aGroup, RMTableRowRPG aParentRPG, RMTableRowRP
     
     // If we previously hit page break (presumably on last detail row of group), return for new page
     if(_doPageBreak) {
-        _lastRow = new RMTableRowRPG(); _lastRow._group = aGroup; return false; }
+        _lastRow = new RMTableRowRPG(); _lastRow._group = aGroup;
+        return false;
+    }
 
     // Add header row for group, if header row exists
     if(headerRow!=null && (!aGroup.isEmpty() || headerRow.getPrintEvenIfGroupIsEmpty())) {
@@ -182,9 +187,6 @@ protected boolean addRows(RMGroup aGroup, RMTableRowRPG aParentRPG, RMTableRowRP
             else continue;
         }
         
-        // Add child group
-        //_rptOwner.pushDataStack(childGroup);
-    
         // Add details row for group, if details row exists
         if(detailsRow!=null) {
             
@@ -202,33 +204,48 @@ protected boolean addRows(RMGroup aGroup, RMTableRowRPG aParentRPG, RMTableRowRP
             
             // If no RowRPG, do normal row RPG
             if(rowRPG==null) {
-                rowRPG = new RMTableRowRPG(); rowRPG.rpgAll(_rptOwner, detailsRow, childGroup, version); }
+                rowRPG = new RMTableRowRPG();
+                rowRPG.rpgAll(_rptOwner, detailsRow, childGroup, version);
+            }
             
             // Add DetailsRow RowRPG
             if(!addRow(rowRPG, aParentRPG)) {
-                break; }  //_rptOwner.popDataStack(); 
+                break; } 
             parentRPG = rowRPG;
         }
         
-        // Recurse
+        // If lower level groupings exist, recurse
         if(!childGroup.isLeaf()) {
-            if(!addRows(childGroup, parentRPG, theLastRow)) {
-                break; }}  //_rptOwner.popDataStack(); 
+            if(!addRows(childGroup, parentRPG, theLastRow))
+                break;
+        } 
         
-        // Recurse hook (for RMTableGroupRPG)
-        else if(!addRowsExtra(childGroup, parentRPG, theLastRow)) {
-            break; }  //_rptOwner.popDataStack(); 
+        // If child table exists, recurse (for RMTableGroupRPG)
+        else if(!addChildTableRows(childGroup, parentRPG, theLastRow))
+            break;
         
-        // Remove child group and clear LastRow
-        theLastRow = null;  //_rptOwner.popDataStack(); 
+        // Clear LastRow
+        theLastRow = null;
 
-        // Check for PageBreak: If we're at PageBreakGroupIndex or DetailsRow.PageBreakKey evals true, set DoPageBreak
-        int pbreakGroupIndex = _table.getPageBreakGroupIndex();
-        if(pbreakGroupIndex>=0 && pbreakGroupIndex>=aGroup.getParentCount() && i+1<iMax) _doPageBreak = true;
-        String pbreakKey = detailsRow!=null? detailsRow.getPageBreakKey() : null;
-        if(pbreakKey!=null && RMKeyChain.getBoolValue(childGroup, pbreakKey) && i+1<iMax) _doPageBreak = true;
-        if(_doPageBreak) {
-            _lastRow = new RMTableRowRPG(); _lastRow._group = aGroup.getGroup(i+1); added++; break; }
+        // If paginating, check for PageBreak (can be explicit or triggered by DetailsRow.PageBreakKey)
+        if(_paginating && i+1<iMax) {
+            
+            // If at PageBreakGroupIndex, set DoPageBreak
+            int pbIndex = _table.getPageBreakGroupIndex();
+            if(pbIndex>=0 && pbIndex>=aGroup.getParentCount())
+                _doPageBreak = true;
+                
+            // If DetailsRow.PageBreakKey evals true, set DoPageBreak
+            String pbKey = detailsRow!=null? detailsRow.getPageBreakKey() : null;
+            if(pbKey!=null && RMKeyChain.getBoolValue(childGroup, pbKey))
+                _doPageBreak = true;
+            
+            // If DoPageBreak, create place-holder LastRow for next group
+            if(_doPageBreak) {
+                _lastRow = new RMTableRowRPG(); _lastRow._group = aGroup.getGroup(i+1);
+                added++; break;
+            }
+        }
     }
     
     // Add Running summary (if grouping didn't finish and one is available)
@@ -268,11 +285,19 @@ protected boolean addRows(RMGroup aGroup, RMTableRowRPG aParentRPG, RMTableRowRP
                 if(row.getGroup().getParentCount()>group.getParentCount()) group = row.getGroup(); }
             group = new RMGroup.Running(aGroup, group, null); }
         
-        // Add summary row
-        if(headerRow==null && detailsRow==null) summaryRow.setNumberOfChildrenToStayWith(0); // Hack
-        RMTableRowRPG row = new RMTableRowRPG(); row.rpgAll(_rptOwner, summaryRow, group, null);
+        // If no header/details, then this row shouldn't do widow/orphan
+        if(headerRow==null && detailsRow==null) summaryRow.setNumberOfChildrenToStayWith(0);
+        
+        // Create filled Summary row
+        RMTableRowRPG row = new RMTableRowRPG();
+        row.rpgAll(_rptOwner, summaryRow, group, null);
+        
+        // If last summary was split, use remainder instead
         if(theLastRow!=null && theLastRow._row==summaryRow && theLastRow._split!=null) {
-            row = theLastRow._split; theLastRow = null; }
+            row = theLastRow._split; theLastRow = null;
+        }
+        
+        // Add row (return if failed)
         if(!addRow(row, aParentRPG))
             return false;
     }
@@ -282,9 +307,12 @@ protected boolean addRows(RMGroup aGroup, RMTableRowRPG aParentRPG, RMTableRowRP
 }
 
 /**
- * A hook to add extra rows or such at bottom of table.
+ * A hook to add rows for child tables (RMTableGroup).
  */
-protected boolean addRowsExtra(RMGroup aGroup, RMTableRowRPG aParentRPG, RMTableRowRPG theLastRow)  { return true; }
+protected boolean addChildTableRows(RMGroup aGroup, RMTableRowRPG aParentRPG, RMTableRowRPG theLastRow)
+{
+    return true;
+}
 
 /**
  * Adds a row to this TableRPG.
