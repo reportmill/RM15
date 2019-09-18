@@ -8,62 +8,19 @@ import snap.util.*;
 /**
  * This shape manages a row of cells.
  */
-public class RMCrossTabRow implements Cloneable, XMLArchiver.Archivable {
+public class RMCrossTabRow extends RMCrossTabSpan implements XMLArchiver.Archivable {
 
-    // The table this row is associated with
-    RMCrossTab                _table;
-    
     // The table row height
     double                    _height = 25;
     
-    // The row cells
-    List <RMCrossTabCell>     _cells = new ArrayList();
-
-    // The dividers between this column and the next
-    List <RMCrossTabDivider>  _dividers = new ArrayList();
-
 /**
  * Returns the index of this row in the table.
  */
 public int getIndex()
 {
     for(int i=0, iMax=_table.getRowCount(); i<iMax; i++) if(_table.getRow(i)==this) return i;
-    return -1; // Return -1 since row not found
+    return -1;
 }
-
-/**
- * Returns the number of cells in this row.
- */
-public int getCellCount()  { return _cells.size(); }
-
-/**
- * Returns the specific child cell at the given index in the list of unique cells for this row.
- */
-public RMCrossTabCell getCell(int anIndex)  { return _cells.get(anIndex); }
-
-/**
- * Sets the cell at given index.
- */
-protected void setCell(RMCrossTabCell aCell, int anIndex)
-{
-    while(anIndex>=_cells.size()) _cells.add(null);
-    _cells.set(anIndex, aCell);
-}
-
-/**
- * Adds a cell to end of row.
- */
-public void addCell(RMCrossTabCell aCell)  { addCell(aCell, getCellCount()); }
-
-/**
- * Adds a cell at given index.
- */
-public void addCell(RMCrossTabCell aCell, int anIndex)  { _cells.add(anIndex, aCell); }
-
-/**
- * Removes a cell at given index.
- */
-public RMCrossTabCell removeCell(int anIndex)  { return _cells.remove(anIndex); }
 
 /**
  * Returns the row y.
@@ -84,7 +41,13 @@ public double getHeight()  { return _height; }
  */
 public void setHeight(double aHeight)
 {
+    // If already set, just return
+    //if(aHeight==_height) return;
+    
+    // Calculate change and set new value
     double dh = aHeight - _height; _height = aHeight;
+    
+    // Set new table height
     if(_table!=null) _table.setHeight(_table.getHeight() + dh);
 }
 
@@ -105,16 +68,6 @@ public double getBestHeight()
 }
 
 /**
- * Returns the divider count.
- */
-public int getDividerCount()  { return getDividers().size(); }
-
-/**
- * Returns the specific divider at given index. 
- */
-public RMCrossTabDivider getDivider(int anIndex)  { return getDividers().get(anIndex); }
-
-/**
  * Returns the dividers for this column.
  */
 public List <RMCrossTabDivider> getDividers()
@@ -124,7 +77,7 @@ public List <RMCrossTabDivider> getDividers()
     
     // Get/create first divider, init Bounds and Start and add
     int row = getIndex();
-    RMCrossTabDivider divider = createDivider();
+    RMCrossTabDivider divider = getDividerFromPool();
     divider.setBounds(0, Math.round(getMaxY()), _table.getWidth(), 0); divider._start = 0;
     _dividers.add(divider);
     
@@ -159,7 +112,7 @@ public List <RMCrossTabDivider> getDividers()
             
             // If divider is null, get/create a new one
             if(divider==null) {
-                divider = createDivider();
+                divider = getDividerFromPool();
                 divider.setBounds(cellX, getMaxY(), _table.getWidth() - cellX, 0);
                 _dividers.add(divider); divider._start = i;
             }
@@ -175,31 +128,9 @@ public List <RMCrossTabDivider> getDividers()
 }
 
 /**
- * Resets dividers so they will be recalculated.
- */
-public void resetDividers()  { _dividers.clear(); }
-
-/**
- * Creates divider.
- */
-protected RMCrossTabDivider createDivider()
-{
-    RMCrossTabDivider div = new RMCrossTabDivider(this);
-    if(_table.getStroke()!=null) div.setStroke(_table.getStroke());
-    return div;
-}
-
-/**
  * Returns a basic clone of this object.
  */
-public RMCrossTabRow clone()
-{
-    RMCrossTabRow clone = null;
-    try { clone = (RMCrossTabRow)super.clone(); } catch(CloneNotSupportedException e) { }
-    clone._cells = new ArrayList();
-    clone._dividers = new ArrayList();
-    return clone;
-}
+public RMCrossTabRow clone()  { return (RMCrossTabRow)super.clone(); }
 
 /**
  * Returns a clone of row including a clone of cells.
@@ -239,9 +170,6 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
 /**
  * Standard toString implementation.
  */
-public String toString()
-{
-    return getClass().getSimpleName() + ": height=" + getHeight() + ", cells=" + _cells.toString();
-}
+public String toString()  { return "RMCrossTabRow: height=" + getHeight() + ", cells=" + _cells.toString(); }
 
 }

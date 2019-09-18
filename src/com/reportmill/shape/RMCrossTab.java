@@ -107,7 +107,8 @@ public void addRow(int anIndex)
 public void addRow(RMCrossTabRow aRow, int anIndex)
 {
     // Add row
-    _rows.add(anIndex, aRow); aRow._table = this; // Add row to rows
+    _rows.add(anIndex, aRow);
+    aRow._table = this;
         
     // Add Row cells to columns
     for(int i=0, iMax=getColCount(); i<iMax; i++) { RMCrossTabCol col = getCol(i);
@@ -185,8 +186,9 @@ public void addCol(int anIndex)
 public void addCol(RMCrossTabCol aCol, int anIndex)
 {
     // Add column
-    _cols.add(anIndex, aCol); aCol._table = this; // Add column to list
-        
+    _cols.add(anIndex, aCol);
+    aCol._table = this;
+    
     // Add column cells to rows
     for(int i=0, iMax=getRowCount(); i<iMax; i++) { RMCrossTabRow row = getRow(i);
         RMCrossTabCell cell = aCol.getCell(i);

@@ -8,19 +8,10 @@ import snap.util.*;
 /**
  * Provides info for a column in a crosstab.
  */
-public class RMCrossTabCol implements Cloneable, XMLArchiver.Archivable {
-
-    // The table that owns this column
-    RMCrossTab                _table;
+public class RMCrossTabCol extends RMCrossTabSpan implements XMLArchiver.Archivable {
 
     // The width of the column
-    double                    _width = 120;
-    
-    // The row cells
-    List <RMCrossTabCell>     _cells = new ArrayList();
-    
-    // The dividers between this column and the next
-    List <RMCrossTabDivider>  _dividers = new ArrayList();
+    double                     _width = 120;
 
 /**
  * Returns the index of this column in the table.
@@ -28,42 +19,8 @@ public class RMCrossTabCol implements Cloneable, XMLArchiver.Archivable {
 public int getIndex()
 {
     for(int i=0, iMax=_table.getColCount(); i<iMax; i++) if(_table.getCol(i)==this) return i;
-    return -1; // Return -1 since column not found
+    return -1;
 }
-
-/**
- * Returns the number of cells in this row.
- */
-public int getCellCount()  { return _cells.size(); }
-
-/**
- * Returns the specific child cell at the given index in the list of unique cells for this row.
- */
-public RMCrossTabCell getCell(int anIndex)  { return _cells.get(anIndex); }
-
-/**
- * Sets the cell at given index.
- */
-protected void setCell(RMCrossTabCell aCell, int anIndex)
-{
-    while(anIndex>=_cells.size()) _cells.add(null);
-    _cells.set(anIndex, aCell);
-}
-
-/**
- * Adds a cell at end of column.
- */
-public void addCell(RMCrossTabCell aCell)  { addCell(aCell, getCellCount()); }
-
-/**
- * Adds a cell at given index.
- */
-public void addCell(RMCrossTabCell aCell, int anIndex)  { _cells.add(anIndex, aCell); }
-
-/**
- * Removes a cell at given index.
- */
-public RMCrossTabCell removeCell(int anIndex)  { return _cells.remove(anIndex); }
 
 /**
  * Returns the x of this column.
@@ -84,9 +41,16 @@ public double getWidth()  { return _width; }
  */
 public void setWidth(double aWidth)
 {
+    // If already set, just return
     if(aWidth==_width) return;
+    
+    // Calculate change and set new value
     double dw = aWidth - _width; _width = aWidth;
+    
+    // Set new table width
     if(_table!=null) _table.setWidth(_table.getWidth() + dw);
+    
+    // Set cell widths
     for(int i=0, iMax=getCellCount(); i<iMax; i++)
         getCell(i).setWidth(aWidth);
 }
@@ -108,16 +72,6 @@ public double getBestWidth()
 }
 
 /**
- * Returns the divider count.
- */
-public int getDividerCount()  { return getDividers().size(); }
-
-/**
- * Returns the specific divider at given index. 
- */
-public RMCrossTabDivider getDivider(int anIndex)  { return getDividers().get(anIndex); }
-
-/**
  * Returns the dividers for this column.
  */
 public List <RMCrossTabDivider> getDividers()
@@ -127,7 +81,7 @@ public List <RMCrossTabDivider> getDividers()
     
     // Get/create first divider, init Bounds and Start and add
     int column = getIndex();
-    RMCrossTabDivider divider = createDivider();
+    RMCrossTabDivider divider = getDividerFromPool();
     divider.setBounds(Math.round(getMaxX()), 0, 0, _table.getHeight()); divider._start = 0;
     _dividers.add(divider);
     
@@ -162,7 +116,7 @@ public List <RMCrossTabDivider> getDividers()
             
             // If divider is null, get/create a new one
             if(divider==null) {
-                divider = createDivider();
+                divider = getDividerFromPool();
                 divider.setBounds(getMaxX(), cellY, 0, _table.getHeight() - cellY);
                 _dividers.add(divider); divider._start = i;
             }
@@ -175,31 +129,9 @@ public List <RMCrossTabDivider> getDividers()
 }
 
 /**
- * Resets dividers so they will be recalculated.
- */
-public void resetDividers()  { _dividers.clear(); }
-
-/**
- * Creates divider.
- */
-protected RMCrossTabDivider createDivider()
-{
-    RMCrossTabDivider div = new RMCrossTabDivider(this);
-    if(_table.getStroke()!=null) div.setStroke(_table.getStroke());
-    return div;
-}
-
-/**
  * Returns a basic clone of this object.
  */
-public RMCrossTabCol clone()
-{
-    RMCrossTabCol clone = null;
-    try { clone = (RMCrossTabCol)super.clone(); } catch(CloneNotSupportedException e) { }
-    clone._cells = new ArrayList();
-    clone._dividers = new ArrayList();
-    return clone;
-}
+public RMCrossTabCol clone()  { return (RMCrossTabCol)super.clone(); }
   
 /**
  * XML archival.
@@ -216,5 +148,10 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
 {
     _width = anElement.getAttributeFloatValue("width"); return this;
 }
+
+/**
+ * Standard toString implementation.
+ */
+public String toString()  { return "RMCrossTabCol: width=" + getWidth() + ", cells=" + _cells.toString(); }
 
 }
