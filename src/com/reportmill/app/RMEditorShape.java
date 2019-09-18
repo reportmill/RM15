@@ -31,7 +31,10 @@ public void setDoc(RMDocument aDoc)
     super.setDoc(aDoc);
     
     // Make sure current document page is super-selected
-    if(_editor._selShapes!=null) _editor.setSuperSelectedShape(getSelPage());
+    if(_editor._selShapes!=null) {
+        RMPage page = getSelPage();
+        _editor.setSuperSelectedShape(page);
+    }
     
     // Create and install undoer
     if(_editor.isEditing()) _undoer = new Undoer();

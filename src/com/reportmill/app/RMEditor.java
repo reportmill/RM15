@@ -544,16 +544,23 @@ public void paste()  { RMEditorClipboard.paste(this); }
  */
 public void selectAll()
 {
+    // If document selected, select page
+    RMShape superSelShape = getSuperSelectedShape();
+    if(superSelShape instanceof RMDocument) {
+        setSuperSelectedShape(((RMDocument)superSelShape).getSelectedPage());
+        superSelShape = getSuperSelectedShape();
+    }
+    
     // If text editing, forward to text editor
     if(getTextEditor()!=null)
         getTextEditor().selectAll();
     
     // Otherwise, select all children
-    else if(getSuperSelectedShape().getChildCount()>0) {
+    else if(superSelShape.getChildCount()>0) {
         
         // Get list of all hittable children of super-selected shape
         List shapes = new ArrayList();
-        for(RMShape shape : getSuperSelectedShape().getChildren())
+        for(RMShape shape : superSelShape.getChildren())
             if(shape.isHittable())
                 shapes.add(shape);
         

@@ -89,10 +89,10 @@ public void mousePressed(ViewEvent anEvent)
     // Get selected shape at event point
     RMShape selectedShape = editor.getShapeAtPoint(anEvent.getX(), anEvent.getY());
     
-    // If hit shape is super selected, then forward the event
+    // If SelShape is super-selected, start DragMode.Select
     if(isSuperSelected(selectedShape)) {
 
-        // If selectedShape isn't editor superSelectedShape, superSelect it (ie., pop the selection)
+        // If selectedShape isn't main superSelectedShape, superSelect it (ie., pop selection)
         if(selectedShape != editor.getSuperSelectedShape())
             editor.setSuperSelectedShape(selectedShape);
         
@@ -100,35 +100,33 @@ public void mousePressed(ViewEvent anEvent)
         _dragMode = DragMode.Select;
     }
 
-    // If Multi-click and SelectedShape is super-selectable, super-select shape and redo with reduced clicks
+    // If SelShape should be super-selected automatically, super-select and re-enter
+    else if(selectedShape.getParent()!=null && selectedShape.getParent().childrenSuperSelectImmediately()) {
+        editor.setSuperSelectedShape(selectedShape);
+        mousePressed(anEvent);
+        return;
+    }
+        
+    // If Multi-click and SelShape is super-selectable, super-select and re-enter with reduced clicks
     else if(anEvent.getClickCount()>1 && editor.getTool(selectedShape).isSuperSelectable(selectedShape)) {
-        editor.setSuperSelectedShape(selectedShape);                               // Super select selectedShape
-        ViewEvent event = anEvent.copyForClickCount(anEvent.getClickCount()-1);  // Get event with reduced clicks
-        mousePressed(event); return;                                               // Re-enter and return
+        editor.setSuperSelectedShape(selectedShape);
+        ViewEvent event = anEvent.copyForClickCount(anEvent.getClickCount()-1);
+        mousePressed(event);
+        return;
     }
 
-    // If event was shift click, either add or remove hit shape from list
+    // If event was shift click, either add or remove hit shape from editor selected shapes
     else if(anEvent.isShiftDown()) {
-            
-        // If mouse pressed shape is already selected, remove it and reset drag mode to none
-        if(isSelected(selectedShape)) {
-            editor.removeSelectedShape(selectedShape); _dragMode = DragMode.None; }
-        
-        // If shape wasn't yet selected, add it to selected shapes
-        else { editor.addSelectedShape(selectedShape); _dragMode = DragMode.Move; }
+        if(isSelected(selectedShape)) editor.removeSelectedShape(selectedShape);
+        else editor.addSelectedShape(selectedShape);
+        _dragMode = DragMode.None;
     }
         
-    // Otherwise, handle normal mouse press on shape
+    // Otherwise, make sure shape is selected and start move (or rotate)
     else {
-        if(!isSelected(selectedShape))                                    // If hit shape isn't selected then select it
+        if(!isSelected(selectedShape))
             editor.setSelectedShape(selectedShape);
-        _dragMode = !anEvent.isAltDown()? DragMode.Move : DragMode.Rotate;  // Set drag mode to move
-    }
-    
-    // If a shape was selected whose parent childrenSuperSelectImmediately, go ahead and super select it
-    if(editor.getSelectedShape()!=null && editor.getSuperSelectedShape().childrenSuperSelectImmediately()) {
-        editor.setSuperSelectedShape(editor.getSelectedShape());     // Super select selected shape
-        mousePressed(anEvent); return;                               // Re-enter mouse pressed and return
+        _dragMode = !anEvent.isAltDown()? DragMode.Move : DragMode.Rotate;
     }
     
     // Set last point to event point in super selected shape coords
