@@ -57,8 +57,8 @@ public class RMEditor extends RMViewer implements DeepChangeListener {
     
     // Constants for PropertyChanges
     public static final String CurrentTool_Prop = "CurrentTool";
-    public static final String SelectedShapes_Prop = "SelectedShapes";
-    public static final String SuperSelectedShape_Prop = "SuperSelectedShape";
+    public static final String SelShapes_Prop = "SelShapes";
+    public static final String SuperSelShape_Prop = "SuperSelShape";
     
 /**
  * Creates a new editor.
@@ -79,7 +79,8 @@ public RMEditor()
 /**
  * Returns the editor pane for this editor, if there is one.
  */
-public RMEditorPane getEditorPane()  { return _ep!=null? _ep : (_ep=getOwner(RMEditorPane.class)); } RMEditorPane _ep;
+public RMEditorPane getEditorPane()  { return _ep!=null? _ep : (_ep=getOwner(RMEditorPane.class)); }
+private RMEditorPane _ep;
 
 /**
  * Override to return as editor shape.
@@ -181,10 +182,7 @@ public void setSelectedShapes(List <RMShape> theShapes)
     _selShapes.addAll(theShapes);
     
     // Fire PropertyChange
-    firePropChange(SelectedShapes_Prop, null, theShapes);
-    
-    // Reset EditorPane
-    RMEditorPane ep = getEditorPane(); ep.resetLater();
+    firePropChange(SelShapes_Prop, null, theShapes);
 }
 
 /**
@@ -239,7 +237,7 @@ public void setSuperSelectedShape(RMShape aShape)
         addSuperSelectedShape(shape);
     
     // Fire PropertyChange and repaint
-    firePropChange(SuperSelectedShape_Prop, null, aShape);
+    firePropChange(SuperSelShape_Prop, null, aShape);
     repaint();
 }
 
@@ -330,18 +328,25 @@ public List <RMShape> getSelectedOrSuperSelectedShapes()
  */
 public void popSelection()
 {
-    // If there are selected shapes, empty current selection
-    if(getSelectedShapeCount()>0)
-        setSuperSelectedShape(getSelectedShape().getParent());
+    // If there is a selected shape, just super-select parent (clear selected shapes)
+    RMShape selShape = getSelectedShape();
+    if(selShape!=null && selShape.getParent()!=null) {
+        setSuperSelectedShape(selShape.getParent());
+        return;
+    }
 
     // Otherwise select super-selected shape (or its parent if it has childrenSuperSelectImmediately)
-    else if(getSuperSelectedShapeCount()>1) {
-        if(getSuperSelectedShape() instanceof RMTextShape)
-            setSelectedShape(getSuperSelectedShape());
-        else if(getSuperSelectedShape().getParent().childrenSuperSelectImmediately())
-            setSuperSelectedShape(getSuperSelectedShape().getParent());
-        else setSelectedShape(getSuperSelectedShape());
+    if(getSuperSelectedShapeCount()>2) {
+        RMShape superSelShape = getSuperSelectedShape();
+        if(superSelShape instanceof RMTextShape)
+            setSelectedShape(superSelShape);
+        else if(superSelShape.getParent().childrenSuperSelectImmediately())
+            setSuperSelectedShape(superSelShape.getParent());
+        else setSelectedShape(superSelShape);
     }
+    
+    // Otherwise, beep
+    else beep();
 }
 
 /**

@@ -662,16 +662,17 @@ protected void keyPressed(ViewEvent anEvent)
     
     // Handle supported non-character keys
     else switch(keyCode) {
-        case KeyCode.TAB: replace("\t"); break; // Handle tab
-        case KeyCode.ENTER: replace("\n"); break; // Handle enter
-        case KeyCode.LEFT: keyBackward(isShiftDown); break; // Handle left arrow
-        case KeyCode.RIGHT: keyForward(isShiftDown); break; // Handle right arrow
-        case KeyCode.UP: keyUp(); break; // Handle up arrow
-        case KeyCode.DOWN: keyDown(); break; // Handle down arrow
-        case KeyCode.HOME: selectLineStart(); break; // Handle home key
-        case KeyCode.END: selectLineEnd(); break; // Handle end key
-        case KeyCode.BACK_SPACE: delete(); break; // Handle backspace key
-        case KeyCode.DELETE: deleteForward(); break; // Handle delete key
+        case KeyCode.TAB: replace("\t"); break;
+        case KeyCode.ENTER: replace("\n"); break;
+        case KeyCode.LEFT: keyBackward(isShiftDown); break;
+        case KeyCode.RIGHT: keyForward(isShiftDown); break;
+        case KeyCode.UP: keyUp(); break;
+        case KeyCode.DOWN: keyDown(); break;
+        case KeyCode.HOME: selectLineStart(); break;
+        case KeyCode.END: selectLineEnd(); break;
+        case KeyCode.BACK_SPACE: delete(); break;
+        case KeyCode.DELETE: deleteForward(); break;
+        case KeyCode.ESCAPE: return; // Suppress consume so editor gets it
         //default: return; // Any other non-character key, just return
     }
     

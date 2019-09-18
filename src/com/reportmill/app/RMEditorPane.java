@@ -232,6 +232,9 @@ protected void initUI()
     // Enable Events for editor
     enableEvents(getEditor(), MousePress, MouseRelease);
     
+    // Listen for Editor PropChanges
+    getEditor().addPropChangeListener(pc -> editorDidPropChange(pc));
+    
     // Configure Window ClassName, Image and enable window events
     WindowView win = getWindow();
     win.setImage(getFrameIcon());
@@ -585,6 +588,18 @@ public void runPopupMenu(ViewEvent anEvent)
     pmenu.setOwner(getMenuBar());
     pmenu.show(getEditor(), anEvent.getX(), anEvent.getY());
     anEvent.consume();
+}
+
+/**
+ * Called when Editor has prop change.
+ */
+private void editorDidPropChange(PropChange aPC)
+{
+    String pname = aPC.getPropName();
+    switch(pname) {
+        case RMEditor.SelShapes_Prop: resetLater(); break;
+        case RMEditor.SuperSelShape_Prop: resetLater(); break;
+    }
 }
 
 /**
