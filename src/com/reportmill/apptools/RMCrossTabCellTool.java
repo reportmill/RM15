@@ -57,7 +57,7 @@ public void resetUI()
     RMCrossTabCell cell = getSelectedShape(); if(cell==null) return;
     
     // Get whether cell is in header row or column
-    boolean isHeaderCell = cell.isColumnHeader() || cell.isRowHeader();
+    boolean isHeaderCell = cell.isColHeader() || cell.isRowHeader();
     
     // Update GroupingKeyText
     if(isHeaderCell)
@@ -270,7 +270,7 @@ public void drop(T aCell, ViewEvent anEvent)
         String string = anEvent.getClipboard().getString(); //ClipboardUtils.getString(anEvent.getTransferable());
     
         // If this cell is header row or header column and there is no grouping, set grouping
-        if((aCell.isColumnHeader() || aCell.isRowHeader()) && aCell.getGrouping()==null) {
+        if((aCell.isColHeader() || aCell.isRowHeader()) && aCell.getGrouping()==null) {
             String key = StringUtils.delete(string, "@"); // Get key (drop string without @-signs)
             aCell.setGrouping(new RMGrouping(key)); // Set new grouping
         }

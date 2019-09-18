@@ -220,7 +220,7 @@ public RMCrossTabCell getCellBelow()
 /**
  * Returns whether this cell is a column header cell.
  */
-public boolean isColumnHeader()
+public boolean isColHeader()
 {
     return getRow()<getTable().getHeaderRowCount() && getCol()>=getTable().getHeaderColCount();
 }
@@ -253,7 +253,7 @@ protected void paintShape(Painter aPntr)
     
     // If cell has grouping, paint corner grouping indicator
     RMShapePaintProps props = RMShapePaintProps.get(aPntr);
-    if(props.isEditing() && (isRowHeader() || isColumnHeader())) {
+    if(props.isEditing() && (isRowHeader() || isColHeader())) {
         double x = Math.round(getMaxX()) - getX();
         double y = Math.round(getY()) - getY();
         aPntr.setColor(Color.BLACK);

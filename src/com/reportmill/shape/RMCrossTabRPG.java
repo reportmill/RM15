@@ -102,7 +102,7 @@ private RMGroup getCellGroup(RMCrossTab aCtab, RMCrossTabCell aCell, RMGroup aDa
     group.groupBy(grouping);
     
     // If cell is column header, add column for each child group
-    if(aCell.isColumnHeader()) {
+    if(aCell.isColHeader()) {
         
         // Add extra columns for each group item
         addNeededColumns(aCtab, aCell, group);

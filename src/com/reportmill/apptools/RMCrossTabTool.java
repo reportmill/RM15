@@ -66,7 +66,7 @@ public void respondUI(ViewEvent anEvent)
     if(anEvent.equals("ColCountSpinner")) {
         int count = anEvent.getIntValue();
         count = Math.max(count, 1); count = Math.max(count, ctab.getHeaderColCount());
-        ctab.setColumnCount(count);
+        ctab.setColCount(count);
     }
     
     // Handle HeaderRowCountSpinner, HeaderColCountSpinner
@@ -224,7 +224,7 @@ public void mouseDragged(T aCTab, ViewEvent anEvent)
         double delta = point.x - _divider.getX();
         
         // Get divider column and resize
-        RMCrossTabCol column = _divider.getColumn();
+        RMCrossTabCol column = _divider.getCol();
         if(column.getIndex()>=0) column.setWidth(column.getWidth() + delta);
     }
     
@@ -267,14 +267,14 @@ public void processKeyEvent(T aCTab, ViewEvent anEvent)
             RMCrossTabDivider divider = (RMCrossTabDivider)editor.getSelectedShape();
             
             // If divider is last column or row divider, just beep
-            if(divider.isColumnDivider()? divider.getNextColumn()==null : divider.getNextRow()==null)
+            if(divider.isColDivider()? divider.getNextCol()==null : divider.getNextRow()==null)
                 beep();
             
             // If column divider, merge cells around divider
-            else if(divider.isColumnDivider()) {
+            else if(divider.isColDivider()) {
                 
                 // Get column index and iterate over divider rows and merge cells on either side of divider
-                int col = divider.getColumn().getIndex();
+                int col = divider.getCol().getIndex();
                 for(int i=divider.getStart(), iMax=divider.getEnd(); i<iMax; i++)
                     aCTab.mergeCells(i, col, i, col+1);
             }
@@ -557,7 +557,7 @@ public static void addCrossTab(RMEditor anEditor)
 {
     // Create and configure default table
     RMCrossTab ctab = new RMCrossTab();
-    ctab.setRowCount(3); ctab.setColumnCount(3); ctab.setHeaderRowCount(1);
+    ctab.setRowCount(3); ctab.setColCount(3); ctab.setHeaderRowCount(1);
     
     // Get parent for shape add and set ctab shape location in middle of parent
     RMParentShape parent = anEditor.firstSuperSelectedShapeThatAcceptsChildren();

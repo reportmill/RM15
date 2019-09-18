@@ -9,43 +9,43 @@ package com.reportmill.shape;
 public class RMCrossTabDivider extends RMLineShape {
 
     // The row or column this divider is associated with
-    Object   _rowCol;
+    RMCrossTabSpan  _span;
     
     // The starting row index (if column divider) or column index (if row divider) for this divider
-    int      _start;
+    int             _start;
     
     // The ending row index (if column divider) or column index (if row divider) for this divider
-    int      _end;
+    int             _end;
 
 /**
  * Creates a new divider for given row or column.
  */
-public RMCrossTabDivider(Object aRowCol)  { _rowCol = aRowCol; }
+public RMCrossTabDivider(RMCrossTabSpan aSpan)  { _span = aSpan; }
 
 /**
  * Returns whether divider is a row divider.
  */
-public boolean isRowDivider()  { return _rowCol instanceof RMCrossTabRow; }
+public boolean isRowDivider()  { return _span instanceof RMCrossTabRow; }
 
 /**
  * Returns whether divider is a column divider. 
  */
-public boolean isColumnDivider()  { return _rowCol instanceof RMCrossTabCol; }
+public boolean isColDivider()  { return _span instanceof RMCrossTabCol; }
 
 /**
  * Returns the divder row as a cell row.
  */
-public RMCrossTabRow getRow()  { return (RMCrossTabRow)_rowCol; }
+public RMCrossTabRow getRow()  { return (RMCrossTabRow)_span; }
 
 /**
  * Returns the divider column as cell column.
  */
-public RMCrossTabCol getColumn()  { return (RMCrossTabCol)_rowCol; }
+public RMCrossTabCol getCol()  { return (RMCrossTabCol)_span; }
 
 /**
  * Returns the table this divider is a part of.
  */
-public RMCrossTab getTable()  { return isRowDivider()? getRow()._table : getColumn()._table; }
+public RMCrossTab getTable()  { return isRowDivider()? getRow()._table : getCol()._table; }
 
 /**
  * Returns the divider row to the right of the divider.
@@ -63,12 +63,12 @@ public RMCrossTabRow getNextRow()
 /**
  * Returns the divider column below the divider.
  */
-public RMCrossTabCol getNextColumn()
+public RMCrossTabCol getNextCol()
 {
     // Iterate over columns and return the one after this divider
     RMCrossTab table = getTable();
     for(int i=0, iMax=table.getColCount(); i<iMax; i++)
-        if(table.getCol(i)==getColumn() && i+1<iMax)
+        if(table.getCol(i)==getCol() && i+1<iMax)
             return table.getCol(i+1);
     return null; // Return null if no column after this divider
 }

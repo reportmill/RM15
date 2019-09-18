@@ -151,7 +151,7 @@ public int getColCount()  { return _cols.size(); }
 /**
  * Sets the number of columns for this table.
  */
-public void setColumnCount(int aColumnCount)
+public void setColCount(int aColumnCount)
 {
     if(aColumnCount<1) return; // Require at least 1 column
     while(aColumnCount>getColCount()) addCol(); // Add cols if needed
