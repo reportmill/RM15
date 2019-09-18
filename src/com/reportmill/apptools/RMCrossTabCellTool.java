@@ -169,6 +169,11 @@ public void processEvent(T aCell, ViewEvent anEvent)
     // Get cell table
     RMEditor editor = getEditor();
     RMCrossTab table = aCell.getTable();
+    RMTool tableTool = editor.getTool(table);
+    
+    // If event is popup trigger, run crosstab popup
+    if(anEvent.isPopupTrigger()) {
+        tableTool.processEvent(table, anEvent); return; }
     
     // Handle MousePressed
     if(anEvent.isMousePress())
@@ -179,7 +184,7 @@ public void processEvent(T aCell, ViewEvent anEvent)
         
         // If mouse pressed event is null, forward events to table
         if(_mousePressedEvent==null) {
-            editor.getTool(table).processEvent(table, anEvent); return; }
+            tableTool.processEvent(table, anEvent); return; }
         
         // Get event point in cell coords
         Point point = editor.convertToShape(anEvent.getX(), anEvent.getY(), aCell);
@@ -191,13 +196,13 @@ public void processEvent(T aCell, ViewEvent anEvent)
             editor.setSelectedShape(aCell);
             
             // Send table table mouse pressed
-            editor.getTool(table).processEvent(table, _mousePressedEvent);
+            tableTool.processEvent(table, _mousePressedEvent);
             
             // Clear mouse pressed event so we'll know that events should be forwarded
             _mousePressedEvent = null;
             
             // Send current mouse dragged event to table and return
-            editor.getTool(table).processEvent(table, anEvent);
+            tableTool.processEvent(table, anEvent);
             return;
         }
     }
@@ -207,7 +212,7 @@ public void processEvent(T aCell, ViewEvent anEvent)
     
         // If mouse pressed event is null, forward on to table tool
         if(_mousePressedEvent==null) {
-            editor.getTool(table).processEvent(table, anEvent); _mousePressedEvent = null; return; }
+            tableTool.processEvent(table, anEvent); _mousePressedEvent = null; return; }
         
         // Clear mouse pressed event
         _mousePressedEvent = null;
