@@ -814,10 +814,9 @@ public void paintFront(Painter aPntr)
     // Do normal paint
     super.paintFront(aPntr);
     
-    // Draw selection handles and current tool
-    if(getCurrentTool()!=getSelectTool())
-        getSelectTool().paintTool(aPntr);
-    getCurrentTool().paintTool(aPntr);
+    // Have current tool paintTool (paints selected shape handles by default)
+    RMTool tool = getCurrentTool();
+    tool.paintTool(aPntr);
    
     // Paint proximity guides
     RMEditorProxGuide.paintProximityGuides(this, aPntr);

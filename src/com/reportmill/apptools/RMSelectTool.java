@@ -409,47 +409,28 @@ public void setRedoMousePressed(boolean aFlag)  { _redoMousePressed = aFlag; }
  */
 public void paintTool(Painter aPntr)
 {
-    // Iterate over super selected shapes and have tool paint SuperSelected
+    // Paint handles for super selected shapes and selected shapes (if mouse up)
+    super.paintTool(aPntr);
+    
+    // If not mouseDown (select/move/resize), just return
     RMEditor editor = getEditor();
-    for(int i=1, iMax=editor.getSuperSelectedShapeCount(); i<iMax; i++) {
-        RMShape shape = editor.getSuperSelectedShape(i);
-        RMTool tool = editor.getTool(shape);
-        tool.paintHandles(shape, aPntr, true);
-    }
-    
-    // Get selected shapes
-    List <RMShape> selectedShapes = editor.getSelectedShapes();
-    
-    // If in mouse loop, substitute "while selecting shapes"
-    if(editor.isMouseDown()) {
+    if(!editor.isMouseDown())
+        return;
         
-        // Bogus - Make sure that text bounds are drawn
-        for(RMShape shape : selectedShapes) { if(!(shape instanceof RMTextShape)) continue;
-            RMTextTool tool = (RMTextTool)editor.getTool(shape);
-            tool.paintBoundsRect((RMTextShape)shape, aPntr);
-        }
-    
-        selectedShapes = _whileSelectingSelShapes;
+    // Make sure that text bounds are drawn?
+    List <RMShape> selectedShapes = editor.getSelectedShapes();
+    for(RMShape shape : selectedShapes) { if(!(shape instanceof RMTextShape)) continue;
+        RMTextTool tool = (RMTextTool)editor.getTool(shape);
+        tool.paintBoundsRect((RMTextShape)shape, aPntr);
     }
 
-    // Iterate over SelectedShapes and have tool paint Selected
-    for(int i=0, iMax=selectedShapes.size(); i<iMax; i++) { RMShape shape = selectedShapes.get(i);
-        RMTool tool = editor.getTool(shape);
-        tool.paintHandles(shape, aPntr, false);
-    }
+    // Paint handles for selecting shapes
+    paintHandlesForShapes(aPntr, _whileSelectingSelShapes);
 
-    // Draw _selectionRect
-    if(!_selectionRect.isEmpty()) {
-
-        // Get selection rect in editor coords
-        Rect rect = editor.convertFromShape(_selectionRect, null).getBounds();
-
-        // Draw selection content as light transparent rect
-        aPntr.setColor(new Color(.9,.5)); aPntr.fill(rect);
-
-        // Draw selection frame as darker transparent border
-        aPntr.setStroke(Stroke.Stroke1); aPntr.setColor(new Color(.6,.6)); aPntr.draw(rect);
-    }
+    // Paint SelectionRect: light transparent rect with darker transparent border
+    Rect rect = editor.convertFromShape(_selectionRect, null).getBounds();
+    aPntr.setColor(new Color(.9,.5)); aPntr.fill(rect);
+    aPntr.setStroke(Stroke.Stroke1); aPntr.setColor(new Color(.6,.6)); aPntr.draw(rect);
 }
 
 /**

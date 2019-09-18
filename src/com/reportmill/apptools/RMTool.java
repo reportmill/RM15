@@ -370,7 +370,15 @@ public void mouseDragged(ViewEvent anEvent)
 /**
  * Event handling for shape creation.
  */
-public void mouseReleased(ViewEvent anEvent)  { getEditor().setCurrentToolToSelectTool(); _shape = null; }
+public void mouseReleased(ViewEvent anEvent)
+{
+    // If user basically just clicked, expand shape to semi-reasonable size
+    if(_shape.getWidth()<=2 && _shape.getHeight()<=2)
+        _shape.setSize(20,20);
+    
+    // Reset Editor.CurrentTool to SelectTool and clear Shape
+    getEditor().setCurrentToolToSelectTool(); _shape = null;
+}
 
 /**
  * Event handling from SelectTool for super selected shapes.
@@ -457,7 +465,49 @@ public void processKeyEvent(T aShape, ViewEvent anEvent)  { }
 /**
  * Paints when tool is active for things like SelectTool's handles & selection rect or polygon's in-progress path.
  */
-public void paintTool(Painter aPntr)  { }
+public void paintTool(Painter aPntr)
+{
+    // Paint handles for super selected shapes
+    paintHandlesForSuperSelectedShapes(aPntr);
+    
+    // If Editor.MouseDown, just return
+    RMEditor editor = getEditor();
+    if(editor.isMouseDown())
+        return;
+        
+    // Otherwise, paint handles for selected shapes
+    paintHandlesForShapes(aPntr, null);
+}
+
+/**
+ * Paints handles for given list of shapes (uses Editor.SelectedShapes if null).
+ */
+protected void paintHandlesForShapes(Painter aPntr, List <RMShape> theShapes)
+{
+    // Get editor and shapes
+    RMEditor editor = getEditor();
+    List <RMShape> shapes = theShapes!=null? theShapes : editor.getSelectedShapes();
+    
+    // Iterate over shapes and have tool paintHandles
+    for(RMShape shape : shapes) {
+        RMTool tool = editor.getTool(shape);
+        tool.paintHandles(shape, aPntr, false);
+    }
+}
+
+/**
+ * Paints handles for super selected shapes.
+ */
+protected void paintHandlesForSuperSelectedShapes(Painter aPntr)
+{
+    // Iterate over super selected shapes and have tool paint SuperSelected
+    RMEditor editor = getEditor();
+    for(int i=1, iMax=editor.getSuperSelectedShapeCount(); i<iMax; i++) {
+        RMShape shape = editor.getSuperSelectedShape(i);
+        RMTool tool = editor.getTool(shape);
+        tool.paintHandles(shape, aPntr, true);
+    }
+}
 
 /**
  * Handles painting shape handles (or any indication that a shape is selected/super-selected).
@@ -467,7 +517,7 @@ public void paintHandles(T aShape, Painter aPntr, boolean isSuperSelected)
     // If no handles, just return
     if(getHandleCount(aShape)==0) return;
     
-    // Turn off antialiasing and cache current composite
+    // Turn off antialiasing and cache current opacity
     aPntr.setAntialiasing(false);
     double opacity = aPntr.getOpacity();
     
@@ -476,15 +526,15 @@ public void paintHandles(T aShape, Painter aPntr, boolean isSuperSelected)
         aPntr.setOpacity(.64);
     
     // Determine if rect should be reduced if the shape is especially small
-    boolean mini = aShape.getWidth()<16 || aShape.getHeight()<16;
+    boolean mini = aShape.getWidth()<=20 || aShape.getHeight()<=20;
         
     // Iterate over shape handles, get rect (reduce if needed) and draw
     for(int i=0, iMax=getHandleCount(aShape); i<iMax; i++) {
         Rect hr = getHandleRect(aShape, i, isSuperSelected); if(mini) hr.inset(1, 1);
-        aPntr.drawImage(_handle, hr.getX(), hr.getY(), hr.getWidth(), hr.getHeight());
+        aPntr.drawImage(_handle, hr.x, hr.y, hr.width, hr.height);
     }
         
-    // Restore composite and turn on antialiasing
+    // Restore opacity and turn on antialiasing
     aPntr.setOpacity(opacity);
     aPntr.setAntialiasing(true);
 }
@@ -503,12 +553,12 @@ public Point getHandlePoint(T aShape, int aHandle, boolean isSuperSelected)
     Rect bounds = isSuperSelected? getBoundsSuperSelected(aShape).getInsetRect(-HandleWidth/2):aShape.getBoundsInside();
     
     // Get minx and miny of given shape
-    double minX = aShape.width()>=0? bounds.getX() : bounds.getMaxX();
-    double minY = aShape.height()>=0? bounds.getY() : bounds.getMaxY();
+    double minX = aShape.width()>=0? bounds.x : bounds.getMaxX();
+    double minY = aShape.height()>=0? bounds.y : bounds.getMaxY();
     
     // Get maxx and maxy of givn shape
-    double maxX = aShape.width()>=0? bounds.getMaxX() : bounds.getX();
-    double maxY = aShape.height()>=0? bounds.getMaxY() : bounds.getY();
+    double maxX = aShape.width()>=0? bounds.getMaxX() : bounds.x;
+    double maxY = aShape.height()>=0? bounds.getMaxY() : bounds.y;
     
     // Get midx and midy of given shape
     double midX = minX + (maxX-minX)/2;
