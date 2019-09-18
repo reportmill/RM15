@@ -95,6 +95,6 @@ public void respondUI(ViewEvent anEvent)
 /**
  * Returns the image used to represent shapes that this tool represents.
  */
-protected snap.gfx.Image getImageImpl()  { return getEditor().getTool(RMImageShape.class).getImage(); }
+protected snap.gfx.Image getImageImpl()  { return getToolForClass(RMImageShape.class).getImage(); }
 
 }

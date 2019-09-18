@@ -113,6 +113,16 @@ public T getSelectedShape()
 public List <? extends RMShape> getSelectedShapes()  { return getEditor().getSelectedOrSuperSelectedShapes(); }
 
 /**
+ * Returns the tool for a given shape.
+ */
+public RMTool getTool(RMShape aShape)  { return _editor.getTool(aShape); }
+
+/**
+ * Returns the tool for a given shape class.
+ */
+public RMTool getToolForClass(Class <? extends RMShape> aClass)  { return _editor.getTool(aClass); }
+
+/**
  * Called when a tool is selected.
  */
 public void activateTool()  { }
@@ -213,7 +223,7 @@ public RMFont getFontDeep(RMEditor anEditor, RMShape aShape)
     RMFont font = getFont(anEditor, aShape);
     for(int i=0, iMax=aShape.getChildCount(); i<iMax && font==null; i++) font = aShape.getChild(i).getFont();
     for(int i=0, iMax=aShape.getChildCount(); i<iMax && font==null; i++) {
-        RMShape child = aShape.getChild(i); RMTool tool = anEditor.getTool(child);
+        RMShape child = aShape.getChild(i); RMTool tool = getTool(child);
         font = tool.getFontDeep(anEditor, child);
     }
     return font;
@@ -242,7 +252,7 @@ public void setFontFamilyDeep(RMEditor anEditor, RMShape aShape, RMFont aFont)
     // Set FontFamily for shape and recurse for children
     setFontFamily(anEditor, aShape, aFont);
     for(int i=0, iMax=aShape.getChildCount(); i<iMax; i++) { RMShape child = aShape.getChild(i);
-        RMTool tool = anEditor.getTool(child); tool.setFontFamilyDeep(anEditor, child, aFont); }
+        RMTool tool = getTool(child); tool.setFontFamilyDeep(anEditor, child, aFont); }
 }
 
 /**
@@ -264,7 +274,7 @@ public void setFontNameDeep(RMEditor anEditor, RMShape aShape, RMFont aFont)
     // Set Font name for shape and recurse for children
     setFontName(anEditor, aShape, aFont);
     for(int i=0, iMax=aShape.getChildCount(); i<iMax; i++) { RMShape child = aShape.getChild(i);
-        RMTool tool = anEditor.getTool(child); tool.setFontNameDeep(anEditor, child, aFont); }
+        RMTool tool = getTool(child); tool.setFontNameDeep(anEditor, child, aFont); }
 }
 
 /**
@@ -285,7 +295,7 @@ public void setFontSizeDeep(RMEditor anEditor, RMShape aShape, double aSize, boo
 {
     setFontSize(anEditor, aShape, aSize, isRelative);
     for(int i=0, iMax=aShape.getChildCount(); i<iMax; i++) { RMShape child = aShape.getChild(i);
-        RMTool tool = anEditor.getTool(child); tool.setFontSizeDeep(anEditor, child, aSize, isRelative); }    
+        RMTool tool = getTool(child); tool.setFontSizeDeep(anEditor, child, aSize, isRelative); }    
 }
 
 /**
@@ -305,7 +315,7 @@ public void setFontBoldDeep(RMEditor anEditor, RMShape aShape, boolean aFlag)
 {
     setFontBold(anEditor, aShape, aFlag);
     for(int i=0, iMax=aShape.getChildCount(); i<iMax; i++) { RMShape child = aShape.getChild(i);
-        RMTool tool = anEditor.getTool(child); tool.setFontBoldDeep(anEditor, child, aFlag); }    
+        RMTool tool = getTool(child); tool.setFontBoldDeep(anEditor, child, aFlag); }    
 }
 
 /**
@@ -325,7 +335,7 @@ public void setFontItalicDeep(RMEditor anEditor, RMShape aShape, boolean aFlag)
 {
     setFontItalic(anEditor, aShape, aFlag);
     for(int i=0, iMax=aShape.getChildCount(); i<iMax; i++) { RMShape child = aShape.getChild(i);
-        RMTool tool = anEditor.getTool(child); tool.setFontItalicDeep(anEditor, child, aFlag); }    
+        RMTool tool = getTool(child); tool.setFontItalicDeep(anEditor, child, aFlag); }    
 }
 
 /**
@@ -490,7 +500,7 @@ protected void paintHandlesForShapes(Painter aPntr, List <RMShape> theShapes)
     
     // Iterate over shapes and have tool paintHandles
     for(RMShape shape : shapes) {
-        RMTool tool = editor.getTool(shape);
+        RMTool tool = getTool(shape);
         tool.paintHandles(shape, aPntr, false);
     }
 }
@@ -504,7 +514,7 @@ protected void paintHandlesForSuperSelectedShapes(Painter aPntr)
     RMEditor editor = getEditor();
     for(int i=1, iMax=editor.getSuperSelectedShapeCount(); i<iMax; i++) {
         RMShape shape = editor.getSuperSelectedShape(i);
-        RMTool tool = editor.getTool(shape);
+        RMTool tool = getTool(shape);
         tool.paintHandles(shape, aPntr, true);
     }
 }
@@ -722,14 +732,14 @@ public RMShapeHandle getShapeHandleAtPoint(Point aPoint)
     // Check selected shapes for a selected handle index
     for(int i=0, iMax=editor.getSelectedShapeCount(); handle==-1 && i<iMax; i++) {
         shape = editor.getSelectedShape(i);
-        tool = editor.getTool(shape);
+        tool = getTool(shape);
         handle = tool.getHandleAtPoint(shape, aPoint, false);
     }
 
     // Check super selected shapes for a selected handle index
     for(int i=0, iMax=editor.getSuperSelectedShapeCount(); handle==-1 && i<iMax; i++) {
         shape = editor.getSuperSelectedShape(i);
-        tool = editor.getTool(shape);
+        tool = getTool(shape);
         handle = tool.getHandleAtPoint(shape, aPoint, true);
     }
 
@@ -753,7 +763,7 @@ public boolean acceptsDrag(T aShape, ViewEvent anEvent)
         return true;
     
     // Return true in any case if accepts children
-    return getEditor().getTool(aShape).getAcceptsChildren(aShape);
+    return getTool(aShape).getAcceptsChildren(aShape);
 }
 
 /**
@@ -869,7 +879,7 @@ private void dropImageFile(RMShape aShape, ClipboardData aFile, Point aPoint)
         switch(dbox.showOptionDialog(null, options[0])) {
         
             // Handle Create Image Shape
-            case 0: while(!editor.getTool(aShape).getAcceptsChildren(aShape)) aShape = aShape.getParent(); break;
+            case 0: while(!getTool(aShape).getAcceptsChildren(aShape)) aShape = aShape.getParent(); break;
             
             // Handle Create Texture
             case 1: aShape.setFill(new RMImageFill(imgSrc, true));
@@ -926,7 +936,7 @@ private void dropPDFFile(RMShape aShape, ClipboardData aFile, Point aPoint)
     
     // If image hit a real shape, see if user wants it to be a texture
     RMEditor editor = getEditor();
-    RMShape shape = aShape; while(!editor.getTool(shape).getAcceptsChildren(shape)) shape = shape.getParent();
+    RMShape shape = aShape; while(!getTool(shape).getAcceptsChildren(shape)) shape = shape.getParent();
     
     // Get parent to add image shape to and drop point in parent coords
     RMParentShape parent = shape instanceof RMParentShape? (RMParentShape)shape : shape.getParent();
@@ -954,9 +964,8 @@ private void dropPDFFile(RMShape aShape, ClipboardData aFile, Point aPoint)
 private void dropReportFile(RMShape aShape, ClipboardData aFile, Point aPoint)
 {
     // Find a parent shape that accepts children
-    RMEditor editor = getEditor();
     RMParentShape parent = aShape instanceof RMParentShape? (RMParentShape)aShape : aShape.getParent();
-    while(!editor.getTool(parent).getAcceptsChildren(parent))
+    while(!getTool(parent).getAcceptsChildren(parent))
         parent = parent.getParent();
     
     // Get document for dropped file and embedded document shape for document
@@ -964,6 +973,7 @@ private void dropReportFile(RMShape aShape, ClipboardData aFile, Point aPoint)
     RMNestedDoc ndoc = new RMNestedDoc(); ndoc.setNestedDoc(doc);
     
     // Center embedded document around drop point
+    RMEditor editor = getEditor();
     Point point = editor.convertToShape(aPoint.x, aPoint.y, parent);
     ndoc.setXY(point);
 

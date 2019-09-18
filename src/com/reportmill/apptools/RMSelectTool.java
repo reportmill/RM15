@@ -86,57 +86,51 @@ public void mousePressed(ViewEvent anEvent)
         return;
     }
     
-    // Get selected shape at event point
-    RMShape selectedShape = editor.getShapeAtPoint(anEvent.getX(), anEvent.getY());
+    // Get shape hit by event point
+    RMShape hitShape = editor.getShapeAtPoint(anEvent.getX(), anEvent.getY());
     
-    // If SelShape is super-selected, start DragMode.Select
-    if(isSuperSelected(selectedShape)) {
-
-        // If selectedShape isn't main superSelectedShape, superSelect it (ie., pop selection)
-        if(selectedShape != editor.getSuperSelectedShape())
-            editor.setSuperSelectedShape(selectedShape);
-        
-        // Set drag mode to select
+    // If HitShape is super-selected, make sure it's main Editor.SuperSelShape and start DragMode.Select
+    if(isSuperSelected(hitShape)) {
+        if(hitShape!=editor.getSuperSelectedShape())
+            editor.setSuperSelectedShape(hitShape);
         _dragMode = DragMode.Select;
     }
 
-    // If SelShape should be super-selected automatically, super-select and re-enter
-    else if(selectedShape.getParent()!=null && selectedShape.getParent().childrenSuperSelectImmediately()) {
-        editor.setSuperSelectedShape(selectedShape);
+    // If HitShape should be super-selected automatically, super-select and re-enter
+    else if(hitShape.getParent()!=null && hitShape.getParent().childrenSuperSelectImmediately()) {
+        editor.setSuperSelectedShape(hitShape);
         mousePressed(anEvent);
         return;
     }
         
-    // If Multi-click and SelShape is super-selectable, super-select and re-enter with reduced clicks
-    else if(anEvent.getClickCount()>1 && editor.getTool(selectedShape).isSuperSelectable(selectedShape)) {
-        editor.setSuperSelectedShape(selectedShape);
+    // If Multi-click and HitShape is super-selectable, super-select and re-enter with reduced clicks
+    else if(anEvent.getClickCount()>1 && getTool(hitShape).isSuperSelectable(hitShape)) {
+        editor.setSuperSelectedShape(hitShape);
         ViewEvent event = anEvent.copyForClickCount(anEvent.getClickCount()-1);
         mousePressed(event);
         return;
     }
 
-    // If event was shift click, either add or remove hit shape from editor selected shapes
+    // If Shift-click, either add or remove HitShape from Editor.SelShapes
     else if(anEvent.isShiftDown()) {
-        if(isSelected(selectedShape)) editor.removeSelectedShape(selectedShape);
-        else editor.addSelectedShape(selectedShape);
+        if(isSelected(hitShape)) editor.removeSelectedShape(hitShape);
+        else editor.addSelectedShape(hitShape);
         _dragMode = DragMode.None;
     }
         
-    // Otherwise, make sure shape is selected and start move (or rotate)
+    // Otherwise, make sure HitShape is selected and start move or rotate
     else {
-        if(!isSelected(selectedShape))
-            editor.setSelectedShape(selectedShape);
+        if(!isSelected(hitShape))
+            editor.setSelectedShape(hitShape);
         _dragMode = !anEvent.isAltDown()? DragMode.Move : DragMode.Rotate;
     }
     
     // Set last point to event point in super selected shape coords
     _lastMousePoint = getEditorEvents().getEventPointInShape(false);
     
-    // Get editor super selected shape
-    RMShape superSelectedShape = editor.getSuperSelectedShape();
-        
-    // Call mouse pressed for superSelectedShape's tool
-    editor.getTool(superSelectedShape).processEvent(superSelectedShape, anEvent);
+    // Get editor super selected shape and call mouse pressed for superSelectedShape's tool
+    RMShape superSelShape = editor.getSuperSelectedShape();
+    getTool(superSelShape).processEvent(superSelShape, anEvent);
     
     // If redo mouse pressed was requested, do redo
     if(getRedoMousePressed()) {
@@ -144,16 +138,13 @@ public void mousePressed(ViewEvent anEvent)
         
     // If event was consumed, set event shape and DragMode to event dispatch and return
     if(anEvent.isConsumed()) {
-        _eventShape = superSelectedShape; _dragMode = DragMode.EventDispatch; return; }
+        _eventShape = superSelShape; _dragMode = DragMode.EventDispatch; return; }
     
-    // Get the shape at the event point
-    RMShape mousePressedShape = editor.getShapeAtPoint(anEvent.getX(), anEvent.getY());
-    
-    // If mousePressedShape is the editor's selected shape, call mouse pressed on mousePressedShape's tool
-    if(isSelected(mousePressedShape)) {
+    // If HitShape is selected, call mouse pressed on HitShape's tool
+    if(isSelected(hitShape)) {
         
         // Call mouse pressed on mousePressedShape's tool
-        editor.getTool(mousePressedShape).processEvent(mousePressedShape, anEvent);
+        getTool(hitShape).processEvent(hitShape, anEvent);
         
         // If redo mouse pressed was requested, do redo
         if(getRedoMousePressed()) {
@@ -161,7 +152,7 @@ public void mousePressed(ViewEvent anEvent)
             
         // If event was consumed, set event shape and drag mode to event dispatch and return
         if(anEvent.isConsumed()) {
-            _eventShape = mousePressedShape; _dragMode = DragMode.EventDispatch; return; }
+            _eventShape = hitShape; _dragMode = DragMode.EventDispatch; return; }
     }
 }
 
@@ -268,7 +259,7 @@ public void mouseDragged(ViewEvent anEvent)
             break;
 
         // Handle DragModeSuperSelect: Forward mouse drag on to super selected shape's mouse dragged and break
-        case EventDispatch: editor.getTool(_eventShape).processEvent(_eventShape, anEvent); break;
+        case EventDispatch: getTool(_eventShape).processEvent(_eventShape, anEvent); break;
 
         // Handle DragModeNone
         case None: break;
@@ -314,7 +305,7 @@ public void mouseReleased(ViewEvent anEvent)
 
         // Handle EventDispatch
         case EventDispatch:
-            editor.getTool(_eventShape).processEvent(_eventShape, anEvent);
+            getTool(_eventShape).processEvent(_eventShape, anEvent);
             _eventShape = null;
             break;
     }
@@ -338,7 +329,7 @@ public void mouseMoved(ViewEvent anEvent)
     RMEditor editor = getEditor();
     for(int i=1, iMax=editor.getSuperSelectedShapeCount(); i<iMax && !anEvent.isConsumed(); i++) {
         RMShape shape = editor.getSuperSelectedShape(i);
-        editor.getTool(shape).mouseMoved(shape, anEvent);
+        getTool(shape).mouseMoved(shape, anEvent);
     }
 }
 
@@ -369,7 +360,7 @@ private List <RMShape> getHitShapes()
 
     // If selection rect is outside super selected shape, move up shape hierarchy
     while(superShape!=editor.getDoc() &&
-        !path.getBounds().intersectsRect(editor.getTool(superShape).getBoundsSuperSelected(superShape))) {
+        !path.getBounds().intersectsRect(getTool(superShape).getBoundsSuperSelected(superShape))) {
         RMParentShape parent = superShape.getParent();
         editor.setSuperSelectedShape(parent);
         path = superShape.localToParent(path);
@@ -418,7 +409,7 @@ public void paintTool(Painter aPntr)
     // Make sure that text bounds are drawn?
     List <RMShape> selectedShapes = editor.getSelectedShapes();
     for(RMShape shape : selectedShapes) { if(!(shape instanceof RMTextShape)) continue;
-        RMTextTool tool = (RMTextTool)editor.getTool(shape);
+        RMTextTool tool = (RMTextTool)getTool(shape);
         tool.paintBoundsRect((RMTextShape)shape, aPntr);
     }
 

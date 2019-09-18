@@ -323,10 +323,10 @@ public void processKeyEvent(T aCTab, ViewEvent anEvent)
         else if(anEvent.getKeyChar()==KeyCode.CHAR_UNDEFINED || Character.isISOControl(anEvent.getKeyChar()))
             return;
         
-        // If key is anything else, superselect cell and forward key press
+        // If key is anything else, superselect cell and forward key press to cell tool
         else {
-            editor.setSuperSelectedShape(cell); // Super-select cell
-            editor.getTool(cell).processKeyEvent(cell, anEvent); // Forward to cell tool
+            editor.setSuperSelectedShape(cell);
+            getTool(cell).processKeyEvent(cell, anEvent);
         }
     }
     
@@ -517,7 +517,7 @@ public void moveShapeHandle(T aShape, int aHandle, Point aPoint)
         super.moveShapeHandle(aShape, aHandle, aPoint);
     
     // Call base tool implementation with base tool handle
-    else getEditor().getTool(RMShape.class).moveShapeHandle(aShape, getBaseHandle(aHandle), aPoint);
+    else getToolForClass(RMShape.class).moveShapeHandle(aShape, getBaseHandle(aHandle), aPoint);
 }
 
 /**

@@ -242,7 +242,7 @@ public void mousePressed(T aTableGroup, ViewEvent anEvent)
     RMEditor editor = getEditor();
     if(editor.getSelectedOrSuperSelectedShape()==aTableGroup) {
         RMTable mainTable = aTableGroup.getMainTable();                // Get main table
-        editor.getTool(mainTable).processEvent(mainTable, anEvent);    // Forward on
+        getTool(mainTable).processEvent(mainTable, anEvent);    // Forward on
     }
 }
 

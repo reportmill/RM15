@@ -166,10 +166,9 @@ public RMGrouping getGrouping()
  */
 public void processEvent(T aCell, ViewEvent anEvent)
 {
-    // Get cell table
-    RMEditor editor = getEditor();
+    // Get cell table and tool
     RMCrossTab table = aCell.getTable();
-    RMTool tableTool = editor.getTool(table);
+    RMTool tableTool = getTool(table);
     
     // If event is popup trigger, run crosstab popup
     if(anEvent.isPopupTrigger()) {
@@ -187,6 +186,7 @@ public void processEvent(T aCell, ViewEvent anEvent)
             tableTool.processEvent(table, anEvent); return; }
         
         // Get event point in cell coords
+        RMEditor editor = getEditor();
         Point point = editor.convertToShape(anEvent.getX(), anEvent.getY(), aCell);
         
         // If point is outside cell, start sending to table tool

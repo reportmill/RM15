@@ -342,7 +342,7 @@ public void mousePressed(T aTable, ViewEvent anEvent)
     if(!isSuperSelected(aTable)) {
         RMTableRow tableRow = (RMTableRow)aTable.getChildContaining(point); // Get hit table row
         if(tableRow!=null && tableRow.isStructured()) // If table row is structured
-            editor.getTool(tableRow).processEvent(tableRow, anEvent);
+            getTool(tableRow).processEvent(tableRow, anEvent);
         return;
     }
     
@@ -446,7 +446,7 @@ public void runMenuForShape(RMShape aShape, double x, double y)
 {
     RMEditor editor = getEditor(); // Get editor
     RMTableRow tableRow = (RMTableRow)editor.getSuperSelectedShape(); // Get table row
-    RMTableRowTool tableRowTool = (RMTableRowTool)editor.getTool(tableRow); // Get table row tool
+    RMTableRowTool tableRowTool = (RMTableRowTool)getTool(tableRow); // Get table row tool
     Menu pmenu = tableRowTool.getPopupMenu(tableRow); // Fill menu
     Point point = editor.convertFromShape(x, y, aShape); // Get point in editor
     pmenu.show(editor, point.x, point.y); // Show popup menu
