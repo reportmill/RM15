@@ -5,7 +5,6 @@ package com.reportmill.app;
 import com.reportmill.shape.*;
 import snap.gfx.*;
 import snap.util.PropChangeListener;
-import snap.util.Undoer;
 
 /**
  * A shape to act as root of shape to be viewed.
@@ -17,9 +16,6 @@ public class RMViewerShape extends RMParentShape {
 
     // The document being viewed
     RMDocument         _doc;
-    
-    // An optional undoer object to track document changes
-    Undoer             _undoer;
     
     // A PropChangeListener to catch doc changes (Showing, PageSize, )
     PropChangeListener _viewerDocLsnr = pc -> _viewer.docDidPropChange(pc);
@@ -58,56 +54,6 @@ public void setDoc(RMDocument aDoc)
     // Start listening to shape changes and notify shapes shown
     _doc.addPropChangeListener(_viewerDocLsnr);
 }
-
-/**
- * Returns the root shape as RMDocument, if available.
- */
-public RMDocument getDocument()  { return _doc; }
-
-/**
- * Returns the page count.
- */
-public int getPageCount()  { RMDocument d = getDoc(); return d!=null? d.getPageCount() : 1; }
-
-/**
- * Returns the page at index.
- */
-public RMPage getPage(int anIndex)  { RMDocument d = getDoc(); return d!=null? d.getPage(anIndex) : null; }
-
-/**
- * Returns the currently selected page shape.
- */
-public RMPage getSelPage()  { RMDocument d = getDoc(); return d!=null? d.getSelectedPage() : null; }
-
-/**
- * Returns the index of the current visible document page.
- */
-public int getSelPageIndex()  { RMDocument d = getDoc(); return d!=null? d.getSelectedIndex() : 0; }
-
-/**
- * Sets the page of viewer's document that is visible (by index).
- */
-public void setSelPageIndex(int anIndex)  { RMDocument d = getDoc(); if(d!=null) d.setSelectedIndex(anIndex); }
-
-/**
- * Returns whether content snaps to grid.
- */
-public boolean getSnapGrid()  { RMDocument d = getDoc(); return d!=null && d.getSnapGrid(); }
-
-/**
- * Returns the content grid spacing.
- */
-public double getGridSpacing()  { RMDocument d = getDoc(); return d!=null? d.getGridSpacing() : 1; }
-
-/**
- * Returns whether content snaps to margin.
- */
-public boolean getSnapMargin()  { RMDocument d = getDoc(); return d!=null && d.getSnapMargin(); }
-
-/**
- * Returns the undoer.
- */
-public Undoer getUndoer()  { return _undoer; }
 
 /**
  * Override to return content preferred width.

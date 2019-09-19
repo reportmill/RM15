@@ -489,7 +489,8 @@ public static void convertToImage(RMEditor anEditor)
 public static void moveRightOnePoint(RMEditor anEditor)
 {
     anEditor.undoerSetUndoTitle("Move Right One Point");
-    double offset = anEditor.getViewerShape().getSnapGrid()? anEditor.getViewerShape().getGridSpacing() : 1;
+    RMDocument doc = anEditor.getDoc();
+    double offset = doc.getSnapGrid()? doc.getGridSpacing() : 1;
     for(RMShape shape : anEditor.getSelectedShapes())
         shape.setFrameX(shape.getFrameX() + offset);
 }
@@ -500,7 +501,8 @@ public static void moveRightOnePoint(RMEditor anEditor)
 public static void moveLeftOnePoint(RMEditor anEditor)
 {
     anEditor.undoerSetUndoTitle("Move Left One Point");
-    double offset = anEditor.getViewerShape().getSnapGrid()? anEditor.getViewerShape().getGridSpacing() : 1;
+    RMDocument doc = anEditor.getDoc();
+    double offset = doc.getSnapGrid()? doc.getGridSpacing() : 1;
     for(RMShape shape : anEditor.getSelectedShapes())
         shape.setFrameX(shape.getFrameX() - offset);
 }
@@ -511,7 +513,8 @@ public static void moveLeftOnePoint(RMEditor anEditor)
 public static void moveUpOnePoint(RMEditor anEditor)
 {
     anEditor.undoerSetUndoTitle("Move Up One Point");
-    double offset = anEditor.getViewerShape().getSnapGrid()? anEditor.getViewerShape().getGridSpacing() : 1;
+    RMDocument doc = anEditor.getDoc();
+    double offset = doc.getSnapGrid()? doc.getGridSpacing() : 1;
     for(RMShape shape : anEditor.getSelectedShapes())
         shape.setFrameY(shape.getFrameY() - offset);
 }
@@ -522,7 +525,8 @@ public static void moveUpOnePoint(RMEditor anEditor)
 public static void moveDownOnePoint(RMEditor anEditor)
 {
     anEditor.undoerSetUndoTitle("Move Down One Point");
-    double offset = anEditor.getViewerShape().getSnapGrid()? anEditor.getViewerShape().getGridSpacing() : 1;
+    RMDocument doc = anEditor.getDoc();
+    double offset = doc.getSnapGrid()? doc.getGridSpacing() : 1;
     for(RMShape shape : anEditor.getSelectedShapes())
         shape.setFrameY(shape.getFrameY() + offset);
 }
@@ -534,7 +538,7 @@ public static void moveToNewLayer(RMEditor anEditor)
 {
     RMDocument doc = anEditor.getDoc();
     if(anEditor.getSelectedShapeCount()==0 || doc==null) { anEditor.beep(); return; }
-    doc.getSelectedPage().moveToNewLayer(anEditor.getSelectedShapes());
+    doc.getSelPage().moveToNewLayer(anEditor.getSelectedShapes());
 }
 
 /**

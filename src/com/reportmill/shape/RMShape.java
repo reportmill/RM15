@@ -939,9 +939,14 @@ public List <RMShape> getChildren()  { return Collections.emptyList(); }
 public RMShape getRootShape()  { return _parent!=null? _parent.getRootShape() : this; }
 
 /**
- * Returns the RMDocument ancestor of this shape (or null if not there).
+ * Returns the RMDocument ancestor of this shape.
  */
-public RMDocument getDocument()  { return _parent!=null? _parent.getDocument() : null; }
+public RMDocument getDoc()  { return _parent!=null? _parent.getDoc() : null; }
+
+/**
+ * Returns the RMDocument ancestor of this shape.
+ */
+public RMDocument getDocument()  { return getDoc(); }
 
 /**
  * Returns the RMPage ancestor of this shape (or null if not there).

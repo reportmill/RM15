@@ -530,7 +530,7 @@ private void drawCircle(Painter aPntr, double aX, double aY)
 private void copySelImage()
 {
     // Get an image of the current page and sub-image
-    RMShape page = getViewer().getDoc().getSelectedPage();
+    RMShape page = getViewer().getDoc().getSelPage();
     Image img = RMShapeUtils.createImage(page, Color.WHITE);
     Image img2 = img.getSubimage(_rect.getX(), _rect.getY(), _rect.getWidth(), _rect.getHeight());
     

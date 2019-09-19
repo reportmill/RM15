@@ -112,22 +112,22 @@ public boolean isPreview()  { return !isEditing(); }
 /**
  * Returns the page count.
  */
-public int getPageCount()  { return _vshape.getPageCount(); }
+public int getPageCount()  { return getDoc().getPageCount(); }
 
 /**
  * Returns the currently selected page shape.
  */
-public RMPage getSelPage()  { return _vshape.getSelPage(); }
+public RMPage getSelPage()  { return getDoc().getSelPage(); }
 
 /**
  * Returns the index of the current visible document page.
  */
-public int getSelPageIndex()  { return _vshape.getSelPageIndex(); }
+public int getSelPageIndex()  { return getDoc().getSelPageIndex(); }
 
 /**
  * Sets the page of viewer's document that is visible (by index).
  */
-public void setSelPageIndex(int anIndex)  { _vshape.setSelPageIndex(anIndex); }
+public void setSelPageIndex(int anIndex)  { getDoc().setSelPageIndex(anIndex); }
 
 /**
  * Selects the next page.
@@ -487,19 +487,19 @@ public void print(String aPrinterName, boolean showPanel)
 private class RMVPrintable implements Printer.Printable {
     
     /** Returns a print page count for given printer. */
-    public int getPageCount(Printer aPrinter)  { return _vshape.getPageCount(); }
+    public int getPageCount(Printer aPrinter)  { return RMViewer.this.getPageCount(); }
     
     /** Returns the page size for given page index. */
     public Size getPageSize(Printer aPrinter, int anIndex)
     {
-        RMShape page = _vshape.getPage(anIndex);
+        RMShape page = getDoc().getPage(anIndex);
         return page.getSize();
     }
     
     /** Executes a print for given printer and page index. */
     public void print(Printer aPrinter, int anIndex)
     {
-        RMShape page = _vshape.getPage(anIndex);
+        RMShape page = getDoc().getPage(anIndex);
         Painter pntr = aPrinter.getPainter();
         RMShapeUtils.paintShape(pntr, page, null, 1);
     }

@@ -502,9 +502,9 @@ public static double getGuideLocation(RMDocument aDoc, int anIndex)
 {
     switch(anIndex) {
         case 0: return aDoc.getMarginLeft();
-        case 1: return aDoc.getSelectedPage().getWidth() - aDoc.getMarginRight();
+        case 1: return aDoc.getSelPage().getWidth() - aDoc.getMarginRight();
         case 2: return aDoc.getMarginTop();
-        case 3: return aDoc.getSelectedPage().getHeight() - aDoc.getMarginBottom();
+        case 3: return aDoc.getSelPage().getHeight() - aDoc.getMarginBottom();
     }
     return 0;
 }

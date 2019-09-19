@@ -257,8 +257,8 @@ private void addSuperSelectedShape(RMShape aShape)
     getTool(aShape).didBecomeSuperSelected(aShape);
 
     // If ancestor is page but not document's selected page, make it the selected page
-    if(aShape instanceof RMPage && aShape!=getDoc().getSelectedPage())
-        getDoc().setSelectedPage((RMPage)aShape);
+    if(aShape instanceof RMPage && aShape!=getDoc().getSelPage())
+        getDoc().setSelPage((RMPage)aShape);
 }
 
 /**
@@ -552,7 +552,7 @@ public void selectAll()
     // If document selected, select page
     RMShape superSelShape = getSuperSelectedShape();
     if(superSelShape instanceof RMDocument) {
-        setSuperSelectedShape(((RMDocument)superSelShape).getSelectedPage());
+        setSuperSelectedShape(((RMDocument)superSelShape).getSelPage());
         superSelShape = getSuperSelectedShape();
     }
     
@@ -622,7 +622,7 @@ public void addShapesToShape(List <? extends RMShape> theShapes, RMParentShape a
                 dr = 2*_lastPasteShape.getRoll() - _lastCopyShape.getRoll() - firstShape.getRoll();
             }
 
-            else dx = dy = getViewerShape().getGridSpacing();
+            else dx = dy = getDoc().getGridSpacing();
         }
     }
 

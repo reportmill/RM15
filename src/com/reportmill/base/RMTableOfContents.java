@@ -186,7 +186,7 @@ public static void rpgPage(ReportOwner anRptOwner, RMDocument aDocRPG, RMPage aP
     if(crpg instanceof ReportOwner.ShapeList) {
         for(RMShape pg : crpg.getChildArray()) aDocRPG.addPage((RMPage)pg, anIndex++); }
     else aDocRPG.addPage((RMPage)crpg, anIndex);
-    aDocRPG.setSelectedIndex(0);
+    aDocRPG.setSelPageIndex(0);
 }
 
 }

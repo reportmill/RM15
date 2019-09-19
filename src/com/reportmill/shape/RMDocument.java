@@ -227,14 +227,24 @@ public void addPages(RMDocument aDoc)
 }
 
 /**
- * Returns the current page index of this document.
+ * Returns the selected page of document.
  */
-public int getSelectedIndex()  { return _selIndex; }
+public RMPage getSelPage()  { return _selIndex>=0 && _selIndex<getPageCount()? getPage(_selIndex) : null; }
 
 /**
- * Selects the currently selected page by index.
+ * Selects the selected page.
  */
-public void setSelectedIndex(int anIndex)
+public void setSelPage(RMPage aPage)  { setSelPageIndex(aPage.indexOf()); }
+
+/**
+ * Returns the selected page index of this document.
+ */
+public int getSelPageIndex()  { return _selIndex; }
+
+/**
+ * Selects the selected page by index.
+ */
+public void setSelPageIndex(int anIndex)
 {
     int index = Math.min(anIndex, getPageCount()-1);
     if(index==_selIndex) return;
@@ -243,14 +253,12 @@ public void setSelectedIndex(int anIndex)
 }
 
 /**
- * Returns the currently selected page of this document.
+ * Obsolete methods.
  */
-public RMPage getSelectedPage()  { return _selIndex>=0 && _selIndex<getPageCount()? getPage(_selIndex) : null; }
-
-/**
- * Selects the given page.
- */
-public void setSelectedPage(RMPage aPage)  { setSelectedIndex(aPage.indexOf()); }
+public int getSelectedIndex()  { return getSelPageIndex(); }
+public void setSelectedIndex(int anIndex)  { setSelPageIndex(anIndex); }
+public RMPage getSelectedPage()  { return getSelPage(); }
+public void setSelectedPage(RMPage aPage)  { setSelPage(aPage); }
 
 /**
  * Returns the page layout for the document.
@@ -378,8 +386,8 @@ public void setSnapMargin(boolean aValue)  { _snapMargin = aValue; }
  */
 public Rect getMarginRect()
 {
-    double marginWidth = getSelectedPage().getWidth() - getMarginLeft() - getMarginRight();
-    double marginHeight = getSelectedPage().getHeight() - getMarginTop() - getMarginBottom();
+    double marginWidth = getSelPage().getWidth() - getMarginLeft() - getMarginRight();
+    double marginHeight = getSelPage().getHeight() - getMarginTop() - getMarginBottom();
     return new Rect(getMarginLeft(), getMarginTop(), marginWidth, marginHeight);
 }
 
@@ -416,7 +424,7 @@ public double getMarginBottom()  { return _margins.height; }
 /**
  * Returns the size of a document page.
  */
-public Size getPageSize()  { return getPageCount()>0? getSelectedPage().getSize() : getPageSizeDefault(); }
+public Size getPageSize()  { return getPageCount()>0? getSelPage().getSize() : getPageSizeDefault(); }
 
 /**
  * Sets the size of the document (and all of its pages).
@@ -601,9 +609,9 @@ public void write(File aFile)  { write(aFile.getAbsolutePath()); }
 public void writePDF(String aPath)  { SnapUtils.writeBytes(getBytesPDF(), aPath); }
 
 /**
- * Returns the document itself (over-ridden from RMShape).
+ * Override to returns this document.
  */
-public RMDocument getDocument()  { return this; }
+public RMDocument getDoc()  { return this; }
 
 /**
  * Returns a subreport document for given name (override to improve).
@@ -711,16 +719,16 @@ public void resolvePageReferences()  { if(_reportOwner!=null) _reportOwner.resol
 protected void layoutImpl()
 {
     // Get document
-    int selectedIndex = getSelectedIndex();
+    int selIndex = getSelPageIndex();
     double offscreen = getWidth() + 5000;
     
     // If no pages or selected page, return
-    if(getPageCount()==0 || getSelectedPage()==null) return;
+    if(getPageCount()==0 || getSelPage()==null) return;
     
     // Handle PageLayout Single: Iterate over pages, set location to zero and set current page to visible
     if(getPageLayout()==RMDocument.PageLayout.Single) {
         for(int i=0, iMax=getChildCount(); i<iMax; i++) { RMPage page = getPage(i);
-            boolean showing = i==getSelectedIndex();
+            boolean showing = i==selIndex;
             page.setXY(showing? 0 : offscreen, 0);
         }
     }
@@ -729,7 +737,7 @@ protected void layoutImpl()
     else if(getPageLayout()==RMDocument.PageLayout.Double) {
         for(int i=0, iMax=getChildCount(); i<iMax; i+=2) {
             RMPage page1 = getPage(i), page2 = i+1<iMax? getPage(i+1) : null;
-            boolean showing = i==selectedIndex || i+1==selectedIndex;
+            boolean showing = i==selIndex || i+1==selIndex;
             page1.setXY(showing? 0 : offscreen, 0);
             if(page2!=null)
                 page2.setXY(showing? page1.getWidth() : offscreen, 0);
@@ -741,12 +749,12 @@ protected void layoutImpl()
         
         // Set location of page 1
         RMPage page = getPage(0);
-        page.setXY(selectedIndex==0? getPageSize().width : offscreen, 0);
+        page.setXY(selIndex==0? getPageSize().width : offscreen, 0);
         
         // Iterate over pages, set location of alternating pages to zero/page-width, set current pages to visible
         for(int i=1, iMax=getChildCount(); i<iMax; i+=2) {
             RMPage page1 = getPage(i), page2 = i+1<iMax? getPage(i+1) : null;
-            boolean showing = i==selectedIndex || i+1==selectedIndex;
+            boolean showing = i==selIndex || i+1==selIndex;
             page1.setXY(showing? 0 : offscreen, 0);
             if(page2!=null)
                 page2.setXY(showing? page1.getWidth() : offscreen, 0);
