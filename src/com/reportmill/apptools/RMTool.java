@@ -1025,7 +1025,6 @@ public static RMTool createTool(Class aClass)
     if(aClass==RMCrossTabDivider.class) return new RMCrossTabDividerTool();
     if(aClass==RMCrossTabFrame.class) return new RMCrossTabFrameTool();
     if(aClass==RMDocument.class) return new RMDocumentTool();
-    if(aClass==RMEditorShape.class) return new RMTool();
     if(aClass==RMGraph.class) return new RMGraphTool();
     if(aClass==RMGraphLegend.class) return new RMGraphLegendTool();
     if(aClass==RMGraphPartBars.class) return new RMGraphPartBarsTool();

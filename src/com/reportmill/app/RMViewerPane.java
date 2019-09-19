@@ -66,11 +66,6 @@ public ScrollView getScrollView()  { return _scrollView; }
 public BorderView getScrollBorderView()  { return _scrollBorderView; }
 
 /**
- * Returns the viewer shape.
- */
-public RMViewerShape getViewerShape()  { return getViewer().getViewerShape(); }
-
-/**
  * Returns the document associated with this viewer.
  */
 public RMDocument getDoc()  { return getViewer().getDoc(); }

@@ -474,7 +474,7 @@ public void save()
     
     // Add URL.String to RecentFilesMenu, clear undoer and reset UI
     RecentFiles.addPath("RecentDocuments", url.getPath(), 10);
-    getViewerShape().getUndoer().reset();
+    getDoc().getUndoer().reset();
     resetLater();
 }
 

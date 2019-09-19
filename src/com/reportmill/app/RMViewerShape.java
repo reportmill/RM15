@@ -5,6 +5,7 @@ package com.reportmill.app;
 import com.reportmill.shape.*;
 import snap.gfx.*;
 import snap.util.PropChangeListener;
+import snap.util.Undoer;
 
 /**
  * A shape to act as root of shape to be viewed.
@@ -20,10 +21,23 @@ public class RMViewerShape extends RMParentShape {
     // A PropChangeListener to catch doc changes (Showing, PageSize, )
     PropChangeListener _viewerDocLsnr = pc -> _viewer.docDidPropChange(pc);
     
+    // An optional undoer object to track document changes
+    Undoer             _undoer;
+    
 /**
  * Creates a ViewerShape for given viewer.
  */
-public RMViewerShape(RMViewer aViewer)  { _viewer = aViewer; }
+public RMViewerShape(RMViewer aViewer)
+{
+    // Set Viewer
+    _viewer = aViewer;
+    
+    // If Viewer is really editor, do more
+    if(_viewer instanceof RMEditor) {
+        RMEditor editor = (RMEditor)_viewer;
+        addDeepChangeListener(editor);
+    }
+}
 
 /**
  * Returns the viewer.
@@ -53,7 +67,26 @@ public void setDoc(RMDocument aDoc)
     
     // Start listening to shape changes and notify shapes shown
     _doc.addPropChangeListener(_viewerDocLsnr);
+    
+    // If working for editor, do more
+    if(_viewer instanceof RMEditor) { RMEditor editor = (RMEditor)_viewer;
+
+        // Make sure current document page is super-selected
+        if(editor._selShapes!=null) {
+            RMPage page = getDoc().getSelPage();
+            editor.setSuperSelectedShape(page);
+        }
+        
+        // Create and install undoer
+        if(editor.isEditing())
+            _undoer = new Undoer();
+    }
 }
+
+/**
+ * Returns the undoer.
+ */
+public Undoer getUndoer()  { return _undoer; }
 
 /**
  * Override to return content preferred width.

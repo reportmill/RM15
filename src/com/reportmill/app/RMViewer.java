@@ -27,7 +27,7 @@ import snap.web.WebURL;
 public class RMViewer extends ParentView {
 
     // The shape viewer uses to manage real root of shapes
-    RMViewerShape            _vshape = createViewerShape();
+    RMViewerShape            _vshape = new RMViewerShape(this);
     
     // The Zoom mode
     ZoomMode                 _zoomMode = ZoomMode.ZoomAsNeeded;
@@ -61,11 +61,6 @@ public RMViewer()
  * Returns the viewer shape.
  */
 public RMViewerShape getViewerShape()  { return _vshape; }
-
-/**
- * Creates the viewer shape.
- */
-protected RMViewerShape createViewerShape()  { return new RMViewerShape(this); }
 
 /**
  * Returns the document associated with this viewer.

@@ -83,16 +83,6 @@ public RMEditorPane getEditorPane()  { return _ep!=null? _ep : (_ep=getOwner(RME
 private RMEditorPane _ep;
 
 /**
- * Override to return as editor shape.
- */
-public RMEditorShape getViewerShape()  { return (RMEditorShape)super.getViewerShape(); }
-
-/**
- * Creates the viewer shape.
- */
-protected RMViewerShape createViewerShape()  { return new RMEditorShape(this); }
-
-/**
  * Returns whether viewer is really doing editing.
  */
 public boolean isEditing()  { return _editing; }
