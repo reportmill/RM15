@@ -27,8 +27,8 @@ public class RMViewerPane extends ViewOwner {
     // The ScrollView for this viewer
     ScrollView        _scrollView;
     
-    // The BorderView for the ScrollView
-    BorderView        _scrollBorderView;
+    // The RulerBox that holds the ScrollView
+    RulerBox          _rulerBox;
     
     // The controls at the top of the document
     ViewOwner         _topToolBar;
@@ -51,19 +51,19 @@ protected void setViewer(RMViewer aViewer)
 }
 
 /**
- * Creates the real viewer for this viewer plus.
+ * Creates the real viewer for this viewer pane.
  */
 protected RMViewer createViewer()  { return new RMViewer(); }
 
 /**
- * Returns the scroll view for this viewer plus.
+ * Returns the scroll view for this viewer pane.
  */
 public ScrollView getScrollView()  { return _scrollView; }
 
 /**
- * Returns the scroll view for this viewer plus.
+ * Returns the RulerBox that holds the ScrollView.
  */
-public BorderView getScrollBorderView()  { return _scrollBorderView; }
+public RulerBox getRulerBox()  { return _rulerBox; }
 
 /**
  * Returns the document associated with this viewer.
@@ -83,7 +83,7 @@ public ViewOwner getTopToolBar()  { return _topToolBar!=null? _topToolBar : (_to
 /**
  * Creates the top tool bar.
  */
-public ViewOwner createTopToolBar()  { return new RMViewerTopToolBar(this); }
+protected ViewOwner createTopToolBar()  { return new RMViewerTopToolBar(this); }
 
 /**
  * Returns the bottom controls.
@@ -93,7 +93,7 @@ public ViewOwner getBottomToolBar()  { return _btmToolBar!=null? _btmToolBar : (
 /**
  * Creates bottom tool bar.
  */
-public ViewOwner createBottomToolBar()  { return new RMViewerBottomToolBar(this); }
+protected ViewOwner createBottomToolBar()  { return new RMViewerBottomToolBar(this); }
 
 /**
  * Saves the current viewer document.
@@ -109,6 +109,28 @@ public void print()  { getViewer().print(); }
  * Copies the current viewer document selection.
  */
 public void copy()  { getViewer().getEvents().copy(); }
+
+/**
+ * Returns whether editor pane shows rulers.
+ */
+public boolean isShowRulers()  { return getRulerBox().isShowRulers(); }
+
+/**
+ * Sets whether editor pane shows rulers.
+ */
+public void setShowRulers(boolean aValue)
+{
+    // Determine if we should resize window after toggle (depending on whether window is at preferred size)
+    WindowView win = getWindow();
+    boolean doPack = win.getSize().equals(win.getPrefSize());
+    
+    // Forward to RulerBox
+    getRulerBox().setShowRulers(aValue);
+    
+    // Resize window if window was previously at preferred size
+    if(doPack)
+        getWindow().pack();
+}
 
 /**
  * Runs a dialog panel to request a percentage zoom (which is then set with setZoomFactor).
@@ -150,13 +172,14 @@ protected View createUI()
 
     _scrollView.setContent(_viewer);
     
-    // Create ScrollBorderView
-    _scrollBorderView = new BorderView(); _scrollBorderView.setCenter(_scrollView);
+    // Create RulerBox
+    _rulerBox = new RulerBox();
+    _rulerBox.setContent(_scrollView);
 
     // Create BorderView and add TopToolBar, ScrollView/Viewer and BottomToolBar
     BorderView bpane = new BorderView();
     bpane.setTop(getTopToolBar().getUI());
-    bpane.setCenter(_scrollBorderView);
+    bpane.setCenter(_rulerBox);
     bpane.setBottom(getBottomToolBar().getUI());
     return bpane;
 }
@@ -166,6 +189,10 @@ protected View createUI()
  */
 protected void resetUI()
 {
+    // Repaint rulers if visible
+    if(isShowRulers()) getRulerBox().repaint();
+    
+    // Trigger top/bottom toolbar resets
     if(!ViewUtils.isMouseDown()) getTopToolBar().resetLater();
     if(!ViewUtils.isMouseDown()) getBottomToolBar().resetLater();
 }

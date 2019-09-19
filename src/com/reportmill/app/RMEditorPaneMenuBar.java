@@ -52,7 +52,7 @@ protected void resetUI()
     setViewEnabled("RedoMenuItem", undoer!=null && undoer.getRedoSetLast()!=null);
     
     // Update ShowRulersMenuItem
-    setViewValue("ShowRulersMenuItem", getEditorPane().getShowRulers());
+    setViewValue("ShowRulersMenuItem", getEditorPane().isShowRulers());
 }
 
 /**
@@ -198,7 +198,7 @@ protected void respondUI(ViewEvent anEvent)
     if(anEvent.equals("KeysPanelMenuItem")) epane.getAttributesPanel().setVisibleName(AttributesPanel.KEYS);
     
     // Handle ShowRulersMenuItem, FeedbackMenuItem, PrefsMenuItem
-    if(anEvent.equals("ShowRulersMenuItem")) epane.setShowRulers(!epane.getShowRulers());
+    if(anEvent.equals("ShowRulersMenuItem")) epane.setShowRulers(!epane.isShowRulers());
     if(anEvent.equals("FeedbackMenuItem")) new FeedbackPanel().showPanel(epane.getUI());
     if(anEvent.equals("PrefsMenuItem")) new PreferencesPanel().showPanel(epane.getUI());
     

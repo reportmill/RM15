@@ -106,8 +106,8 @@ public void mouseDragged(ViewEvent anEvent)
         
     // Update rulers
     RMEditorPane epane = editor.getEditorPane();
-    if(epane._hruler!=null) { Point p = new Point(anEvent.getX(),anEvent.getY());
-        epane._hruler.setMousePoint(p); epane._vruler.setMousePoint(p); }
+    if(epane.isShowRulers())
+        epane.getRulerBox().setMousePoint(anEvent.getPoint());
 }
 
 /**
@@ -140,8 +140,8 @@ public void mouseMoved(ViewEvent anEvent)
         
     // Update rulers
     RMEditorPane epane = editor.getEditorPane();
-    if(epane._hruler!=null) { Point p = new Point(anEvent.getX(),anEvent.getY());
-        epane._hruler.setMousePoint(p); epane._vruler.setMousePoint(p); }
+    if(epane.isShowRulers())
+        epane.getRulerBox().setMousePoint(anEvent.getPoint());
 }
 
 /**

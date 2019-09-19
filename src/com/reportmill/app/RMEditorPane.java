@@ -19,9 +19,6 @@ public class RMEditorPane extends RMViewerPane {
     // The menu bar owner
     RMEditorPaneMenuBar    _menuBar;
 
-    // The editor ruler nodes
-    RMEditorRuler          _hruler, _vruler;
-    
     // The original editor, if in preview mode
     RMEditor               _realEditor;
     
@@ -32,7 +29,7 @@ public class RMEditorPane extends RMViewerPane {
     AttributesPanel        _attrsPanel = createAttributesPanel();
     
     // The image for a window frame icon
-    static Image           _frameImg;
+    private static Image   _frameImg;
 
 /**
  * Creates a new EditorPane.
@@ -57,7 +54,7 @@ public RMEditorPaneToolBar getTopToolBar()  { return (RMEditorPaneToolBar)super.
 /**
  * Creates the top tool bar.
  */
-public ViewOwner createTopToolBar()  { return new RMEditorPaneToolBar(this); }
+protected ViewOwner createTopToolBar()  { return new RMEditorPaneToolBar(this); }
 
 /**
  * Returns the SwingOwner for the menu bar.
@@ -67,7 +64,7 @@ public RMEditorPaneMenuBar getMenuBar()  { return _menuBar!=null? _menuBar : (_m
 /**
  * Creates the RMEditorPaneMenuBar for the menu bar.
  */
-public RMEditorPaneMenuBar createMenuBar()  { return new RMEditorPaneMenuBar(this); }
+protected RMEditorPaneMenuBar createMenuBar()  { return new RMEditorPaneMenuBar(this); }
 
 /**
  * Returns the datasource associated with the editor's document.
@@ -115,41 +112,6 @@ public void setDataSource(WebURL aURL, double aX, double aY)
         
     // Set DataSource in editor, show DataSource inspector, KeysBrowser and refocus window
     setDataSource(dsource, aX, aY);
-}
-
-/**
- * Returns whether editor pane shows rulers.
- */
-public boolean getShowRulers()  { return _hruler!=null; }
-
-/**
- * Sets whether editor pane shows rulers.
- */
-public void setShowRulers(boolean aValue)
-{
-    // If showing rulers is already equal value, just return
-    if(aValue==getShowRulers()) return;
-    
-    // Determine if we should resize window after toggle (depending on whether window is at preferred size)
-    WindowView win = getWindow();
-    boolean doPack = win.getSize().equals(win.getPrefSize());
-    
-    // If no rulers, create and add them
-    if(_hruler==null) {
-        getScrollBorderView().setTop(_hruler = new RMEditorRuler(getEditor(), RMEditorRuler.HORIZONTAL));
-        getScrollBorderView().setLeft(_vruler = new RMEditorRuler(getEditor(), RMEditorRuler.VERTICAL));
-    }
-    
-    // Otherwise, remove and clear them
-    else {
-        getScrollBorderView().setTop(null);
-        getScrollBorderView().setLeft(null);
-        _hruler = _vruler = null;
-    }
-    
-    // Resize window if window was previously at preferred size
-    if(doPack)
-        getWindow().pack();
 }
 
 /**
@@ -210,7 +172,7 @@ protected View createUI()
     // Create ColView to hold them
     ColView vbox = new ColView(); vbox.setFillWidth(true);
     vbox.setChildren(attrPanel.getUI(), inspPanel.getUI());
-    vbox.setBorder(Border.createLineBorder(Color.LIGHTGRAY, 1));
+    vbox.setBorder(Color.LIGHTGRAY, 1);
     
     // Create normal RMViewerPane BorderView UI and panels to right side
     BorderView bview = (BorderView)super.createUI();
@@ -258,9 +220,6 @@ protected void resetUI()
             win.setDocURL(getSourceURL());
         }
     }
-    
-    // Update the rulers if visible
-    if(_hruler!=null) { _hruler.repaint(); _vruler.repaint(); }
     
     // Reset MenuBar, InspectorPanel and AttributesPanel
     if(!ViewUtils.isMouseDown()) getMenuBar().resetLater();
@@ -351,14 +310,6 @@ public String getWindowTitle()
     // If previewing, add "(Previewing)" and return
     if(getEditor().isPreview()) title += " (Previewing)";
     return title;
-}
-
-/**
- * Returns the icon for the editor window frame.
- */
-public static Image getFrameIcon()
-{
-    return _frameImg!=null? _frameImg : (_frameImg=Image.get(RMEditorPane.class, "ReportMill16x16.png"));
 }
 
 /**
@@ -600,6 +551,14 @@ private void editorDidPropChange(PropChange aPC)
         case RMEditor.SelShapes_Prop: resetLater(); break;
         case RMEditor.SuperSelShape_Prop: resetLater(); break;
     }
+}
+
+/**
+ * Returns the icon for the editor window frame.
+ */
+private static Image getFrameIcon()
+{
+    return _frameImg!=null? _frameImg : (_frameImg=Image.get(RMEditorPane.class, "ReportMill16x16.png"));
 }
 
 /**
