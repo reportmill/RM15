@@ -1,9 +1,11 @@
 package com.reportmill.app;
 import com.reportmill.shape.*;
+import java.util.*;
 import snap.gfx.*;
 import snap.util.*;
 import snap.view.*;
 import snap.viewx.DialogBox;
+import snap.web.WebResponse;
 import snap.web.WebURL;
 
 /**
@@ -11,26 +13,25 @@ import snap.web.WebURL;
  */
 public class SamplesPane extends ViewOwner {
     
-    //
-    RMEditorPane _epane;
-    SheetDialogBox   _dbox;
+    // The editor pane
+    RMEditorPane       _epane;
+    
+    // The shared document names
+    private static String     _docNames[];
+    
+    // The shared document images
+    private static Image      _docImages[];
     
     // The selected index
-    int            _selIndex;
+    int                _selIndex;
     
-    // The effects
-    ShadowEffect    _shadow, _selShadow;
+    // The dialog box
+    SheetDialogBox     _dbox;
     
-    // Samples
-    static final String S1 = "Blank.rpt";
-    static final String S2 = "BasicMovies.rpt";
-    static final String S3 = "BasicGraph.rpt";
-    static final String S4 = "TableCTabGraph.rpt";
-    static final String S5 = "CrossTab.rpt";
-    static final String S6 = "TableGroup.rpt";
-    static final String S7 = "Graphics.rpt";
-    static final String SALL[] = { S1, S2, S3, S4, S5, S6, S7 };
-    static final Image DOC_IMAGES[] = new Image[SALL.length];
+    // Constants
+    private static final String SAMPLES_ROOT = "http://reportmill.com/rmsamples/";
+    private static final Effect SHADOW = new ShadowEffect();
+    private static final Effect SHADOW_SEL = new ShadowEffect(10, Color.get("#038ec3"), 0, 0);
     
 /**
  * Shows the samples pane.
@@ -61,39 +62,17 @@ void dialogBoxClosed()
  */
 protected View createUI()
 {
-    // Create Shadows
-    _shadow = new ShadowEffect(); _selShadow = new ShadowEffect(10, Color.get("#038ec3"), 0, 0);
-    
     // Create main ColView to hold RowViews for samples
-    ColView colView = new ColView(); colView.setSpacing(25); colView.setPadding(25,15,20,15);
+    ColView colView = new ColView(); colView.setName("ItemColView");
+    colView.setSpacing(25); colView.setPadding(25,15,20,15);
     colView.setAlign(Pos.TOP_CENTER); colView.setFillWidth(true);
     colView.setFill(new Color(.97,.97,1d)); colView.setBorder(Color.GRAY,1);
+    colView.setPrefWidth(557);
     
-    // Create RowViews
-    RowView rowView = null;
-    for(int i=0; i<SALL.length; i++) { String name = SALL[i];
-    
-        // Create/add new RowView for every three samples
-        if(i%3==0) {
-            rowView = new RowView(); rowView.setAlign(Pos.CENTER);
-            colView.addChild(rowView);
-        }
-        
-        // Create ImageViewX for sample
-        ImageView iview = new ImageView(); iview.setPrefSize(getDocSize(i)); iview.setFill(Color.WHITE);
-        iview.setName("ImageView" + String.valueOf(i)); iview.setEffect(i==0? _selShadow : _shadow);
-        
-        // Create label for sample
-        Label label = new Label(name); label.setFont(Font.Arial13); label.setPadding(3,4,3,4);
-        label.setLeanY(VPos.BOTTOM); if(i==0) { label.setFill(Color.BLUE); label.setTextFill(Color.WHITE); }
-        
-        // Create/add ItemBox for Sample and add ImageView + Label
-        ColView ibox = new ColView(); ibox.setPrefSize(175,175); ibox.setAlign(Pos.TOP_CENTER);
-        ibox.setChildren(iview, label); ibox.setPadding(0,0,8,0);
-        ibox.setName("ItemBox" + String.valueOf(i));
-        ibox.addEventHandler(e -> itemBoxWasPressed(ibox, e), MousePress);
-        rowView.addChild(ibox);
-    }
+    // Add loading label
+    Label loadLabel = new Label("Loading..."); loadLabel.setFont(Font.Arial16.deriveFont(32).getBold());
+    loadLabel.setTextFill(Color.GRAY);
+    colView.addChild(loadLabel);
     
     // Create ScrollView
     ScrollView scroll = new ScrollView(colView); scroll.setPrefHeight(420);
@@ -111,36 +90,164 @@ protected View createUI()
  */
 protected void initUI()
 {
+    if(_docNames==null)
+        loadIndexFile();
+    else buildUI();
+}
+
+/**
+ * Starts loading.
+ */
+private void loadIndexFile()
+{
+    WebURL url = WebURL.getURL(SAMPLES_ROOT + "index.txt");
+    url.getResponseAndCall(resp -> indexFileLoaded(resp));
+}
+
+/**
+ * Loads content.
+ */
+private void indexFileLoaded(WebResponse aResp)
+{
+    // If response is bogus, report it
+    if(aResp.getCode()!=WebResponse.OK) {
+        runLater(() -> indexFileLoadFailed(aResp)); return; }
+        
+    // Get text and break into lines
+    String text = aResp.getText();
+    String lines[] = text.split("\\s*\n\\s*");
+    
+    // Get names list from lines
+    List <String> docNamesList = new ArrayList();
+    for(String line : lines) { line = line.trim();
+        if(line.length()>0)
+            docNamesList.add(line);
+    }
+    
+    // Get DocNames from list
+    _docNames = docNamesList.toArray(new String[docNamesList.size()]);
+    _docImages = new Image[_docNames.length];
+    
+    // Rebuild UI
+    runLater(() -> buildUI());
+}
+
+/**
+ * Loads failure condition.
+ */
+private void indexFileLoadFailed(WebResponse aResp)
+{
+    // Get error string and TextArea
+    String str = "Failed to load index file.\n" + "Response code: " + aResp.getCodeString() + "\n" +
+        "Exception: " + aResp.getException();
+    TextArea textArea = new TextArea(); textArea.setText(str);
+    
+    // Add to ColView
+    ColView colView = getView("ItemColView", ColView.class);
+    colView.setAlign(Pos.CENTER);
+    colView.addChild(textArea);
+}
+
+/**
+ * Loads samples.
+ */
+private void buildUI()
+{
+    // Get ItemColView and remove children
+    ColView colView = getView("ItemColView", ColView.class);
+    colView.removeChildren();
+    
+    // Create RowViews
+    RowView rowView = null;
+    for(int i=0; i<_docNames.length; i++) { String name = _docNames[i];
+    
+        // Create/add new RowView for every three samples
+        if(i%3==0) {
+            rowView = new RowView(); rowView.setAlign(Pos.CENTER);
+            colView.addChild(rowView);
+        }
+        
+        // Create ImageViewX for sample
+        ImageView iview = new ImageView(); iview.setPrefSize(getDocSize(i)); iview.setFill(Color.WHITE);
+        iview.setName("ImageView" + String.valueOf(i)); iview.setEffect(i==0? SHADOW_SEL : SHADOW);
+        
+        // Create label for sample
+        Label label = new Label(name); label.setFont(Font.Arial13); label.setPadding(3,4,3,4);
+        label.setLeanY(VPos.BOTTOM); if(i==0) { label.setFill(Color.BLUE); label.setTextFill(Color.WHITE); }
+        
+        // Create/add ItemBox for Sample and add ImageView + Label
+        ColView ibox = new ColView(); ibox.setPrefSize(175,175); ibox.setAlign(Pos.TOP_CENTER);
+        ibox.setChildren(iview, label); ibox.setPadding(0,0,8,0);
+        ibox.setName("ItemBox" + String.valueOf(i));
+        ibox.addEventHandler(e -> itemBoxWasPressed(ibox, e), MousePress);
+        rowView.addChild(ibox);
+    }
+    
+    // Make sure all row views and image boxes are owned by ui
+    for(View child : colView.getChildren())
+        child.setOwner(this);
+    
+    // Load images
     loadImagesInBackground();
-    //createImages();
 }
 
 /**
  * Called when template ItemBox is clicked.
  */
-void itemBoxWasPressed(ColView anItemBox, ViewEvent anEvent)
+private void itemBoxWasPressed(ColView anItemBox, ViewEvent anEvent)
 {
+    // Get name and index of pressed ItemBox
     String name = anItemBox.getName();
     int index = StringUtils.intValue(name);
+    
+    // Set attributes of current selection back to normal
     ColView oldItemBox = getView("ItemBox" + _selIndex, ColView.class);
-    oldItemBox.getChild(0).setEffect(_shadow);
-    Label oldLabel = (Label)oldItemBox.getChild(1); oldLabel.setFill(null); oldLabel.setTextFill(null);
-    anItemBox.getChild(0).setEffect(_selShadow);
-    Label newLabel = (Label)anItemBox.getChild(1); newLabel.setFill(Color.BLUE); newLabel.setTextFill(Color.WHITE);
+    oldItemBox.getChild(0).setEffect(SHADOW);
+    Label oldLabel = (Label)oldItemBox.getChild(1);
+    oldLabel.setFill(null); oldLabel.setTextFill(null);
+    
+    // Set attributes of new selection to selected effect
+    anItemBox.getChild(0).setEffect(SHADOW_SEL);
+    Label newLabel = (Label)anItemBox.getChild(1);
+    newLabel.setFill(Color.BLUE); newLabel.setTextFill(Color.WHITE);
+    
+    // Set new index
     _selIndex = index;
+    
+    // If double-click, confirm dialog box
     if(anEvent.getClickCount()>1) _dbox.confirm();
 }
 
 /**
+ * Returns the number of docs.
+ */
+private static int getDocCount()  { return _docNames.length; }
+
+/**
+ * Returns the doc names.
+ */
+private static String[] getDocNames()  { return _docNames; }
+
+/**
+ * Returns the doc name at index.
+ */
+private static String getDocName(int anIndex)  { return _docNames[anIndex]; }
+
+/**
  * Returns the doc at given index.
  */
-static RMDocument getDoc(int anIndex)
+private static RMDocument getDoc(int anIndex)
 {
-    String name = SALL[anIndex];
-    String urls = "http://reportmill.com/jars/samples/" + name;
+    // Get document name, URL string and URL
+    String name = getDocName(anIndex);
+    String urls = SAMPLES_ROOT + name + '/' + name + ".rpt";
     WebURL url = WebURL.getURL(urls);
+    
+    // Get bytes (complain if not found)
     byte bytes[] = url.getBytes();
     if(bytes==null) { System.err.println("SamplesPane.getDoc: Couldn't load " + url); return null; }
+    
+    // Return document
     RMDocument doc = RMDocument.getDoc(bytes);
     return doc;
 }
@@ -148,16 +255,18 @@ static RMDocument getDoc(int anIndex)
 /**
  * Returns the doc thumnail image at given index.
  */
-public Image getDocImage(int anIndex)
+private Image getDocImage(int anIndex)
 {
     // If image already set, just return
-    Image img = DOC_IMAGES[anIndex]; if(img!=null) return img;
+    Image img = _docImages[anIndex]; if(img!=null) return img;
     
-    // Get image name, URL string, URL and Image. Then make sure image is loaded by requesting Image.Native.
-    String name = SALL[anIndex].replace(".rpt", ".png");
-    String urls = "http://reportmill.com/jars/samples/" + name;
+    // Get image name, URL string, and URL
+    String name = getDocName(anIndex);
+    String urls = SAMPLES_ROOT + name + '/' + name + ".png";
     WebURL imgURL = WebURL.getURL(urls);
-    img = DOC_IMAGES[anIndex] = Image.get(imgURL);
+    
+    // Create Image. Then make sure image is loaded by requesting Image.Native.
+    img = _docImages[anIndex] = Image.get(imgURL);
     img.getNative();
     return img;
 }
@@ -165,7 +274,7 @@ public Image getDocImage(int anIndex)
 /**
  * Returns size of doc at given index.
  */
-static Size getDocSize(int anIndex)
+private static Size getDocSize(int anIndex)
 {
     return new Size(102,132);
 }
@@ -173,33 +282,34 @@ static Size getDocSize(int anIndex)
 /**
  * Loads the thumbnail image for each sample in background thread.
  */
-void loadImagesInBackground()  { new Thread(() -> loadImages()).start(); }
+private void loadImagesInBackground()  { new Thread(() -> loadImages()).start(); }
     
 /**
  * Loads the thumbnail image for each sample in background thread.
  */
-void loadImages()
+private void loadImages()
 {
     // Iterate over sample names and load/set images
-    for(int i=0; i<SALL.length; i++) { int index = i;
+    for(int i=0; i<getDocCount(); i++) { int index = i;
         Image img = getDocImage(i);
         runLater(() -> setImage(img, index));
     }
 }
 
 /** Called after an image is loaded to set in ImageView in app thread. */
-void setImage(Image anImg, int anIndex)
+private void setImage(Image anImg, int anIndex)
 {
-    ImageView iview = getView("ImageView" + String.valueOf(anIndex), ImageView.class);
+    String name = "ImageView" + String.valueOf(anIndex);
+    ImageView iview = getView(name, ImageView.class);
     iview.setImage(anImg);
 }
 
 /**
  * Creates images (only needed when updating).
  */
-static void createImages()
+private static void createImages()
 {
-    for(int i=0; i<SALL.length; i++) {
+    for(int i=0,iMax=getDocCount();i<iMax;i++) {
         RMDocument doc = getDoc(i); if(doc==null) continue;
         doc = doc.generateReport();
         doc.getPage(0).setPaintBackground(false);
@@ -207,14 +317,15 @@ static void createImages()
         Image img = createImage(doc.getPage(0), size.width, size.height);
         byte bytes[] = img.getBytesPNG();
         new java.io.File("/tmp/gallery").mkdir();
-        SnapUtils.writeBytes(bytes, "/tmp/gallery/" + SALL[i].replace(".rpt", ".png"));
+        String fname = "/tmp/gallery/" + getDocName(i) + ".png";
+        SnapUtils.writeBytes(bytes, fname);
     }
 }
 
 /**
  * Returns an image for the given shape, with given background color (null for clear) and scale.
  */
-static Image createImage(RMShape aShape, double aW, double aH)
+private static Image createImage(RMShape aShape, double aW, double aH)
 {
     // Create new image
     int w = (int)Math.round(aW), h = (int)Math.round(aH);
