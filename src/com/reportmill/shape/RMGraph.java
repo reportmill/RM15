@@ -593,6 +593,11 @@ public static class FontBox extends Rect {
 public void setFill(RMFill aFill)  { super.setFill(aFill); relayout(); }
 
 /**
+ * Sets the stroke for this shape, with an option to turn on drawsStroke.
+ */
+public void setStroke(RMStroke aStroke)  { super.setStroke(aStroke); relayout(); }
+
+/**
  * Standard clone implementation.
  */
 public RMGraph clone()
