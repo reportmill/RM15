@@ -71,9 +71,6 @@ public void setVisible(boolean aValue)
     // If requested visible and inspector is not visible, make visible
     if(aValue && !isVisible())
         setVisible(0);
-    
-    // If setting not visible, propagate on to window
-    //if(!aValue && isVisible()) setWindowVisible(false);
 }
 
 /**
@@ -94,12 +91,6 @@ public void setVisible(int anIndex)
     
     // ResetUI
     resetLater();
-
-    // If window isn't visible, set window visible
-    //if(!isVisible()) { RMEditorPane epane = RMEditorPane.getMain(); if(epane==null) return;
-    //    WindowView win = getWindow(); View eview = epane.getUI();
-    //    Point pnt = win.getScreenLocation(eview, Pos.TOP_RIGHT, win.getWidth() + 20, 0);
-    //    win.show(eview, pnt.x, pnt.y); }
 }
 
 /**
@@ -139,10 +130,6 @@ protected View createUI()
     return _tabView;
 }
 
-/** Initializes the UI panel. */
-//protected void initUI()  { getWindow().setAlwaysOnTop(true); getWindow().setHideOnDeactivate(true);
-//    getWindow().setType(WindowView.TYPE_UTILITY); getWindow().setSaveName("AttributesPanel"); }
-
 /**
  * Updates the attributes panel UI (forwards on to inspector at selected tab).
  */
@@ -156,41 +143,16 @@ public void resetUI()
         _tabView.setTabContent(inspector.getUI(), _tabView.getSelIndex());
     
     // Set window title and reset inspector
-    //getWindow().setTitle(Key.getStringValue(inspector, "getWindowTitle"));
     inspector.resetLater();
 }
 
 /**
- * This inner class is a ColorPanel suitable for manipulating colors in current RMEditor.
+ * Subclass ColorPanel to change setWindowVisible to show AttributesPanel.ColorPanel instead.
  */
 public class APColorPanel extends ColorPanel {
     
     /** Overrides color panel behavior to order attributes panel visible instead. */
     public void setWindowVisible(boolean aValue)  { setVisibleName(COLOR, true); }
-
-    /** Overrides normal implementation to update color from editor if no color well selected. */
-    protected void resetUI()
-    {
-        // If no ColorWell, get color from editor
-        if(getColorWell()==null) {
-            Color color = RMEditorUtils.getSelectedColor(getEditor());
-            setColor(color);
-        }
-        
-        // Do normal version
-        super.resetUI();
-    }
-
-    /** Override to forward to editor if no ColorWell. */
-    protected void fireActionEvent(ViewEvent anEvent)
-    {
-        super.fireActionEvent(anEvent);
-        if(getColorWell()==null)
-            RMEditorUtils.setSelectedColor(getEditor(), getColor());
-    }
-    
-    /** Returns the name for this panel. */
-    public String getWindowTitle() { return "Color Panel"; }
 }
 
 }

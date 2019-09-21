@@ -8,10 +8,10 @@ import com.reportmill.base.RMNumberFormat;
 import com.reportmill.graphics.*;
 import com.reportmill.shape.*;
 import java.util.*;
-import snap.gfx.Font;
+import snap.gfx.*;
 import snap.util.*;
 import snap.view.*;
-import snap.viewx.ColorButton;
+import snap.viewx.*;
 
 /**
  * Tool bar for RMEditorPane.
@@ -23,6 +23,9 @@ public class RMEditorPaneToolBar extends RMEditorPane.SupportPane {
     
     // The font size ComboBox
     ComboBox          _fontSizeComboBox;
+    
+    // The editor selected color ColorWell (hidden)
+    ColorWell         _colorWell;
     
     // The toolbar tools
     RMTool            _toolBarTools[];
@@ -51,6 +54,11 @@ protected void initUI()
     Object sizes[] = { 6, 8, 9, 10, 11, 12, 14, 16, 18, 22, 24, 36, 48, 64, 72, 96, 128, 144 };
     _fontSizeComboBox.setItems(sizes);
     _fontSizeComboBox.setItemTextFunction(i -> SnapUtils.stringValue(i) + " pt");
+    
+    // Create/configure hidden ColorWell
+    _colorWell = new ColorWell(); _colorWell.setName("ColorWell");
+    ColorPanel.getShared().setDefaultColorWell(_colorWell);
+    _colorWell.setOwner(this);
 }
 
 /**
@@ -102,6 +110,10 @@ protected void resetUI()
     setViewValue("AlignCenterButton", alignX==RMTypes.AlignX.Center);
     setViewValue("AlignRightButton", alignX==RMTypes.AlignX.Right);
     setViewValue("AlignFullButton", alignX==RMTypes.AlignX.Full);
+    
+    // Update ColorWell
+    Color color = RMEditorUtils.getSelectedColor(editor);
+    _colorWell.setColor(color);
 }
 
 /**
@@ -259,6 +271,10 @@ protected void respondUI(ViewEvent anEvent)
     // Handle ConnectToDataSourceMenuItem
     if(anEvent.equals("ConnectToDataSourceMenuItem") || anEvent.equals("ConnectToDataSourceButton"))
         RMEditorPaneUtils.connectToDataSource(getEditorPane());
+        
+    // Handle ColorWell
+    if(anEvent.equals("ColorWell"))
+        RMEditorUtils.setSelectedColor(editor, _colorWell.getColor());
 }
 
 /**
