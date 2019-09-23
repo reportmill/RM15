@@ -166,12 +166,12 @@ public void setEditing(boolean aFlag)
 protected View createUI()
 {
     // Get AttributesPanel and InspectorPanel
-    AttributesPanel attrPanel = getAttributesPanel(); attrPanel.getUI().setGrowHeight(true);
+    AttributesPanel attrPanel = getAttributesPanel();
     InspectorPanel inspPanel = getInspectorPanel();
     
     // Create ColView to hold them
     ColView vbox = new ColView(); vbox.setFillWidth(true);
-    vbox.setChildren(attrPanel.getUI(), inspPanel.getUI());
+    vbox.setChildren(inspPanel.getUI(), attrPanel.getUI());
     vbox.setBorder(Color.LIGHTGRAY, 1);
     
     // Create normal RMViewerPane BorderView UI and panels to right side
@@ -580,6 +580,9 @@ public static class SupportPane extends ViewOwner {
     
     /** Returns the editor. */
     public RMEditor getEditor()  { return _editorPane.getEditor(); }
+    
+    /** Returns the title. */
+    public String getWindowTitle()  { return "Inspector"; }
 }
 
 }

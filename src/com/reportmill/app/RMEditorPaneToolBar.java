@@ -59,6 +59,16 @@ protected void initUI()
     _colorWell = new ColorWell(); _colorWell.setName("ColorWell");
     ColorPanel.getShared().setDefaultColorWell(_colorWell);
     _colorWell.setOwner(this);
+    
+    // Install InspectorPanel.TitleLabel
+    RowView rowView = (RowView)getUI(ColView.class).getChild(1);
+    Label titleLabel = getEditorPane().getInspectorPanel().getView("TitleLabel", Label.class);
+    titleLabel.setAlign(Pos.BOTTOM_CENTER);
+    titleLabel.setPadding(0,0,0,0);
+    titleLabel.setPrefSize(275, 20);
+    titleLabel.setLean(Pos.BOTTOM_RIGHT);
+    titleLabel.setTransY(2);
+    rowView.addChild(titleLabel);
 }
 
 /**
@@ -80,7 +90,7 @@ protected void resetUI()
     RMNumberFormat nfmt = fmt instanceof RMNumberFormat? (RMNumberFormat)fmt : null;
     setViewValue("MoneyButton", nfmt!=null && nfmt.isLocalCurrencySymbolUsed());
     setViewValue("PercentButton", nfmt!=null && nfmt.isPercentSymbolUsed());
-    setViewValue("CommaButton", nfmt!=null && nfmt.isGroupingUsed());
+    //setViewValue("CommaButton", nfmt!=null && nfmt.isGroupingUsed());
         
     // Reset PreviewEditButton state if out of sync
     if(getViewBoolValue("PreviewEditButton")==getEditorPane().isEditing())
@@ -100,16 +110,16 @@ protected void resetUI()
     // Reset BoldButton, ItalicButton, UnderlineButton
     setViewValue("BoldButton", font.isBold());
     setViewEnabled("BoldButton", font.getBold()!=null);
-    setViewValue("ItalicButton", font.isItalic());
-    setViewEnabled("ItalicButton", font.getItalic()!=null);
-    setViewValue("UnderlineButton", RMEditorUtils.isUnderlined(editor));
+    //setViewValue("ItalicButton", font.isItalic());
+    //setViewEnabled("ItalicButton", font.getItalic()!=null);
+    //setViewValue("UnderlineButton", RMEditorUtils.isUnderlined(editor));
     
     // Update AlignLeftButton, AlignCenterButton, AlignRightButton, AlignFullButton, AlignTopButton, AlignMiddleButton
-    RMTypes.AlignX alignX = RMEditorUtils.getAlignmentX(editor);
-    setViewValue("AlignLeftButton", alignX==RMTypes.AlignX.Left);
-    setViewValue("AlignCenterButton", alignX==RMTypes.AlignX.Center);
-    setViewValue("AlignRightButton", alignX==RMTypes.AlignX.Right);
-    setViewValue("AlignFullButton", alignX==RMTypes.AlignX.Full);
+    //RMTypes.AlignX alignX = RMEditorUtils.getAlignmentX(editor);
+    //setViewValue("AlignLeftButton", alignX==RMTypes.AlignX.Left);
+    //setViewValue("AlignCenterButton", alignX==RMTypes.AlignX.Center);
+    //setViewValue("AlignRightButton", alignX==RMTypes.AlignX.Right);
+    //setViewValue("AlignFullButton", alignX==RMTypes.AlignX.Full);
     
     // Update ColorWell
     Color color = RMEditorUtils.getSelectedColor(editor);

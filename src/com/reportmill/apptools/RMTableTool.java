@@ -125,7 +125,7 @@ public void respondUI(ViewEvent anEvent)
     if(anEvent.equals("GroupingTable")) {
         
         // Handle DropEvent: Get drop string and add grouping
-        if(anEvent.isDragDropEvent()) {  //int toRow = _groupingTable.rowAtPoint(anEvent.getLocation());
+        if(anEvent.isDragDrop()) {  //int toRow = _groupingTable.rowAtPoint(anEvent.getLocation());
             String string = anEvent.getClipboard().getString().replace("@", "");
             addGroupingKey(string);
         }

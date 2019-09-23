@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<SpringView width="275" height="425" PrefWidth="275" PrefHeight="425">
-  <ScaleBox x="3" y="3" width="269" height="42">
-    <HBox Name="SelPathView" MinWidth="269">
+<ColView PrefWidth="275" Padding="3,0,0,0" FillWidth="true">
+  <Label Name="TitleLabel" PrefHeight="25" Align="CENTER" text="Inspector">
+    <font name="Arial Bold" size="12" />
+  </Label>
+  <ScaleBox>
+    <RowView Name="SelPathView" PrefWidth="269" PrefHeight="42">
       <BevelBorder />
-    </HBox>
+    </RowView>
   </ScaleBox>
-  <HBox x="3" y="48" width="269" height="48" Align="CENTER">
-    <ToggleButton Name="ShapeSpecificButton" PrefWidth="66" PrefHeight="42" ToolTip="Shape-Specific Attributes Inspector" Selected="true" ToggleGroup="InspTG" Position="CENTER_LEFT" />
-    <ToggleButton Name="ShapeFillsButton" PrefWidth="66" PrefHeight="42" ToolTip="Fill &amp; Stroke Inspector" image="ShapeFills.png" ToggleGroup="InspTG" Position="CENTER" />
-    <ToggleButton Name="ShapePlacementButton" PrefWidth="66" PrefHeight="42" ToolTip="Placement Inspector" image="ShapePlacement.png" ToggleGroup="InspTG" Position="CENTER" />
-    <ToggleButton Name="ShapeGeneralButton" PrefWidth="66" PrefHeight="42" ToolTip="General Attributes Inspector" image="ShapeGeneral.png" ToggleGroup="InspTG" Position="CENTER_RIGHT" />
-  </HBox>
-  <BorderView Name="InspectorPanel" y="100" width="275" height="325" />
-</SpringView>
+  <RowView PrefWidth="269" Align="CENTER" Padding="6,3,6,3">
+    <ToggleButton Name="ShapeSpecificButton" PrefWidth="66" PrefHeight="42" ToolTip="Shape-Specific Attributes Inspector" Position="CENTER_LEFT" Selected="true" Group="InspTG" />
+    <ToggleButton Name="ShapeFillsButton" PrefWidth="66" PrefHeight="42" ToolTip="Fill &amp; Stroke Inspector" image="ShapeFills.png" Position="CENTER" Group="InspTG" />
+    <ToggleButton Name="ShapePlacementButton" PrefWidth="66" PrefHeight="42" ToolTip="Placement Inspector" image="ShapePlacement.png" Position="CENTER" Group="InspTG" />
+    <ToggleButton Name="ShapeGeneralButton" PrefWidth="66" PrefHeight="42" ToolTip="General Attributes Inspector" image="ShapeGeneral.png" Position="CENTER_RIGHT" Group="InspTG" />
+  </RowView>
+  <BoxView Name="InspectorPanel" PrefWidth="275" PrefHeight="325" Padding="0" FillWidth="true" FillHeight="true" />
+</ColView>

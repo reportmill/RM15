@@ -65,7 +65,7 @@ public void respondUI(ViewEvent anEvent)
         mainTable.setName(anEvent.getStringValue());
     
     // Handle MainTableNameText
-    if(anEvent.equals("MainTableNameText") && anEvent.isDragDropEvent())
+    if(anEvent.equals("MainTableNameText") && anEvent.isDragDrop())
         mainTable.setName(anEvent.getStringValue().replace("@", ""));
 
     // Handle AddPeerMenuItem

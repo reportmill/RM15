@@ -121,13 +121,34 @@ public void setVisibleName(String aName, boolean doToggle)
  */
 protected View createUI()
 {
+    // Create TabView
     _tabView = new TabView();
+    _tabView.setGrowHeight(true);
     _tabView.setFont(Font.Arial12.deriveFont(11d));
     String names[] = getInspectorNames(); ViewOwner inspectors[] = getInspectors();
-    for(int i=0;i<names.length;i++)
-        _tabView.addTab(names[i], new Label());
-    _tabView.setPrefSize(275, 290);
-    return _tabView;
+    for(int i=0;i<names.length;i++) _tabView.addTab(names[i], new Label());
+    
+    // Separator Rect
+    RectView rectView = new RectView();
+    rectView.setPrefHeight(1);
+    rectView.setFill(Color.LIGHTGRAY);
+    
+    // Create TitleLabel
+    Label titleLabel = new Label("Attributes");
+    titleLabel.setFont(Font.Arial11.getBold());
+    titleLabel.setTextFill(Color.GRAY);
+    titleLabel.setPrefHeight(20);
+    titleLabel.setAlign(Pos.CENTER);
+    
+    // Add attributes
+    ColView colView = new ColView();
+    colView.setPrefSize(275, 300);
+    colView.setGrowHeight(true);
+    colView.setFillWidth(true);
+    colView.addChild(rectView);
+    colView.addChild(titleLabel);
+    colView.addChild(_tabView);
+    return colView;
 }
 
 /**

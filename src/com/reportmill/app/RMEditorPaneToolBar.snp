@@ -1,69 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<VBox FillWidth="true">
-<HBox Padding="6,10,4,10" Spacing="1">
-  <Button Name="NewButton" PrefWidth="22" PrefHeight="22" ToolTip="New" image="File_New.png" ShowBorder="false" />
-  <Button Name="OpenButton" PrefWidth="22" PrefHeight="22" ToolTip="Open" image="File_Open.png" ShowBorder="false" />
-  <Button Name="SaveButton" PrefWidth="22" PrefHeight="22" ToolTip="Save" image="File_Save.png" ShowBorder="false" />
-  <Button Name="PrintButton" PrefWidth="22" PrefHeight="22" ToolTip="Print" image="File_Print.png" ShowBorder="false" />
-  <Separator PrefWidth="8" PrefHeight="18" Vertical="true" />
-  <Button Name="CutButton" PrefWidth="22" PrefHeight="22" ToolTip="Cut" image="Edit_Cut.png" ShowBorder="false" />
-  <Button Name="CopyButton" PrefWidth="22" PrefHeight="22" ToolTip="Copy" image="Edit_Copy.png" ShowBorder="false" />
-  <Button Name="PasteButton" PrefWidth="22" PrefHeight="22" ToolTip="Paste" image="Edit_Paste.png" ShowBorder="false" />
-  <Button Name="DeleteButton" PrefWidth="22" PrefHeight="22" ToolTip="Delete" image="Edit_Delete.png" ShowBorder="false" />
-  <Separator PrefWidth="8" PrefHeight="18" Vertical="true" />
-  <Button Name="UndoButton" PrefWidth="22" PrefHeight="22" ToolTip="Undo" image="Edit_Undo.png" ShowBorder="false" />
-  <Button Name="RedoButton" PrefWidth="22" PrefHeight="22" ToolTip="Redo" image="Edit_Redo.png" ShowBorder="false" />
-  <Separator PrefWidth="14" PrefHeight="18" Vertical="true" />
-  <ColorButton Name="FillColorButton" PrefWidth="32" PrefHeight="22" ToolTip="Set Fill Color" Title="Fill Color" />
-  <ColorButton Name="StrokeColorButton" PrefWidth="32" PrefHeight="22" ToolTip="Set Stroke Color" Title="Stroke Color" />
-  <ColorButton Name="TextColorButton" PrefWidth="32" PrefHeight="22" ToolTip="Set Text Color" Title="Text Color" />
-  <Separator PrefWidth="8" PrefHeight="18" Vertical="true" />
-  <ToggleButton Name="MoneyButton" PrefWidth="22" PrefHeight="22" ToolTip="Money Format" image="Format_Money.png" ShowBorder="false" />
-  <ToggleButton Name="PercentButton" PrefWidth="22" PrefHeight="22" ToolTip="Percent Format" image="Format_Percent.png" ShowBorder="false" />
-  <ToggleButton Name="CommaButton" PrefWidth="22" PrefHeight="22" ToolTip="Comma Format" image="Format_Comma.png" ShowBorder="false" />
-  <Button Name="DecimalAddButton" PrefWidth="22" PrefHeight="22" ToolTip="Add Decimal" image="Format_DecimalAdd.png" ShowBorder="false" />
-  <Button Name="DecimalRemoveButton" PrefWidth="22" PrefHeight="22" ToolTip="Remove Decimal" image="Format_DecimalRemove.png" ShowBorder="false" />
-  <Button Name="SamplesButton" PrefWidth="60" PrefHeight="22" LeanX="CENTER" text="Samples" ToolTip="Show Samples" />
-  <Button Name="PreviewHTMLButton" PrefWidth="22" PrefHeight="22" LeanX="RIGHT" ToolTip="Preview HTML" image="Preview_HTML.png" ShowBorder="false" />
-  <Button Name="PreviewPDFButton" PrefWidth="22" PrefHeight="22" ToolTip="Preview PDF" image="Preview_PDF.png" ShowBorder="false" />
-</HBox>
-<HBox Padding="4,10,6,10" Spacing="1">
-  <ToggleButton Name="PreviewEditButton" PrefWidth="84" PrefHeight="24" text="Preview" />
-  <Separator PrefWidth="15" PrefHeight="18" Vertical="true" />
-  <HBox Spacing="-1">
-    <ToggleButton Name="RMSelectToolButton" PrefWidth="24" PrefHeight="24" ToolTip="Selection Tool" image="/com/reportmill/apptools/RMSelect.png" Position="CENTER_LEFT" Selected="true" ToggleGroup="bg1" />
-    <ToggleButton Name="RMLineShapeToolButton" PrefWidth="24" PrefHeight="24" ToolTip="Line Tool" image="/com/reportmill/apptools/RMLineShape.png" Position="CENTER" ToggleGroup="bg1" />
-    <ToggleButton Name="RMRectShapeToolButton" PrefWidth="24" PrefHeight="24" ToolTip="Rectangle Tool" image="/com/reportmill/apptools/RMRectShape.png" Position="CENTER" ToggleGroup="bg1" />
-    <ToggleButton Name="RMOvalShapeToolButton" PrefWidth="24" PrefHeight="24" ToolTip="Oval Tool" image="/com/reportmill/apptools/RMOvalShape.png" Position="CENTER" ToggleGroup="bg1" />
-    <ToggleButton Name="RMTextToolButton" PrefWidth="24" PrefHeight="24" ToolTip="Text Tool" image="/com/reportmill/apptools/RMText.png" Position="CENTER" ToggleGroup="bg1" />
-    <ToggleButton Name="RMPolygonShapeToolButton" PrefWidth="24" PrefHeight="24" ToolTip="Polygon Tool" image="/com/reportmill/apptools/RMPolygonShape.png" Position="CENTER" ToggleGroup="bg1" />
-    <ToggleButton Name="PencilToolButton" PrefWidth="24" PrefHeight="24" ToolTip="Pencil Tool" image="/com/reportmill/apptools/RMPencilShape.png" Position="CENTER_RIGHT" ToggleGroup="bg1" />
-  </HBox>
-  <Separator PrefWidth="16" PrefHeight="18" Vertical="true" />
-  <ComboBox name="FontFaceComboBox" MinWidth="80" PrefHeight="22" ShowTextField="true" ShowButton="false" FilterList="true" />
-  <Label PrefWidth="1" PrefHeight="8" />
-  <ComboBox name="FontSizeComboBox" MinWidth="35" PrefHeight="22" ShowTextField="true" ShowButton="false" />
-  <Button Name="FontSizeUpButton" PrefWidth="22" PrefHeight="22" ToolTip="Increase Font Size" image="Format_IncreaseFont.png" ShowBorder="false" />
-  <Button Name="FontSizeDownButton" PrefWidth="22" PrefHeight="22" ToolTip="Decrease Font Size" image="Format_DecreaseFont.png" ShowBorder="false" />
-  <Separator PrefWidth="8" PrefHeight="18" Vertical="true" />
-  <ToggleButton Name="BoldButton" PrefWidth="22" PrefHeight="22" ToolTip="Make Bold" image="Format_Bold.png" ShowBorder="false" />
-  <ToggleButton Name="ItalicButton" PrefWidth="22" PrefHeight="22" ToolTip="Make Italic" image="Format_Italic.png" ShowBorder="false" />
-  <ToggleButton Name="UnderlineButton" PrefWidth="22" PrefHeight="22" ToolTip="Make Underline" image="Format_Underline.png" ShowBorder="false" />
-  <Separator PrefWidth="8" PrefHeight="18" Vertical="true" />
-  <ToggleButton Name="AlignLeftButton" PrefWidth="22" PrefHeight="22" image="Format_AlignLeft.png" ShowBorder="false" ToggleGroup="bg2" />
-  <ToggleButton Name="AlignCenterButton" PrefWidth="22" PrefHeight="22" image="Format_AlignCenter.png" ShowBorder="false" ToggleGroup="bg2" />
-  <ToggleButton Name="AlignRightButton" PrefWidth="22" PrefHeight="22" image="Format_AlignRight.png" ShowBorder="false" ToggleGroup="bg2" />
-  <ToggleButton Name="AlignFullButton" PrefWidth="22" PrefHeight="22" image="Format_AlignFull.png" ShowBorder="false" ToggleGroup="bg2" />
-  <MenuButton Name="AddShapesMenuButton" PrefWidth="33" PrefHeight="24" LeanX="RIGHT" ToolTip="Add Shapes" image="AddShapes.png" ShowBorder="false" ShowArrow="false">
-    <MenuItem Name="AddTableButton" text="Table" image="/com/reportmill/apptools/RMTable.png" />
-    <MenuItem Name="AddGraphButton" text="Graph" image="/com/reportmill/apptools/RMGraph.png" />
-    <MenuItem Name="AddLabelsButton" text="Labels" image="/com/reportmill/apptools/RMLabels.png" />
-    <MenuItem Name="AddCrossTabFrameButton" text="CrossTab" image="/com/reportmill/apptools/RMCrossTabFrame.png" />
-    <MenuItem Name="AddCrossTabButton" text="Simple Table" image="/com/reportmill/apptools/RMCrossTab.png" />
-    <MenuItem Name="AddImagePlaceHolderMenuItem" text="Image Placeholder" image="/com/reportmill/apptools/RMImage.png" />
-    <MenuItem Name="AddSubreportMenuItem" text="Subreport" image="/com/reportmill/apptools/RMSubreport.png" />
-    <MenuItem Name="AddWidgetMenuItem" text="Widget" image="ShapeRollScaleSkew.png" />
-  </MenuButton>
-  <Button Name="ConnectToDataSourceButton" PrefWidth="24" PrefHeight="24" ToolTip="Connect to DataSource" image="DataSource.png" ShowBorder="false" />
-</HBox>
-</VBox>
+<ColView FillWidth="true">
+  <RowView Padding="6,10,4,10" Spacing="1">
+    <Button Name="NewButton" PrefWidth="22" PrefHeight="22" ToolTip="New" image="File_New.png" ShowBorder="false" />
+    <Button Name="OpenButton" PrefWidth="22" PrefHeight="22" ToolTip="Open" image="File_Open.png" ShowBorder="false" />
+    <Button Name="SaveButton" PrefWidth="22" PrefHeight="22" ToolTip="Save" image="File_Save.png" ShowBorder="false" />
+    <Button Name="PrintButton" PrefWidth="22" PrefHeight="22" ToolTip="Print" image="File_Print.png" ShowBorder="false" />
+    <Separator PrefWidth="8" PrefHeight="18" Vertical="true" />
+    <Button Name="CutButton" PrefWidth="22" PrefHeight="22" ToolTip="Cut" image="Edit_Cut.png" ShowBorder="false" />
+    <Button Name="CopyButton" PrefWidth="22" PrefHeight="22" ToolTip="Copy" image="Edit_Copy.png" ShowBorder="false" />
+    <Button Name="PasteButton" PrefWidth="22" PrefHeight="22" ToolTip="Paste" image="Edit_Paste.png" ShowBorder="false" />
+    <Button Name="DeleteButton" PrefWidth="22" PrefHeight="22" ToolTip="Delete" image="Edit_Delete.png" ShowBorder="false" />
+    <Separator PrefWidth="8" PrefHeight="18" Vertical="true" />
+    <Button Name="UndoButton" PrefWidth="22" PrefHeight="22" ToolTip="Undo" image="Edit_Undo.png" ShowBorder="false" />
+    <Button Name="RedoButton" PrefWidth="22" PrefHeight="22" ToolTip="Redo" image="Edit_Redo.png" ShowBorder="false" />
+    <Separator PrefWidth="14" PrefHeight="18" Vertical="true" />
+    <ColorButton Name="FillColorButton" PrefWidth="32" PrefHeight="22" ToolTip="Set Fill Color" Title="Fill Color" />
+    <ColorButton Name="StrokeColorButton" PrefWidth="32" PrefHeight="22" ToolTip="Set Stroke Color" Title="Stroke Color" />
+    <ColorButton Name="TextColorButton" PrefWidth="32" PrefHeight="22" ToolTip="Set Text Color" Title="Text Color" />
+    <Separator PrefWidth="8" PrefHeight="18" Vertical="true" />
+    <ToggleButton Name="MoneyButton" PrefWidth="22" PrefHeight="22" ToolTip="Money Format" image="Format_Money.png" ShowBorder="false" />
+    <ToggleButton Name="PercentButton" PrefWidth="22" PrefHeight="22" ToolTip="Percent Format" image="Format_Percent.png" ShowBorder="false" />
+    <Button Name="SamplesButton" PrefWidth="60" PrefHeight="22" LeanX="CENTER" ToolTip="Show Samples" text="Samples" />
+    <Button Name="PreviewHTMLButton" PrefWidth="22" PrefHeight="22" LeanX="RIGHT" ToolTip="Preview HTML" image="Preview_HTML.png" ShowBorder="false" />
+    <Button Name="PreviewPDFButton" PrefWidth="22" PrefHeight="22" ToolTip="Preview PDF" image="Preview_PDF.png" ShowBorder="false" />
+  </RowView>
+  <RowView Padding="4,0,6,10" Spacing="1">
+    <ToggleButton Name="PreviewEditButton" PrefWidth="84" PrefHeight="24" text="Preview" />
+    <Separator PrefWidth="15" PrefHeight="18" Vertical="true" />
+    <RowView Spacing="-1">
+      <ToggleButton Name="RMSelectToolButton" PrefWidth="24" PrefHeight="24" ToolTip="Selection Tool" image="/com/reportmill/apptools/RMSelect.png" Position="CENTER_LEFT" Selected="true" Group="bg1" />
+      <ToggleButton Name="RMLineShapeToolButton" PrefWidth="24" PrefHeight="24" ToolTip="Line Tool" image="/com/reportmill/apptools/RMLineShape.png" Position="CENTER" Group="bg1" />
+      <ToggleButton Name="RMRectShapeToolButton" PrefWidth="24" PrefHeight="24" ToolTip="Rectangle Tool" image="/com/reportmill/apptools/RMRectShape.png" Position="CENTER" Group="bg1" />
+      <ToggleButton Name="RMOvalShapeToolButton" PrefWidth="24" PrefHeight="24" ToolTip="Oval Tool" image="/com/reportmill/apptools/RMOvalShape.png" Position="CENTER" Group="bg1" />
+      <ToggleButton Name="RMTextToolButton" PrefWidth="24" PrefHeight="24" ToolTip="Text Tool" image="/com/reportmill/apptools/RMText.png" Position="CENTER" Group="bg1" />
+      <ToggleButton Name="RMPolygonShapeToolButton" PrefWidth="24" PrefHeight="24" ToolTip="Polygon Tool" image="/com/reportmill/apptools/RMPolygonShape.png" Position="CENTER" Group="bg1" />
+      <ToggleButton Name="PencilToolButton" PrefWidth="24" PrefHeight="24" ToolTip="Pencil Tool" image="/com/reportmill/apptools/RMPencilShape.png" Position="CENTER_RIGHT" Group="bg1" />
+    </RowView>
+    <Separator PrefWidth="16" PrefHeight="18" Vertical="true" />
+    <ComboBox Name="FontFaceComboBox" MinWidth="80" PrefHeight="22" ShowTextField="true" ShowButton="false" FilterList="true" />
+    <Label PrefWidth="1" PrefHeight="8" />
+    <ComboBox Name="FontSizeComboBox" MinWidth="35" PrefHeight="22" ShowTextField="true" ShowButton="false" />
+    <Button Name="FontSizeUpButton" PrefWidth="22" PrefHeight="22" ToolTip="Increase Font Size" image="Format_IncreaseFont.png" ShowBorder="false" />
+    <Button Name="FontSizeDownButton" PrefWidth="22" PrefHeight="22" ToolTip="Decrease Font Size" image="Format_DecreaseFont.png" ShowBorder="false" />
+    <ToggleButton Name="BoldButton" PrefWidth="22" PrefHeight="22" ToolTip="Make Bold" image="Format_Bold.png" ShowBorder="false" />
+    <Separator PrefWidth="8" PrefHeight="18" Vertical="true" />
+    <MenuButton Name="AddShapesMenuButton" PrefWidth="33" PrefHeight="24" ToolTip="Add Shapes" image="AddShapes.png" ShowBorder="false" ShowArrow="false">
+      <MenuItem Name="AddTableButton" text="Table" image="/com/reportmill/apptools/RMTable.png" />
+      <MenuItem Name="AddGraphButton" text="Graph" image="/com/reportmill/apptools/RMGraph.png" />
+      <MenuItem Name="AddLabelsButton" text="Labels" image="/com/reportmill/apptools/RMLabels.png" />
+      <MenuItem Name="AddCrossTabFrameButton" text="CrossTab" image="/com/reportmill/apptools/RMCrossTabFrame.png" />
+      <MenuItem Name="AddCrossTabButton" text="Simple Table" image="/com/reportmill/apptools/RMCrossTab.png" />
+      <MenuItem Name="AddImagePlaceHolderMenuItem" text="Image Placeholder" image="/com/reportmill/apptools/RMImage.png" />
+      <MenuItem Name="AddSubreportMenuItem" text="Subreport" image="/com/reportmill/apptools/RMSubreport.png" />
+      <MenuItem Name="AddWidgetMenuItem" text="Widget" image="ShapeRollScaleSkew.png" />
+    </MenuButton>
+    <Button Name="ConnectToDataSourceButton" PrefWidth="24" PrefHeight="24" ToolTip="Connect to DataSource" image="DataSource.png" ShowBorder="false" />
+  </RowView>
+</ColView>

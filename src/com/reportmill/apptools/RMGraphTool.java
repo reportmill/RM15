@@ -60,7 +60,9 @@ protected void initUI()
     setViewItems("ItemsLayoutList", RMGraph.ItemLayout.values());
     
     // Enable drop keys
-    enableEvents("ListKeyText", DragDrop); enableEvents("FilterText", DragDrop); enableEvents("KeysText", DragDrop);
+    enableEvents("ListKeyText", DragDrop);
+    enableEvents("FilterText", DragDrop);
+    enableEvents("KeysText", DragDrop);
 }
 
 /**
@@ -128,8 +130,11 @@ public void respondUI(ViewEvent anEvent)
     graph.repaint();
 
     // Handle ListKeyText
-    if(anEvent.equals("ListKeyText"))
+    if(anEvent.equals("ListKeyText")) {
         graph.setDatasetKey(StringUtils.delete(anEvent.getStringValue(), "@"));
+        if(anEvent.isDragDrop())
+            anEvent.dropComplete();
+    }
     
     // Handle FilterText
     if(anEvent.equals("FilterText"))
@@ -144,9 +149,10 @@ public void respondUI(ViewEvent anEvent)
         
         // Get Key string and key strings
         String keysString = getViewStringValue("KeysText");
-        if(anEvent.isDragDropEvent()) {
+        if(anEvent.isDragDrop()) {
             if(keysString==null || keysString.length()==0) keysString = anEvent.getStringValue();
             else keysString += ',' + anEvent.getStringValue();
+            anEvent.dropComplete();
         }
         String keyStrings[] = keysString.split(",");
 

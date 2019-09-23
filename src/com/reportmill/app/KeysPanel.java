@@ -98,7 +98,8 @@ public boolean isSelectedToMany()
 protected void initUI()
 {
     _keysBrowser = getView("KeysBrowser", BrowserView.class);
-    _keysBrowser.setResolver(new KeysBrowserResolver()); _keysBrowser.setRowHeight(16);
+    _keysBrowser.setResolver(new KeysBrowserResolver());
+    _keysBrowser.setRowHeight(20);
     _keysBrowser.setCellConfigure(c -> configureKeysBrowserCell((ListCell)c));
     enableEvents(_keysBrowser, MouseRelease, DragGesture, View.DragSourceEnd);
 }

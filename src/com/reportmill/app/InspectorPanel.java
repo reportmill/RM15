@@ -16,6 +16,9 @@ public class InspectorPanel extends RMEditorPane.SupportPane {
     // The selection path view
     ChildView             _selPathView;
     
+    // The Title label
+    Label                 _titleLabel;
+    
     // The ShapeButton
     ToggleButton          _shapeBtn;
     
@@ -56,6 +59,10 @@ public InspectorPanel(RMEditorPane anEP)  { super(anEP); }
  */
 public void initUI()
 {
+    // Get/configure TitleLabel
+    _titleLabel = getView("TitleLabel", Label.class);
+    _titleLabel.setTextFill(Color.GRAY);
+    
     // Get SelPathView and InspectorPanel
     _selPathView = getView("SelPathView", ChildView.class);
     enableEvents(_selPathView, MouseRelease);
@@ -63,11 +70,6 @@ public void initUI()
     
     // Create the Action that redispatches the event and add the action to the action map
     addKeyActionHandler("UndoAction", "meta Z");
-    //getView("OffscreenButton").setPickable(false);
-    
-    // Configure Window
-    //getWindow().setType(WindowView.TYPE_UTILITY); getWindow().setAlwaysOnTop(true);
-    //getWindow().setHideOnDeactivate(true);getWindow().setResizable(false);getWindow().setSaveName("InspectorPanel");
 }
 
 /**
@@ -90,8 +92,15 @@ public void resetUI()
     // Get the inspector (owner)
     ViewOwner owner = getInspector();
     
-    // Get window title from owner and set
-    //String title = RMKey.getStringValue(owner, "getWindowTitle"); getWindow().setTitle(title);
+    // Get inspector title from owner and set
+    String title = "Inspector";
+    if(owner instanceof RMTool) title = ((RMTool)owner).getWindowTitle();
+    else if(owner instanceof RMEditorPane.SupportPane) {
+        title = ((RMEditorPane.SupportPane)owner).getWindowTitle();
+        String shpName = tool.getShapeClass().getSimpleName().replace("RM", "").replace("Shape", "");
+        title += " (" + shpName + ')';
+    }
+    _titleLabel.setText(title);
 
     // If owner non-null, tell it to reset
     if(owner!=null)
@@ -147,9 +156,6 @@ public void setVisible(boolean aValue)
     // If requested visible and inspector is not visible, make visible
     if(aValue && !isVisible())
         setVisible(-1);
-    
-    // If requested invisible and inspector is visible, set window not visible
-    //else if(!aValue && isVisible()) setWindowVisible(false);
 }
 
 /**
@@ -179,12 +185,6 @@ public void setVisible(int anIndex)
         setInspector(_shapeTree);
         _shapeBtn.getToggleGroup().setSelected(null);
     }
-    
-    // If inspector panel isn't visible, set window visible
-    //if(!isVisible()) { RMEditorPane epane = RMEditorPane.getMain(); if(epane==null) return;
-    //    WindowView win = getWindow(); View eview = epane.getUI();
-    //    Point pnt = win.getScreenLocation(eview, Pos.BOTTOM_RIGHT, win.getWidth() + 20, 0);
-    //    win.show(eview, pnt.x, pnt.y); }
 }
 
 /**
@@ -213,7 +213,7 @@ protected ViewOwner getInspector()  { return _childInspector; }
 protected void setInspector(ViewOwner anOwner)
 {
     _childInspector = anOwner;
-    getView("InspectorPanel", BorderView.class).setCenter(anOwner.getUI());
+    getView("InspectorPanel", BoxView.class).setContent(anOwner.getUI());
 }
 
 /**
