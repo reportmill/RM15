@@ -85,6 +85,14 @@ public class RMGraph extends RMParentShape {
     public enum ItemLayout { Abreast, Stacked, Layered };
     
 /**
+ * Creates an RMGraph.
+ */
+public RMGraph()
+{
+    _pie._parent = this;
+}
+    
+/**
  * Returns the dataset key associated with the graph.
  */
 public String getDatasetKey()  { return _datasetKey; }

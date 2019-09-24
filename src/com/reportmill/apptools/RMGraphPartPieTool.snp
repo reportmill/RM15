@@ -5,4 +5,10 @@
     <Label text="Extrude Wedges:" />
     <ComboBox Name="ExtrusionComboBox" PrefWidth="100" PrefHeight="22" />
   </RowView>
+  <TitleView PrefWidth="250" PrefHeight="48" Title="Hole Ratio">
+    <RowView Padding="0,5,0,5" Spacing="5">
+      <Slider Name="HoleRatioSlider" GrowWidth="true" PrefHeight="16" Max="100" />
+      <TextField Name="HoleRatioText" PrefWidth="50" PrefHeight="20" Align="CENTER" />
+    </RowView>
+  </TitleView>
 </ColView>

@@ -47,11 +47,18 @@ public boolean isMeshed()  { if(_graph.getKeyCount()==1) return false; return su
  */
 protected void configure()
 {
-    // Get graph area bounds
-    Rect bounds = _graph.getBoundsInside();
+    // Get Graph, graph bounds
+    RMGraph graph = _graph;
+    Rect bounds = graph.getBoundsInside();
     
-    // Get wedge label text
-    RMGraphPartLabelAxis labelAxis = _graph.getLabelAxis();
+    // Get Pie shape and info
+    RMGraphPartPie pieShape = graph.getPie();
+    boolean drawWedgeLabelLines = pieShape.getDrawWedgeLabelLines();
+    String extrusionKey = pieShape.getExtrusionKey();
+    double holeRatio = pieShape.getHoleRatio();
+
+    // Get LabelAxis
+    RMGraphPartLabelAxis labelAxis = graph.getLabelAxis();
     
     // Get wedge label string
     RMXString barLabelString = null;
@@ -62,7 +69,9 @@ protected void configure()
     }
     
     // Get wedge prototype
-    RMOvalShape prototype = new RMOvalShape(); prototype.setStrokeColor(RMColor.black);
+    RMOvalShape prototype = new RMOvalShape();
+    prototype.setHoleRatio(holeRatio);
+    prototype.setStrokeColor(RMColor.black);
     
     // Iterate over each graph section and add individual pies
     for(int i=0, iMax=getSectionCount(); i<iMax; i++) { RMGraphSection section = getSection(i);
@@ -82,7 +91,7 @@ protected void configure()
             pieBounds = totalBounds.getInsetRect(totalBounds.getWidth()/10, totalBounds.getHeight()/10);
         
         // if there are extruded pie wedges, pieBounds is totalBounds inset another 10%
-        if(!_graph.getPie().getExtrusionKey().equals(RMGraphPartPie.EXTRUDE_NONE))
+        if(!extrusionKey.equals(RMGraphPartPie.EXTRUDE_NONE))
             pieBounds.inset(pieBounds.getWidth()/20);
             
         // Round pieBounds down to largest square in rect
@@ -94,6 +103,7 @@ protected void configure()
         // If total is zero, then we can't draw wedges. Just add oval and continue
         if(total==0) {
             RMOvalShape oval = new RMOvalShape();
+            oval.setHoleRatio(holeRatio);
             oval.setFrame(pieBounds);
             _pieShape.addWedge(oval);
             continue;
@@ -121,7 +131,6 @@ protected void configure()
             wedge.setSweepAngle(sweep);
             
             // if wedge should be extruded, calculate proper bounds
-            String extrusionKey = _graph.getPie().getExtrusionKey();
             boolean extrude = !extrusionKey.equals(RMGraphPartPie.EXTRUDE_NONE) &&
                 (extrusionKey.equals(RMGraphPartPie.EXTRUDE_ALL) ||
                 (extrusionKey.equals(RMGraphPartPie.EXTRUDE_FIRST) && j==0) ||
@@ -210,7 +219,7 @@ protected void configure()
                 _pieShape.addWedgeLabel(label);
 
                 // draw a line from label to wedge, if specified in template
-                if(_graph.getPie().getDrawWedgeLabelLines()) {
+                if(drawWedgeLabelLines) {
                     
                     // Get label frame
                     Rect labelFrame = label.getFrame();

@@ -34,6 +34,10 @@ public void resetUI()
     // Update ExtrusionComboBox
     String extrusionKey = pie.getExtrusionKey();
     setViewSelItem("ExtrusionComboBox", extrusionKey);
+    
+    // Update HoleRatioSlider, HoleRatioText
+    setViewValue("HoleRatioSlider", pie.getHoleRatio()*100);
+    setViewValue("HoleRatioText", Math.round(pie.getHoleRatio()*100));
 }
 
 /**
@@ -43,10 +47,6 @@ public void respondUI(ViewEvent anEvent)
 {
     // Get the selected part pie (just return if null)
     RMGraphPartPie pie = getSelectedShape(); if(pie==null) return;
-
-    // Register graph for redisplay - shouldn't need this
-    getSelectedGraph().repaint();
-    getSelectedGraph().relayout();
 
     // Handle WedgeLinesCheckBox
     if(anEvent.equals("WedgeLinesCheckBox"))
@@ -61,6 +61,13 @@ public void respondUI(ViewEvent anEvent)
             if(key!=null)
                 pie.setExtrusionKey(key);
         }
+    }
+    
+    // Handle HoleRatioSlider, HoleRatioText
+    if(anEvent.equals("HoleRatioSlider") || anEvent.equals("HoleRatioText")) {
+        pie.undoerSetUndoTitle("Hole Ratio Change");
+        double hratio = anEvent.getFloatValue()/100;
+        pie.setHoleRatio(hratio);
     }
 }
 
