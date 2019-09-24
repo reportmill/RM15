@@ -11,12 +11,14 @@
     <TextView Name="KeysText" x="4" y="78" width="244" height="60" FireActionOnEnterKey="true" />
   </SpringView>
   <SpringView width="262" height="284" PrefWidth="262" PrefHeight="284" title="View">
-    <ToggleButton Name="GraphTypeBarButton" x="38" y="8" width="30" height="30" Padding="4" ToolTip="Bar Graph" image="Graph_Bar.png" ToggleGroup="gtypebg" />
-    <ToggleButton Name="GraphTypeBarHButton" x="68" y="8" width="30" height="30" Padding="4" ToolTip="Horizontal Bar Graph" image="Graph_BarHorz.png" ToggleGroup="gtypebg" />
-    <ToggleButton Name="GraphTypeAreaButton" x="98" y="8" width="30" height="30" Padding="4" ToolTip="Area Graph" image="Graph_Area.png" ToggleGroup="gtypebg" />
-    <ToggleButton Name="GraphTypeLineButton" x="128" y="8" width="30" height="30" Padding="4" ToolTip="Line Graph" image="Graph_Line.png" ToggleGroup="gtypebg" />
-    <ToggleButton Name="GraphTypeScatterButton" x="158" y="8" width="30" height="30" Padding="4" ToolTip="Scatter Graph" image="Graph_Scatter.png" ToggleGroup="gtypebg" />
-    <ToggleButton Name="GraphTypePieButton" x="188" y="8" width="30" height="30" Padding="4" ToolTip="Pie Graph" image="Graph_Pie.png" ToggleGroup="gtypebg" />
+    <RowView x="20" y="8" width="216" height="32" FillHeight="true">
+      <ToggleButton Name="GraphTypeBarButton" PrefWidth="36" Padding="4" ToolTip="Bar Graph" image="Graph_Bar.png" Position="CENTER_LEFT" ToggleGroup="gtypebg" />
+      <ToggleButton Name="GraphTypeBarHButton" PrefWidth="36" Padding="4" ToolTip="Horizontal Bar Graph" image="Graph_BarHorz.png" Position="CENTER" ToggleGroup="gtypebg" />
+      <ToggleButton Name="GraphTypeAreaButton" PrefWidth="36" Padding="4" ToolTip="Area Graph" image="Graph_Area.png" Position="CENTER" ToggleGroup="gtypebg" />
+      <ToggleButton Name="GraphTypeLineButton" PrefWidth="36" Padding="4" ToolTip="Line Graph" image="Graph_Line.png" Position="CENTER" ToggleGroup="gtypebg" />
+      <ToggleButton Name="GraphTypeScatterButton" PrefWidth="36" Padding="4" ToolTip="Scatter Graph" image="Graph_Scatter.png" Position="CENTER" ToggleGroup="gtypebg" />
+      <ToggleButton Name="GraphTypePieButton" PrefWidth="36" Padding="4" ToolTip="Pie Graph" image="Graph_Pie.png" Position="CENTER_RIGHT" ToggleGroup="gtypebg" />
+    </RowView>
     <TitleView x="4" y="47" width="248" height="106" Title="Layout">
       <SpringView width="248" height="106" PrefWidth="248" PrefHeight="106">
         <Label x="17" y="2" width="70" height="20" text="Series" />
