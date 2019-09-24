@@ -21,12 +21,21 @@ protected T newInstance()  { T shape = super.newInstance(); shape.setStroke(new 
  * Updates the UI controls from the currently selected oval.
  */
 public void resetUI()
-{    
+{
+    // Get current oval shape
     RMOvalShape oval = getSelectedShape(); if(oval==null) return;
+    
+    // Update StartThumb, StartText
     setViewValue("StartThumb", oval.getStartAngle());
     setViewValue("StartText", oval.getStartAngle());
+    
+    // Update SweepThumb, SweepText
     setViewValue("SweepThumb", oval.getSweepAngle());
     setViewValue("SweepText", oval.getSweepAngle());
+    
+    // Update HoleRatioSlider, HoleRatioText
+    setViewValue("HoleRatioSlider", oval.getHoleRatio()*100);
+    setViewValue("HoleRatioText", Math.round(oval.getHoleRatio()*100));
 }
 
 /**
@@ -37,18 +46,26 @@ public void respondUI(ViewEvent anEvent)
     RMOvalShape oval = getSelectedShape(); if(oval==null) return;
     List <RMOvalShape> ovals = (List)getSelectedShapes();
     
-    // Handle Start Angle ThumbWheel & Text
+    // Handle StartThumb, StartText
     if(anEvent.equals("StartThumb") || anEvent.equals("StartText")) {
         oval.undoerSetUndoTitle("Start Angle Change");
         for(RMOvalShape o : ovals)
             o.setStartAngle(anEvent.getFloatValue());
     }
 
-    // Handle Sweep Angle ThumbWheel & Text
+    // Handle SweepThumb, SweepText
     if(anEvent.equals("SweepThumb") || anEvent.equals("SweepText")) {
         oval.undoerSetUndoTitle("Sweep Angle Change");
         for(RMOvalShape o : ovals)
             o.setSweepAngle(anEvent.getFloatValue());
+    }
+    
+    // Handle HoleRatioSlider, HoleRatioText
+    if(anEvent.equals("HoleRatioSlider") || anEvent.equals("HoleRatioText")) {
+        oval.undoerSetUndoTitle("Hole Ratio Change");
+        double hratio = anEvent.getFloatValue()/100;
+        for(RMOvalShape o : ovals)
+            o.setHoleRatio(hratio);
     }
 }
 
