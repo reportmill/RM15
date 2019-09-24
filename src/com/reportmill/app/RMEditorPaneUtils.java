@@ -20,7 +20,7 @@ public class RMEditorPaneUtils {
 public static void connectToDataSource(RMEditorPane anEP)
 {
     RMDataSource ds = new RMDataSource(RMExtras.getHollywoodURL());
-    if(ds!=null) anEP.setDataSource(ds);
+    if(ds!=null) anEP.setDataSource(ds, 350, 0);
 }
 
 /**

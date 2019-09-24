@@ -78,10 +78,26 @@ protected View createUI()
     ScrollView scroll = new ScrollView(colView); scroll.setPrefHeight(420);
     scroll.setShowHBar(false); scroll.setShowVBar(true);
     
-    // Create top level box to hold ColView and label
-    ColView boxView = new ColView(); boxView.setSpacing(8); boxView.setFillWidth(true);
-    Label label = new Label("Select a template:"); label.setFont(Font.Arial16.getBold());
-    boxView.setChildren(label, scroll);
+    // Create "Select template" label
+    Label selectLabel = new Label("Select a template:");
+    selectLabel.setFont(Font.Arial16.deriveFont(20).getBold());
+    
+    // Create silly DatasetButton to add movies dataset
+    Button dsetButton = new Button("Add Movies Dataset"); dsetButton.setName("DatasetButton");
+    dsetButton.setFont(Font.Arial12);
+    dsetButton.setPadding(4,4,4,4);
+    dsetButton.setLeanX(HPos.RIGHT);
+    dsetButton.addEventHandler(e -> datasetButtonClicked(), Action);
+    
+    // Create HeaderRow to hold SelectLabel and DatasetButton
+    RowView headerRow = new RowView();
+    headerRow.addChild(selectLabel);
+    headerRow.addChild(dsetButton);
+    
+    // Create top level col view to hold HeaderRow and ColView
+    ColView boxView = new ColView();
+    boxView.setSpacing(8); boxView.setFillWidth(true);
+    boxView.setChildren(headerRow, scroll);
     return boxView;
 }
 
@@ -216,6 +232,15 @@ private void itemBoxWasPressed(ColView anItemBox, ViewEvent anEvent)
     
     // If double-click, confirm dialog box
     if(anEvent.getClickCount()>1) _dbox.confirm();
+}
+
+/**
+ * Called when user hits DatasetButton.
+ */
+private void datasetButtonClicked()
+{
+    RMEditorPaneUtils.connectToDataSource(_epane);
+    _dbox.cancel();
 }
 
 /**

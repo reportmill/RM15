@@ -910,10 +910,13 @@ public void setDataSource(RMDataSource aDataSource, double aX, double aY)
 
     // If valid drop point, animate into place
     if(aX>0) {
-        Rect vrect = getVisRect(); double dx = aX - (vrect.getMaxX() - 53), dy = aY - (vrect.getMaxY() - 53);
+        Rect vrect = getVisRect();
+        double dx = aX - (vrect.getMaxX() - 53);
+        double dy = aY - (vrect.getMaxY() - 53);
         getAnimCleared(1800).setOnFrame(a -> {
-            _xmlDX = SnapUtils.doubleValue(a.interpolate(dx, 0));
-            _xmlDY = SnapUtils.doubleValue(a.interpolate(dy, 0));
+            double time = a.getTime(), maxTime = a.getMaxTime(), ratio = time/maxTime;
+            _xmlDX = SnapUtils.doubleValue(a.interpolate(dx, 0, ratio));
+            _xmlDY = SnapUtils.doubleValue(a.interpolate(dy, 0, ratio));
             repaint();
         }).play();
     }

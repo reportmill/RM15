@@ -203,8 +203,12 @@ protected void respondUI(ViewEvent anEvent)
         RMEditorUtils.setFormat(editor, nfmt);
     }
     
-    if(anEvent.equals("SamplesButton"))
+    // Handle SamplesButton
+    if(anEvent.equals("SamplesButton")) {
+        View samplesButton = getView("SamplesButton");
+        samplesButton.getAnim(0).finish();
         new SamplesPane().showSamples(epane);
+    }
     
     // Handle Preview/Edit button and PreviewMenuItem
     if(anEvent.equals("PreviewEditButton") || anEvent.equals("PreviewMenuItem")) {
@@ -285,6 +289,18 @@ protected void respondUI(ViewEvent anEvent)
     // Handle ColorWell
     if(anEvent.equals("ColorWell"))
         RMEditorUtils.setSelectedColor(editor, _colorWell.getColor());
+}
+
+/**
+ * Animate SampleButton.
+ */
+public void animateSamplesButton()
+{
+    View btn = getView("SamplesButton");
+    btn.setScale(1.2);
+    btn.getAnim(400).setScale(1.4).getAnim(800).setScale(1.2).getAnim(1200).setScale(1.4).getAnim(1600).setScale(1.2)
+    .getAnim(2400).setRotate(360);
+    btn.getAnim(0).setLoopCount(3).play();
 }
 
 /**

@@ -20,6 +20,8 @@
     <Separator PrefWidth="8" PrefHeight="18" Vertical="true" />
     <ToggleButton Name="MoneyButton" PrefWidth="22" PrefHeight="22" ToolTip="Money Format" image="Format_Money.png" ShowBorder="false" />
     <ToggleButton Name="PercentButton" PrefWidth="22" PrefHeight="22" ToolTip="Percent Format" image="Format_Percent.png" ShowBorder="false" />
+    <Button Name="DecimalAddButton" PrefWidth="22" PrefHeight="22" ToolTip="Add Decimal" image="Format_DecimalAdd.png" ShowBorder="false" />
+    <Button Name="DecimalRemoveButton" PrefWidth="22" PrefHeight="22" ToolTip="Remove Decimal" image="Format_DecimalRemove.png" ShowBorder="false" />
     <Button Name="SamplesButton" PrefWidth="60" PrefHeight="22" LeanX="CENTER" ToolTip="Show Samples" text="Samples" />
     <Button Name="PreviewHTMLButton" PrefWidth="22" PrefHeight="22" LeanX="RIGHT" ToolTip="Preview HTML" image="Preview_HTML.png" ShowBorder="false" />
     <Button Name="PreviewPDFButton" PrefWidth="22" PrefHeight="22" ToolTip="Preview PDF" image="Preview_PDF.png" ShowBorder="false" />
@@ -54,6 +56,5 @@
       <MenuItem Name="AddSubreportMenuItem" text="Subreport" image="/com/reportmill/apptools/RMSubreport.png" />
       <MenuItem Name="AddWidgetMenuItem" text="Widget" image="ShapeRollScaleSkew.png" />
     </MenuButton>
-    <Button Name="ConnectToDataSourceButton" PrefWidth="24" PrefHeight="24" ToolTip="Connect to DataSource" image="DataSource.png" ShowBorder="false" />
   </RowView>
 </ColView>

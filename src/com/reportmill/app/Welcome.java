@@ -110,7 +110,7 @@ public void respondUI(ViewEvent anEvent)
         epane.getInspectorPanel().showDocumentInspector();
         RMEditorPane ep = epane; runLater(() -> ep.getWindow().toFront());
         close();  // Close welcome panel
-        runLater(() -> animateSamplesButton(ep));
+        runLater(() -> ep.getTopToolBar().animateSamplesButton());
     }
             
     // Handle OpenButton
@@ -163,18 +163,6 @@ public RMEditorPane newEditorPane()
     RMEditorPane ep = new RMEditorPane();
     if(SnapUtils.isTeaVM) ep.getUI().getWindow().setMaximized(true);
     return ep;
-}
-
-/**
- * Animate SampleButton.
- */
-private void animateSamplesButton(RMEditorPane anEP)
-{
-    View btn = anEP.getTopToolBar().getView("SamplesButton");
-    btn.setScale(1.2);
-    btn.getAnim(400).setScale(1.4).getAnim(800).setScale(1.2).getAnim(1200).setScale(1.4).getAnim(1600).setScale(1.2)
-    .getAnim(2400).setRotate(360);
-    btn.getAnim(0).setLoopCount(3).play();
 }
 
 }
