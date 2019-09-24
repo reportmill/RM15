@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<SpringView width="262" height="284" PrefWidth="262" PrefHeight="284">
-  <ComboBox Name="ExtrusionComboBox" x="111" y="71" width="102" height="22" />
-  <Label x="26" y="72" width="100" height="20" text="Extrude Wedges:" />
-  <CheckBox Name="DrawWedgeLabelLinesCheckBox" x="26" y="34" width="153" height="17" text="Draw Wedge Label Lines" />
-</SpringView>
+<ColView Padding="20,10,10,10" Spacing="10" FillWidth="true">
+  <CheckBox Name="WedgeLinesCheckBox" text="Draw Wedge Label Lines" />
+  <RowView Spacing="5">
+    <Label text="Extrude Wedges:" />
+    <ComboBox Name="ExtrusionComboBox" PrefWidth="100" PrefHeight="22" />
+  </RowView>
+</ColView>

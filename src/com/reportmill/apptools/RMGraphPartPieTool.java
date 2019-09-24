@@ -3,7 +3,6 @@
  */
 package com.reportmill.apptools;
 import com.reportmill.shape.*;
-import snap.util.ClassUtils;
 import snap.view.*;
 import snap.viewx.DialogBox;
 
@@ -29,8 +28,12 @@ public void resetUI()
     // Get the selected part pie (just return if null)
     RMGraphPartPie pie = getSelectedShape(); if(pie==null) return;
 
-    // DrawWedgeLabelLinesCheckBox
-    setViewValue("DrawWedgeLabelLinesCheckBox", pie.getDrawWedgeLabelLines());
+    // Update WedgeLinesCheckBox
+    setViewValue("WedgeLinesCheckBox", pie.getDrawWedgeLabelLines());
+    
+    // Update ExtrusionComboBox
+    String extrusionKey = pie.getExtrusionKey();
+    setViewSelItem("ExtrusionComboBox", extrusionKey);
 }
 
 /**
@@ -42,10 +45,11 @@ public void respondUI(ViewEvent anEvent)
     RMGraphPartPie pie = getSelectedShape(); if(pie==null) return;
 
     // Register graph for redisplay - shouldn't need this
-    getSelectedGraph().repaint(); getSelectedGraph().relayout();
+    getSelectedGraph().repaint();
+    getSelectedGraph().relayout();
 
-    // Handle DrawWedgeLabelLinesCheckBox
-    if(anEvent.equals("DrawWedgeLabelLinesCheckBox"))
+    // Handle WedgeLinesCheckBox
+    if(anEvent.equals("WedgeLinesCheckBox"))
         pie.setDrawWedgeLabelLines(anEvent.getBoolValue());
 
     // Handle ExtrusionComboBox
@@ -74,7 +78,8 @@ public RMGraphPartPie getSelectedShape()
  */
 public RMGraph getSelectedGraph()
 {
-    return ClassUtils.getInstance(super.getSelectedShape(), RMGraph.class);
+    RMShape selShape = super.getSelectedShape();
+    return selShape instanceof RMGraph? (RMGraph)selShape : null;
 }
 
 /**

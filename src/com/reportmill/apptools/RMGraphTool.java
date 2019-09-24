@@ -32,11 +32,23 @@ public class RMGraphTool <T extends RMGraph> extends RMTool <T> implements RMSor
     RMScene3DTool           _3dTool = new Scene3DTool();
 
 /**
+ * Override to forward to proxy tools.
+ */
+public void setEditor(RMEditor anEditor)
+{
+    super.setEditor(anEditor);
+    _barTool.setEditor(anEditor);
+    _pieTool.setEditor(anEditor);
+    _3dTool.setEditor(anEditor);
+}
+
+/**
  * Override to add inspectors to tabbed pane.
  */
 protected View createUI()
 {
     TabView tpane = (TabView)super.createUI();
+    tpane.setTabMinWidth(50);
     tpane.addTab("Bars", _barTool.getUI());
     tpane.addTab("3D", _3dTool.getUI());
     return tpane;
@@ -51,6 +63,8 @@ protected void initUI()
     _sortPanel = new RMSortPanel(this);
     _sortPanel.getUI().setBounds(4, 182, 248, 100);
     _sortPanel.setSelectedPane(1);
+    
+    // Add SortPanel to main tab content
     TabView tpane = getUI(TabView.class);
     ChildView tab0 = (ChildView)tpane.getTabContent(0);
     tab0.addChild(_sortPanel.getUI());
@@ -74,9 +88,13 @@ protected void resetUI()
     RMGraph graph = getSelectedGraph(); if(graph==null) return;
     
     // Ensure Bar/Pie specific tab is installed
-    TabView tpane = getUI(TabView.class); boolean isPie = graph.getType()==RMGraph.Type.Pie;
-    View tui = isPie? _pieTool.getUI() : _barTool.getUI(); String str = isPie? "Pie" : "Bar";
-    if(tpane.getTabContent(2)!=tui) { tpane.setTabTitle(str,2); tpane.setTabContent(tui,2); }
+    boolean isPie = graph.getType()==RMGraph.Type.Pie;
+    TabView tabPane = getUI(TabView.class);
+    View tabUI = isPie? _pieTool.getUI() : _barTool.getUI();
+    if(tabPane.getTabContent(2)!=tabUI) {
+        tabPane.setTabTitle(isPie? "Pie" : "Bar", 2);
+        tabPane.setTabContent(tabUI, 2);
+    }
     
     // Update ListKeyText, FilterText
     setViewValue("ListKeyText", graph.getDatasetKey());
@@ -114,8 +132,14 @@ protected void resetUI()
     setViewValue("ShowLegendCheckBox", graph.isShowLegend());
     setViewValue("Draw3DCheckBox", graph.getDraw3D());
     
-    // Update sortpanel
+    // Update SortPanel, 
     _sortPanel.resetLater();
+    if(_barTool.isUISet() && _barTool.getUI().isShowing())
+        _barTool.resetLater();
+    else if(_pieTool.isUISet() && _pieTool.getUI().isShowing())
+        _pieTool.resetLater();
+    else if(_3dTool.isUISet() && _3dTool.getUI().isShowing())
+        _3dTool.resetLater();
 }
 
 /**
