@@ -130,6 +130,9 @@ public void setEditing(boolean aFlag)
     // If editor already has requested editing state, just return
     if(aFlag == isEditing()) return;
     
+    // Hide attributes drawer
+    hideAttributesDrawer();
+    
     // If not yet previewing, store current template then generate report and swap it in
     if(!aFlag) {
                 
