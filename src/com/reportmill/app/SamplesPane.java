@@ -55,6 +55,7 @@ void dialogBoxClosed()
     if(_dbox._cancelled) return;
     if(_selIndex==0 && _epane.getDoc().getPage(0).getChildCount()==0) return;
     _epane.getEditor().setDoc(getDoc(_selIndex));
+    _epane.getEditor().requestFocus();
 }
 
 /**

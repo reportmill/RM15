@@ -83,8 +83,11 @@ public void setDataSource(RMDataSource aDataSource, double aX, double aY)
 {
     // Set DataSource in editor, show DataSource inspector, KeysBrowser and refocus window
     getEditor().setDataSource(aDataSource, aX, aY);
-    getAttributesPanel().setVisibleName(AttributesPanel.KEYS);
-    if(getWindow().isVisible()) getWindow().toFront();
+    if(getWindow().isVisible())
+        getWindow().toFront();
+    
+    // Show KeysPanel (after delay, so XML icon animation can finish)
+    runLaterDelayed(2000, () -> getAttributesPanel().setVisibleName(AttributesPanel.KEYS));
 }
 
 /**
@@ -165,18 +168,28 @@ public void setEditing(boolean aFlag)
  */
 protected View createUI()
 {
-    // Get AttributesPanel and InspectorPanel
+    // Get AttributesPanel (early so editor pane can register with correct ColorPanel)
     AttributesPanel attrPanel = getAttributesPanel();
+    attrPanel.getUI();
+    
+    // Get InspectorPanel
     InspectorPanel inspPanel = getInspectorPanel();
+    View inspPanelUI = inspPanel.getUI();
+    inspPanelUI.setGrowHeight(true);
     
     // Create ColView to hold them
-    ColView vbox = new ColView(); vbox.setFillWidth(true);
-    vbox.setChildren(inspPanel.getUI(), attrPanel.getUI());
-    vbox.setBorder(Color.LIGHTGRAY, 1);
+    ColView colView = new ColView();
+    colView.setFillWidth(true);
+    colView.setBorder(Color.LIGHTGRAY, 1);
+    colView.addChild(inspPanelUI);
     
     // Create normal RMViewerPane BorderView UI and panels to right side
     BorderView bview = (BorderView)super.createUI();
-    bview.setRight(vbox); //return bview;
+    bview.setRight(colView);
+
+    // Install AttributesPanel    
+    ParentView rbox = getRulerBox();
+    attrPanel.getDrawer().showTabButton(rbox);
     
     // Create ColView holding MenuBar and EditorPane UI (with key listener so MenuBar catches shortcut keys)
     View mbarView = MenuBar.createMenuBarView(getMenuBar().getUI(), bview);
@@ -283,6 +296,16 @@ public AttributesPanel getAttributesPanel()  { return _attrsPanel; }
  * Creates the AttributesPanel.
  */
 protected AttributesPanel createAttributesPanel()  { return new AttributesPanel(this); }
+
+/**
+ * Shows the AttributesPanel Drawer.
+ */
+public void showAttributesDrawer()  { getAttributesPanel().showDrawer(); }
+
+/**
+ * Hides the AttributesPanel Drawer.
+ */
+public void hideAttributesDrawer()  { getAttributesPanel().hideDrawer(); }
 
 /**
  * Returns extension for editor document.

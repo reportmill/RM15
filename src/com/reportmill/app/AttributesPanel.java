@@ -19,6 +19,9 @@ public class AttributesPanel extends RMEditorPane.SupportPane {
     
     // Inspectors
     ViewOwner       _insprs[];
+    
+    // The DrawerView
+    DrawerView      _drawer;
 
     // Constants for tab selection
     public static final String KEYS = "Keys";
@@ -89,6 +92,10 @@ public void setVisible(int anIndex)
     // Set TabView to tab at given index
     _tabView.setSelIndex(anIndex);
     
+    // If drawer is set, show drawer
+    if(_drawer!=null)
+        showDrawer();
+    
     // ResetUI
     resetLater();
 }
@@ -117,38 +124,48 @@ public void setVisibleName(String aName, boolean doToggle)
 }
 
 /**
+ * Returns the DrawerView.
+ */
+public DrawerView getDrawer()
+{
+    // If already set, just return
+    if(_drawer!=null) return _drawer;
+    
+    // Get/configure UI for drawer
+    View attrUI = getUI();
+    attrUI.setPrefSize(320, 320);
+    DrawerView drawer = new DrawerView(attrUI);
+    drawer.getDrawerLabel().setText("Attributes Panel");
+    drawer.getTabLabel().setText("Keys");
+    return _drawer = drawer;
+}
+
+/**
+ * Returns the DrawerView.
+ */
+public void showDrawer()  { getDrawer().show(); }
+
+/**
+ * Hides the Attributes Drawer.
+ */
+public void hideDrawer()  { getDrawer().hide(); }
+
+/**
  * Returns the UI panel for the attributes panel.
  */
 protected View createUI()
 {
-    // Create TabView
+    // Create/configure TabView
     _tabView = new TabView();
     _tabView.setGrowHeight(true);
     _tabView.setFont(Font.Arial12.deriveFont(11d));
+    
+    // Install child inspectors (placeholders)
     String names[] = getInspectorNames(); ViewOwner inspectors[] = getInspectors();
     for(int i=0;i<names.length;i++) _tabView.addTab(names[i], new Label());
     
-    // Separator Rect
-    RectView rectView = new RectView();
-    rectView.setPrefHeight(1);
-    rectView.setFill(Color.LIGHTGRAY);
-    
-    // Create TitleLabel
-    Label titleLabel = new Label("Attributes");
-    titleLabel.setFont(Font.Arial11.getBold());
-    titleLabel.setTextFill(Color.GRAY);
-    titleLabel.setPrefHeight(20);
-    titleLabel.setAlign(Pos.CENTER);
-    
-    // Add attributes
-    ColView colView = new ColView();
-    colView.setPrefSize(275, 300);
-    colView.setGrowHeight(true);
-    colView.setFillWidth(true);
-    colView.addChild(rectView);
-    colView.addChild(titleLabel);
-    colView.addChild(_tabView);
-    return colView;
+    // Return TabView
+    return _tabView;
 }
 
 /**
@@ -159,12 +176,33 @@ public void resetUI()
     // Get inspector component from TabView
     ViewOwner inspector = getInspectors()[_tabView.getSelIndex()];
 
-    // If inspector panel is JLabel, swap in real inspector UI
+    // If inspector panel is Label, swap in real inspector UI
     if(_tabView.getContent() instanceof Label)
         _tabView.setTabContent(inspector.getUI(), _tabView.getSelIndex());
     
     // Set window title and reset inspector
     inspector.resetLater();
+}
+
+/**
+ * Called when child starts dragging.
+ */
+public void childDragStart()
+{
+    if(_drawer==null) return;
+    _drawer.setPickable(false);
+    _drawer.getAnim(300).clear().setOpacity(.05).play();
+}
+
+/**
+ * Called when child finishes dragging.
+ */
+public void childDragStop()
+{
+    if(_drawer==null) return;
+    _drawer.setPickable(true);
+    if(_drawer.getAnim(0).isPlaying()) _drawer.setOpacity(1);
+    else _drawer.getAnim(300).clear().setOpacity(1).play();
 }
 
 /**

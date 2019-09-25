@@ -110,7 +110,7 @@ public void respondUI(ViewEvent anEvent)
         epane.getInspectorPanel().showDocumentInspector();
         RMEditorPane ep = epane; runLater(() -> ep.getWindow().toFront());
         close();  // Close welcome panel
-        runLater(() -> ep.getTopToolBar().animateSamplesButton());
+        runLater(() -> ep.getTopToolBar().startSamplesButtonAnim());
     }
             
     // Handle OpenButton

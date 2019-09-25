@@ -914,6 +914,10 @@ public static void addWidget(RMEditor anEditor)
  */
 public static void runDatasetKeyPanel(RMEditor anEditor, String aKeyPath)
 {
+    // Hide AttributesPanel Drawer
+    RMEditorPane editorPane = anEditor.getEditorPane();
+    editorPane.hideAttributesDrawer();
+    
     // Run dataset key panel to get dataset element type
     int type = new DatasetKeyPanel().showDatasetKeyPanel(anEditor);
     
@@ -926,7 +930,6 @@ public static void runDatasetKeyPanel(RMEditor anEditor, String aKeyPath)
     }
     
     // If EditorPane.Inspector showing DataSource inspector, reset os ShapeSpecific
-    RMEditorPane editorPane = anEditor.getEditorPane();
     if(editorPane.getInspectorPanel().isShowingDataSource())
         editorPane.getInspectorPanel().setVisible(0);
 }

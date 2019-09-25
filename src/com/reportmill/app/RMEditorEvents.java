@@ -179,8 +179,11 @@ public void keyPressed(ViewEvent anEvent)
     char keyChar = anEvent.getKeyChar();
     
     // Handle escape (assuming mouse isn't down)
-    if(keyCode==KeyCode.ESCAPE && !ViewUtils.isMouseDown())
-        editor.popSelection();
+    if(keyCode==KeyCode.ESCAPE && !ViewUtils.isMouseDown()) {
+        if(editor.getEditorPane().getAttributesPanel().getDrawer().isShowing())
+            editor.getEditorPane().hideAttributesDrawer();
+        else editor.popSelection();
+    }
     
     // Handle backspace or delete key
     else if(keyCode==KeyCode.BACK_SPACE || keyCode==KeyCode.DELETE)

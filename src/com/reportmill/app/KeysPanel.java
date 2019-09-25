@@ -161,11 +161,16 @@ public void respondUI(ViewEvent anEvent)
         cboard.addData(dragKeyFull);
         cboard.setDragImage(ImageUtils.getImage(dragKeyFull, getSelectedShape().getDocument().getFont()));
         cboard.startDrag();
+        
+        // Notify Attributes panel that dragging started
+        getEditorPane().getAttributesPanel().childDragStart();
     }
     
     // Handle KeysBrowser DragSourceEnd
-    if(anEvent.isDragSourceEnd())
+    if(anEvent.isDragSourceEnd()) {
         _dragKey = null;
+        getEditorPane().getAttributesPanel().childDragStop();
+    }
         
     // Handle BuiltInKeysButton
     if(anEvent.equals("BuiltInKeysButton"))
