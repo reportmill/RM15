@@ -64,7 +64,7 @@ public void setContent(View aView)
     if(_content!=null) removeChild(_content);
     
     // Add new Content in box
-    BoxView box = new BoxView(aView);
+    BoxView box = new BoxView(aView, true, true);
     box.setPadding(1,1,1,1);
     box.setBorder(Border.createLoweredBevelBorder());
     _content = box;
@@ -192,6 +192,8 @@ public void show()
     
     // Resize to view
     Size size = getPrefSize();
+    size.width = Math.max(size.width, getWidth());
+    size.height = Math.max(size.height, getHeight());
     setSize(size);
     setOpacity(1);
 
@@ -246,25 +248,41 @@ protected void processEvent(ViewEvent anEvent)
 {
     // Handle MousePress
     if(anEvent.isMousePress()) {
+        
+        // Clear MouseDownPoint and if not in margin, just bail
         _mouseDownPnt = null;
         if(!inMargin(anEvent)) return;
+        
+        // Set MouseDown vars
         _mouseDownPnt = anEvent.getPoint(getParent());
-        _mouseDownY = getMargin().top;
+        _mouseDownY = getMargin().top; _mouseDownW = getWidth(); _mouseDownH = getHeight();
         _mouseDragged = false;
+        _mouseDownInResize = inResize(anEvent);
     }
 
     // Handle MouseDrag
     else if(anEvent.isMouseDrag()) {
+        
+        // If no MouseDownPoint, bail
         if(_mouseDownPnt==null) return;
+        
+        // Get new point and change
         Point pnt = anEvent.getPoint(getParent());
+        double dx = pnt.x - _mouseDownPnt.x;
         double dy = pnt.y - _mouseDownPnt.y;
-        setDrawerY(_mouseDownY + dy);
-        if(Math.abs(dy)>2) _mouseDragged = true;
+        
+        // Either resize or reposition
+        if(_mouseDownInResize) setDrawerSize(_mouseDownW - dx, _mouseDownH + dy);
+        else setDrawerY(_mouseDownY + dy);
+        
+        // If significant change, set MouseDragged
+        if(Math.abs(dx)>2 || Math.abs(dy)>2) _mouseDragged = true;
     }
     
     // Handle MouseRelease
     if(anEvent.isMouseRelease()) {
         
+        // Clear MouseDownPoint
         _mouseDownPnt = null;
         
         // If click was inside content, just return
@@ -283,9 +301,10 @@ protected void processEvent(ViewEvent anEvent)
         setCloseBoxHighlight(false);
 }
 
-boolean _mouseDragged;
-Point _mouseDownPnt;
-double _mouseDownY;
+// Some drag vars
+private boolean _mouseDragged; Point _mouseDownPnt;
+private double _mouseDownY, _mouseDownW, _mouseDownH;
+private boolean _mouseDownInResize;
 
 /**
  * Sets the drawer Y relative to parent.
@@ -301,12 +320,36 @@ private void setDrawerY(double aY)
     setMargin(margin);
 }
 
+/**
+ * Sets the drawer Y relative to parent.
+ */
+private void setDrawerSize(double aW, double aH)
+{
+    Size size = getPrefSize();
+    size.width = Math.max(size.width, aW);
+    size.height = Math.max(size.height, aH);
+    setSize(size);
+    relayoutParent();
+}
+
 // Returns whether event point is in margin.
 private boolean inMargin(ViewEvent anEvent)
 {
     Rect contentRect = getBoundsLocal().getInsetRect(getInsetsAll());
     boolean inContent = contentRect.contains(anEvent.getPoint());
     return !inContent;
+}
+
+// Returns whether event point is in margin.
+private boolean inResize(ViewEvent anEvent)
+{
+    Insets ins = getInsetsAll();
+    Rect resizeRect = getBoundsLocal();
+    resizeRect.width = ins.left;
+    resizeRect.y = resizeRect.height - ins.bottom;
+    resizeRect.height = ins.bottom;
+    boolean inResize = resizeRect.contains(anEvent.getPoint());
+    return inResize;
 }
 
 /**
