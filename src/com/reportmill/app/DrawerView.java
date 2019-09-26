@@ -32,10 +32,10 @@ public DrawerView(View aView)
     setFill(ViewUtils.getBackFill());
     setBorder(Color.DARKGRAY, 1);
     setManaged(false);
-    setLean(Pos.CENTER_RIGHT);
+    setLean(Pos.TOP_RIGHT);
     
     // Configure action
-    enableEvents(MouseRelease, MouseEnter, MouseExit, MouseMove);
+    enableEvents(MousePress, MouseDrag, MouseRelease, MouseEnter, MouseExit, MouseMove);
     
     // Add DrawerLabel
     addChild(getDrawerLabel());
@@ -93,7 +93,7 @@ public Button getTabButton()
     ViewUtils.addChild(btn, tlabel);
     
     // Add EventHandler to call show when clicked
-    btn.addEventHandler(e -> show(), View.Action);
+    btn.addEventHandler(e -> toggleDrawer(), View.Action);
     
     // Return button
     return _tabButton = btn;
@@ -200,6 +200,10 @@ public void show()
     parView.setClipToBounds(true);
     ViewUtils.addChild(parView, this);
     
+    // Adjust DrawerY if needed
+    if(getMargin().top==0 || getMargin().top+getHeight()/2>parView.getHeight())
+        setDrawerY(-1);
+    
     // Start animate in
     setTransX(size.width);
     getAnim(800).clear().setTransX(1).play();
@@ -240,11 +244,31 @@ public void toggleDrawer()
  */
 protected void processEvent(ViewEvent anEvent)
 {
+    // Handle MousePress
+    if(anEvent.isMousePress()) {
+        _mouseDownPnt = null;
+        if(!inMargin(anEvent)) return;
+        _mouseDownPnt = anEvent.getPoint(getParent());
+        _mouseDownY = getMargin().top;
+        _mouseDragged = false;
+    }
+
+    // Handle MouseDrag
+    else if(anEvent.isMouseDrag()) {
+        if(_mouseDownPnt==null) return;
+        Point pnt = anEvent.getPoint(getParent());
+        double dy = pnt.y - _mouseDownPnt.y;
+        setDrawerY(_mouseDownY + dy);
+        if(Math.abs(dy)>2) _mouseDragged = true;
+    }
+    
     // Handle MouseRelease
     if(anEvent.isMouseRelease()) {
         
+        _mouseDownPnt = null;
+        
         // If click was inside content, just return
-        if(!inMargin(anEvent)) return;
+        if(_mouseDragged || !inMargin(anEvent)) return;
         
         // Toggle drawer
         toggleDrawer();
@@ -257,6 +281,24 @@ protected void processEvent(ViewEvent anEvent)
     // Handle MouseExit
     else if(anEvent.isMouseExit())
         setCloseBoxHighlight(false);
+}
+
+boolean _mouseDragged;
+Point _mouseDownPnt;
+double _mouseDownY;
+
+/**
+ * Sets the drawer Y relative to parent.
+ */
+private void setDrawerY(double aY)
+{
+    // Get Y value (if less than zero, adjust to place drawer in middle of parent)
+    double y = aY; if(y<0) y = Math.round((getParent().getHeight() - getHeight())/2);
+    
+    // Get margin, adjust and update (just return if already at Y)
+    Insets margin = getMargin().clone(); if(margin.top==y) return;
+    margin.top = y;
+    setMargin(margin);
 }
 
 // Returns whether event point is in margin.
