@@ -1,28 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<TabView PrefWidth="275" PrefHeight="325">
-  <font name="Arial" size="12" />
-  <VBox Align="TOP_CENTER" Padding="24,8,8,8" Spacing="10" title="General">
-    <font name="Arial" size="11" />
-    <HBox PrefWidth="250" Spacing="5">
-      <Label text="Name:" />
-      <TextField Name="NameText" GrowWidth="true" />
-    </HBox>
+<ColView Padding="8" Spacing="10" FillWidth="true">
+  <font name="Arial" size="11" />
+  <RowView Spacing="5">
+    <Label text="Name:" />
+    <TextField Name="NameText" GrowWidth="true" />
+  </RowView>
+  <RowView Align="CENTER">
     <CheckBox Name="LockedCheckBox" text="Locked" />
-    <VBox LeanY="BOTTOM">
-      <Label text="URL:" />
-      <TextView Name="UrlText" PrefWidth="250" PrefHeight="136" FireActionOnEnterKey="true" FireActionOnFocusLost="true" />
-    </VBox>
-  </VBox>
-  <VBox Padding="16,8,8,8" Spacing="3" FillWidth="true" title="Bindings">
-    <font name="Arial" size="11" />
-    <HBox>
+  </RowView>
+  <ColView FillWidth="true">
+    <Label text="URL:" />
+    <TextView Name="UrlText" PrefHeight="60" FireActionOnEnterKey="true" FireActionOnFocusLost="true" />
+  </ColView>
+  <ColView Spacing="3" GrowHeight="true" FillWidth="true">
+    <RowView>
       <Label text="Key Bindings" />
       <Label LeanX="RIGHT" text="(enter key in text)" />
-    </HBox>
+    </RowView>
     <TableView Name="BindingsTable" GrowHeight="true" ShowHeader="false" GridColor="#c9c9c9">
       <TableCol PrefWidth="80" />
       <TableCol GrowWidth="true" />
     </TableView>
     <TextView Name="BindingsText" GrowHeight="true" PrefHeight="100" FireActionOnEnterKey="true" FireActionOnFocusLost="true" />
-  </VBox>
-</TabView>
+  </ColView>
+</ColView>

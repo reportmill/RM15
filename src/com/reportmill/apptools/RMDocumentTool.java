@@ -14,9 +14,6 @@ import snap.view.*;
  */
 public class RMDocumentTool <T extends RMDocument> extends RMTool <T> {
     
-    // Whether document tool should show normal inspector or advanced
-    boolean          _advanced;
-
     // The array of supported paper sizes
     static Size      _paperSizes[];
     
@@ -52,17 +49,6 @@ public void resetUI()
     RMDocument doc = getSelectedShape(); if(doc==null) return;
     RMPage page = doc.getSelPage();
     
-    // Make sure appropriate panel is set
-    setViewSelIndex(getUI(), _advanced? 1 : 0);
-    
-    // Handle Advanced controls
-    if(_advanced) {
-        setViewValue("PaginateCheckBox", doc.isPaginate());
-        setViewValue("CompressCheckBox", doc.getCompress());
-        setViewValue("ProximityGuideCheckBox", RMEditorProxGuide.isEnabled());
-        return;
-    }
-
     // Set PageWidthText and PageHeightText
     setViewValue("PageWidthText", getUnitsFromPointsStr(page.getWidth()));
     setViewValue("PageHeightText", getUnitsFromPointsStr(page.getHeight()));
@@ -99,6 +85,11 @@ public void resetUI()
     
     // Repaint PageSizeView
     getView("PageSizeView", PageSizeView.class).repaint();
+    
+    // Update ProximityGuideCheckBox, PaginateCheckBox, CompressCheckBox
+    setViewValue("ProximityGuideCheckBox", RMEditorProxGuide.isEnabled());
+    setViewValue("PaginateCheckBox", doc.isPaginate());
+    setViewValue("CompressCheckBox", doc.getCompress());
 }
 
 /**
@@ -174,14 +165,10 @@ public void respondUI(ViewEvent anEvent)
     // Handle NullStringText
     if(anEvent.equals("NullStringText")) doc.setNullString(anEvent.getStringValue());
     
-    // Handle advanced button
-    if(anEvent.equals("AdvancedButton")) _advanced = !_advanced;
-        
-    // Handle UIAdvanced PaginateCheckBox, CompressCheckBox
+    // Handle ProximityGuideCheckBox, PaginateCheckBox, CompressCheckBox
+    if(anEvent.equals("ProximityGuideCheckBox")) RMEditorProxGuide.setEnabled(anEvent.getBoolValue());
     if(anEvent.equals("PaginateCheckBox")) doc.setPaginate(anEvent.getBooleanValue());
     if(anEvent.equals("CompressCheckBox")) doc.setCompress(anEvent.getBoolValue());
-    if(anEvent.equals("ProximityGuideCheckBox")) RMEditorProxGuide.setEnabled(anEvent.getBoolValue());
-    if(anEvent.equals("BasicButton")) _advanced = !_advanced;
     
     // If page size changed, make sure window is right size
     if(resizeWindow) {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<SwitchView>
-  <SpringView Name="BasicPanel" width="275" height="325" PrefWidth="275" PrefHeight="325">
+<ColView FillWidth="true">
+  <SpringView Name="BasicPanel" width="275" height="300" PrefWidth="275" PrefHeight="325">
     <TitleView x="2" width="170" height="150" Title="Paper Size">
       <SpringView width="170" height="150" PrefWidth="170" PrefHeight="150">
         <View Name="PageSizeView" x="4" y="2" width="162" height="108" Class="com.reportmill.apptools.RMDocumentTool$PageSizeView" />
@@ -55,17 +55,14 @@
         <RadioButton Name="ContinuousRadio" x="128" y="20" width="100" height="20" text="Continuous" />
       </SpringView>
     </TitleView>
-    <Label x="4" y="299" width="75" height="18" Align="CENTER_RIGHT" text="String for Null:" />
-    <TextField Name="NullStringText" x="80" y="299" width="80" height="18" Align="CENTER" />
-    <Button Name="AdvancedButton" x="170" y="299" width="100" height="20" text="Advanced..." />
   </SpringView>
-  <SpringView Name="AdvancedPanel" x="2" y="434" width="275" height="325" PrefWidth="275" PrefHeight="325">
-    <Label x="6" width="200" height="24" text="Advanced Settings">
-      <font name="Arial Bold" size="16" />
-    </Label>
-    <CheckBox Name="PaginateCheckBox" x="6" y="30" width="120" height="20" text="Paginate" />
-    <CheckBox Name="CompressCheckBox" x="6" y="50" width="100" height="20" text="Compress" />
-    <CheckBox Name="ProximityGuideCheckBox" x="6" y="70" width="119" height="20" text="Proximity Guide" />
-    <Button Name="BasicButton" x="170" y="299" width="100" height="20" text="Basic Settings..." />
-  </SpringView>
-</SwitchView>
+  <ColView Name="AdvancedPanel" Padding="5" Spacing="5" FillWidth="true">
+    <RowView Padding="0,0,3,3" Spacing="4">
+      <Label text="String for Null:" />
+      <TextField Name="NullStringText" GrowWidth="true" Align="CENTER" />
+    </RowView>
+    <CheckBox Name="ProximityGuideCheckBox" PrefHeight="20" text="Proximity Guide" />
+    <CheckBox Name="PaginateCheckBox" PrefHeight="20" text="Paginate" />
+    <CheckBox Name="CompressCheckBox" PrefHeight="20" text="Compress" />
+  </ColView>
+</ColView>
