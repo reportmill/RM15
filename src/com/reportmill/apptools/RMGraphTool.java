@@ -53,7 +53,9 @@ protected void initUI()
     _sortPanel.setSelectedPane(1);
     
     // Add SortPanel to main tab content
-    BoxView sortBox = getView("SortPanelBox", BoxView.class);
+    //BoxView sortBox = getView("SortPanelBox", BoxView.class);
+    TitleView sortBox = getView("SortPanelBox", TitleView.class);
+    _sortPanel.getView("SortingLabel").setVisible(false);
     sortBox.setContent(_sortPanel.getUI());
     
     // Add 3D UI

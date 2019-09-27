@@ -21,11 +21,13 @@
     <Label PrefWidth="100" PrefHeight="18" text="Key(s):" />
     <Label PrefWidth="145" PrefHeight="18" Align="CENTER_RIGHT" LeanX="RIGHT" text="(Comma Separated)" />
   </RowView>
-  <BoxView FillWidth="true" Padding="0,4,3,4">
+  <BoxView Padding="0,4,3,4" FillWidth="true">
     <TextView Name="KeysText" PrefHeight="50" FireActionOnEnterKey="true" />
   </BoxView>
-  <BoxView Name="SortPanelBox" Padding="3,4,0,4" />
-  <BoxView FillWidth="true" Padding="3,4,3,4">
+  <BoxView Padding="3,4,0,4" FillWidth="true">
+    <TitleView Name="SortPanelBox" Padding="4,4,6,4" Title="Sorting" />
+  </BoxView>
+  <BoxView Padding="3,4,3,4" FillWidth="true">
     <TitleView Title="View Options">
       <RowView Padding="0,4,5,4" Spacing="10">
         <ColorDock Name="ColorDock" PrefWidth="109" PrefHeight="44" />
@@ -37,17 +39,17 @@
       </RowView>
     </TitleView>
   </BoxView>
-  <BoxView FillWidth="true" Padding="0,4,3,4" >
-    <TitleView PrefHeight="106" Title="Layout">
-      <RowView Padding="0,5,4,5" Spacing="8">
+  <BoxView Padding="0,4,3,4" FillWidth="true" >
+    <TitleView Title="Layout">
+      <RowView Padding="2,5,5,5" Spacing="8">
         <ColView GrowWidth="true" FillWidth="true">
-          <Label PrefHeight="20" text=" Series" >
+          <Label PrefHeight="14" text=" Series" >
             <font name="Arial" size="10" />
           </Label>
           <ListView Name="SectionLayoutList" PrefWidth="80" PrefHeight="58" />
         </ColView>
         <ColView GrowWidth="true" FillWidth="true">
-          <Label PrefHeight="20" text=" Items" >
+          <Label PrefHeight="14" text=" Items" >
             <font name="Arial" size="10" />
           </Label>
           <ListView Name="ItemsLayoutList" PrefWidth="80" PrefHeight="58" />
@@ -55,10 +57,10 @@
       </RowView>
     </TitleView>
   </BoxView>
-  <BoxView FillWidth="true" Padding="3,4,3,4">
+  <BoxView Padding="3,4,3,4" FillWidth="true">
     <TitleView Name="TypeBox" Title="Bars" />
   </BoxView>
-  <BoxView FillWidth="true" Padding="3,4,3,4">
+  <BoxView Padding="3,4,3,4" FillWidth="true">
     <TitleView Name="3DBox" Title="3D" />
   </BoxView>
 </ColView>
