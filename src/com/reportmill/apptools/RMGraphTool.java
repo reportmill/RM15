@@ -43,18 +43,6 @@ public void setEditor(RMEditor anEditor)
 }
 
 /**
- * Override to add inspectors to tabbed pane.
- */
-protected View createUI()
-{
-    TabView tpane = (TabView)super.createUI();
-    tpane.setTabMinWidth(50);
-    tpane.addTab("Bars", _barTool.getUI());
-    tpane.addTab("3D", _3dTool.getUI());
-    return tpane;
-}
-
-/**
  * Initializes UI panel.
  */
 protected void initUI()
@@ -65,9 +53,12 @@ protected void initUI()
     _sortPanel.setSelectedPane(1);
     
     // Add SortPanel to main tab content
-    TabView tpane = getUI(TabView.class);
-    ChildView tab0 = (ChildView)tpane.getTabContent(0);
-    tab0.addChild(_sortPanel.getUI());
+    BoxView sortBox = getView("SortPanelBox", BoxView.class);
+    sortBox.setContent(_sortPanel.getUI());
+    
+    // Add 3D UI
+    TitleView thr3dBox = getView("3DBox", TitleView.class);
+    thr3dBox.setContent(_3dTool.getUI());
     
     // Set values in SectionLayoutList and ItemsLayoutList
     setViewItems("SectionLayoutList", RMGraph.SectionLayout.values());
@@ -89,11 +80,11 @@ protected void resetUI()
     
     // Ensure Bar/Pie specific tab is installed
     boolean isPie = graph.getType()==RMGraph.Type.Pie;
-    TabView tabPane = getUI(TabView.class);
-    View tabUI = isPie? _pieTool.getUI() : _barTool.getUI();
-    if(tabPane.getTabContent(2)!=tabUI) {
-        tabPane.setTabTitle(isPie? "Pie" : "Bar", 2);
-        tabPane.setTabContent(tabUI, 2);
+    TitleView typeBox = getView("TypeBox", TitleView.class);
+    View typeUI = isPie? _pieTool.getUI() : _barTool.getUI();
+    if(typeBox.getContent()!=typeUI) {
+        typeBox.setText(isPie? "Pie" : "Bar");
+        typeBox.setContent(typeUI);
     }
     
     // Update ListKeyText, FilterText
@@ -131,6 +122,7 @@ protected void resetUI()
     setViewValue("ColorItemsCheckBox", graph.isColorItems());
     setViewValue("ShowLegendCheckBox", graph.isShowLegend());
     setViewValue("Draw3DCheckBox", graph.getDraw3D());
+    getView("3DBox").setVisible(graph.getDraw3D());
     
     // Update SortPanel, 
     _sortPanel.resetLater();

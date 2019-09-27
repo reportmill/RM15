@@ -68,6 +68,12 @@ public void initUI()
     enableEvents(_selPathView, MouseRelease);
     _shapeBtn = getView("ShapeSpecificButton", ToggleButton.class);
     
+    // Get/configure ContentBox
+    ScrollView inspBox = getView("ContentBox", ScrollView.class);
+    inspBox.setBorder(null);
+    inspBox.setBarSize(12);
+    inspBox.setFillWidth(true);
+    
     // Create the Action that redispatches the event and add the action to the action map
     addKeyActionHandler("UndoAction", "meta Z");
 }
@@ -213,7 +219,8 @@ protected ViewOwner getInspector()  { return _childInspector; }
 protected void setInspector(ViewOwner anOwner)
 {
     _childInspector = anOwner;
-    getView("InspectorPanel", BoxView.class).setContent(anOwner.getUI());
+    ScrollView inspBox = getView("ContentBox", ScrollView.class);
+    inspBox.setContent(anOwner.getUI());
 }
 
 /**

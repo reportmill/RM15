@@ -14,5 +14,5 @@
     <ToggleButton Name="ShapePlacementButton" PrefWidth="66" PrefHeight="42" ToolTip="Placement Inspector" image="ShapePlacement.png" Position="CENTER" Group="InspTG" />
     <ToggleButton Name="ShapeGeneralButton" PrefWidth="66" PrefHeight="42" ToolTip="General Attributes Inspector" image="ShapeGeneral.png" Position="CENTER_RIGHT" Group="InspTG" />
   </RowView>
-  <BoxView Name="InspectorPanel" PrefWidth="275" PrefHeight="325" Padding="0" GrowHeight="true" FillWidth="true" FillHeight="true" />
+  <ScrollView Name="ContentBox" GrowHeight="true" />
 </ColView>
