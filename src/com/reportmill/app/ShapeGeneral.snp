@@ -23,6 +23,6 @@
       <TableCol PrefWidth="80" />
       <TableCol GrowWidth="true" />
     </TableView>
-    <TextView Name="BindingsText" PrefHeight="100" FireActionOnEnterKey="true" FireActionOnFocusLost="true" />
+    <TextView Name="BindingsText" GrowHeight="true" PrefHeight="100" FireActionOnEnterKey="true" FireActionOnFocusLost="true" />
   </VBox>
 </TabView>

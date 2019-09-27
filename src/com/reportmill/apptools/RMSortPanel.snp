@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<SpringView Name="SortingPanel" x="4" y="170" width="267" height="100" PrefWidth="267" PrefHeight="100" GrowWidth="true" GrowHeight="true">
+<SpringView Name="SortingPanel" x="4" y="170" width="267" height="100" PrefWidth="267" PrefHeight="100" GrowWidth="true" >
   <Label width="100" height="18" text="Sorting:" />
   <MenuButton Name="SortKeysMenuButton" x="200" width="66" height="18" LeanX="RIGHT" text="Keys...">
     <MenuItem Name="AddSortMenuItem" text="Add..." />
