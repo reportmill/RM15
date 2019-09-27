@@ -5,7 +5,6 @@ package com.reportmill.apptools;
 import com.reportmill.app.*;
 import com.reportmill.shape.*;
 import com.reportmill.graphics.*;
-import java.text.DecimalFormat;
 import java.util.List;
 import snap.gfx.*;
 import snap.util.*;
@@ -17,23 +16,20 @@ import snap.view.*;
 public class RMTextTool <T extends RMTextShape> extends RMTool <T> {
     
     // The TextArea
-    TextArea          _textArea;
+    TextArea           _textArea;
     
     // The shape hit by text tool on mouse down
-    RMShape           _downShape;
+    RMShape            _downShape;
     
     // Whether editor should resize RMText whenever text changes
-    boolean           _updatingSize = false;
+    boolean            _updatingSize = false;
     
     // The minimum height of the RMText when editor text editor is updating size
-    double            _updatingMinHeight = 0;
+    double             _updatingMinHeight = 0;
 
     // Whether current mouse drag should be moving table column
-    boolean           _moveTableColumn;
+    boolean            _moveTableColumn;
 
-    // Format used for line height controls
-    DecimalFormat     _format = new DecimalFormat("0.##");
-    
     // A Listener for RichText PropChange
     PropChangeListener  _richTextLsnr = pc -> richTextDidPropChange(pc);
 
@@ -45,15 +41,7 @@ protected void initUI()
     // Get the TextView and register to update selection
     TextView textView = getView("TextView", TextView.class);
     _textArea = textView.getTextArea();
-    _textArea.addPropChangeListener(pce -> {
-        RMEditor ed = getEditor();
-        RMTextEditor ted = ed.getTextEditor(); if(ted!=null) ted.setSel(_textArea.getSelStart(), _textArea.getSelEnd());
-        RMTextShape text = getSelectedShape(); if(text!=null) text.repaint();
-        ViewUtils.runOnMouseUp(() -> getEditorPane().resetLater()); resetLater();
-    }, TextArea.Selection_Prop);
-    
-    // Configure the format
-    _format.setDecimalSeparatorAlwaysShown(false);
+    _textArea.addPropChangeListener(pc -> textAreaChangedSel(), TextArea.Selection_Prop);
 }
 
 /**
@@ -74,18 +62,21 @@ public void resetUI()
     if(ted!=null)
         pgraph = ted.getInputParagraph();
     
-    // Update AlignLeftButton, AlignCenterButton, AlignRightButton, AlignFullButton, AlignTopButton, AlignMiddleButton
+    // Update AlignLeftButton, AlignCenterButton, AlignRightButton, AlignFullButton
     setViewValue("AlignLeftButton", pgraph.getAlignmentX()==RMTypes.AlignX.Left);
     setViewValue("AlignCenterButton", pgraph.getAlignmentX()==RMTypes.AlignX.Center);
     setViewValue("AlignRightButton", pgraph.getAlignmentX()==RMTypes.AlignX.Right);
     setViewValue("AlignFullButton", pgraph.getAlignmentX()==RMTypes.AlignX.Full);
+    
+    // Update AlignTopButton, AlignMiddleButton, AlignBottomButton
     setViewValue("AlignTopButton", text.getAlignmentY()==RMTypes.AlignY.Top);
     setViewValue("AlignMiddleButton", text.getAlignmentY()==RMTypes.AlignY.Middle);
-    setViewValue("AlignBottomButton", text.getAlignmentY()==RMTypes.AlignY.Bottom); // Update AlignBottomButton
+    setViewValue("AlignBottomButton", text.getAlignmentY()==RMTypes.AlignY.Bottom);
     
     // Set TextView RichText and selection
-    _textArea.setRichText(text.getRichText()); //if(!_textArea.isFocusOwner())?
-    if(ted!=null) _textArea.setSel(ted.getSelStart(),ted.getSelEnd());
+    _textArea.setRichText(text.getRichText());
+    if(ted!=null)
+        _textArea.setSel(ted.getSelStart(), ted.getSelEnd());
 
     // Get text's background color and set in TextArea if found
     Color color = null; for(RMShape shape=text; color==null && shape!=null;) {
@@ -93,9 +84,11 @@ public void resetUI()
     _textArea.setFill(color==null? Color.WHITE : color);
     
     // Get xstring font size and scale up to 12pt if any string run is smaller
-    //double fsize = 12;
-    //for(int i=0,iMax=xstring.getRunCount();i<iMax;i++) fsize = Math.min(fsize, xstring.getRun(i).getFont().getSize());
-    //_textArea.setFontScale(fsize<12? 12/fsize : 1);
+    double fsize = 12;
+    for(RichTextLine line : text.getRichText().getLines())
+        for(RichTextRun run : line.getRuns())
+            fsize = Math.min(fsize, run.getFont().getSize());
+    _textArea.setFontScale(fsize<12? 12/fsize : 1);
     
     // Update MarginText, RoundingThumb, RoundingText
     setViewValue("MarginText", text.getMarginString());
@@ -154,28 +147,6 @@ public void respondUI(ViewEvent anEvent)
     
     // Register repaint for texts
     for(RMShape txt : texts) txt.repaint(); //texts.forEach(i -> i.repaint());
-    
-    // Handle TextArea: Send KeyEvents to Editor.TextEditor (and update its selection after MouseEvents)
-    /*if(anEvent.getTarget()==_textArea) {
-        
-        // Get Editor TextEditor (if not yet installed, SuperSelect text and try again)
-        RMEditorTextEditor ted = editor.getTextEditor();
-        if(ted==null) {
-            getEditor().setSuperSelectedShape(text);
-            ted = editor.getTextEditor(); if(ted==null) return;
-        }
-        
-        // If KeyEvent, reroute to Editor.TextEditor
-        if(anEvent.isKeyEvent()) {
-            ted.processKeyEvent(anEvent.getEvent(KeyEvent.class)); anEvent.consume();
-            if(anEvent.isKeyPressed()) _textArea.hideCursor();
-            _textArea.setSel(ted.getSelStart(), ted.getSelEnd());
-        }
-        
-        // If MouseEvent, update Editor.TextEditor selection
-        if(anEvent.isMouseReleased())
-            ted.setSel(_textArea.getSelStart(), _textArea.getSelEnd(), _textArea.getSelAnchor());
-    }*/
     
     // Handle AlignLeftButton, AlignCenterButton, AlignRightButton, AlignFullButton, AlignTopButton, AlignMiddleButton
     if(anEvent.equals("AlignLeftButton")) RMEditorUtils.setAlignmentX(editor, RMTypes.AlignX.Left);
@@ -282,6 +253,30 @@ public void respondUI(ViewEvent anEvent)
     // Update PDF options: EditableCheckBox, MultilineCheckBox
     if(anEvent.equals("EditableCheckBox")) text.setEditable(anEvent.getBoolValue());
     if(anEvent.equals("MultilineCheckBox")) text.setMultiline(anEvent.getBoolValue());
+}
+
+/**
+ * Called when TextArea changes selection.
+ */
+private void textAreaChangedSel()
+{
+    // If in resetUI, just return
+    if(isSendEventDisabled()) return;
+    
+    // Get text, repaint and make sure it's super-selected
+    RMEditor editor = getEditor();
+    RMTextShape textShape = getSelectedShape(); if(textShape==null) return;
+    textShape.repaint();
+    if(textShape!=editor.getSuperSelectedShape())
+        editor.setSuperSelectedShape(textShape);
+    
+    // Get TextEditor and update sel from TextArea
+    RMTextEditor textEd = editor.getTextEditor();
+    if(textEd!=null)
+        textEd.setSel(_textArea.getSelStart(), _textArea.getSelEnd());
+        
+    // ResetUI on MouseUp
+    ViewUtils.runOnMouseUp(() -> getEditorPane().resetLater());
 }
 
 /**
@@ -408,7 +403,6 @@ public void processEvent(T aTextShape, ViewEvent anEvent)
     // Handle KeyEvent
     if(anEvent.isKeyEvent()) {
         processKeyEvent(aTextShape, anEvent); return; }
-    //System.out.println("MoveTableColumn: " + _moveTableColumn);
         
     // If MoveTableColumn, forward to moveTableColumn()
     if(_moveTableColumn)
@@ -518,14 +512,8 @@ private void moveTableColumn(ViewEvent anEvent)
  */
 public void didBecomeSuperSelected(T aTextShape)
 {
-    // If not superselected by TextInspector pane, have editor request focus
-    //if(!isUISet() || !_textArea.hasFocus()) anEditor.requestFocus();
-    
     // Start listening to changes to TextShape RichText
     aTextShape.getRichText().addPropChangeListener(_richTextLsnr);
-    
-    // If UI is loaded, install string in text area
-    //if(isUISet()) _textArea.getTextEditor().setXString(text.getXString());
 }
 
 /**
