@@ -1,28 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<SpringView width="275" height="325" PrefWidth="275" PrefHeight="325">
-  <HBox x="41" y="11" width="190" height="25" PrefWidth="190" PrefHeight="25" LeanX="CENTER" Spacing="5">
-    <Label PrefWidth="60" Align="CENTER_RIGHT" text="Rendering:" />
+<ColView Padding="10,4,4,4" Spacing="8" FillWidth="true">
+  <RowView Align="CENTER" Spacing="5">
+    <Label text="Rendering:" />
     <ComboBox Name="RenderingComboBox" PrefWidth="75" PrefHeight="22" />
-  </HBox>
-  <View Name="Trackball" x="35" y="48" width="112" height="112" LeanX="CENTER" Class="com.reportmill.gfx3d.Trackball">
-    <font name="Arial" size="12" />
-  </View>
-  <Spinner Name="YawSpinner" x="194" y="60" width="54" height="22" Value="0" />
-  <Label x="162" y="61" width="32" height="20" text="Yaw:" />
-  <Spinner Name="PitchSpinner" x="194" y="91" width="54" height="22" Value="0" />
-  <Label x="162" y="92" width="32" height="20" text="Pitch:" />
-  <Spinner Name="RollSpinner" x="194" y="122" width="54" height="22" Value="0" />
-  <Label x="162" y="123" width="32" height="20" text="Roll:" />
-  <TitleView x="13" y="172" width="250" height="45" GrowWidth="true" Title="Depth">
-    <HBox Padding="0,4,0,0" Spacing="5">
-      <Slider Name="DepthSlider" PrefWidth="180" GrowWidth="true" Min="10" Max="200" />
+    <Label PrefHeight="18" PrefWidth="40" />
+  </RowView>
+  <RowView Align="CENTER">
+    <View Name="Trackball" PrefWidth="118" PrefHeight="118" Class="com.reportmill.gfx3d.Trackball" />
+    <ColView Spacing="8">
+      <RowView Spacing="5">
+        <Label PrefWidth="32" text="Yaw:" />
+        <Spinner Name="YawSpinner" PrefWidth="54" Value="0" />
+      </RowView>
+      <RowView Spacing="5">
+        <Label PrefWidth="32" text="Pitch:" />
+        <Spinner Name="PitchSpinner" PrefWidth="54" Value="0" />
+      </RowView>
+      <RowView Spacing="5">
+        <Label PrefWidth="32" text="Roll:" />
+        <Spinner Name="RollSpinner" PrefWidth="54" Value="0" />
+      </RowView>
+    </ColView>
+  </RowView>
+  <TitleView Title="Depth">
+    <RowView Padding="4" Spacing="5">
+      <Slider Name="DepthSlider" GrowWidth="true" Min="10" Max="200" />
       <TextField Name="DepthText" PrefWidth="50" PrefHeight="20" Align="CENTER" />
-    </HBox>
+    </RowView>
   </TitleView>
-  <TitleView x="13" y="227" width="250" height="45" GrowWidth="true" Title="Focal Length (inches from screen to eye)">
-    <HBox Padding="0,4,0,0" Spacing="5">
-      <Slider Name="FOVSlider" PrefWidth="180" GrowWidth="true" Min="6" Max="60" />
+  <TitleView Title="Focal Length (inches from screen to eye)">
+    <RowView Padding="4" Spacing="5">
+      <Slider Name="FOVSlider" GrowWidth="true" Min="6" Max="60" />
       <TextField Name="FOVText" PrefWidth="50" PrefHeight="20" Align="CENTER" />
-    </HBox>
+    </RowView>
   </TitleView>
-</SpringView>
+</ColView>
