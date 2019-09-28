@@ -125,6 +125,7 @@ public void respondUI(ViewEvent anEvent)
             String string = anEvent.getClipboard().getString(); string = StringUtils.delete(string, "@");
             shape.undoerSetUndoTitle("Add Sort Order");
             grouping.addSort(new RMSort(string));
+            anEvent.dropComplete();
         }
         
         // Handle selection
@@ -184,6 +185,8 @@ public void respondUI(ViewEvent anEvent)
         grouping.getTopNSort().setKey(StringUtils.delete(anEvent.getStringValue(), "@"));
         if(grouping.getTopNSort().getCount()==0)
             grouping.getTopNSort().setCount(5);
+        if(anEvent.isDragDrop())
+            anEvent.dropComplete();
     }
     
     // Handle TopNCountText

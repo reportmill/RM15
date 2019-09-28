@@ -29,18 +29,25 @@
   </BoxView>
   <BoxView Padding="3,4,3,4" FillWidth="true">
     <TitleView Title="View Options">
-      <RowView Padding="0,4,5,4" Spacing="10">
-        <ColorDock Name="ColorDock" PrefWidth="109" PrefHeight="44" />
-        <ColView Spacing="1">
-          <CheckBox Name="ShowLegendCheckBox" PrefHeight="17" text="Show Legend" />
-          <CheckBox Name="ColorItemsCheckBox" text="Color Items" />
-          <CheckBox Name="Draw3DCheckBox" PrefHeight="17" text="Draw 3D" />
-        </ColView>
-      </RowView>
+      <ColView Padding="0,4,5,4" Spacing="4" FillWidth="true">
+        <font name="Arial" size="10" />
+        <RowView Spacing="10">
+          <ColorDock Name="ColorDock" PrefWidth="109" PrefHeight="44" />
+          <ColView Spacing="1">
+            <CheckBox Name="ShowLegendCheckBox" PrefHeight="17" text="Show Legend" />
+            <CheckBox Name="ColorItemsCheckBox" text="Color Items" />
+            <CheckBox Name="Draw3DCheckBox" PrefHeight="17" text="Draw 3D" />
+          </ColView>
+        </RowView>
+        <RowView Spacing="3">
+          <Label text="Color Key:" />
+          <TextField Name="ColorKeyText" GrowWidth="true" />
+        </RowView>
+      </ColView>
     </TitleView>
   </BoxView>
-  <BoxView Padding="0,4,3,4" FillWidth="true" >
-    <TitleView Title="Layout">
+  <BoxView Name="MultiKeyLayoutBox" Padding="0,4,3,4" FillWidth="true" >
+    <TitleView Title="Multi-Key Layout">
       <RowView Padding="2,5,5,5" Spacing="8">
         <ColView GrowWidth="true" FillWidth="true">
           <Label PrefHeight="14" text=" Series" >

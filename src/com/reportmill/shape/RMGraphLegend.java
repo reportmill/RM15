@@ -140,12 +140,31 @@ protected void configureRPG(RMGraphRPG graphRPG, boolean doRPG)
     // Iterate over strings and add legend items
     double x = 2, y = 2;
     for(int i=0,iMax=strings.size();i<iMax; i++) {
-        String text = strings.get(i); RMGroup group = groups.get(i);
-        RMRectShape box = new RMRectShape(); box.setColor(graph.getColor(i)); box.setBounds(x,y,16,12); x += 18;
-        RMTextShape label = new RMTextShape(); label.setText(text); label.setFont(getFont());
-        if(doRPG && text.contains("@")) label.getXString().rpgClone(graphRPG._rptOwner, group, null, false);
-        label.setBounds(x,y,getWidth()-x-2,8); label.setBestHeight();
-        addChild(box); addChild(label); x = 2; y += label.getHeight() + 2;
+        
+        // Create Legend item box
+        RMRectShape box = new RMRectShape();
+        box.setColor(graphRPG.getColor(i));
+        box.setBounds(x,y,16,12); x += 18;
+        
+        // Create Legend item text
+        String text = strings.get(i);
+        RMTextShape label = new RMTextShape();
+        label.setText(text);
+        label.setFont(getFont());
+        
+        // If text is a key, evaluate it
+        if(doRPG && text.contains("@")) {
+            RMGroup group = groups.get(i);
+            label.getXString().rpgClone(graphRPG._rptOwner, group, null, false);
+        }
+        
+        // Reset label to appropriate size
+        label.setBounds(x,y,getWidth()-x-2,8);
+        label.setBestHeight();
+        
+        // Add box and label and increment x/y
+        addChild(box); addChild(label);
+        x = 2; y += label.getHeight() + 2;
     }
     
     // Resize

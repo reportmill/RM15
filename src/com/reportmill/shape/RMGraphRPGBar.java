@@ -209,7 +209,8 @@ public void addBars()
             
             // Set bar color and bounds
             int cindex = i; if(_stacked && (iMax==1 || !_meshed) || _graph.isColorItems()) cindex = j;
-            bar.setColor(_graph.getColor(cindex));
+            RMColor color = getColor(cindex);
+            bar.setColor(color);
             Rect barBounds = getBarBounds(i, j); bar.setBounds(barBounds);
             
             // Get layer index

@@ -53,7 +53,6 @@ protected void initUI()
     _sortPanel.setSelectedPane(1);
     
     // Add SortPanel to main tab content
-    //BoxView sortBox = getView("SortPanelBox", BoxView.class);
     TitleView sortBox = getView("SortPanelBox", TitleView.class);
     _sortPanel.getView("SortingLabel").setVisible(false);
     sortBox.setContent(_sortPanel.getUI());
@@ -124,7 +123,15 @@ protected void resetUI()
     setViewValue("ColorItemsCheckBox", graph.isColorItems());
     setViewValue("ShowLegendCheckBox", graph.isShowLegend());
     setViewValue("Draw3DCheckBox", graph.getDraw3D());
+    
+    // Update ColorKeyText
+    setViewValue("ColorKeyText", graph.getColorKey());
+    
+    // Make 3D controls visible if graph draws 3D
     getView("3DBox").setVisible(graph.getDraw3D());
+    
+    // Make MultiKeyLayoutBox visible is more than one key
+    getView("MultiKeyLayoutBox").setVisible(graph.getKeyCount()>1);
     
     // Update SortPanel, 
     _sortPanel.resetLater();
@@ -162,7 +169,7 @@ public void respondUI(ViewEvent anEvent)
     if(anEvent.equals("KeysMenuItem"))
         getEditorPane().getAttributesPanel().setVisibleName(AttributesPanel.KEYS);
     
-    // Handle KeysText, Key2Text, Key3Text
+    // Handle KeysText
     if(anEvent.equals("KeysText")) {
         
         // Get Key string and key strings
@@ -197,19 +204,34 @@ public void respondUI(ViewEvent anEvent)
     
     // Handle ColorDock
     if(anEvent.equals("ColorDock")) {
+        
+        // Get ColorDock selected index/color
         ColorDock cdock = getView("ColorDock", ColorDock.class);
-        int index = cdock.getSelIndex(); // Get the selected index
-        List <RMColor> colors = new ArrayList(graph.getColors()); // Get copy of graph colors
-        while(colors.size()<index+1) colors.add(RMColor.white); // Make sure they are at least as long as selected index
-        colors.set(index, RMColor.get(cdock.getColor(index))); // Set color of selected index, remove trailing whites
+        int index = cdock.getSelIndex();
+        RMColor color = RMColor.get(cdock.getColor(index));
+        
+        // Get copy of graph colors and make sure they are at least as long as selected index
+        List <RMColor> colors = new ArrayList(graph.getColors());
+        while(colors.size()<index+1) colors.add(RMColor.white);
+        
+        // Set color of selected index, remove trailing whites, and set new colors in graph
+        colors.set(index, color); 
         while(colors.size()>1 && colors.get(colors.size()-1).equals(RMColor.white)) colors.remove(colors.size()-1);
-        graph.setColors(colors); // Set new colors in graph
+        graph.setColors(colors);
     }
 
     // Handle ColorItemsCheckBox, ShowLegendCheckBox, Draw3DCheckBox
     if(anEvent.equals("ColorItemsCheckBox")) graph.setColorItems(anEvent.getBoolValue());
     if(anEvent.equals("ShowLegendCheckBox")) graph.setShowLegend(anEvent.getBoolValue());
     if(anEvent.equals("Draw3DCheckBox")) graph.setDraw3D(anEvent.getBoolValue());
+    
+    // Handle ColorKeyText
+    if(anEvent.equals("ColorKeyText")) {
+        String ckey = anEvent.getStringValue();
+        graph.setColorKey(anEvent.getStringValue());
+        if(ckey!=null && ckey.length()>0)
+            graph.setColorItems(true);
+    }
 }
 
 /**

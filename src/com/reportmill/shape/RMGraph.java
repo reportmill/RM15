@@ -69,6 +69,9 @@ public class RMGraph extends RMParentShape {
     // Whether graph should color individual items
     boolean                   _colorItems;
     
+    // A key that can be evaluated on graph data item to return color string
+    String                    _colorKey;
+    
     // This list of colors this graph uses
     List                      _colors;
     
@@ -376,7 +379,29 @@ public boolean isColorItems()  { return _colorItems; }
  */
 public void setColorItems(boolean aValue)
 {
-    _colorItems = aValue; relayout();
+    if(aValue==isColorItems()) return;
+    firePropChange("ColorItems", _colorItems, _colorItems = aValue);
+    relayout();
+    if(getLegend()!=null) getLegend().resetItems();
+}
+
+/**
+ * Returns the key evaluated on graph data item to return color string.
+ */
+public String getColorKey()  { return _colorKey; }
+
+/**
+ * Sets the key evaluated on graph data item to return color string.
+ */
+public void setColorKey(String aKey)
+{
+    // If value already set, just return
+    String key = aKey!=null && aKey.length()>0? aKey : null;
+    if(SnapUtils.equals(key, getColorKey())) return;
+    
+    // Set value and update graph/legend
+    firePropChange("ColorKey", _colorKey, _colorKey = key);
+    relayout();
     if(getLegend()!=null) getLegend().resetItems();
 }
 
@@ -669,6 +694,9 @@ protected XMLElement toXMLShape(XMLArchiver anArchiver)
     if(!_draw3D) e.add("draw-3d", false);
     if(isColorItems()) e.add("ColorItems", true);
     
+    // Archive ColorKey
+    if(getColorKey()!=null) e.add("ColorKey", getColorKey());
+    
     // Archive colors
     if(!getColors().equals(getDefaultColors())) {
         StringBuffer cbuf = new StringBuffer();
@@ -742,6 +770,9 @@ protected void fromXMLShape(XMLArchiver anArchiver, XMLElement anElement)
     // Unarchive Draw3d, ColorItems
     setDraw3D(anElement.getAttributeBoolValue("draw-3d", true));
     if(anElement.hasAttribute("ColorItems")) setColorItems(anElement.getAttributeBoolValue("ColorItems"));
+    
+    // Unarchive ColorKey
+    if(anElement.hasAttribute("ColorKey")) setColorKey(anElement.getAttributeValue("ColorKey"));
     
     // Unarchive colors: Get colors string, string array and create colors list and set
     if(anElement.hasAttribute("colors")) {

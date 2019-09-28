@@ -151,7 +151,7 @@ protected void configure()
             }
             
             // Set wedge color
-            wedge.setColor(_graph.getColor(j));
+            wedge.setColor(getColor(j));
             
             // Add wedge to section item
             sectionItem.setBar(wedge);

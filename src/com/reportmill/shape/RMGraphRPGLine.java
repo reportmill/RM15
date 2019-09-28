@@ -26,8 +26,6 @@ public void addBars()
     // Iterate over series
     for(int i=0, iMax=getSeriesCount(); i<iMax; i++) { RMGraphSeries series = getSeries(i);
         
-        // Create path for line and establish bounds with MoveTo upper-left/lower-right
-        
         // Create path and iterate over series items
         Path path = new Path();
         for(int j=0, jMax=series.getItemCount(); j<jMax; j++) {
@@ -57,13 +55,14 @@ public void addBars()
         RMPolygonShape lineShape = new RMPolygonShape(path);
         
         // If area or 3D line, set fill color and stroke to black
+        RMColor color = getColor(i);
         if(_graph.getType()==RMGraph.Type.Area || _graph.getDraw3D()) {
-            lineShape.setColor(_graph.getColor(i));
-            lineShape.setStrokeColor(_graph.getColor(i).darker().darker());
+            lineShape.setColor(color);
+            lineShape.setStrokeColor(color.darker().darker());
         }
         
         // If 2D line, set stroke color and line width
-        else { lineShape.setColor(null); lineShape.setStroke(_graph.getColor(i), 2); }
+        else { lineShape.setColor(null); lineShape.setStroke(color, 2); }
         
         // Set line bounds
         lineShape.setBounds(path.getBounds());
@@ -94,12 +93,9 @@ public void addBars()
                 // Set bounds
                 linePointShape.setBounds(lineX - inset, lineY - inset, inset*2, inset*2);
                 
-                // Get bar color
-                RMColor barColor = _graph.getColor(i);
-                
                 // Set bar color
-                linePointShape.setColor(barColor);
-                linePointShape.setStrokeColor(barColor.darker().darker());
+                linePointShape.setColor(color);
+                linePointShape.setStrokeColor(color.darker().darker());
                 
                 // Add line point shape
                 _barShape.addBar(linePointShape, i);

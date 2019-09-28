@@ -3,9 +3,9 @@
  */
 package com.reportmill.shape;
 import com.reportmill.base.*;
+import com.reportmill.graphics.RMColor;
 import com.reportmill.shape.RMGraph.*;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * A shape class for a generated RMGraph.
@@ -26,6 +26,9 @@ abstract class RMGraphRPG {
     
     // The list of sections for the generated graph
     List <RMGraphSection>  _sections;
+    
+    // The list of colors
+    List <RMColor>           _colors;
     
     // The graph shape
     RMParentShape          _graphShape;
@@ -82,15 +85,9 @@ public RMGraphRPG(RMGraph aGraph, ReportOwner anRptOwner)
     _series = RMGraphSeries.getSeries(this);
     _sections = RMGraphSection.getSections(this);
     
-    // Get parent table row group (if there is one) by removing so it won't be used to evaluate cells
-    //Object parentTableRowGroup = parentTableRow==null? null : anRptOwner.popDataStack();
-    
     // Generate GraphView
     _graphShape = createGraphShape();
     ((GraphShape)_graphShape).setGraphRPG(this);
-    
-    // Restore parent table row group to ReportMill's data bearing objects list
-    //if(parentTableRowGroup!=null) anRptOwner.pushDataStack(parentTableRowGroup);
 }
 
 /**
@@ -152,6 +149,47 @@ public RMGraphSection getSection(int anIndex)  { return _sections.get(anIndex); 
  * Returns the graph sections.
  */
 public List <RMGraphSection> getSections()  { return _sections; }
+
+/**
+ * Returns the colors.
+ */
+public List <RMColor> getColors()
+{
+    // If already set, just return
+    if(_colors!=null) return _colors;
+    
+    // If no graph key, just use Graph.Colors
+    String ckey = _graph.getColorKey();
+    if(ckey==null)
+        return _colors = (List)_graph.getColors();
+        
+    // Otherwise, get colors
+    RMGraphSeries series = getSeries(0);
+    List <RMColor> colors = new ArrayList();
+    for(int i=0,iMax=series.getItemCount(); i<iMax; i++) { RMGraphSeries.Item item = series.getItem(i);
+        Object obj = item.getGroup();
+        Object val = RMKeyChain.getValue(obj, ckey);
+        if(val instanceof String) {
+            RMColor c = RMColor.get((String)val);
+            if(c==null) c = _graph.getColor(i);
+            colors.add(c);
+        }
+        else colors.add(_graph.getColor(i));
+    }
+    
+    // Return colors from ColorKey
+    return _colors = colors;
+}
+
+/**
+ * Returns the color count.
+ */
+public int getColorCount()  { return getColors().size(); }
+
+/**
+ * Returns the individual color at given index.
+ */
+public RMColor getColor(int anIndex)  { return getColors().get(anIndex%getColorCount()); }
 
 /**
  * An interface to identify generated graph shapes.
