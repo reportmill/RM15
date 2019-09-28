@@ -21,6 +21,15 @@ public class DrawerView extends ParentView {
     
     // The CloseBox
     View         _closeBox;
+    
+    // The round rect used for bounds shape
+    RoundRect    _roundRect;
+    
+    // Whether drawer is currently hiding
+    boolean      _hiding;
+    
+    // Constants
+    public static final Effect SHADOW_EFFECT = new ShadowEffect(10, Color.GRAY, 0, 0);
 
 /**
  * Creates DrawerView.
@@ -30,7 +39,7 @@ public DrawerView(View aView)
     // Configure basic attributes
     setPadding(30,10,10,10);
     setFill(ViewUtils.getBackFill());
-    setBorder(Color.DARKGRAY, 1);
+    setBorder(Color.GRAY, 1);
     setManaged(false);
     setLean(Pos.TOP_RIGHT);
     
@@ -45,6 +54,9 @@ public DrawerView(View aView)
     
     // Set content
     setContent(aView);
+    
+    // Set Effect
+    setEffect(SHADOW_EFFECT);
 }
 
 /**
@@ -217,9 +229,10 @@ public void show()
 public void hide()
 {
     // If hidden, just return
-    if(!isShowing()) return;
+    if(!isShowing() || _hiding) return;
     
     // Animate out
+    _hiding = true;
     getAnim(800).clear().setTransX(getWidth()).setOnFinish(a -> hideDrawerDone()).play();
 }
 
@@ -228,6 +241,7 @@ public void hide()
  */
 protected void hideDrawerDone()
 {
+    _hiding = false;
     ParentView parView = getAttachView();
     ViewUtils.removeChild(parView, this);
 }
@@ -273,7 +287,7 @@ protected void processEvent(ViewEvent anEvent)
         
         // Either resize or reposition
         if(_mouseDownInResize) setDrawerSize(_mouseDownW - dx, _mouseDownH + dy);
-        else setDrawerY(_mouseDownY + dy);
+        else setDrawerY(Math.max(_mouseDownY + dy, 0));
         
         // If significant change, set MouseDragged
         if(Math.abs(dx)>2 || Math.abs(dy)>2) _mouseDragged = true;
@@ -366,5 +380,17 @@ protected double getPrefHeightImpl(double aW)  { return BoxView.getPrefHeight(th
  * Override to layout content.
  */
 protected void layoutImpl()  { BoxView.layout(this, getContent(), null, true, true); }
+
+/**
+ * Override to handle rounding radius.
+ */
+public Shape getBoundsShape()
+{
+    if(_roundRect!=null && (_roundRect.width!=getWidth() || _roundRect.height!=getHeight())) _roundRect = null;
+    if(_roundRect!=null) return _roundRect;
+    RoundRect rrect = new RoundRect(0, 0, getWidth(), getHeight(), 5);
+    rrect = rrect.copyForCorners(true, false, false, true);
+    return _roundRect = rrect;
+}
 
 }

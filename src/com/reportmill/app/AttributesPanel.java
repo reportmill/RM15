@@ -191,6 +191,7 @@ public void childDragStart()
 {
     if(_drawer==null) return;
     _drawer.setPickable(false);
+    _drawer.setEffect(null);
     _drawer.getAnim(300).clear().setOpacity(.05).play();
 }
 
@@ -202,7 +203,15 @@ public void childDragStop()
     if(_drawer==null) return;
     _drawer.setPickable(true);
     if(_drawer.getAnim(0).isPlaying()) _drawer.setOpacity(1);
-    else _drawer.getAnim(300).clear().setOpacity(1).play();
+    else _drawer.getAnim(250).clear().setOpacity(1).setOnFinish(a -> childDragStopDone()).play();
+}
+
+/**
+ * Called when fade-in anim is done.
+ */
+private void childDragStopDone()
+{
+    _drawer.setEffect(DrawerView.SHADOW_EFFECT);
 }
 
 /**
