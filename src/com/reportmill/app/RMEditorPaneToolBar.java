@@ -296,11 +296,15 @@ protected void respondUI(ViewEvent anEvent)
  */
 public void startSamplesButtonAnim()
 {
+    // Get button
     View btn = getView("SamplesButton");
     btn.setScale(1.2);
-    btn.getAnim(400).setScale(1.4).getAnim(800).setScale(1.2).getAnim(1200).setScale(1.4).getAnim(1600).setScale(1.2)
+    
+    // Configure anim
+    ViewAnim anim = btn.getAnim(0);
+    anim.getAnim(400).setScale(1.4).getAnim(800).setScale(1.2).getAnim(1200).setScale(1.4).getAnim(1600).setScale(1.2)
     .getAnim(2400).setRotate(360);
-    btn.getAnim(0).setLoopCount(3).play();
+    anim.setLoopCount(3).play();
 }
 
 /**
@@ -308,8 +312,8 @@ public void startSamplesButtonAnim()
  */
 public void stopSamplesButtonAnim()
 {
-    View samplesButton = getView("SamplesButton");
-    samplesButton.getAnim(0).finish();
+    View btn = getView("SamplesButton");
+    btn.getAnim(0).finish();
 }
 
 /**

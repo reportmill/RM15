@@ -189,10 +189,15 @@ public void resetUI()
  */
 public void childDragStart()
 {
+    // If no drawer, bail
     if(_drawer==null) return;
+    
+    // Make drawer invisible to mouse, and clear effect to speed up fade out anim
     _drawer.setPickable(false);
     _drawer.setEffect(null);
-    _drawer.getAnim(300).clear().setOpacity(.05).play();
+    
+    // Configure drawer anim to fade out
+    _drawer.getAnim(300).clear().setOpacity(.05).needsFinish().play();
 }
 
 /**
@@ -200,10 +205,15 @@ public void childDragStart()
  */
 public void childDragStop()
 {
+    // If no drawer, bail
     if(_drawer==null) return;
+    
+    // Make drawer pickage again
     _drawer.setPickable(true);
-    if(_drawer.getAnim(0).isPlaying()) _drawer.setOpacity(1);
-    else _drawer.getAnim(250).clear().setOpacity(1).setOnFinish(a -> childDragStopDone()).play();
+    
+    // Configure drawer anim to fade drawer back in
+    ViewAnim anim = _drawer.getAnim(0).clear();
+    anim.getAnim(250).setOpacity(1).setOnFinish(() -> childDragStopDone()).needsFinish().play();
 }
 
 /**

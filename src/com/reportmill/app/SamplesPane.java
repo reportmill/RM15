@@ -396,7 +396,8 @@ private class SheetDialogBox extends DialogBox {
         _clipBox = new BoxView(ui); _clipBox.setSize(size); _clipBox.setManaged(false); _clipBox.setLeanX(HPos.CENTER);
         _clipBox.setClipToBounds(true);
         _cview.addChild(_clipBox);
-        ui.setTransY(-size.height); ui.getAnim(1000).setTransY(-1).play();
+        ui.setTransY(-size.height);
+        ui.getAnim(1000).setTransY(-1).play();
         
         // Make sure stage and Builder.FirstFocus are focused
         runLater(() -> notifyDidShow());
@@ -410,7 +411,7 @@ private class SheetDialogBox extends DialogBox {
     protected void hide()
     {
         View ui = getUI();
-        ui.getAnimCleared(1000).setTransY(-ui.getHeight()).setOnFinish(a -> hideFinished()).play();
+        ui.getAnimCleared(1000).setTransY(-ui.getHeight()).setOnFinish(() -> hideFinished()).needsFinish().play();
     }
     
     void hideFinished()

@@ -25,6 +25,9 @@ public class DrawerView extends ParentView {
     // The round rect used for bounds shape
     RoundRect    _roundRect;
     
+    // Dedicated anim so nothing interferes with drawer open/close
+    ViewAnim     _slideAnim;
+    
     // Whether drawer is currently hiding
     boolean      _hiding;
     
@@ -220,7 +223,8 @@ public void show()
     
     // Start animate in
     setTransX(size.width);
-    getAnim(800).clear().setTransX(1).play();
+    if(_slideAnim==null) _slideAnim = new ViewAnim(this);
+    _slideAnim.clear().getAnim(800).setTransX(1).play();
 }
 
 /**
@@ -233,7 +237,7 @@ public void hide()
     
     // Animate out
     _hiding = true;
-    getAnim(800).clear().setTransX(getWidth()).setOnFinish(a -> hideDrawerDone()).play();
+    _slideAnim.clear().getAnim(800).setTransX(getWidth()).setOnFinish(() -> hideDrawerDone()).play();
 }
 
 /**
@@ -326,7 +330,8 @@ private boolean _mouseDownInResize;
 private void setDrawerY(double aY)
 {
     // Get Y value (if less than zero, adjust to place drawer in middle of parent)
-    double y = aY; if(y<0) y = Math.round((getParent().getHeight() - getHeight())/2);
+    double y = aY;
+    if(y<0) y = Math.round((getParent().getHeight() - getHeight())*2/3);
     
     // Get margin, adjust and update (just return if already at Y)
     Insets margin = getMargin().clone(); if(margin.top==y) return;

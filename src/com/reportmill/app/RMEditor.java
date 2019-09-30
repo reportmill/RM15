@@ -905,6 +905,7 @@ public RMDataSource getDataSource()  { RMDocument d = getDoc(); return d!=null? 
  */
 public void setDataSource(RMDataSource aDataSource, double aX, double aY)
 {
+    // Set Doc.DataSource and repaint
     getDoc().setDataSource(aDataSource);
     repaint();
 
@@ -913,13 +914,21 @@ public void setDataSource(RMDataSource aDataSource, double aX, double aY)
         Rect vrect = getVisRect();
         double dx = aX - (vrect.getMaxX() - 53);
         double dy = aY - (vrect.getMaxY() - 53);
-        getAnimCleared(1800).setOnFrame(a -> {
-            double time = a.getTime(), maxTime = a.getMaxTime(), ratio = time/maxTime;
-            _xmlDX = SnapUtils.doubleValue(a.interpolate(dx, 0, ratio));
-            _xmlDY = SnapUtils.doubleValue(a.interpolate(dy, 0, ratio));
-            repaint();
-        }).play();
+        getAnimCleared(1800).setOnFrame(() -> setDataSourceAnimFrame(dx, dy)).play();
     }
+}
+
+/**
+ * Called when setDataSource gets frame update.
+ */
+private void setDataSourceAnimFrame(double dx, double dy)
+{
+    ViewAnim anim = getAnim(0);
+    double time = anim.getTime(), maxTime = anim.getMaxTime();
+    double ratio = time/maxTime;
+    _xmlDX = SnapUtils.doubleValue(anim.interpolate(dx, 0, ratio));
+    _xmlDY = SnapUtils.doubleValue(anim.interpolate(dy, 0, ratio));
+    repaint();
 }
 
 /**
