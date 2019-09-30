@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ColView FillWidth="true">
+  <SpringView width="275" height="235" PrefWidth="275" PrefHeight="235">
+    <Label x="5" y="4" width="56" height="20" text="Bounds:">
+      <font name="Arial Bold" size="12" />
+    </Label>
+    <Label x="64" y="18" width="17" height="20" Align="CENTER" text="X:" />
+    <Label x="198" y="18" width="17" height="20" Align="CENTER" text="Y:" />
+    <Label x="63" y="79" width="22" height="20" Align="CENTER" text="W:" />
+    <Label x="199" y="79" width="17" height="20" Align="CENTER" text="H:" />
+    <TextField Name="XText" x="5" y="36" width="128" height="22" Align="CENTER" />
+    <ThumbWheel Name="XThumb" x="5" y="62" width="128" height="16" type="linear" min="-50" max="50" round="1" />
+    <TextField Name="YText" x="140" y="36" width="128" height="22" Align="CENTER" />
+    <ThumbWheel Name="YThumb" x="140" y="62" width="128" height="16" type="linear" min="-50" max="50" round="1" />
+    <TextField Name="WText" x="4" y="97" width="128" height="22" Align="CENTER" />
+    <ThumbWheel Name="WThumb" x="4" y="123" width="128" height="16" type="linear" min="-50" max="50" round="1" />
+    <TextField Name="HText" x="139" y="97" width="128" height="22" Align="CENTER" />
+    <ThumbWheel Name="HThumb" x="139" y="123" width="128" height="16" type="linear" min="-50" max="50" round="1" />
+    <Label x="5" y="147" width="93" height="20" text="Minimum Size:" />
+    <Label x="12" y="171" width="25" height="22" Align="CENTER_RIGHT" text="W:" />
+    <TextField Name="MinWText" x="38" y="171" width="50" height="22" Align="CENTER" />
+    <Button Name="MinWSyncButton" x="88" y="171" width="22" height="22" text="S" />
+    <Label x="12" y="199" width="25" height="22" Align="CENTER_RIGHT" text="H:" />
+    <TextField Name="MinHText" x="38" y="200" width="50" height="22" Align="CENTER" />
+    <Button Name="MinHSyncButton" x="88" y="200" width="22" height="22" text="S" />
+    <Label x="134" y="147" width="93" height="20" text="Preferred Size:" />
+    <Label x="141" y="171" width="25" height="22" Align="CENTER_RIGHT" text="W:" />
+    <TextField Name="PrefWText" x="167" y="171" width="50" height="22" Align="CENTER" />
+    <Button Name="PrefWSyncButton" x="217" y="171" width="22" height="22" text="S" />
+    <Label x="141" y="200" width="25" height="22" Align="CENTER_RIGHT" text="H:" />
+    <TextField Name="PrefHText" x="167" y="200" width="50" height="22" Align="CENTER" />
+    <Button Name="PrefHSyncButton" x="217" y="200" width="22" height="22" text="S" />
+  </SpringView>
+  <ColView Padding="5,5,5,5" Spacing="6" FillWidth="true">
+    <font name="Arial" size="11" />
+    <TitleView Padding="5,8,9,18" Title="Rotation">
+      <RowView Spacing="4">
+        <ThumbWheel Name="RotationThumb" GrowWidth="true" PrefHeight="16" min="-90" max="90" round="1" />
+        <TextField Name="RotationText" PrefWidth="50" PrefHeight="20" Align="CENTER" />
+      </RowView>
+    </TitleView>
+    <TitleView Padding="5,8,5,8" Title="Scale">
+      <ColView Spacing="5" FillWidth="true">
+        <RowView Spacing="4">
+          <Label text="X:" />
+          <ThumbWheel Name="ScaleXThumb" GrowWidth="true" PrefHeight="16" type="linear" min="-5" max="5" round="0.05" />
+          <TextField Name="ScaleXText" PrefWidth="50" PrefHeight="20" Align="CENTER" />
+        </RowView>
+        <RowView Spacing="4">
+          <Label text="Y:" />
+          <ThumbWheel Name="ScaleYThumb" GrowWidth="true" PrefHeight="16" type="linear" min="-5" max="5" round="0.05" />
+          <TextField Name="ScaleYText" PrefWidth="50" PrefHeight="20" Align="CENTER" />
+        </RowView>
+        <CheckBox Name="ScaleSymetricCheckBox" text="Scale Symetrically" Selected="true" />
+      </ColView>
+    </TitleView>
+    <TitleView Padding="5,8,9,8" Title="Skew" Collapsible="true">
+      <ColView Spacing="5" FillWidth="true">
+        <RowView Spacing="4">
+          <Label text="X:" />
+          <ThumbWheel Name="SkewXThumb" GrowWidth="true" PrefHeight="16" min="-90" max="90" round="1" />
+          <TextField Name="SkewXText" PrefWidth="50" PrefHeight="20" Align="CENTER" />
+        </RowView>
+        <RowView Spacing="4">
+          <Label text="Y:" />
+          <ThumbWheel Name="SkewYThumb" GrowWidth="true" PrefHeight="16" min="-90" max="90" round="1" />
+          <TextField Name="SkewYText" PrefWidth="50" PrefHeight="20" Align="CENTER" />
+        </RowView>
+      </ColView>
+    </TitleView>
+    <TitleView Padding="5,8,8,8" Title="Autosizing" Collapsible="true">
+      <ColView Padding="1" Spacing="5" Align="TOP_CENTER">
+        <View Name="AutosizingPanel" PrefWidth="100" PrefHeight="100" Class="com.reportmill.app.ShapePlacement$AutosizingPanel" />
+        <Button Name="ResetAutosizingButton" PrefWidth="80" PrefHeight="20" text="Default" />
+      </ColView>
+    </TitleView>
+  </ColView>
+</ColView>
