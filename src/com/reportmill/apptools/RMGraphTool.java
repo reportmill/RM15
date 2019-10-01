@@ -84,7 +84,7 @@ protected void resetUI()
     TitleView typeBox = getView("TypeBox", TitleView.class);
     View typeUI = isPie? _pieTool.getUI() : _barTool.getUI();
     if(typeBox.getContent()!=typeUI) {
-        typeBox.setText(isPie? "Pie" : "Bar");
+        typeBox.setText(isPie? "Pie" : "Bars");
         typeBox.setContent(typeUI);
     }
     

@@ -65,9 +65,9 @@
     </TitleView>
   </BoxView>
   <BoxView Padding="3,4,3,4" FillWidth="true">
-    <TitleView Name="TypeBox" Title="Bars" />
+    <TitleView Name="TypeBox" Padding="5,4,5,4" Title="Bars" Collapsible="true" />
   </BoxView>
   <BoxView Padding="3,4,3,4" FillWidth="true">
-    <TitleView Name="3DBox" Title="3D" />
+    <TitleView Name="3DBox" Padding="5,4,5,4" Title="3D" Collapsible="true" />
   </BoxView>
 </ColView>

@@ -94,9 +94,19 @@ public void respondUI(ViewEvent anEvent)
     RMGrouper grouper = table.getGrouper();
     RMGrouping grouping = getGrouping();
     
-    // Handle ListKeyText, FilterKeyText
-    if(anEvent.equals("ListKeyText")) table.setDatasetKey(StringUtils.delete(anEvent.getStringValue(), "@"));
-    if(anEvent.equals("FilterKeyText")) table.setFilterKey(StringUtils.delete(anEvent.getStringValue(), "@"));
+    // Handle ListKeyText
+    if(anEvent.equals("ListKeyText")) {
+         table.setDatasetKey(StringUtils.delete(anEvent.getStringValue(), "@"));
+         if(anEvent.isDragDrop())
+             anEvent.dropComplete();
+    }
+    
+    // Handle FilterKeyText
+    if(anEvent.equals("FilterKeyText")) {
+        table.setFilterKey(StringUtils.delete(anEvent.getStringValue(), "@"));
+         if(anEvent.isDragDrop())
+             anEvent.dropComplete();
+    }
 
     // Handle AddGroupMenuItem
     if(anEvent.equals("AddGroupMenuItem")) {
@@ -128,6 +138,7 @@ public void respondUI(ViewEvent anEvent)
         if(anEvent.isDragDrop()) {  //int toRow = _groupingTable.rowAtPoint(anEvent.getLocation());
             String string = anEvent.getClipboard().getString().replace("@", "");
             addGroupingKey(string);
+            anEvent.dropComplete();
         }
         
         // Handle SelectionEvent and MouseClick
