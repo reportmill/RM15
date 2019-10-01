@@ -255,7 +255,7 @@ public void explode()
     
     // Animate out
     _hiding = true;
-    Explode exp = new Explode(this, 20, 20, () -> hideDrawerDone());
+    Explode exp = new Explode(this, 25, 25, () -> hideDrawerDone());
     exp.setHostView(getParent().getParent());
     exp.setRunTime(1400);
     exp.play();
@@ -270,6 +270,7 @@ protected void hideDrawerDone()
     ParentView parView = getAttachView();
     ViewUtils.removeChild(parView, this);
     setOpacity(1);
+    setMaximized(false);
 }
 
 /**
@@ -308,7 +309,8 @@ public void setMaximized(boolean aValue)
         double ny = _minBnds.y;
         double nw = _minBnds.width;
         double nh = _minBnds.height; _minBnds = null;
-        _slideAnim.clear().getAnim(400).setWidth(nw).setHeight(nh).setValue("DrawerY", ny).play();
+        if(!isShowing()) { setSize(nw, nh); setDrawerY(ny); }
+        else _slideAnim.clear().getAnim(400).setWidth(nw).setHeight(nh).setValue("DrawerY", ny).play();
     }
 }
 

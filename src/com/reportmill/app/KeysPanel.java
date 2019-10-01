@@ -224,7 +224,7 @@ public void respondUI(ViewEvent anEvent)
     if(anEvent.equals("ShowKeysTableMenu")) {
         boolean show = !isShowKeysTable();
         setShowKeysTable(show);
-        getEditorPane().getAttributesPanel().getDrawer().setMaximized(show);
+        runLaterDelayed(600, () -> getEditorPane().getAttributesPanel().getDrawer().setMaximized(show));
     }
 }
 
