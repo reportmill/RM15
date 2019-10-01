@@ -1,7 +1,8 @@
 package com.reportmill.app;
+import snap.gfx.*;
 import snap.util.SnapUtils;
 import snap.view.*;
-import snap.gfx.*;
+import snap.viewx.Explode;
 
 /**
  * A View that slides in/out of another view.
@@ -245,6 +246,22 @@ public void hide()
 }
 
 /**
+ * Hides the drawer.
+ */
+public void explode()
+{
+    // If hidden, just return
+    if(!isShowing() || _hiding) return;
+    
+    // Animate out
+    _hiding = true;
+    Explode exp = new Explode(this, 20, 20, () -> hideDrawerDone());
+    exp.setHostView(getParent().getParent());
+    exp.setRunTime(1400);
+    exp.play();
+}
+
+/**
  * Cleanup when hideDrawer animation done.
  */
 protected void hideDrawerDone()
@@ -252,6 +269,7 @@ protected void hideDrawerDone()
     _hiding = false;
     ParentView parView = getAttachView();
     ViewUtils.removeChild(parView, this);
+    setOpacity(1);
 }
 
 /**
@@ -345,7 +363,8 @@ protected void processEvent(ViewEvent anEvent)
         if(_mouseDragged || !inMargin(anEvent)) return;
         
         // Toggle drawer
-        toggleDrawer();
+        if(anEvent.getX()>getWidth()-14) explode();
+        else toggleDrawer();
     }
     
     // Handle MouseEnter, MouseExit, MouseMove
