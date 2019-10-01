@@ -34,6 +34,12 @@ public class KeysPanel extends RMEditorPane.SupportPane {
     // Whether to show built in keys
     boolean                  _showBuiltIn = false;
     
+    // The KeysTable
+    TableView                _keysTable;
+    
+    // The KeysTable key
+    String                   _keysTableKey = "";
+    
     // Contants aggregate keys
     static final String      _aggregateKeys[] = { "total", "average", "count", "countDeep", "max", "min" };
     
@@ -73,6 +79,37 @@ public String getKeyPath()
     if(key.equals("Page of PageMax")) return "@Page@ of @PageMax@";  // Special case for Page of PageMax
     return "@" + key + "@"; // Return path with @ signs
 }
+
+/**
+ * Returns the KeyPath entity.
+ */
+public Entity getKeyPathEntity(String aKey)
+{
+    Entity entity = getEntity(); if(entity==null) return null;
+    Property kprop = entity.getKeyPathProperty(aKey); if(kprop==null) return null;
+    Entity kentity = kprop.getRelationEntity();
+    return kentity;
+}
+
+/**
+ * Returns the items for key path entity.
+ */
+public List getKeyPathItems(String aKey)
+{
+    // Get full list key from selected shape and browser
+    RMShape selShape = getSelectedShape();
+    String kprfx = selShape.getDatasetKey(), ksfx = _keysBrowser.getPath();
+    String key = kprfx!=null? (kprfx + '.' + ksfx) : ksfx;
+    
+    // Get Editor.Datasource dataset (just return if null)
+    RMEditor editor = getEditor();
+    RMDataSource dsrc = editor.getDataSource(); if(dsrc==null) return null;
+    Map dset = dsrc.getDataset();
+    
+    // Get List
+    List items = RMKeyChain.getListValue(dset, key);
+    return items;
+}
   
 /**
  * Returns whether selected item is to-many.
@@ -97,10 +134,13 @@ public boolean isSelectedToMany()
  */
 protected void initUI()
 {
+    // Get/configure KeysBrowser
     _keysBrowser = getView("KeysBrowser", BrowserView.class);
     _keysBrowser.setResolver(new KeysBrowserResolver());
     _keysBrowser.setRowHeight(20);
     _keysBrowser.setCellConfigure(c -> configureKeysBrowserCell((ListCell)c));
+    
+    // Register KeysBrowser for click, drag
     enableEvents(_keysBrowser, MouseRelease, DragGesture, View.DragSourceEnd);
 }
 
@@ -110,11 +150,11 @@ protected void initUI()
 public void resetUI()
 {
     // Get selected shape and shape tool
-    RMShape selectedShape = getSelectedShape();
-    RMTool tool = getEditor().getTool(selectedShape);
+    RMShape selShape = getSelectedShape();
+    RMTool tool = getEditor().getTool(selShape);
     
     // Get entity from tool/shape and set in browser
-    Entity entity = !_showBuiltIn? tool.getDatasetEntity(selectedShape) : null;
+    Entity entity = !_showBuiltIn? tool.getDatasetEntity(selShape) : null;
     if(entity!=_entity) { _entity = entity;
         _rootItems = entity!=null? new KeyNode("Root").getChildren() : _builtInKeyNodes;
         _keysBrowser.setItems(_rootItems);
@@ -122,6 +162,10 @@ public void resetUI()
     
     // Update BuiltInKeysButton
     setViewValue("BuiltInKeysButton", _showBuiltIn);
+    
+    // Update KeysTableKey
+    if(isShowKeysTable())
+        setKeysTableKey(getKeyPath());
 }
 
 /**
@@ -175,6 +219,13 @@ public void respondUI(ViewEvent anEvent)
     // Handle BuiltInKeysButton
     if(anEvent.equals("BuiltInKeysButton"))
         _showBuiltIn = anEvent.getBoolValue();
+        
+    // Handle ShowKeysTableMenu
+    if(anEvent.equals("ShowKeysTableMenu")) {
+        boolean show = !isShowKeysTable();
+        setShowKeysTable(show);
+        getEditorPane().getAttributesPanel().getDrawer().setMaximized(show);
+    }
 }
 
 /**
@@ -195,6 +246,74 @@ public void configureKeysBrowserCell(ListCell <KeyNode> aCell)
     KeyNode knode = aCell.getItem();
     if(knode!=null && knode._special) aCell.setFont(_keysBrowser.getFont().getBold());
     aCell.setToolTip(aCell.getText());
+}
+
+/**
+ * Returns whether KeysTable is showing.
+ */
+public boolean isShowKeysTable()  { return _keysTable!=null && _keysTable.isShowing(); }
+
+/**
+ * Shows the KeysTable.
+ */
+public void setShowKeysTable(boolean aValue)
+{
+    // If already set, just return
+    if(aValue==isShowKeysTable()) return;
+    
+    // Get SplitView
+    SplitView split = getView("SplitView", SplitView.class);
+    
+    // If showing
+    if(aValue) {
+        
+        // Create table if needed
+        if(_keysTable==null) {
+            _keysTable = new TableView();
+            _keysTable.setGrowHeight(true);
+            _keysTable.setShowHeader(true);
+            _keysTable.setFont(Font.Arial12);
+            _keysTable.setCellPadding(new Insets(2,4,2,4));
+            _keysTable.setFocusable(false);
+        }
+        
+        // Add KeysTable to split
+        split.addItemWithAnim(_keysTable, 100);
+    }
+    
+    // If hiding
+    else split.removeItemWithAnim(_keysTable);
+}
+
+/**
+ * Sets the KeysTableKey.
+ */
+public void setKeysTableKey(String aKey)
+{
+    // If already set, just return
+    String key = aKey.replace("@", "");
+    if(key.equals(_keysTableKey)) return;
+    _keysTableKey = key;
+    
+    // Set columns
+    while(_keysTable.getColCount()>0) _keysTable.removeCol(0);
+    
+    // Get entity for key
+    Entity entity = getKeyPathEntity(key); if(entity==null) return;
+    
+    // Iterate over entity properties and add column for each
+    List <Property> attrs = entity.getAttributes();
+    for(Property prop : attrs) {
+        if(prop.isRelation()) continue;
+        TableCol col = new TableCol();
+        col.setHeaderText(prop.getName());
+        col.setItemKey(prop.getName());
+        _keysTable.addCol(col);
+    }
+    
+    // Get/set items
+    List items = getKeyPathItems(key);
+    _keysTable.setItems(items);
 }
 
 /**

@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<SpringView Name="KeysPanel" width="275" height="260" PrefWidth="275" PrefHeight="260">
-  <Label x="5" y="5" width="265" height="20" text="Drag and Drop keys:" />
-  <ToggleButton Name="BuiltInKeysButton" x="220" y="4" width="50" height="18" LeanX="RIGHT" text="Built-ins" />
-  <BrowserView Name="KeysBrowser" x="5" y="25" width="265" height="230" GrowWidth="true" GrowHeight="true" />
-</SpringView>
+<ColView Name="KeysPanel" Padding="5" Spacing="3" FillWidth="true">
+  <RowView>
+    <Label text="Drag and Drop keys:" />
+    <ToggleButton Name="BuiltInKeysButton" PrefWidth="60" PrefHeight="18" LeanX="RIGHT" text="Built-ins" Position="CENTER_LEFT" />
+    <MenuButton PrefWidth="18" PrefHeight="18" Position="CENTER_RIGHT">
+      <MenuItem Name="ShowKeysTableMenu" Text="Show/Hide Key Data Table" />
+    </MenuButton>
+  </RowView>
+  <SplitView Name="SplitView" Vertical="true" GrowHeight="true">
+    <Border />
+    <BrowserView Name="KeysBrowser" GrowHeight="true" />
+  </SplitView>
+</ColView>

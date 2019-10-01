@@ -96,28 +96,30 @@ public void setProperties(List <Property> theProps)
 /**
  * Adds a given property.
  */
-public void addProperty(Property aProperty)
+public void addProperty(Property aProp)
 {
-    Property duplicate = getProperty(aProperty.getName());
+    String name = aProp.getName();
+    Property duplicate = getProperty(name);
     int index = duplicate==null? getPropertyCount() : removeProperty(duplicate);
-    addProperty(aProperty, index);
+    if(name.equalsIgnoreCase("id")) index = 0;
+    addProperty(aProp, index);
 }
 
 /**
  * Adds a given property at given index.
  */
-public void addProperty(Property aProperty, int anIndex)
+public void addProperty(Property aProp, int anIndex)
 {
     // Add property to list
-    _props.add(anIndex, aProperty);
-    aProperty.setEntity(this);  // Set Property.Entity to this
+    _props.add(anIndex, aProp);
+    aProp.setEntity(this);  // Set Property.Entity to this
     _attrs = _attrsSorted = _relations = _relationsSorted = _primaries = null;  // Reset cached lists
 }
 
 /**
  * Adds given properties.
  */
-public void addProperty(Property ... theProperties)  { for(Property p : theProperties) addProperty(p); }
+public void addProperty(Property ... theProps)  { for(Property p : theProps) addProperty(p); }
 
 /**
  * Removes a property at given index.
@@ -133,9 +135,9 @@ public Object removeProperty(int anIndex)
 /**
  * Removes the given property.
  */
-public int removeProperty(Property aProperty)
+public int removeProperty(Property aProp)
 {
-    int index = ListUtils.indexOfId(_props, aProperty);
+    int index = ListUtils.indexOfId(_props, aProp);
     if(index>=0) removeProperty(index);
     return index;
 }
@@ -170,7 +172,7 @@ public Property getAttribute(int anIndex)  { return getAttributes().get(anIndex)
 /**
  * Returns the list of attributes.
  */
-private List <Property> getAttributes()
+public List <Property> getAttributes()
 {
     // If already set, just return
     if(_attrs!=null) return _attrs;
@@ -236,7 +238,8 @@ public Property getAttributeSorted(int anIndex)  { return getAttributesSorted().
  */
 private List <Property> getAttributesSorted()
 {
-    if(_attrsSorted==null) Collections.sort(_attrsSorted = new ArrayList(getAttributes()));
+    if(_attrsSorted!=null) return _attrsSorted;
+    Collections.sort(_attrsSorted = new ArrayList(getAttributes()));
     return _attrsSorted;
 }
 
@@ -248,9 +251,10 @@ public Property getRelationSorted(int anIndex)  { return getRelationsSorted().ge
 /**
  * Returns the list of relations sorted.
  */
-private List <Property> getRelationsSorted()
+public List <Property> getRelationsSorted()
 {
-    if(_relationsSorted==null) Collections.sort(_relationsSorted = new ArrayList(_relations));
+    if(_relationsSorted!=null) return _relationsSorted;
+    Collections.sort(_relationsSorted = new ArrayList(_relations));
     return _relationsSorted;
 }
 

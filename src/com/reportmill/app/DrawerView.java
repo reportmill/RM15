@@ -1,4 +1,5 @@
 package com.reportmill.app;
+import snap.util.SnapUtils;
 import snap.view.*;
 import snap.gfx.*;
 
@@ -30,6 +31,9 @@ public class DrawerView extends ParentView {
     
     // Whether drawer is currently hiding
     boolean      _hiding;
+    
+    // The size of the draw last sized
+    Rect         _minBnds;
     
     // Constants
     public static final Effect SHADOW_EFFECT = new ShadowEffect(10, Color.GRAY, 0, 0);
@@ -260,6 +264,37 @@ public void toggleDrawer()
 }
 
 /**
+ * Returns whether drawer is maximized.
+ */
+public boolean isMaximized()  { return _minBnds!=null; }
+
+/**
+ * Resize the drawer to maximum size for view.
+ */
+public void setMaximized(boolean aValue)
+{
+    // If already set, just return
+    if(aValue==isMaximized()) return;
+    
+    // If setting, grow window
+    if(aValue) {
+        double pw = getParent().getWidth();
+        double ph = getParent().getHeight();
+        double nw = pw - 12;
+        double nh = ph - 24; _minBnds = getBounds();
+        _slideAnim.clear().getAnim(400).setWidth(nw).setHeight(nh).setValue("DrawerY", 12).play();
+    }
+    
+    // Otherwise, shrink size
+    else {
+        double ny = _minBnds.y;
+        double nw = _minBnds.width;
+        double nh = _minBnds.height; _minBnds = null;
+        _slideAnim.clear().getAnim(400).setWidth(nw).setHeight(nh).setValue("DrawerY", ny).play();
+    }
+}
+
+/**
  * ProcessEvent.
  */
 protected void processEvent(ViewEvent anEvent)
@@ -275,7 +310,8 @@ protected void processEvent(ViewEvent anEvent)
         _mouseDownPnt = anEvent.getPoint(getParent());
         _mouseDownY = getMargin().top; _mouseDownW = getWidth(); _mouseDownH = getHeight();
         _mouseDragged = false;
-        _mouseDownInResize = inResize(anEvent);
+        _msDwnResize = inResize(anEvent);
+        _msDwnResizeTop = inResizeTop(anEvent);
     }
 
     // Handle MouseDrag
@@ -290,7 +326,9 @@ protected void processEvent(ViewEvent anEvent)
         double dy = pnt.y - _mouseDownPnt.y;
         
         // Either resize or reposition
-        if(_mouseDownInResize) setDrawerSize(_mouseDownW - dx, _mouseDownH + dy);
+        if(_msDwnResize) setDrawerSize(_mouseDownW - dx, _mouseDownH + dy);
+        else if(_msDwnResizeTop) {
+            setDrawerSize(_mouseDownW - dx, _mouseDownH - dy); setDrawerY(_mouseDownY + dy); }
         else setDrawerY(Math.max(_mouseDownY + dy, 0));
         
         // If significant change, set MouseDragged
@@ -322,7 +360,7 @@ protected void processEvent(ViewEvent anEvent)
 // Some drag vars
 private boolean _mouseDragged; Point _mouseDownPnt;
 private double _mouseDownY, _mouseDownW, _mouseDownH;
-private boolean _mouseDownInResize;
+private boolean _msDwnResize, _msDwnResizeTop;
 
 /**
  * Sets the drawer Y relative to parent.
@@ -359,15 +397,23 @@ private boolean inMargin(ViewEvent anEvent)
     return !inContent;
 }
 
-// Returns whether event point is in margin.
+// Returns whether event point is bottom corner.
 private boolean inResize(ViewEvent anEvent)
 {
     Insets ins = getInsetsAll();
-    Rect resizeRect = getBoundsLocal();
-    resizeRect.width = ins.left;
-    resizeRect.y = resizeRect.height - ins.bottom;
-    resizeRect.height = ins.bottom;
-    boolean inResize = resizeRect.contains(anEvent.getPoint());
+    Rect bnds = getBoundsLocal();
+    bnds.setRect(bnds.x, bnds.height - ins.bottom, ins.left, ins.bottom);
+    boolean inResize = bnds.contains(anEvent.getPoint());
+    return inResize;
+}
+
+// Returns whether event point is bottom corner.
+private boolean inResizeTop(ViewEvent anEvent)
+{
+    Insets ins = getInsetsAll();
+    Rect bnds = getBoundsLocal();
+    bnds.setRect(bnds.x, 0, ins.left, ins.top);
+    boolean inResize = bnds.contains(anEvent.getPoint());
     return inResize;
 }
 
@@ -385,6 +431,24 @@ protected double getPrefHeightImpl(double aW)  { return BoxView.getPrefHeight(th
  * Override to layout content.
  */
 protected void layoutImpl()  { BoxView.layout(this, getContent(), null, true, true); }
+
+/**
+ * Override to handle DrawerY.
+ */
+public Object getValue(String aPropName)
+{
+    if(aPropName=="DrawerY") return getMargin().top;
+    return super.getValue(aPropName);
+}
+
+/**
+ * Override to handle DrawerY.
+ */
+public void setValue(String aPropName, Object aValue)
+{
+    if(aPropName=="DrawerY") setDrawerY(SnapUtils.doubleValue(aValue));
+    else super.setValue(aPropName, aValue);
+}
 
 /**
  * Override to handle rounding radius.
