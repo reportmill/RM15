@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ColView Padding="8" Spacing="10" FillWidth="true">
+<ColView Padding="5" Spacing="10" FillWidth="true">
   <font name="Arial" size="11" />
   <RowView Spacing="5">
     <Label text="Name:" />
     <TextField Name="NameText" GrowWidth="true" />
-  </RowView>
-  <RowView Align="CENTER">
-    <CheckBox Name="LockedCheckBox" text="Locked" />
   </RowView>
   <ColView FillWidth="true">
     <Label text="URL:" />
@@ -17,10 +14,10 @@
       <Label text="Key Bindings" />
       <Label LeanX="RIGHT" text="(enter key in text)" />
     </RowView>
-    <TableView Name="BindingsTable" GrowHeight="true" ShowHeader="false" GridColor="#c9c9c9">
+    <TableView Name="BindingsTable" ShowHeader="false" GridColor="#c9c9c9">
       <TableCol PrefWidth="80" />
       <TableCol GrowWidth="true" />
     </TableView>
-    <TextView Name="BindingsText" GrowHeight="true" PrefHeight="100" FireActionOnEnterKey="true" FireActionOnFocusLost="true" />
+    <TextView Name="BindingsText" GrowHeight="true" PrefHeight="80" FireActionOnEnterKey="true" FireActionOnFocusLost="true" />
   </ColView>
 </ColView>

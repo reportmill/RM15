@@ -42,6 +42,9 @@ public void resetUI()
     // Get currently selected shape
     RMShape shape = getEditor().getSelectedOrSuperSelectedShape();
     
+    // Update LockedCheckBox
+    setViewValue("LockedCheckBox", shape.isLocked());
+    
     // Update XThumb & XText
     setViewValue("XThumb", getUnitsFromPoints(shape.getFrameX()));
     setViewValue("XText", getUnitsFromPointsStr(shape.getFrameX()));
@@ -102,7 +105,11 @@ public void respondUI(ViewEvent anEvent)
     RMEditor editor = getEditor();
     RMShape shape = editor.getSelectedOrSuperSelectedShape();
     List <? extends RMShape> shapes = editor.getSelectedOrSuperSelectedShapes();
-    
+
+    // Handle LockedCheckBox
+    if(anEvent.equals("LockedCheckBox")) { boolean value = anEvent.getBoolValue();
+        for(RMShape shp : shapes) shp.setLocked(value); }
+
     // Handle X ThumbWheel and Text
     if(anEvent.equals("XThumb") || anEvent.equals("XText")) {
         editor.undoerSetUndoTitle("Location Change");

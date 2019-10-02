@@ -33,10 +33,10 @@
         <font name="Arial" size="10" />
         <RowView Spacing="10">
           <ColorDock Name="ColorDock" PrefWidth="109" PrefHeight="44" />
-          <ColView Spacing="1">
-            <CheckBox Name="ShowLegendCheckBox" PrefHeight="17" text="Show Legend" />
+          <ColView>
+            <CheckBox Name="ShowLegendCheckBox" text="Show Legend" />
             <CheckBox Name="ColorItemsCheckBox" text="Color Items" />
-            <CheckBox Name="Draw3DCheckBox" PrefHeight="17" text="Draw 3D" />
+            <CheckBox Name="Draw3DCheckBox" text="Draw 3D" />
           </ColView>
         </RowView>
         <RowView Spacing="3">
