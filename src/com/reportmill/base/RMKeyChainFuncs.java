@@ -216,68 +216,73 @@ public static Object RMConditional(Object v, Object t, Object f) { return SnapUt
 /**
  * Returns true if given object string starts with given string.
  */
-public static boolean startsWith(Object anObj, Object aString)
+public static boolean startsWith(Object anObj, Object aStr)
 {
-    return anObj instanceof String && aString instanceof String && anObj.toString().startsWith(aString.toString());
+    String str = SnapUtils.stringValue(anObj); if(str==null) return false;
+    return aStr instanceof String && anObj.toString().startsWith(aStr.toString());
 }
 
 /**
  * Returns true if given object string ends with given string.
  */
-public static boolean endsWith(Object anObj, Object aString)
+public static boolean endsWith(Object anObj, Object aStr)
 {
-    return anObj instanceof String && aString instanceof String && anObj.toString().endsWith(aString.toString());
+    String str = SnapUtils.stringValue(anObj); if(str==null) return false;
+    return aStr instanceof String && anObj.toString().endsWith(aStr.toString());
 }
 
 /**
  * Returns the first index of given pattern in given string.
  */
-public static int indexOf(String aStr, Object aPtrn)  { return indexOf(aStr, aPtrn, 0); }
+public static int indexOf(Object aStr, Object aPtrn)  { return indexOf(aStr, aPtrn, 0); }
 
 /**
  * Returns the first index of given pattern in given string.
  */
-public static int indexOf(String aStr, Object aPtrn, Object aStart)
+public static int indexOf(Object aStr, Object aPtrn, Object aStart)
 {
+    String str = SnapUtils.stringValue(aStr); if(str==null) return -1;
     String ptrn = aPtrn instanceof String? (String)aPtrn : null; if(ptrn==null) return -1;
     int start = SnapUtils.intValue(aStart);
-    return aStr.indexOf(ptrn, start);
+    return str.indexOf(ptrn, start);
 }
 
 /**
  * Returns the last index of given pattern in given string.
  */
-public static int lastIndexOf(String aStr, Object aPtrn)
+public static int lastIndexOf(Object aStr, Object aPtrn)
 {
-    return aPtrn instanceof String? aStr.lastIndexOf((String)aPtrn) : -1;
+    String str = SnapUtils.stringValue(aStr); if(str==null) return -1;
+    return aPtrn instanceof String? str.lastIndexOf((String)aPtrn) : -1;
 }
 
 /**
  * Returns the substring of the given string from the given index onward.
  */
-public static String substring(Object aString, Object start)
+public static String substring(Object aStr, Object start)
 {
-    return aString.toString().substring(SnapUtils.intValue(start));
+    String str = SnapUtils.stringValue(aStr); if(str==null) return null;
+    return str.substring(SnapUtils.intValue(start));
 }
 
 /**
  * Returns the substring of the given string in the given start/end range.
  */
-public static String substring(Object aString, Object start, Object end)
+public static String substring(Object aStr, Object start, Object end)
 {
-    String string = aString.toString();
+    String str = SnapUtils.stringValue(aStr); if(str==null) return null;
     int s = SnapUtils.intValue(start);
-    int e = Math.min(SnapUtils.intValue(end), string.length());
-    return string.substring(s, e);
+    int e = Math.min(SnapUtils.intValue(end), str.length());
+    return str.substring(s, e);
 }
 
 /**
  * Returns an array of strings by splitting given string with given regex separator.
  */
-public static String[] split(Object aString, Object aRegex)
+public static String[] split(Object aStr, Object aRegex)
 {
-    String string = aString.toString();
-    return string!=null? string.split(aRegex.toString()) : null;
+    String str = aStr.toString();
+    return str!=null? str.split(aRegex.toString()) : null;
 }
 
 /**
@@ -348,10 +353,10 @@ public static Object RMAllFonts(Object aSize)
 /**
  * Returns string format of given date, using given date format string (category method).
  */
-public static String format(Object anObj, Object aString)
+public static String format(Object anObj, Object aStr)
 {
     // Get format string (just return if not string)
-    String fmtStr = aString instanceof String? (String)aString : null; if(fmtStr==null) return null;
+    String fmtStr = aStr instanceof String? (String)aStr : null; if(fmtStr==null) return null;
     
     // If number, get number format and return formatted string
     if(anObj instanceof Number) {
@@ -369,51 +374,35 @@ public static String format(Object anObj, Object aString)
     return null;
 }
 
-/** 
- * Returns substring of given string from given start index (category method).
- */
-public static String substring(String aString, Object start)  { return substring((Object)aString, start); }
-
-/**
- * Returns substring of given string from given start index to given end index (category method).
- */
-public static String substring(String aString, Object start, Object end)
-{
-    return substring((Object)aString, start, end);
-}
-
-/**
- * Returns whether given string starts with other given string (category method).
- */
-public static boolean startsWith(String aString, Object pre)  { return startsWith((Object)aString, pre); }
-
-/**
- * Returns whether given string ends with other given string (category method).
- */
-public static boolean endsWith(String aString, Object post)  { return endsWith((Object)aString, post); }
-
 /**
  * Returns a number for a given string.
  */
-public static Number number(String aString)  { return SnapUtils.numberValue(aString); }
+public static Number number(Object aStr)
+{
+    return SnapUtils.numberValue(aStr);
+}
 
 /**
  * Returns the given string padded by the given string to be the given length (category method).
  */
-public static String pad(String aString, Object aLength)  { return pad(aString, " ", aLength); }
+public static String pad(Object aStr, Object aLength)
+{
+    return pad(aStr, " ", aLength);
+}
 
 /**
  * Returns the given string padded by the given string to be the given length (category method).
  */
-public static String pad(String aString, Object aPad, Object aLength)
+public static String pad(Object aStr, Object aPad, Object aLength)
 {
     // Get length as int (just return if string already given length)
+    String str = SnapUtils.stringValue(aStr); if(str==null) return null;
     int len = SnapUtils.intValue(aLength);
-    if(aString.length()>=len)
-        return aString;
+    if(str.length()>=len)
+        return str;
     
     // Create string buffer, add pad and return
-    StringBuffer sb = new StringBuffer(aString);
+    StringBuffer sb = new StringBuffer(str);
     while(sb.length()<len) sb.append(aPad);
     return sb.toString();
 }
@@ -421,15 +410,16 @@ public static String pad(String aString, Object aPad, Object aLength)
 /**
  * Returns the given string padded by the given string to be the given length (category method).
  */
-public static String padLeft(String aString, Object aPad, Object aLength)
+public static String padLeft(Object aStr, Object aPad, Object aLength)
 {
     // Get length as int (if string is already given length or greater, just return it)
+    String str = SnapUtils.stringValue(aStr); if(str==null) return null;
     int length = SnapUtils.intValue(aLength);
-    if(aString.length()>=length)
-        return aString;
+    if(str.length()>=length)
+        return str;
     
     // Create string buffer, add pad, return string
-    StringBuffer sb = new StringBuffer(aString);
+    StringBuffer sb = new StringBuffer(str);
     while(sb.length()<length) sb.insert(0, aPad);
     return sb.toString();
 }
@@ -437,22 +427,26 @@ public static String padLeft(String aString, Object aPad, Object aLength)
 /**
  * Fixes the given string to the given length, padding by space. 
  */
-public static String fix(String aString, Object aLength)  { return fix(aString, aLength, " "); }
+public static String fix(Object aStr, Object aLength)
+{
+    return fix(aStr, aLength, " ");
+}
 
 /**
  * Fixes the given string to the given length with the given pad string.
  */
-public static String fix(String aString, Object aLength, Object aPad)
+public static String fix(Object aStr, Object aLength, Object aPad)
 {
-    return pad(substring(aString, 0, aLength), aPad, aLength);
+    return pad(substring(aStr, 0, aLength), aPad, aLength);
 }
 
 /**
  * Wraps the given string to a max of given length by adding newlines.
  */
-public static String wrap(String aString, Object aLength)
+public static String wrap(Object aStr, Object aLength)
 {
-    return StringUtils.wrap(aString, SnapUtils.intValue(aLength));
+    String str = SnapUtils.stringValue(aStr); if(str==null) return null;
+    return StringUtils.wrap(str, SnapUtils.intValue(aLength));
 }
 
 /**
