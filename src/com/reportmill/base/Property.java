@@ -215,9 +215,11 @@ public void setToMany(boolean aValue)  { setType(aValue? Type.RelationList : Typ
  */
 public Entity getRelationEntity()
 {
-    if(_relEntity==null) { Entity e = getEntity(); String name = getRelationEntityName();
-        _relEntity = e!=null && name!=null? e.getEntity(name) : null; }
-    return _relEntity;
+    if(_relEntity!=null) return _relEntity;
+    Entity ent = getEntity();
+    String name = getRelationEntityName();
+    Entity relEntity = ent!=null && name!=null? ent.getEntity(name) : null;
+    return _relEntity = relEntity;
 }
 
 /**

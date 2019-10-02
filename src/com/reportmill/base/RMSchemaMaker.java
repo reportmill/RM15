@@ -31,6 +31,9 @@ public class RMSchemaMaker {
     
     // Used for pruning more specific Class/member branches
     Map <String,Set>       _ignoredClassMembers = new Hashtable();
+    
+    // The schema currently being configure
+    Schema                 _schema;
 
     // The list of objects that have already been processed
     List                   _processed = new ArrayList();
@@ -125,150 +128,173 @@ public Schema getSchema(Object anObject, String aName, int aDepthLimit)
 {
     // Get schema name and create new schema
     String sname = aName!=null? aName : "Root";
-    Schema schema = new Schema(sname);
+    _schema = new Schema(sname);
     
     // Clear processed list, set DepthLimit
     _processed.clear(); _depthLimit = aDepthLimit;
     
     // Configure entity for object and return schema
-    getEntity(anObject, null, aName, 0, schema);
-    return schema;
+    getEntity(anObject, null, aName, 0);
+    return _schema;
 }
 
 /**
- * This is the recursive version of get schema that does the real work.
- * This code currently supports entity subclasses (eg, Vehicle->Car, Vehicle->Truck) by folding them into their base
- * class (eg, Vehicle).
+ * This method returns an Entity with properties by iterating over given object methods, fields, or (Map) keys.
+ * It recurses into method return values to given depth.
  */
-private Entity getEntity(Object anObject, Class aClass, String aKey, int aDepth, Schema aSchema)
+private Entity getEntity(Object anObj, Class aClass, String aKey, int aDepth)
 {
     // If object is null, just return
-    if(anObject==null) return null;
+    if(anObj==null) return null;
     
     // If depth exceeds DepthLimit, just return null
     if(aDepth>getDepthLimit())
         return null;
 
     // Get local reference to object, potentially converted from non-standard type (eg, WebObjects/NSArray)
-    Object object = ReportMill.convertFromAppServerType(anObject);
-    if(object==null)
-        return null;
+    Object obj = ReportMill.convertFromAppServerType(anObj);
     
     // If object is core type, just return (should only happen if given a list of core types)
-    if(object instanceof String || object instanceof StringBuffer || object instanceof Number ||
-        object instanceof Date || object instanceof Boolean || object instanceof Character ||
-        object instanceof byte[] || object instanceof Enum)
+    if(obj==null || obj instanceof String || obj instanceof StringBuffer || obj instanceof Number ||
+        obj instanceof Date || obj instanceof Boolean || obj instanceof Character ||
+        obj instanceof byte[] || obj instanceof Enum)
         return null;
     
     // If object has already been processed, return, otherwise, add to list
-    for(int index = ListUtils.indexOfId(_processed, anObject); index>=0;)
+    for(int index = ListUtils.indexOfId(_processed, anObj); index>=0;)
         return _processedEntities.get(index);
     
     // Handle Maps special
-    if(object instanceof Map) { Map map = (Map)object;
+    if(obj instanceof Map)
+        return getEntityForMap((Map)obj, aKey, aDepth);
+    
+    // Get object class and class name
+    Class objClass = aClass!=null? aClass : obj.getClass();
+    String className = _schema.getEntityCount()==0? aKey : objClass.getSimpleName();
 
-        // Get entity for map key (if absent, create and add to schema)
-        Entity entity = aSchema.getEntity(aKey);
-        if(entity==null) {
-            aSchema.addEntity(entity = new Entity(aKey)); entity.setEntityClass(Map.class); }
+    // Get entity for class name and class
+    Entity entity = getEntityForNameAndClass(className, objClass);
 
-        // Iterate over keys and add and/or configure property for each key
-        for(Map.Entry entry : (Set<Map.Entry>)map.entrySet()) { Object key = entry.getKey();
-            if(key instanceof String && isValidIdentifier((String)key))
-                getProperty(entry.getValue(), null, (String)key, aDepth+1, entity); }
-
-        // Add object/entity to processed lists and return entity
-        _processed.add(anObject); _processedEntities.add(entity);
-        return entity;
+    // Handle fields
+    if(getIncludeFields()) {
+        
+        // Iterate over fields and load into map (if field should be ignored, just continue)
+        Field fields[] = objClass.getFields();
+        for(Field field : fields) { if(!isValidField(field, objClass)) continue;
+            
+            // Get field value and add and/or configure property
+            Object val = null; try { val = field.get(anObj); } catch(Exception e) { }
+            getProperty(val, field.getType(), field.getName(), aDepth, entity);
+        }    
     }
     
-    // Get object class
-    Class objClass = aClass!=null? aClass : object.getClass();
+    // Iterate over methods and load into map
+    Method methods[] = objClass.getMethods();
+    for(Method meth : methods) {
     
-    // Get standard class name
-    String className = aSchema.getEntityCount()==0? aKey : objClass.getSimpleName();
+        // If invalid method, just continue
+        if(!isValidMethod(meth, objClass))
+            continue;
+        
+        // Get method return value
+        Object rval = null; try { rval = meth.invoke(anObj); }
+        catch(Exception e) { }
+        
+        // Get property name and add and/or configure property
+        String mname = meth.getName();
+        String pname = getUseGetAndIsMethodsOnly()? RMKey.getStandard(mname) : mname;
+        getProperty(rval, meth.getReturnType(), pname, aDepth, entity);
+    }
+    
+    // Add object/entity to processed lists and return entity
+    _processed.add(anObj); _processedEntities.add(entity);
+    return entity;
+}
 
-    // If there is an entity for standard class name, return it
-    Entity entity = aSchema.getEntity(className);
+/**
+ * This is a special version of getEntity for Maps. It's much simpler - just iterates over keys.
+ */
+private Entity getEntityForMap(Map aMap, String aKey, int aDepth)
+{
+    // Get entity for map key (if absent, create and add to schema)
+    Entity entity = _schema.getEntity(aKey);
+    if(entity==null) {
+        _schema.addEntity(entity = new Entity(aKey));
+        entity.setEntityClass(Map.class);
+    }
+
+    // Iterate over keys and add and/or configure property for each key
+    for(Map.Entry entry : (Set<Map.Entry>)aMap.entrySet()) { Object key = entry.getKey();
+        if(key instanceof String && isValidIdentifier((String)key))
+            getProperty(entry.getValue(), null, (String)key, aDepth+1, entity);
+    }
+
+    // Add object/entity to processed lists and return entity
+    _processed.add(aMap); _processedEntities.add(entity);
+    return entity;
+}
+
+/**
+ * Returns a Schema Entity for given name and class.
+ * It currently supports entity sub-classes (e.g., Vehicle->Car, Vehicle->Truck) by folding them into the common
+ * super-class (e.g., Vehicle).
+ */
+protected Entity getEntityForNameAndClass(String aName, Class aClass)
+{
+    // If there is already an entity for given name, return it
+    Entity entity = _schema.getEntity(aName);
+    if(entity!=null)
+        return entity;
 
     // If entity not found, iterate over entities to see if superclass entity is available
-    for(int i=0, iMax=aSchema.getEntityCount(); i<iMax && entity==null; i++) { Entity e2 = aSchema.getEntity(i);
-        if(e2.getEntityClass().isAssignableFrom(objClass))
-            entity = e2;
-        else if(objClass.isAssignableFrom(e2.getEntityClass())) {
-            e2.setName(className);
-            e2.setEntityClass(objClass);
-            entity = e2;
+    for(int i=0, iMax=_schema.getEntityCount(); i<iMax; i++) {
+    
+        // Get loop entity and class
+        Entity ent2 = _schema.getEntity(i);
+        Class eclass = ent2.getEntityClass();
+    
+        // If existing entity is superclass of Obj.Class, use it instead
+        if(eclass.isAssignableFrom(aClass))
+            return ent2;
+            
+        // If Obj.Class is superclass of existing entity, rename existing entity to new common super-class and use it
+        else if(aClass.isAssignableFrom(eclass)) {
+            renameEntity(ent2, aName); //ent2.setName(aName);
+            ent2.setEntityClass(aClass);
+            return ent2;
         }
     }
     
     // If entity still not found, create and add to schema
-    if(entity==null) {
-        aSchema.addEntity(entity = new Entity(className));
-        entity.setEntityClass(objClass);
-    }
-    
-    // Handle fields
-    if(getIncludeFields()) { Field fields[] = objClass.getFields();
-        
-        // Iterate over fields and load into map
-        for(int i=0; i<fields.length; i++) { Field field = fields[i]; String fieldName = field.getName();
-            
-            // If field should be ignored, just continue
-            if(ignoreMember(fieldName) || ignoreMember(objClass.getName(), fieldName) || ignoreClass(field.getType()) ||
-                !Modifier.isPublic(field.getModifiers()) || Modifier.isStatic(field.getModifiers()))
-                continue;
-            
-            // Get field value
-            Object obj = null;  try { obj = field.get(anObject); }
-            catch(Exception e) { }
-            
-            // Add and/or configure property
-            getProperty(obj, field.getType(), fieldName, aDepth, entity);
-        }    
-    }
-    
-    // Get object methods
-    Method methods[] = objClass.getMethods();
-    
-    // Iterate over methods and load into map
-    for(int i=0; i<methods.length; i++) { Method method = methods[i];
-        
-        // Get method name and modifiers
-        String methodName = method.getName();
-        int modifiers = method.getModifiers();
-        
-        // Just continue if: (1) method should be ignored or (2) has no return value or (3) is non-public or
-        //  (4) is static or (5) arg count not zero or (6) doesn't conform to _useGetAndIsMethodsOnly
-        if(ignoreMember(methodName) || ignoreMember(objClass.getName(), methodName) ||
-            method.getReturnType()==void.class || ignoreClass(method.getReturnType()) ||
-            !Modifier.isPublic(modifiers) || Modifier.isStatic(modifiers) || method.getParameterTypes().length>0 ||
-            (getUseGetAndIsMethodsOnly() && !methodName.startsWith("get") && !methodName.startsWith("is")))
-            continue;
-
-        // Get object
-        Object obj = null;
-        try { obj = method.invoke(anObject, new Object[0]); }
-        catch(Exception e) { }
-        
-        // Get property name
-        String pname = getUseGetAndIsMethodsOnly()? RMKey.getStandard(methodName) : methodName;
-        
-        // Add and/or configure property
-        getProperty(obj, method.getReturnType(), pname, aDepth, entity);
-    }
-    
-    // Add object/entity to processed lists
-    _processed.add(anObject); _processedEntities.add(entity);
-    
-    // Return entity
+    _schema.addEntity(entity = new Entity(aName));
+    entity.setEntityClass(aClass);
     return entity;
+}
+
+/**
+ * Resets an Entity name for Schema for case when substituting a common superclass for a previously encountered
+ * subclass. Resets the name everywhere (including entity property relation names).
+ */
+private void renameEntity(Entity anEntity, String aName)
+{
+    // Reset name in given entity
+    String oldName = anEntity.getName();
+    anEntity.setName(aName);
+    
+    // Iterate over all entity properties and reset any relation properties that pointed to old name
+    for(Entity entity : _schema.getEntities()) {
+        for(Property prop : entity.getProperties()) {
+            String rname = prop.getRelationEntityName();
+            if(rname!=null && rname.equals(oldName))
+                prop.setRelationEntityName(aName);
+        }
+    }
 }
 
 /**
  * Configures a property for a property value.
  */
-public void getProperty(Object aValue, Class aClass, String aKey, int aDepth, Entity anEntity)
+protected void getProperty(Object aValue, Class aClass, String aKey, int aDepth, Entity anEntity)
 {
     // Get local reference to value, potentially converted from non-standard type (eg, WebObjects/NSArray)
     Object value = ReportMill.convertFromAppServerType(aValue);
@@ -278,48 +304,102 @@ public void getProperty(Object aValue, Class aClass, String aKey, int aDepth, En
         return;
     
     // Get property from entity (if absent, create and add)
-    Property property = anEntity.getProperty(aKey);
-    if(property==null)
-        anEntity.addProperty(property = new Property(aKey)); //property.setNumberType(RMProperty.NumberType.Byte);
+    Property prop = anEntity.getProperty(aKey);
+    if(prop==null)
+        anEntity.addProperty(prop = new Property(aKey));
     
     // Handle String, Number, DateTime, Boolean, Binary
-    if(value instanceof String || value instanceof StringBuffer)
-        property.setType(Property.Type.String);
-    else if(value instanceof Number)
-        property.setType(Property.Type.Number); //aProperty.promoteNumberType((Number)aValue);
-    else if(value instanceof Date)
-        property.setType(Property.Type.Date); //aProperty.promoteDateType((Date)aValue);
-    else if(value instanceof Boolean)
-        property.setType(Property.Type.Boolean);
-    else if(value instanceof byte[])
-        property.setType(Property.Type.Binary);
-    else if(value instanceof Enum)
-        property.setType(Property.Type.Enum);
+    if(value instanceof String || value instanceof StringBuffer) prop.setType(Property.Type.String);
+    else if(value instanceof Number) prop.setType(Property.Type.Number);
+    else if(value instanceof Date) prop.setType(Property.Type.Date);
+    else if(value instanceof Boolean) prop.setType(Property.Type.Boolean);
+    else if(value instanceof byte[]) prop.setType(Property.Type.Binary);
+    else if(value instanceof Enum) prop.setType(Property.Type.Enum);
     
     // Handle relations
     else {
         
         // Get relation key
-        String relationKey = anEntity.getName() + '.' + property.getName();
+        String relKey = anEntity.getName() + '.' + prop.getName();
     
         // Handle List (RelationList)
         if(value instanceof List) { List list = (List)value;
-            property.setType(Property.Type.RelationList);
+        
+            // Set type to List
+            prop.setType(Property.Type.RelationList);
+            
+            // Iterate over significant number of items to ensure we get right relation class
             for(int j=0,jMax=Math.min(list.size(),getBreadthLimit()); j<jMax; j++) { Object item = list.get(j);
-                Entity entity = getEntity(item, null, relationKey, aDepth+1, anEntity.getSchema());
+                Entity entity = getEntity(item, null, relKey, aDepth+1);
                 if(entity!=null)
-                    property.setRelationEntityName(entity.getName());
+                    prop.setRelationEntityName(entity.getName());
             }
         }
         
         // Handle POJO/Map (Relation - everything not covered above)
         else {
-            property.setType(Property.Type.Relation);
-            Entity entity = getEntity(value, null, relationKey, aDepth+1, anEntity.getSchema());
+            
+            // Set type to Relation and recurse to check entity relation class
+            prop.setType(Property.Type.Relation);
+            Entity entity = getEntity(value, null, relKey, aDepth+1);
             if(entity!=null)
-                property.setRelationEntityName(entity.getName());
+                prop.setRelationEntityName(entity.getName());
         }
     }
+}
+
+/**
+ * Returns whether given method is valid method.
+ */
+protected boolean isValidMethod(Method aMeth, Class aClass)
+{
+    // If method has no return value or any parameters, return false
+    if(aMeth.getReturnType()==void.class || aMeth.getParameterTypes().length>0)
+        return false;
+        
+    // If method is non-public or is static return false
+    int mods = aMeth.getModifiers();
+    if(!Modifier.isPublic(mods) || Modifier.isStatic(mods))
+        return false;
+        
+    // If method doesn't conform to UseGetAndIsMethodsOnly
+    String methodName = aMeth.getName();
+    if(getUseGetAndIsMethodsOnly() && !methodName.startsWith("get") && !methodName.startsWith("is"))
+        return false;
+        
+    // If method should be ignored, return false
+    if(ignoreMember(methodName))
+        return false;
+    if(ignoreMember(aClass.getName(), methodName))
+        return false;
+    if(ignoreClass(aMeth.getReturnType()))
+        return false;
+        
+    // Return true since all checks passed
+    return true;
+}
+
+/**
+ * Returns whether given method is valid method.
+ */
+protected boolean isValidField(Field aField, Class aClass)
+{
+    // If field is non-public or is static return false
+    int mods = aField.getModifiers();
+    if(!Modifier.isPublic(mods) || Modifier.isStatic(mods))
+        return false;
+        
+    // If field should be ignored, just continue
+    String fname = aField.getName();
+    if(ignoreMember(fname))
+        return false;
+    if(ignoreMember(aClass.getName(), fname))
+        return false;
+    if(ignoreClass(aField.getType()))
+        return false;
+    
+    // Return true since all checks passed
+    return true;
 }
 
 /**
