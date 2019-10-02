@@ -21,7 +21,7 @@ public class RMXMLReader {
     List <XMLElement>          _resources = new ArrayList();
     
     // A cache of lists for specific element names
-    Map <String, List <Map>>  _entityLists = new HashMap();
+    Map <String, List <Map>>  _entityLists = new LinkedHashMap();
     
 /**
  * Creates an uninitialized reader.
@@ -72,7 +72,7 @@ public Map readObject(Object aSource, Schema aSchema)
         _resources.add(rootXML.removeElement(i));
     
     // Create root map
-    Map rootMap = new HashMap();
+    Map rootMap = new LinkedHashMap();
 
     // Read rootMap from root element (recursively reads everything)
     read(rootXML, rootMap, _name);
@@ -195,7 +195,7 @@ private Map getUniqueMap(XMLElement anElement, String anEntityName)
     List <? extends Property> primaries = entity.getPrimaries();
     
     // Create map with primary key values from element
-    Map map1 = new HashMap();
+    Map map1 = new LinkedHashMap();
     
     // Add primary key values from element
     for(Property property : primaries) {

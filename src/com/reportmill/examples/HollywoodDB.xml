@@ -962,7 +962,7 @@
 		<getMovie id="79" />
 		<getTalent id="34" />
 	</MovieRoles>
-	<MovieRoles id="28" getRoleName="ThÃrÃœse">
+	<MovieRoles id="28" getRoleName="ThÝrÜse">
 		<getMovie id="79" />
 		<getTalent id="33" />
 	</MovieRoles>
@@ -978,7 +978,7 @@
 		<getMovie id="79" />
 		<getTalent id="35" />
 	</MovieRoles>
-	<MovieRoles id="32" getRoleName="Mr LeblÃ">
+	<MovieRoles id="32" getRoleName="Mr LeblÝ">
 		<getMovie id="79" />
 		<getTalent id="39" />
 	</MovieRoles>
@@ -986,7 +986,7 @@
 		<getMovie id="79" />
 		<getTalent id="36" />
 	</MovieRoles>
-	<MovieRoles id="34" getRoleName="Mme LeblÃ">
+	<MovieRoles id="34" getRoleName="Mme LeblÝ">
 		<getMovie id="79" />
 		<getTalent id="38" />
 	</MovieRoles>
@@ -2697,7 +2697,7 @@ Bruce: Lucas personally wanted it rated PG because he feared that viewers wouldn
 	<PlotSummaries id="59" getSummary="Middle-aged novelist Humbert Humbert rents a room in Charlotte Haze's house after he falls passionately in love with her daughter Lolita. There are three slight problems, though - one, Charlotte is madly in love with him (unrequited, needless to say); two, Lolita is only fourteen; three, there's a very peculiar figure by the name of Clare Quilty who keeps popping up in the most unexpected places (and sporting equally unexpected accents), who seems to have a similarly unhealthy interest in Lolita.">
 		<getMovie id="4" />
 	</PlotSummaries>
-	<PlotSummaries id="60" getSummary="A Christmas at SOS Amitiâ€º (a french &quot;suicide hotline&quot; equivalent)">
+	<PlotSummaries id="60" getSummary="A Christmas at SOS Amiti? (a french &quot;suicide hotline&quot; equivalent)">
 		<getMovie id="79" />
 	</PlotSummaries>
 	<PlotSummaries id="61" getSummary="Bounty hunter Jack Walsh sets out to bring bail jumper Jonathan Mardukas back to Los Angeles for trial. But after finding him, Walsh discovers that the &quot;Duke&quot; was a mafia accountant who donated millions of dollars to charities after embezzling it from the mafia.">
@@ -2879,8 +2879,8 @@ Good scene stressing the importance of team work.">
 	<Talent id="31" getLastName="Vanel" getFirstName="Charles">
 		<getMovieRoles id="25" />
 	</Talent>
-	<Talent id="32" getLastName="PoirÃ" getFirstName="Jean-Marie" />
-	<Talent id="33" getLastName="" getFirstName="AnÃmone">
+	<Talent id="32" getLastName="PoirÝ" getFirstName="Jean-Marie" />
+	<Talent id="33" getLastName="" getFirstName="AnÝmone">
 		<getMovieRoles id="28" />
 	</Talent>
 	<Talent id="34" getLastName="Balasko" getFirstName="Josianne">
@@ -2889,7 +2889,7 @@ Good scene stressing the importance of team work.">
 	<Talent id="35" getLastName="Clavier" getFirstName="Christian">
 		<getMovieRoles id="31" />
 	</Talent>
-	<Talent id="36" getLastName="Jugnot" getFirstName="GÃrard">
+	<Talent id="36" getLastName="Jugnot" getFirstName="GÝrard">
 		<getMovieRoles id="33" />
 	</Talent>
 	<Talent id="37" getLastName="Chazel" getFirstName="Marie-Anne">
@@ -2901,7 +2901,7 @@ Good scene stressing the importance of team work.">
 	<Talent id="39" getLastName="Lamotte" getFirstName="Martin">
 		<getMovieRoles id="32" />
 	</Talent>
-	<Talent id="40" getLastName="FranÃ›ois" getFirstName="Jacques">
+	<Talent id="40" getLastName="FranÛois" getFirstName="Jacques">
 		<getMovieRoles id="30" />
 	</Talent>
 	<Talent id="41" getLastName="Moynot" getFirstName="Bruno">
@@ -2924,7 +2924,7 @@ Good scene stressing the importance of team work.">
 	<Talent id="47" getLastName="Dreyfus" getFirstName="Jean-Claude">
 		<getMovieRoles id="40" />
 	</Talent>
-	<Talent id="48" getLastName="Perrier" getFirstName="Jean-FranÃ›ois">
+	<Talent id="48" getLastName="Perrier" getFirstName="Jean-FranÛois">
 		<getMovieRoles id="44" />
 	</Talent>
 	<Talent id="49" getLastName="Dougnac" getFirstName="Marie-Laure">
@@ -3108,16 +3108,16 @@ Good scene stressing the importance of team work.">
 		<getMovieRoles id="149" />
 	</Talent>
 	<Talent id="110" getLastName="Beineix" getFirstName="Jean-Jacques" />
-	<Talent id="111" getLastName="Dalle" getFirstName="BÃatrice">
+	<Talent id="111" getLastName="Dalle" getFirstName="BÝatrice">
 		<getMovieRoles id="99" />
 	</Talent>
-	<Talent id="112" getLastName="Darmont" getFirstName="GÃrard">
+	<Talent id="112" getLastName="Darmont" getFirstName="GÝrard">
 		<getMovieRoles id="100" />
 	</Talent>
 	<Talent id="113" getLastName="De Haviland" getFirstName="Consuelo">
 		<getMovieRoles id="103" />
 	</Talent>
-	<Talent id="114" getLastName="CÃlariÃ" getFirstName="ClÃmentine">
+	<Talent id="114" getLastName="CÝlariÝ" getFirstName="ClÝmentine">
 		<getMovieRoles id="98" />
 	</Talent>
 	<Talent id="115" getLastName="Mathou" getFirstName="Jacques">
@@ -3253,10 +3253,10 @@ Good scene stressing the importance of team work.">
 	<Talent id="159" getLastName="Rourke" getFirstName="Mickey">
 		<getMovieRoles id="141" />
 	</Talent>
-	<Talent id="160" getLastName="CathiÃœre" getFirstName="Alain">
+	<Talent id="160" getLastName="CathiÜre" getFirstName="Alain">
 		<getMovieRoles id="150" />
 	</Talent>
-	<Talent id="161" getLastName="Karyo" getFirstName="TchÃky">
+	<Talent id="161" getLastName="Karyo" getFirstName="TchÝky">
 		<getMovieRoles id="102" />
 	</Talent>
 	<Talent id="162" getLastName="Parillaud" getFirstName="Anne">
@@ -4023,28 +4023,19 @@ Good scene stressing the importance of team work.">
 	<Category getName="Musical" />
 	<RMSchema>
 		<Movie>
-			<getCategory type="string" />
-			<getShowDate type="dateTime" />
-			<id private="true" next="90" primary="true" type="decimal" />
+			<id private="true" next="90" primary="true" type="decimal" />			<getTitle type="string" />			<getRevenue type="decimal" />			<getRating type="string" />			<getShowDate type="dateTime" />			<getCategory type="string" />
+			<getPosterUrl type="string" />			<getTrailerUrl type="string" />			<getStudio subtype="Studio" type="Map" />
 			<getMovieRoles subtype="MovieRole" type="List" />
 			<getPlotSummary subtype="PlotSummary" type="Map" />
-			<getPosterUrl type="string" />
-			<getRating type="string" />
-			<getRevenue type="decimal" />
-			<getStudio subtype="Studio" type="Map" />
-			<getTitle type="string" />
-			<getTrailerUrl type="string" />
 		</Movie>
 		<MovieRole>
 			<id private="true" next="415" primary="true" type="decimal" />
-			<getMovie subtype="Movie" type="Map" />
-			<getRoleName type="string" />
+			<getRoleName type="string" />			<getMovie subtype="Movie" type="Map" />
 			<getTalent subtype="Talent" type="Map" />
 		</MovieRole>
 		<PlotSummary>
 			<id private="true" next="90" primary="true" type="decimal" />
-			<getMovie subtype="Movie" type="Map" />
-			<getSummary type="string" />
+			<getSummary type="string" />			<getMovie subtype="Movie" type="Map" />
 		</PlotSummary>
 		<root type="Map">
 			<Movies subtype="Movie" type="List" />
@@ -4055,17 +4046,13 @@ Good scene stressing the importance of team work.">
 			<Category subtype="Category" type="List" />
 		</root>
 		<Studio>
-			<getBudget type="decimal" />
-			<id private="true" next="38" primary="true" type="decimal" />
+			<id private="true" next="38" primary="true" type="decimal" />			<getName type="string" />			<getBudget type="decimal" />
 			<getMovies subtype="Movie" type="List" />
-			<getName type="string" />
 		</Studio>
 		<Talent>
-			<getFirstName type="string" />
-			<id private="true" next="434" primary="true" type="decimal" />
+			<id private="true" next="434" primary="true" type="decimal" />			<getFirstName type="string" />
 			<getLastName type="string" />
-			<getMovieRoles subtype="MovieRole" type="List" />
-			<getImage type="string" />
+			<getImage type="string" />			<getMovieRoles subtype="MovieRole" type="List" />
 		</Talent>
 		<Category>
 			<property name="getName" type="string" />
