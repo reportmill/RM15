@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<SpringView width="275" height="220" PrefWidth="275" PrefHeight="220">
-  <ColorWell Name="FillColorWell" x="90" y="31" width="60" height="30" />
-</SpringView>
+<ColView Align="CENTER">
+  <ColorWell Name="FillColorWell" PrefWidth="60" PrefHeight="30" Margin="30,0,20,0" />
+</ColView>

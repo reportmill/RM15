@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<SpringView width="275" height="230" PrefWidth="275" PrefHeight="230">
+<SpringView width="275" height="175" PrefWidth="275" PrefHeight="175">
   <CheckBox Name="TiledCheckBox" x="100" y="26" width="150" height="23" text="Tiled" />
   <Label x="43" y="55" width="50" height="18" Align="CENTER" text="Offset:" />
   <Label x="22" y="76" width="20" height="22" Align="CENTER_RIGHT" text="X:" />

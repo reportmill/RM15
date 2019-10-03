@@ -58,55 +58,42 @@ public void resetUI()
 {
     // Get currently selected shape
     RMShape shape = getEditor().getSelectedOrSuperSelectedShape();
-    int tabViewIndex = getViewSelIndex("TabView");
     
-    // If Stroke tab is showing, ensure proper inspector is showing and forward on
-    if(tabViewIndex==0) {
-        
-        // Get stroke from shape (or default, if not available)
-        RMStroke stroke = shape.getStroke(); if(stroke==null) stroke = new RMStroke();
+    // Get stroke from shape (or default, if not available)
+    RMStroke stroke = shape.getStroke(); if(stroke==null) stroke = new RMStroke();
 
-        // Update StrokeCheckBox, StrokeComboBox
-        setViewValue("StrokeCheckBox", shape.getStroke()!=null);
-        setViewValue("StrokeComboBox", stroke.getName());
-        
-        // Get stroke tool, install tool UI in stroke panel and ResetUI
-        RMFillTool tool = _fillTool.getTool(stroke);
-        getView("StrokePane", BorderView.class).setCenter(tool.getUI());
-        tool.resetLater();
-    }
+    // Update StrokeCheckBox, StrokeComboBox
+    setViewValue("StrokeCheckBox", shape.getStroke()!=null);
+    setViewValue("StrokeComboBox", stroke.getName());
     
-    // If Fill tab is showing, ensure proper inspector is showing and forward on
-    else if(tabViewIndex==1) {
-        
-        // Get fill from shape (or default, if not available)
-        RMFill fill = shape.getFill(); if(fill==null) fill = new RMFill();
-
-        // Update FillCheckBox, FillComboBox
-        setViewValue("FillCheckBox", shape.getFill()!=null);
-        setViewValue("FillComboBox", fill.getName());
-        
-        // Get fill tool, install tool UI in fill panel and ResetUI
-        RMFillTool tool = _fillTool.getTool(fill);
-        getView("FillPane", BorderView.class).setCenter(tool.getUI());
-        tool.resetLater();
-    }
+    // Get stroke tool, install tool UI in stroke panel and ResetUI
+    RMFillTool stool = _fillTool.getTool(stroke);
+    getView("StrokePane", BoxView.class).setContent(stool.getUI());
+    stool.resetLater();
     
-    // If Effect tab is showing, ensure proper inspector is showing and forward on
-    else if(tabViewIndex==2) {
-        
-        // Get effect from shape (or default, if not available)
-        Effect effect = shape.getEffect(); if(effect==null) effect = new ShadowEffect();
+    // Get fill from shape (or default, if not available)
+    RMFill fill = shape.getFill(); if(fill==null) fill = new RMFill();
 
-        // Update EffectCheckBox, EffectComboBox
-        setViewValue("EffectCheckBox", shape.getEffect()!=null);
-        setViewValue("EffectComboBox", effect.getName());
-        
-        // Get effect tool, install tool UI in effect panel and ResetUI
-        EffectTool tool = _effectTool.getTool(effect);
-        getView("EffectPane", BorderView.class).setCenter(tool.getUI());
-        tool.resetLater();
-    }
+    // Update FillCheckBox, FillComboBox
+    setViewValue("FillCheckBox", shape.getFill()!=null);
+    setViewValue("FillComboBox", fill.getName());
+    
+    // Get fill tool, install tool UI in fill panel and ResetUI
+    RMFillTool ftool = _fillTool.getTool(fill);
+    getView("FillPane", BoxView.class).setContent(ftool.getUI());
+    ftool.resetLater();
+    
+    // Get effect from shape (or default, if not available)
+    Effect effect = shape.getEffect(); if(effect==null) effect = new ShadowEffect();
+
+    // Update EffectCheckBox, EffectComboBox
+    setViewValue("EffectCheckBox", shape.getEffect()!=null);
+    setViewValue("EffectComboBox", effect.getName());
+    
+    // Get effect tool, install tool UI in effect panel and ResetUI
+    EffectTool etool = _effectTool.getTool(effect);
+    getView("EffectPane", BoxView.class).setContent(etool.getUI());
+    etool.resetLater();
     
     // Update TransparencySlider, TransparencyText (transparency is opposite of opacity and on 0-100 scale)
     double transparency = 100 - shape.getOpacity()*100;
@@ -123,65 +110,52 @@ public void respondUI(ViewEvent anEvent)
     RMEditor editor = getEditor(); if(editor==null) return;
     RMShape shape = editor.getSelectedOrSuperSelectedShape(); if(shape==null) return;
     List <RMShape> shapes = editor.getSelectedOrSuperSelectedShapes();
-    int tabViewIndex = getViewSelIndex("TabView");
     
-    // If Stroke tab is showing, handle basic StrokePane stuff
-    if(tabViewIndex==0) {
-        
-        // Handle StrokeCheckBox: Iterate over shapes and add stroke if not there or remove if there
-        if(anEvent.equals("StrokeCheckBox")) {
-            boolean selected = anEvent.getBoolValue();
-            for(RMShape s : shapes) {
-                if(selected && s.getStroke()==null) s.setStroke(new RMStroke()); // If requested and missing, add
-                if(!selected && s.getStroke()!=null) s.setStroke(null); // If turned off and present, remove
-            }
+    // Handle StrokeCheckBox: Iterate over shapes and add stroke if not there or remove if there
+    if(anEvent.equals("StrokeCheckBox")) {
+        boolean selected = anEvent.getBoolValue();
+        for(RMShape s : shapes) {
+            if(selected && s.getStroke()==null) s.setStroke(new RMStroke()); // If requested and missing, add
+            if(!selected && s.getStroke()!=null) s.setStroke(null); // If turned off and present, remove
         }
-        
-        // Handle StrokeComboBox: Get selected stroke instance and iterate over shapes and add stroke if not there
-        if(anEvent.equals("StrokeComboBox")) {
-            RMStroke newStroke = _fillTool.getStroke(anEvent.getSelIndex());
-            for(RMShape s : shapes) s.setStroke(newStroke.clone());
-        }
+    }
+    
+    // Handle StrokeComboBox: Get selected stroke instance and iterate over shapes and add stroke if not there
+    if(anEvent.equals("StrokeComboBox")) {
+        RMStroke newStroke = _fillTool.getStroke(anEvent.getSelIndex());
+        for(RMShape s : shapes) s.setStroke(newStroke.clone());
     }
 
-    // If Fill tab is showing, handle basic FillPane stuff
-    else if(tabViewIndex==1) {
-        
-        // Handle FillCheckBox: Iterate over shapes and add fill if not there or remove if there
-        if(anEvent.equals("FillCheckBox")) {
-            boolean selected = anEvent.getBoolValue();
-            for(RMShape s : shapes) {
-                if(selected && s.getFill()==null) s.setFill(new RMFill()); // If requested and missing, add
-                if(!selected && s.getFill()!=null) s.setFill(null); // If turned off and present, remove
-            }
-        }
-        
-        // Handle FillComboBox: Get selected fill instance and iterate over shapes and add fill if not there
-        if(anEvent.equals("FillComboBox")) {
-            RMFill newFill = _fillTool.getFill(anEvent.getSelIndex());
-            for(RMShape s : shapes) s.setFill(newFill.deriveFill(s.getFill()));
+    // Handle FillCheckBox: Iterate over shapes and add fill if not there or remove if there
+    if(anEvent.equals("FillCheckBox")) {
+        boolean selected = anEvent.getBoolValue();
+        for(RMShape s : shapes) {
+            if(selected && s.getFill()==null) s.setFill(new RMFill()); // If requested and missing, add
+            if(!selected && s.getFill()!=null) s.setFill(null); // If turned off and present, remove
         }
     }
     
-    // If Effect tab is showing, handle basic EffectPane stuff
-    else if(tabViewIndex==2) {
-        
-        // Handle EffectCheckBox: Iterate over shapes and add effect if not there or remove if there
-        if(anEvent.equals("EffectCheckBox")) {
-            boolean selected = anEvent.getBoolValue();
-            for(RMShape s : shapes) {
-                if(selected && s.getEffect()==null) s.setEffect(new ShadowEffect()); // If requested and missing, add
-                if(!selected && s.getEffect()!=null) s.setEffect(null); // If turned off and present, remove
-            }
-        }
-        
-        // Handle EffectComboBox: Get selected effect instance and iterate over shapes and add effect if not there
-        if(anEvent.equals("EffectComboBox")) {
-            Effect eff = _effectTool.getEffect(anEvent.getSelIndex());
-            for(RMShape s : shapes) s.setEffect(eff);
+    // Handle FillComboBox: Get selected fill instance and iterate over shapes and add fill if not there
+    if(anEvent.equals("FillComboBox")) {
+        RMFill newFill = _fillTool.getFill(anEvent.getSelIndex());
+        for(RMShape s : shapes) s.setFill(newFill.deriveFill(s.getFill()));
+    }
+
+    // Handle EffectCheckBox: Iterate over shapes and add effect if not there or remove if there
+    if(anEvent.equals("EffectCheckBox")) {
+        boolean selected = anEvent.getBoolValue();
+        for(RMShape s : shapes) {
+            if(selected && s.getEffect()==null) s.setEffect(new ShadowEffect()); // If requested and missing, add
+            if(!selected && s.getEffect()!=null) s.setEffect(null); // If turned off and present, remove
         }
     }
     
+    // Handle EffectComboBox: Get selected effect instance and iterate over shapes and add effect if not there
+    if(anEvent.equals("EffectComboBox")) {
+        Effect eff = _effectTool.getEffect(anEvent.getSelIndex());
+        for(RMShape s : shapes) s.setEffect(eff);
+    }
+
     // Handle Transparency Slider and Text
     if(anEvent.equals("TransparencySlider") || anEvent.equals("TransparencyText")) {
         shape.undoerSetUndoTitle("Transparency Change");

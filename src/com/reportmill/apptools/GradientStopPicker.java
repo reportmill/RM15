@@ -55,8 +55,8 @@ public class GradientStopPicker extends ParentView {
 public GradientStopPicker()
 {
     // Enable events
-    enableEvents(MousePress, MouseDrag, MouseMove, Action); enableEvents(DragEvents);
-    repaint();
+    enableEvents(MousePress, MouseDrag, MouseMove, Action);
+    enableEvents(DragEvents);
 }
 
 /** 
@@ -92,7 +92,7 @@ public void setStops(Stop theStops[])
     if(Arrays.equals(theStops, _stops) && _gradientRect!=null) return;
     _stops = Arrays.copyOf(theStops, theStops.length);  // Copy stops
     _selectedKnob = -1;                                 // Deselect knob
-    resetComponents();                                  // call revalidate to add/remove components
+    relayout();                                  // call revalidate to add/remove components
 }
 
 /**
@@ -166,13 +166,13 @@ public void setStop(int index, double anOffset, Color aColor)
 }
 
 /**
- * create an explicit stop at the corresponding gradient position.
+ * Create an explicit stop at the corresponding gradient position.
  */
 public int addStop(Point pt, Color aColor)
 {
     double soff = getStopOffset(pt);
-    int sindex = addStop(soff, aColor);       // null color tells gradient to use color at position
-    resetComponents();                      // call revalidate to create new components
+    int sindex = addStop(soff, aColor);
+    relayout();
     return sindex;
 }
 
@@ -182,8 +182,8 @@ public int addStop(Point pt, Color aColor)
 public void deleteColorStop()
 {
     removeStop(_selectedKnob);
-    _selectedKnob = -1; // deselect
-    resetComponents();
+    _selectedKnob = -1;
+    relayout();
     getEnv().runLater(() -> fireActionEvent(null));
 }
 
@@ -343,11 +343,11 @@ protected void processEvent(ViewEvent anEvent)
     // Handle DragDrop
     else if(anEvent.isDragDrop()) {
         if(_gradientRect.contains(anEvent.getPoint())) {
-            anEvent.acceptDrag();  // Accept drop
+            anEvent.acceptDrag();
             Color color = anEvent.getClipboard().getColor();
             addStop(getStopOffset(_dragPoint), color);
             _dragPoint = null;
-            resetComponents();
+            relayout();
             fireActionEvent(anEvent);
             anEvent.dropComplete();
         } //else dtde.rejectDrop();
@@ -355,10 +355,19 @@ protected void processEvent(ViewEvent anEvent)
 }
 
 /**
- * Called whenever the gradient is reset or a stop is added or removed.  Lays out 
- * all the color wells, the knob images, and the gradient rect.
+ * Returns the preferred width.
  */
-public void resetComponents()
+protected double getPrefWidthImpl(double aH)  { return 180; }
+
+/**
+ * Returns the preferred height.
+ */
+protected double getPrefHeightImpl(double aW)  { return 62; }
+
+/**
+ * Override to reset knobs and such.
+ */
+protected void layoutImpl()
 {
     // Reset wells, knobs and remove all children
     for(ColorWell well : _wells) removeChild(well);
