@@ -22,8 +22,12 @@ public ShapeTree(RMEditorPane anEP)  { super(anEP); }
 protected View createUI()
 {
     if(_shapeTree!=null) return _shapeTree;
-    TreeView tview = new TreeView(); tview.setName("ShapeTree"); tview.setGrowHeight(true);
-    tview.setResolver(new ShapeTreeResolver()); tview.setBorder(Color.GRAY, 1);
+    TreeView tview = new TreeView();
+    tview.setName("ShapeTree");
+    tview.setGrowHeight(true);
+    tview.setBorder(Color.GRAY, 1);
+    tview.getScrollView().setBarSize(14);
+    tview.setResolver(new ShapeTreeResolver());
     return _shapeTree = tview;
 }
 

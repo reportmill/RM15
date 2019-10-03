@@ -22,6 +22,9 @@ public class InspectorPanel extends RMEditorPane.SupportPane {
     // The ShapeButton
     ToggleButton          _shapeBtn;
     
+    // The ScrollView that holds UI for child inspectors
+    ScrollView            _inspBox;
+    
     // The child inspector current installed in inspector panel
     ViewOwner            _childInspector;
     
@@ -69,10 +72,10 @@ public void initUI()
     _shapeBtn = getView("ShapeSpecificButton", ToggleButton.class);
     
     // Get/configure ContentBox
-    ScrollView inspBox = getView("ContentBox", ScrollView.class);
-    inspBox.setBorder(null);
-    inspBox.setBarSize(12);
-    inspBox.setFillWidth(true);
+    _inspBox = getView("ContentBox", ScrollView.class);
+    _inspBox.setBorder(null);
+    _inspBox.setBarSize(12);
+    _inspBox.setFillWidth(true);
     
     // Create the Action that redispatches the event and add the action to the action map
     addKeyActionHandler("UndoAction", "meta Z");
@@ -218,9 +221,16 @@ protected ViewOwner getInspector()  { return _childInspector; }
  */
 protected void setInspector(ViewOwner anOwner)
 {
+    // Set new inspector
     _childInspector = anOwner;
-    ScrollView inspBox = getView("ContentBox", ScrollView.class);
-    inspBox.setContent(anOwner.getUI());
+    
+    // Get content and it grows height
+    View content = anOwner.getUI();
+    boolean contentGrowHeight = content.isGrowHeight();
+    
+    // Set content and whether Inspector ScrollView sizes or scrolls content vertically
+    _inspBox.setContent(content);
+    _inspBox.setFillHeight(contentGrowHeight);
 }
 
 /**
