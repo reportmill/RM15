@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ColView Padding="10,5,5,5" FillWidth="true">
-  <ColView FillWidth="true">
+  <ColView Spacing="2" FillWidth="true">
     <RowView Spacing="10">
       <CheckBox Name="StructuredCheckBox" text="Structured - number of columns:" />
       <TextField Name="NumOfColumnsText" PrefWidth="50" PrefHeight="20" Align="CENTER" />
@@ -17,11 +17,11 @@
     <CheckBox Name="DeleteVSpansCheckBox" text="Delete vertical spans of hidden shapes" />
     <CheckBox Name="ShiftShapesCheckBox" text="Shift shapes below hidden shapes up" />
     <RowView Padding="2">
-      <Label PrefHeight="22" PrefWidth="120" text="Min Split Height:" />
+      <Label PrefWidth="120" text="Min Split Height:" />
       <TextField Name="MinSplitHeightText" PrefWidth="50" PrefHeight="20" Align="CENTER" />
     </RowView>
     <RowView Padding="2">
-      <Label PrefHeight="22" PrefWidth="120" text="Min Remainder Height:" />
+      <Label PrefWidth="120" text="Min Remainder Height:" />
       <TextField Name="MinRemainderHeightText" PrefWidth="50" PrefHeight="20" Align="CENTER" />
     </RowView>
   </ColView>
