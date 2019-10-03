@@ -1036,6 +1036,7 @@ public static RMTool createTool(Class aClass)
     if(aClass==RMLabel.class) return new RMLabelTool();
     if(aClass==RMLabels.class) return new RMLabelsTool();
     if(aClass==RMLineShape.class) return new RMLineShapeTool();
+    if(aClass==RMLinkedText.class) return new RMTextTool();
     if(aClass==RMOvalShape.class) return new RMOvalShapeTool();
     if(aClass==RMPage.class) return new RMPageTool();
     if(aClass==RMParentShape.class) return new RMParentShapeTool();
