@@ -40,6 +40,7 @@ protected void initUI()
 {
     // Get the TextView and register to update selection
     TextView textView = getView("TextView", TextView.class);
+    textView.getScrollView().setBarSize(12);
     _textArea = textView.getTextArea();
     _textArea.addPropChangeListener(pc -> textAreaChangedSel(), TextArea.Selection_Prop);
 }
@@ -105,29 +106,21 @@ public void resetUI()
     setViewValue("ShrinkRadio", text.getWraps()==RMTextShape.WRAP_SCALE);
     setViewValue("GrowRadio", text.getWraps()==RMTextShape.WRAP_NONE);
     
-    // Update CharSpacingThumb and CharSpacingText
-    setViewValue("CharSpacingThumb", text.getCharSpacing());
-    setViewValue("CharSpacingText", text.getCharSpacing());
-    
-    // Update LineSpacingThumb and LineSpacingText
-    setViewValue("LineSpacingThumb", text.getLineSpacing());
-    setViewValue("LineSpacingText", text.getLineSpacing());
-    
-    // Update LineGapThumb and LineGapText
-    setViewValue("LineGapThumb", text.getLineGap());
-    setViewValue("LineGapText", text.getLineGap());
+    // Update CharSpacingSpinner, LineSpacingSpinner, LineGapSpinner
+    setViewValue("CharSpacingSpinner", text.getCharSpacing());
+    setViewValue("LineSpacingSpinner", text.getLineSpacing());
+    setViewValue("LineGapSpinner", text.getLineGap());
     
     // If line height min not set (0), update LineHeightMinSpinner with current font size
     // If valid line height min, update LineHeightMinSpinner with line height
-    double lineHtMin = text.getLineHeightMin();
-    boolean lineHtMinSet = lineHtMin!=0; if(!lineHtMinSet) lineHtMin = RMEditorUtils.getFont(editor).getSize();
-    setViewValue("LineHeightMinSpinner", lineHtMin);
-    
+    //double lineHtMin = text.getLineHeightMin();
+    //boolean lineHtMinSet = lineHtMin!=0; if(!lineHtMinSet) lineHtMin = RMEditorUtils.getFont(editor).getSize();
+    //setViewValue("LineHeightMinSpinner", lineHtMin);
     // If line height max not set, update LineHeightMaxSpinner with current font size
     // If line height max is set, update LineHeightMaxSpinner with line height max
-    double lineHtMax = text.getLineHeightMax();
-    boolean lineHtMaxSet = lineHtMax>999; if(!lineHtMaxSet) lineHtMax = RMEditorUtils.getFont(editor).getSize();
-    setViewValue("LineHeightMaxSpinner", lineHtMax);
+    //double lineHtMax = text.getLineHeightMax();
+    //boolean lineHtMaxSet = lineHtMax>999; if(!lineHtMaxSet) lineHtMax = RMEditorUtils.getFont(editor).getSize();
+    //setViewValue("LineHeightMaxSpinner", lineHtMax);
     
     // Update PDF options: EditableCheckBox, MultilineCheckBox
     setViewValue("EditableCheckBox", text.isEditable());
@@ -179,31 +172,17 @@ public void respondUI(ViewEvent anEvent)
     if(anEvent.equals("ShrinkRadio")) for(RMTextShape txt : texts) txt.setWraps(RMTextShape.WRAP_SCALE);
     if(anEvent.equals("GrowRadio")) for(RMTextShape txt : texts) txt.setWraps(RMTextShape.WRAP_NONE);
     
-    // Handle CharSpacingThumb/CharSpacingText - have RMEditor set char spacing on currently selected texts
-    if(anEvent.equals("CharSpacingThumb") || anEvent.equals("CharSpacingText"))
-        RMTextTool.setCharSpacing(editor, anEvent.getFloatValue());
-    
-    // Handle LineSpacingThumb/LineSpacingText - have RMEditor set line spacing on currently selected texts
-    if(anEvent.equals("LineSpacingThumb") || anEvent.equals("LineSpacingText"))
-        RMTextTool.setLineSpacing(editor, anEvent.getFloatValue());
-
-    // Handle LineSpacingSingleButton, LineSpacingDoubleButton
+    // Handle CharSpacingSpinner, LineSpacingSpinner, LineSpacingSingleButton, LineSpacingDoubleButton, LineGapSpinner
+    if(anEvent.equals("CharSpacingSpinner")) RMTextTool.setCharSpacing(editor, anEvent.getFloatValue());
+    if(anEvent.equals("LineSpacingSpinner")) RMTextTool.setLineSpacing(editor, anEvent.getFloatValue());
     if(anEvent.equals("LineSpacingSingleButton")) RMTextTool.setLineSpacing(editor, 1);
     if(anEvent.equals("LineSpacingDoubleButton")) RMTextTool.setLineSpacing(editor, 2);
+    if(anEvent.equals("LineGapSpinner")) RMTextTool.setLineGap(editor, anEvent.getFloatValue());
 
-    // Handle LineGapThumb/LineGapText - have RMEditor set line gap on currently selected texts
-    if(anEvent.equals("LineGapThumb") || anEvent.equals("LineGapText"))
-        RMTextTool.setLineGap(editor, anEvent.getFloatValue());
-
-    // Handle LineHeightMinSpinner - set line height
-    if(anEvent.equals("LineHeightMinSpinner"))
-        RMTextTool.setLineHeightMin(editor, Math.max(anEvent.getFloatValue(), 0));
-
-    // Handle LineHeightMaxSpinner - set line height max to value
-    if(anEvent.equals("LineHeightMaxSpinner")) {
-        float value = anEvent.getFloatValue(); if(value>=999) value = Float.MAX_VALUE;
-        RMTextTool.setLineHeightMax(editor, value);
-    }
+    // Handle LineHeightMinSpinner, LineHeightMaxSpinner
+    //if(anEvent.equals("LineHeightMinSpinner")) setLineHeightMin(editor, Math.max(anEvent.getFloatValue(), 0));
+    //if(anEvent.equals("LineHeightMaxSpinner")) {
+    //    float val = anEvent.getFloatValue(); if(val>=999) val = Float.MAX_VALUE; setLineHeightMax(editor, val); }
     
     // Handle MakeMinWidthMenuItem, MakeMinHeightMenuItem
     if(anEvent.equals("MakeMinWidthMenuItem")) for(RMTextShape txt : texts) txt.setWidth(txt.getBestWidth());

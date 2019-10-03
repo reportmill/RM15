@@ -26,18 +26,19 @@ public class RMCrossTabCellTool <T extends RMCrossTabCell> extends RMTextTool <T
  */
 protected View createUI()
 {
-    // Get TextToolUI (TabView) and add CrossTabCellUI
-    TabView tpane = (TabView)createUI(RMTextTool.class);
+    // Get UI for this tool
     ChildView cellUI = (ChildView)createUI(getClass());
-    
-    // Add tab for cell panel
-    tpane.addTab("Cell", cellUI, 0);
     
     // Create SortPanel, set bounds and install
     _sortPanel = new RMSortPanel(this);
     _sortPanel.getUI().setBounds(4, 45, 267, 100);
-    cellUI.addChild(_sortPanel.getUI());
-    return tpane;
+    cellUI.addChild(_sortPanel.getUI(), 1);
+    
+    // Get super UI (TextTool UI - a ColView) and add UI for this tool
+    ColView colView = (ColView)createUI(RMTextTool.class);
+    colView.setGrowHeight(false); // So inspector will scroll
+    colView.addChild(cellUI, 0);
+    return colView;
 }
 
 /**
