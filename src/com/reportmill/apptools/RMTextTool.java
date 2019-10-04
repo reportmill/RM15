@@ -583,17 +583,20 @@ public void moveShapeHandle(T aShape, int aHandle, Point toPoint)
     // Get whether left handle and width change
     boolean left = aHandle==HandleW || aHandle==HandleNW || aHandle==HandleSW;
     double dw = p2.getX() - p1.getX(); if(left) dw = -dw;
-    double nw = aShape.getWidth() + dw; if(nw<8) { nw = 8; dw = nw - aShape.getWidth(); }
+    double nw = aShape.getWidth() + dw;
+    if(nw<8) { nw = 8; dw = nw - aShape.getWidth(); }
     
     // Get shape to adjust and new width (make sure it's no less than 8)
-    int index = aShape.indexOf(), index2 = left? index-1 : index+1;
+    int index = aShape.indexOf();
+    int index2 = left? index-1 : index+1;
     RMShape other = aShape.getParent().getChild(index2);
-    double nw2 = other.getWidth() - dw; if(nw2<8) { nw2 = 8; dw = other.getWidth() - nw2; nw = aShape.getWidth() + dw; } 
+    double nw2 = other.getWidth() - dw;
+    if(nw2<8) { nw2 = 8; dw = other.getWidth() - nw2; nw = aShape.getWidth() + dw; } 
     
-    // Adjust shape and revalidate parent
+    // Adjust shape and layout parent
     aShape.setWidth(nw);
     other.setWidth(nw2);
-    aShape.getParent().relayout();
+    aShape.getParent().layout();
 }
 
 /**
