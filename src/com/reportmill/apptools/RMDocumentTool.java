@@ -172,7 +172,7 @@ public void respondUI(ViewEvent anEvent)
     
     // If page size changed, make sure window is right size
     if(resizeWindow) {
-        if(getEditorPane().getWindow().isVisible())
+        if(getEditorPane().getWindow().isVisible() && !getEditorPane().getWindow().isMaximized())
             getEditorPane().getWindow().pack();
         getView("PageSizeView").repaint();
     }
