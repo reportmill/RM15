@@ -190,15 +190,15 @@ protected void respondUI(ViewEvent anEvent)
     // Handle DecimalAddButton: If currently selected format is number format, add decimal
     if(anEvent.equals("DecimalAddButton") && nfmt!=null) {
         nfmt = nfmt.clone();
-        nfmt.setMinimumFractionDigits(nfmt.getMinimumFractionDigits()+1); // Add decimal digits
+        nfmt.setMinimumFractionDigits(nfmt.getMinimumFractionDigits()+1);
         nfmt.setMaximumFractionDigits(nfmt.getMinimumFractionDigits());
         RMEditorUtils.setFormat(editor, nfmt);
     }
     
     // Handle DecimalRemoveButton: If currently selected format is number format, remove decimal digits
     if(anEvent.equals("DecimalRemoveButton") && nfmt!=null) {
-        nfmt = nfmt.clone(); // Clone it
-        nfmt.setMinimumFractionDigits(nfmt.getMinimumFractionDigits()-1); // Remove decimal digits
+        nfmt = nfmt.clone();
+        nfmt.setMinimumFractionDigits(nfmt.getMinimumFractionDigits()-1);
         nfmt.setMaximumFractionDigits(nfmt.getMinimumFractionDigits());
         RMEditorUtils.setFormat(editor, nfmt);
     }
@@ -213,14 +213,8 @@ protected void respondUI(ViewEvent anEvent)
     // Handle Preview/Edit button and PreviewMenuItem
     if(anEvent.equals("PreviewEditButton") || anEvent.equals("PreviewMenuItem")) {
         
-        // Hack to open edited file: Get filename (create file if missing) and open file in TextEdit
-        if(anEvent.isAltDown()) {
-            String fname = getEditor().getDoc().getFilename();
-            if(fname==null) { fname = SnapUtils.getTempDir() + "RMDocument.rpt"; editor.getDoc().write(fname); }
-            String commands[] = { "open",  "-e", fname };
-            try { Runtime.getRuntime().exec(commands); }
-            catch(Exception e) { e.printStackTrace(); }
-        }
+        // Hack to open edited file as text file
+        if(anEvent.isAltDown()) openDocTextFile();
         
         // Normal preview
         else getEditorPane().setEditing(!getEditorPane().isEditing());
@@ -289,6 +283,22 @@ protected void respondUI(ViewEvent anEvent)
     // Handle ColorWell
     if(anEvent.equals("ColorWell"))
         RMEditorUtils.setSelectedColor(editor, _colorWell.getColor());
+}
+
+/**
+ * Opens the editor document as a text file.
+ */
+private void openDocTextFile()
+{
+    // Get filename for doc (if not set, write doc to temp file)
+    String fname = getEditor().getDoc().getFilename();
+    if(fname==null) {
+        fname = SnapUtils.getTempDir() + "RMDocument.rpt";
+        getEditor().getDoc().write(fname);
+    }
+    
+    // Open file
+    GFXEnv.getEnv().openTextFile(fname);
 }
 
 /**
