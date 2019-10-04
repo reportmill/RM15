@@ -963,17 +963,25 @@ private void dropPDFFile(RMShape aShape, ClipboardData aFile, Point aPoint)
  */
 private void dropReportFile(RMShape aShape, ClipboardData aFile, Point aPoint)
 {
+    // Get Editor
+    RMEditor editor = getEditor();
+    
+    // Get doc for dropped file
+    RMDocument doc = RMDocument.getDoc(aFile.getBytes());
+    
+    // If TeaVM, replace report file instead
+    if(SnapUtils.isTeaVM) {
+	    editor.setDoc(doc); editor.requestFocus(); return; }
+    
     // Find a parent shape that accepts children
     RMParentShape parent = aShape instanceof RMParentShape? (RMParentShape)aShape : aShape.getParent();
     while(!getTool(parent).getAcceptsChildren(parent))
         parent = parent.getParent();
     
-    // Get document for dropped file and embedded document shape for document
-    RMDocument doc = RMDocument.getDoc(aFile.getBytes());
+    // Get embedded doc shape for doc
     RMNestedDoc ndoc = new RMNestedDoc(); ndoc.setNestedDoc(doc);
     
-    // Center embedded document around drop point
-    RMEditor editor = getEditor();
+    // Center embedded doc around drop point
     Point point = editor.convertToShape(aPoint.x, aPoint.y, parent);
     ndoc.setXY(point);
 
