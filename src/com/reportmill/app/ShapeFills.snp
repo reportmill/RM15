@@ -16,7 +16,7 @@
         <CheckBox Name="StrokeCheckBox" Padding="0,0,0,8" />
         <ComboBox Name="StrokeComboBox" PrefWidth="135" PrefHeight="23" />
       </RowView>
-      <BoxView Name="StrokePane" PrefHeight="200" FillWidth="true" FillHeight="true" />
+      <BoxView Name="StrokePane" FillWidth="true" />
     </ColView>
   </TitleView>
   <TitleView Padding="6,4,4,4" MinHeight="30" title="Effect" Collapsible="true" Expanded="true">
@@ -25,7 +25,7 @@
         <CheckBox Name="EffectCheckBox" Padding="0,0,0,8" />
         <ComboBox Name="EffectComboBox" PrefWidth="135" PrefHeight="23" />
       </RowView>
-      <BoxView Name="EffectPane" PrefHeight="190" FillWidth="true" FillHeight="true" />
+      <BoxView Name="EffectPane" FillWidth="true" />
     </ColView>
   </TitleView>
   <TitleView Padding="8" title="Transparency">
