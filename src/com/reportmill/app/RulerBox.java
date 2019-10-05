@@ -8,7 +8,7 @@ import com.reportmill.shape.*;
  * A View subclass to add rulers to a given content view.
  * Currently assumes that view is RMEditor is ScrollView.
  */
-public class RulerBox extends HostView {
+public class RulerBox extends ParentView {
     
     // The content view
     View         _content;
@@ -27,10 +27,10 @@ public View getContent()  { return _content; }
 public void setContent(View aView)
 {
     if(aView==_content) return;
-    removeGuests();
-    if(_content!=null) removeGuest(_content);
+    removeChildren();
+    if(_content!=null) removeChild(_content);
     _content = aView;
-    if(_content!=null) addGuest(_content);
+    if(_content!=null) addChild(_content);
 }
 
 /**
