@@ -376,26 +376,46 @@ private static Image createImage(RMShape aShape, double aW, double aH)
  */
 private class SheetDialogBox extends DialogBox {
     
-    ChildView _cview, _clipBox;
-    boolean _cancelled;
+    // The parent view hosting the SheetDialogBox
+    ChildView     _hostView;
+    
+    // The BoxView to hold/clip the UI
+    BoxView       _clipBox;
+    
+    // Whether the dialog box was cancelled
+    boolean       _cancelled;
     
     /**
      * Show Dialog in sheet.
      */
     protected boolean showPanel(View aView)
     {
-        _cview = aView instanceof ChildView? (ChildView)aView : null;
-        if(_cview==null) return super.showPanel(aView);
+        // Get given view as HostView
+        _hostView = aView instanceof ChildView? (ChildView)aView : null;
+        if(_hostView==null) return super.showPanel(aView);
         
-        for(View v : _cview.getChildren()) v.setPickable(false);
+        // Make Other views invisible to mouse clicks
+        for(View v : _hostView.getChildren()) v.setPickable(false);
         
-        View ui = getUI(); ui.setManaged(false); //ui.setLeanX(HPos.CENTER);
-        ui.setFill(ViewUtils.getBackFill()); ui.setBorder(Color.DARKGRAY, 1);
-        Size size = ui.getPrefSize(); ui.setSize(size);
+        // Create/configure UI
+        View ui = getUI();
+        ui.setManaged(false);
+        ui.setFill(ViewUtils.getBackFill());
+        ui.setBorder(Color.DARKGRAY, 1);
+        Size size = ui.getPrefSize();
+        ui.setSize(size);
         
-        _clipBox = new BoxView(ui); _clipBox.setSize(size); _clipBox.setManaged(false); _clipBox.setLeanX(HPos.CENTER);
+        // Create box to hold/clip UI
+        _clipBox = new BoxView(ui);
+        _clipBox.setSize(size);
+        _clipBox.setManaged(false);
+        _clipBox.setLeanX(HPos.CENTER);
         _clipBox.setClipToBounds(true);
-        _cview.addChild(_clipBox);
+        
+        // Add UI box to HostView
+        _hostView.addChild(_clipBox);
+        
+        // Configure UI to animate in and start
         ui.setTransY(-size.height);
         ui.getAnim(1000).setTransY(-1).play();
         
@@ -410,21 +430,28 @@ private class SheetDialogBox extends DialogBox {
      */
     protected void hide()
     {
+        // Configure UI to animate out and start
         View ui = getUI();
-        ui.getAnimCleared(1000).setTransY(-ui.getHeight()).setOnFinish(() -> hideFinished()).needsFinish().play();
+        ViewAnim anim = ui.getAnimCleared(1000);
+        anim.setTransY(-ui.getHeight());
+        anim.setOnFinish(() -> hideAnimDone()).needsFinish().play();
     }
     
-    void hideFinished()
+    /**
+     * Called when hide() animation finishes.
+     */
+    private void hideAnimDone()
     {
-        _cview.removeChild(_clipBox); //_cview.removeChild(getUI());
-        for(View v : _cview.getChildren()) v.setPickable(true);
+        // Remove UI, reset everything pickable and notify of close
+        _hostView.removeChild(_clipBox);
+        for(View v : _hostView.getChildren()) v.setPickable(true);
         dialogBoxClosed();
     }
     
-    /** Hides the dialog box. */
+    /** Override to set cancelled flag. */
     public void confirm()  { _cancelled = false; hide(); }
     
-    /** Cancels the dialog box. */
+    /** Override to set cancelled flag. */
     public void cancel()  { _cancelled = true; hide(); }
 }
 

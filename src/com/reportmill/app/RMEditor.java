@@ -981,14 +981,14 @@ protected void setUndoSelection(Object aSelection)
 /**
  * Property change.
  */
-public void deepChange(Object aShape, PropChange anEvent)
+public void deepChange(Object aShape, PropChange aPC)
 {
     // If deep change for EditorTextEditor, just return since it registers Undo itself (with better coalesce)
     //if(getTextEditor()!=null && getTextEditor().getTextShape()==aShape &&
     //    (anEvent.getSource() instanceof RMXString || anEvent.getSource() instanceof RMXStringRun)) return;
     
     // Add undo change
-    addUndoChange(anEvent);
+    addUndoChange(aPC);
     
     // Reset EditorPane UI
     RMEditorPane ep = getEditorPane(); ep.resetLater();
@@ -997,13 +997,13 @@ public void deepChange(Object aShape, PropChange anEvent)
 /**
  * Property change.
  */
-protected void addUndoChange(PropChange anEvent)
+protected void addUndoChange(PropChange aPC)
 {
     // Get undoer (just return if null)
     Undoer undoer = getUndoer(); if(undoer==null) return;
     
     // If no undos and change is RMDocument.SelectedPage or RMTableGroup.MainTable, just return
-    if(!undoer.hasUndos()) { String pname = anEvent.getPropName();
+    if(!undoer.hasUndos()) { String pname = aPC.getPropName();
         if(pname=="SelectedPage") return;
         if(pname=="MainTable") return;
         if(pname=="Version") return;
@@ -1014,7 +1014,7 @@ protected void addUndoChange(PropChange anEvent)
         undoer.setUndoSelection(new ArrayList(getSelectedOrSuperSelectedShapes()));
     
     // Add property change
-    undoer.addPropertyChange(anEvent);
+    undoer.addPropChange(aPC);
     
     // Save UndoerChanges after delay
     saveUndoerChangesLater();
