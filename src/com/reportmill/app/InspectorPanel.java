@@ -261,7 +261,7 @@ public void resetSelPathView()
         
         // Create new button and configure action
         ToggleButton button = new ToggleButton(); button.setName("SelPath " + (shp.getAncestorCount()-1));
-        button.setPrefSize(40,40); button.setMinSize(40,40); button.setShowBorder(false);
+        button.setPrefSize(40,40); button.setMinSize(40,40); button.setShowArea(false);
         
         // Set button images
         Image img = editor.getTool(shp).getImage();

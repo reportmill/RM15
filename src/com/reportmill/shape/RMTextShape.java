@@ -603,7 +603,7 @@ public void setLinkedText(RMLinkedText aLinkedText)
 public TextBox getTextBox()
 {
     if(_textBox!=null) return _textBox;
-    _textBox = new TextBox(); _textBox.setWrapText(true); updateTextBox();
+    _textBox = new TextBox(); _textBox.setWrapLines(true); updateTextBox();
     return _textBox;
 }
 
