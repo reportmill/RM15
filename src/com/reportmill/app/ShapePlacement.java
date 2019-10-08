@@ -61,14 +61,6 @@ public void resetUI()
     setViewValue("HThumb", getUnitsFromPoints(shape.height()));
     setViewValue("HText", getUnitsFromPointsStr(shape.height()));
     
-    // Update MinWText and MinHText
-    setViewValue("MinWText", shape.isMinWidthSet()? shape.getMinWidth() : "-");
-    setViewValue("MinHText", shape.isMinHeightSet()? shape.getMinHeight() : "-");
-    
-    // Update PrefWText and PrefHText
-    setViewValue("PrefWText", shape.isPrefWidthSet()? shape.getPrefWidth() : "-");
-    setViewValue("PrefHText", shape.isPrefHeightSet()? shape.getPrefHeight() : "-");
-    
     // Update RotationThumb and RotationText
     setViewValue("RotationThumb", shape.getRoll());
     setViewValue("RotationText", shape.getRoll());
@@ -88,6 +80,14 @@ public void resetUI()
     // Update SkewYThumb and SkewYText
     setViewValue("SkewYThumb", shape.getSkewY());
     setViewValue("SkewYText", shape.getSkewY());
+    
+    // Update MinWText and MinHText
+    setViewValue("MinWText", shape.isMinWidthSet()? shape.getMinWidth() : "-");
+    setViewValue("MinHText", shape.isMinHeightSet()? shape.getMinHeight() : "-");
+    
+    // Update PrefWText and PrefHText
+    setViewValue("PrefWText", shape.isPrefWidthSet()? shape.getPrefWidth() : "-");
+    setViewValue("PrefHText", shape.isPrefHeightSet()? shape.getPrefHeight() : "-");
     
     // Disable if document or page
     getUI().setEnabled(!(shape instanceof RMDocument || shape instanceof RMPage));
@@ -140,38 +140,6 @@ public void respondUI(ViewEvent anEvent)
         for(RMShape shp : shapes) shp.setHeight(value);
     }
     
-    // Handle MinWText & MinHText
-    if(anEvent.equals("MinWText"))
-        for(RMShape shp : shapes) shp.setMinWidth(anEvent.getFloatValue());
-    if(anEvent.equals("MinHText"))
-        for(RMShape shp : shapes) shp.setMinHeight(anEvent.getFloatValue());
-    
-    // Handle MinWSyncButton & MinHSyncButton
-    if(anEvent.equals("MinWSyncButton"))
-        for(RMShape shp : shapes) shp.setMinWidth(shp.getWidth());
-    if(anEvent.equals("MinHSyncButton"))
-        for(RMShape shp : shapes) shp.setMinHeight(shp.getHeight());
-
-    // Handle PrefWText & PrefHText
-    if(anEvent.equals("PrefWText"))
-        for(RMShape shp : shapes) shp.setPrefWidth(anEvent.getFloatValue());
-    if(anEvent.equals("PrefHText"))
-        for(RMShape shp : shapes) shp.setPrefHeight(anEvent.getFloatValue());
-    
-    // Handle PrefWSyncButton & PrefHSyncButton
-    if(anEvent.equals("PrefWSyncButton"))
-        for(RMShape shp : shapes) shp.setPrefWidth(shp.getWidth());
-    if(anEvent.equals("PrefHSyncButton"))
-        for(RMShape shp : shapes) shp.setPrefHeight(shp.getHeight());
-        
-    // Handle Rotation Thumb & Text
-    if(anEvent.equals("RotationThumb") || anEvent.equals("RotationText")) {
-        shape.undoerSetUndoTitle("Rotation Change");
-        float value = anEvent.getFloatValue();
-        for(RMShape s : shapes)
-            s.setRoll(value);
-    }
-
     // Handle ScaleX/ScaleY Thumb & Text
     if(anEvent.equals("ScaleXThumb") || anEvent.equals("ScaleXText") ||
         anEvent.equals("ScaleYThumb") || anEvent.equals("ScaleYText")) {
@@ -206,6 +174,38 @@ public void respondUI(ViewEvent anEvent)
             s.setSkewY(value);
     }
     
+    // Handle MinWText & MinHText
+    if(anEvent.equals("MinWText"))
+        for(RMShape shp : shapes) shp.setMinWidth(anEvent.getFloatValue());
+    if(anEvent.equals("MinHText"))
+        for(RMShape shp : shapes) shp.setMinHeight(anEvent.getFloatValue());
+    
+    // Handle MinWSyncButton & MinHSyncButton
+    if(anEvent.equals("MinWSyncButton"))
+        for(RMShape shp : shapes) shp.setMinWidth(shp.getWidth());
+    if(anEvent.equals("MinHSyncButton"))
+        for(RMShape shp : shapes) shp.setMinHeight(shp.getHeight());
+
+    // Handle PrefWText & PrefHText
+    if(anEvent.equals("PrefWText"))
+        for(RMShape shp : shapes) shp.setPrefWidth(anEvent.getFloatValue());
+    if(anEvent.equals("PrefHText"))
+        for(RMShape shp : shapes) shp.setPrefHeight(anEvent.getFloatValue());
+    
+    // Handle PrefWSyncButton & PrefHSyncButton
+    if(anEvent.equals("PrefWSyncButton"))
+        for(RMShape shp : shapes) shp.setPrefWidth(shp.getWidth());
+    if(anEvent.equals("PrefHSyncButton"))
+        for(RMShape shp : shapes) shp.setPrefHeight(shp.getHeight());
+        
+    // Handle Rotation Thumb & Text
+    if(anEvent.equals("RotationThumb") || anEvent.equals("RotationText")) {
+        shape.undoerSetUndoTitle("Rotation Change");
+        float value = anEvent.getFloatValue();
+        for(RMShape s : shapes)
+            s.setRoll(value);
+    }
+
     // Handle AutosizingPanel
     if(anEvent.equals("AutosizingPanel"))
         for(RMShape shp : shapes)

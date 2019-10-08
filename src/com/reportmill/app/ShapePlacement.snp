@@ -5,33 +5,19 @@
     <Label PrefHeight="20" text="Bounds:" />
     <CheckBox Name="LockedCheckBox" LeanX="RIGHT" text="Locked" Position="CENTER_RIGHT" />
   </RowView>
-  <SpringView width="275" height="217" PrefWidth="275" PrefHeight="217">
+  <SpringView width="275" height="132" PrefWidth="275" PrefHeight="132">
     <Label x="64" width="17" height="20" Align="CENTER" text="X:" />
-    <Label x="198" width="17" height="20" Align="CENTER" text="Y:" />
+    <TextField Name="XText" x="15" y="18" width="108" height="22" Align="CENTER" />
+    <ThumbWheel Name="XThumb" x="15" y="44" width="108" height="16" type="linear" min="-50" max="50" round="1" />
+    <Label x="193" width="17" height="20" Align="CENTER" text="Y:" />
+    <TextField Name="YText" x="145" y="18" width="108" height="22" Align="CENTER" />
+    <ThumbWheel Name="YThumb" x="145" y="44" width="108" height="16" type="linear" min="-50" max="50" round="1" />
     <Label x="63" y="61" width="22" height="20" Align="CENTER" text="W:" />
-    <Label x="199" y="61" width="17" height="20" Align="CENTER" text="H:" />
-    <TextField Name="XText" x="5" y="18" width="128" height="22" Align="CENTER" />
-    <ThumbWheel Name="XThumb" x="5" y="44" width="128" height="16" type="linear" min="-50" max="50" round="1" />
-    <TextField Name="YText" x="140" y="18" width="128" height="22" Align="CENTER" />
-    <ThumbWheel Name="YThumb" x="140" y="44" width="128" height="16" type="linear" min="-50" max="50" round="1" />
-    <TextField Name="WText" x="4" y="79" width="128" height="22" Align="CENTER" />
-    <ThumbWheel Name="WThumb" x="4" y="105" width="128" height="16" type="linear" min="-50" max="50" round="1" />
-    <TextField Name="HText" x="139" y="79" width="128" height="22" Align="CENTER" />
-    <ThumbWheel Name="HThumb" x="139" y="105" width="128" height="16" type="linear" min="-50" max="50" round="1" />
-    <Label x="5" y="129" width="93" height="20" text="Minimum Size:" />
-    <Label x="12" y="153" width="25" height="22" Align="CENTER_RIGHT" text="W:" />
-    <TextField Name="MinWText" x="38" y="153" width="50" height="22" Align="CENTER" />
-    <Button Name="MinWSyncButton" x="88" y="153" width="22" height="22" text="S" />
-    <Label x="12" y="181" width="25" height="22" Align="CENTER_RIGHT" text="H:" />
-    <TextField Name="MinHText" x="38" y="182" width="50" height="22" Align="CENTER" />
-    <Button Name="MinHSyncButton" x="88" y="182" width="22" height="22" text="S" />
-    <Label x="134" y="129" width="93" height="20" text="Preferred Size:" />
-    <Label x="141" y="153" width="25" height="22" Align="CENTER_RIGHT" text="W:" />
-    <TextField Name="PrefWText" x="167" y="153" width="50" height="22" Align="CENTER" />
-    <Button Name="PrefWSyncButton" x="217" y="153" width="22" height="22" text="S" />
-    <Label x="141" y="182" width="25" height="22" Align="CENTER_RIGHT" text="H:" />
-    <TextField Name="PrefHText" x="167" y="182" width="50" height="22" Align="CENTER" />
-    <Button Name="PrefHSyncButton" x="217" y="182" width="22" height="22" text="S" />
+    <TextField Name="WText" x="15" y="79" width="108" height="22" Align="CENTER" />
+    <ThumbWheel Name="WThumb" x="15" y="105" width="108" height="16" type="linear" min="-50" max="50" round="1" />
+    <Label x="193" y="61" width="17" height="20" Align="CENTER" text="H:" />
+    <TextField Name="HText" x="145" y="79" width="108" height="22" Align="CENTER" />
+    <ThumbWheel Name="HThumb" x="145" y="105" width="108" height="16" type="linear" min="-50" max="50" round="1" />
   </SpringView>
   <ColView Padding="5,5,5,5" Spacing="6" FillWidth="true">
     <TitleView Padding="5,8,9,18" Title="Rotation">
@@ -70,9 +56,39 @@
       </ColView>
     </TitleView>
     <TitleView Padding="5,8,8,8" Title="Autosizing" Collapsible="true">
-      <ColView Padding="1" Spacing="5" Align="TOP_CENTER">
-        <View Name="AutosizingPanel" PrefWidth="100" PrefHeight="100" Class="com.reportmill.app.ShapePlacement$AutosizingPanel" />
-        <Button Name="ResetAutosizingButton" PrefWidth="80" PrefHeight="20" text="Default" />
+      <ColView FillWidth="true">
+        <RowView Padding="6,5,12,5" Spacing="30">
+          <ColView Spacing="2" Align="TOP_CENTER">
+            <Label text="Min Size:" />
+            <RowView Spacing="1">
+              <Label PrefWidth="20" Align="CENTER" text="W:" />
+              <TextField Name="MinWText" PrefWidth="50" Align="CENTER" />
+              <Button Name="MinWSyncButton" PrefWidth="20" PrefHeight="20" text="S" />
+            </RowView>
+            <RowView Spacing="1">
+              <Label PrefWidth="20" Align="CENTER" text="H:" />
+              <TextField Name="MinHText" PrefWidth="50" Align="CENTER" />
+              <Button Name="MinHSyncButton" PrefWidth="20" PrefHeight="20" text="S" />
+            </RowView>
+          </ColView>
+          <ColView Spacing="2" Align="TOP_CENTER">
+            <Label text="Pref Size:" />
+            <RowView Spacing="1">
+              <Label PrefWidth="20" Align="CENTER" text="W:" />
+              <TextField Name="PrefWText" PrefWidth="50" Align="CENTER" />
+              <Button Name="PrefWSyncButton" PrefWidth="20" PrefHeight="20" text="S" />
+            </RowView>
+            <RowView Spacing="1">
+              <Label PrefWidth="20" Align="CENTER" text="H:" />
+              <TextField Name="PrefHText" PrefWidth="50" Align="CENTER" />
+              <Button Name="PrefHSyncButton" PrefWidth="20" PrefHeight="20" text="S" />
+            </RowView>
+          </ColView>
+        </RowView>
+        <ColView Padding="1" Spacing="5" Align="TOP_CENTER">
+          <View Name="AutosizingPanel" PrefWidth="100" PrefHeight="100" Class="com.reportmill.app.ShapePlacement$AutosizingPanel" />
+          <Button Name="ResetAutosizingButton" PrefWidth="80" PrefHeight="20" text="Default" />
+        </ColView>
       </ColView>
     </TitleView>
   </ColView>
