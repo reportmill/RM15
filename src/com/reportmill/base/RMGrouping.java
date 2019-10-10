@@ -8,7 +8,7 @@ import snap.util.*;
 /**
  * This object represents an individual grouping with attributes like key, sorts, topN sort, etc.
  */
-public class RMGrouping extends SnapObject implements Cloneable, XMLArchiver.Archivable {
+public class RMGrouping implements Cloneable, XMLArchiver.Archivable {
     
     // The grouping key
     String           _key;
@@ -42,6 +42,9 @@ public class RMGrouping extends SnapObject implements Cloneable, XMLArchiver.Arc
     
     // Selected sort index (used in editer only)
     int              _selectedSortIndex = -1;
+
+    // The PropChangeSupport
+    PropChangeSupport  _pcs = PropChangeSupport.EMPTY;
 
 /**
  * Creates an empty grouping.
@@ -315,6 +318,66 @@ public RMSort getSelectedSort()
 }
 
 /**
+ * Add listener.
+ */
+public void addPropChangeListener(PropChangeListener aLsnr)
+{
+    if(_pcs==PropChangeSupport.EMPTY) _pcs = new PropChangeSupport(this);
+    _pcs.addPropChangeListener(aLsnr);
+}
+
+/**
+ * Remove listener.
+ */
+public void removePropChangeListener(PropChangeListener aLsnr)  { _pcs.removePropChangeListener(aLsnr); }
+
+/**
+ * Fires a property change for given property name, old value, new value and index.
+ */
+protected void firePropChange(String aProp, Object oldVal, Object newVal)
+{
+    if(!_pcs.hasListener(aProp)) return;
+    PropChange pc = new PropChange(this, aProp, oldVal, newVal);
+    firePropChange(pc);
+}
+
+/**
+ * Fires a property change for given property name, old value, new value and index.
+ */
+protected void firePropChange(String aProp, Object oldVal, Object newVal, int anIndex)
+{
+    if(!_pcs.hasListener(aProp)) return;
+    PropChange pc = new PropChange(this, aProp, oldVal, newVal, anIndex);
+    firePropChange(pc);
+}
+
+/**
+ * Fires a given property change.
+ */
+protected void firePropChange(PropChange aPC)
+{
+    _pcs.firePropChange(aPC);
+}
+
+/**
+ * Standard clone implementation.
+ */
+public RMGrouping clone()
+{
+    // Do normal clone
+    RMGrouping clone = null; try { clone = (RMGrouping)super.clone(); }
+    catch(CloneNotSupportedException e) { throw new RuntimeException(e); }
+    
+    // Clear PropChangeSupport and return
+    clone._pcs = PropChangeSupport.EMPTY;
+    
+    // Clone sorts, TopNSort and return
+    clone._sorts = new ArrayList(_sorts.size()); for(RMSort s : _sorts) clone._sorts.add(s.clone());
+    clone._topNSort = (RMTopNSort)_topNSort.clone();
+    return clone;
+}
+
+/**
  * Standard equals implementation.
  */
 public boolean equals(Object anObj)
@@ -342,16 +405,9 @@ public boolean equals(Object anObj)
 }
 
 /**
- * Standard clone implementation.
+ * Returns string representation of grouping. 
  */
-public RMGrouping clone()
-{
-    // Do basic clone, clone sorts, TopNSort and return
-    RMGrouping clone = (RMGrouping)super.clone();
-    clone._sorts = new ArrayList(_sorts.size()); for(RMSort s : _sorts) clone._sorts.add(s.clone());
-    clone._topNSort = (RMTopNSort)_topNSort.clone();
-    return clone;
-}
+public String toString()  { return getClass().getSimpleName() + ": " + getKey(); }
 
 /**
  * XML Archival.
@@ -383,7 +439,7 @@ public XMLElement toXML(XMLArchiver anArchiver)
     if(_hasHeader) e.add("header", true);
     if(_hasDetails) e.add("details", true);
     if(_hasSummary) e.add("summary", true);
-    return e; // Return xml element
+    return e;
 }
 
 /**
@@ -438,10 +494,5 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
     setHasSummary(anElement.getAttributeBoolValue("summary"));
     return this; // Return this grouping
 }
-
-/**
- * Returns string representation of grouping. 
- */
-public String toString()  { return getClass().getSimpleName() + ": " + getKey(); }
 
 }

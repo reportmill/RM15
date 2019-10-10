@@ -8,13 +8,16 @@ import snap.util.*;
 /**
  * This class simply manages a list of groupings and has some nice convenience methods.
  */
-public class RMGrouper extends SnapObject implements XMLArchiver.Archivable {
+public class RMGrouper implements Cloneable, XMLArchiver.Archivable {
     
     // The list of groupings
-    List <RMGrouping>  _groupings = new Vector();
+    List <RMGrouping>   _groupings = new Vector();
 
     // Selected group index (editing only)
-    int                _selectedGroupingIndex = 0;
+    int                 _selectedGroupingIndex = 0;
+    
+    // The PropChangeSupport
+    PropChangeSupport   _pcs = PropChangeSupport.EMPTY;
     
     // A listener to catch RMGrouping PropChange
     PropChangeListener  _groupingLsnr = pc -> groupingDidPropChange(pc);
@@ -205,18 +208,74 @@ public RMGroup groupObjects(List aList)
 protected void groupingDidPropChange(PropChange anEvent)  { firePropChange(anEvent); }
 
 /**
+ * Add listener.
+ */
+public void addPropChangeListener(PropChangeListener aLsnr)
+{
+    if(_pcs==PropChangeSupport.EMPTY) _pcs = new PropChangeSupport(this);
+    _pcs.addPropChangeListener(aLsnr);
+}
+
+/**
+ * Remove listener.
+ */
+public void removePropChangeListener(PropChangeListener aLsnr)  { _pcs.removePropChangeListener(aLsnr); }
+
+/**
+ * Fires a property change for given property name, old value, new value and index.
+ */
+protected void firePropChange(String aProp, Object oldVal, Object newVal)
+{
+    if(!_pcs.hasListener(aProp)) return;
+    PropChange pc = new PropChange(this, aProp, oldVal, newVal);
+    firePropChange(pc);
+}
+
+/**
+ * Fires a property change for given property name, old value, new value and index.
+ */
+protected void firePropChange(String aProp, Object oldVal, Object newVal, int anIndex)
+{
+    if(!_pcs.hasListener(aProp)) return;
+    PropChange pc = new PropChange(this, aProp, oldVal, newVal, anIndex);
+    firePropChange(pc);
+}
+
+/**
+ * Fires a given property change.
+ */
+protected void firePropChange(PropChange aPC)
+{
+    _pcs.firePropChange(aPC);
+}
+
+/**
+ * Standard clone implementation.
+ */
+public RMGrouper clone()
+{
+    // Do normal clone
+    RMGrouper clone = null; try { clone = (RMGrouper)super.clone(); }
+    catch(CloneNotSupportedException e) { throw new RuntimeException(e); }
+    
+    // Clear PropChangeSupport
+    clone._pcs = PropChangeSupport.EMPTY;
+    
+    // Clone deep grouping
+    clone._groupings = SnapUtils.cloneDeep(_groupings);
+    
+    // Return clone
+    return clone;
+}
+
+/**
  * Standard equals implementation.
  */
 public boolean equals(Object anObj)
 {
-    // Check identity
+    // Check identity and get other grouper
     if(anObj==this) return true;
-    
-    // Check class
-    if(!getClass().isInstance(anObj)) return false;
-    
-    // Get other grouper
-    RMGrouper other = (RMGrouper)anObj;
+    RMGrouper other = anObj instanceof RMGrouper? (RMGrouper)anObj : null; if(other==null) return false;
     
     // Check groupings
     if(!other._groupings.equals(_groupings)) return false;
@@ -226,18 +285,16 @@ public boolean equals(Object anObj)
 }
 
 /**
- * Standard clone implementation.
+ * Standard toString implementation.
  */
-public RMGrouper clone()
+public String toString()
 {
-    // Do basic clone
-    RMGrouper clone = (RMGrouper)super.clone();
-    
-    // Clone deep grouping
-    clone._groupings = SnapUtils.cloneDeep(_groupings);
-    
-    // Return clone
-    return clone;
+    StringBuffer sb = new StringBuffer("RMGrouper { Keys=");
+    for(RMGrouping grp : getGroupings())
+        sb.append(grp.getKey()).append(", ");
+    if(getGroupingCount()>0)
+        sb.delete(sb.length()-2, sb.length());
+    return sb.append(" }").toString();
 }
 
 /**

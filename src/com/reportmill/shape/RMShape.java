@@ -27,7 +27,7 @@ import snap.view.*;
  *   shape.setOpacity(.667f);
  * </pre></blockquote>
  */
-public class RMShape extends SnapObject implements Cloneable, RMTypes, Archivable, Key.GetSet {
+public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
 
     // X location of shape
     double         _x = 0;
@@ -68,6 +68,9 @@ public class RMShape extends SnapObject implements Cloneable, RMTypes, Archivabl
     // Map to hold less used attributes (name, url, etc.)
     RMSharedMap    _attrMap = SHARED_MAP;
     
+    // The PropChangeSupport
+    PropChangeSupport  _pcs = PropChangeSupport.EMPTY;
+
     // A shared/root RMSharedMap (cloned to turn on shared flag)
     static final RMSharedMap SHARED_MAP = new RMSharedMap().clone();
     
@@ -1447,17 +1450,16 @@ public void addBinding(String aPropName, String aKey)  { addBinding(new Binding(
  */
 public RMShape clone()
 {
-    // Do normal version, clear parent
-    RMShape clone = (RMShape)super.clone();
+    // Do normal version
+    RMShape clone = null; try { clone = (RMShape)super.clone(); }
+    catch(CloneNotSupportedException e) { throw new RuntimeException(e); }
+    
+    // Clear Parent and PropChangeSupport
     clone._parent = null;
+    clone._pcs = PropChangeSupport.EMPTY;
     
     // Clone Rotate/Scale/Skew array
     if(_rss!=null) clone._rss = Arrays.copyOf(_rss,_rss.length);
-    
-    // Clone stroke, fill
-    clone._stroke = null; clone._fill = null;
-    if(getStroke()!=null) clone.setStroke(getStroke().clone());
-    if(getFill()!=null) clone.setFill(getFill().clone());
     
     // Copy attributes map
     clone._attrMap = _attrMap.clone();
@@ -1493,9 +1495,9 @@ public void copyShape(RMShape aShape)
     }
     
     // Copy Stroke, Fill, Effect
-    if(!SnapUtils.equals(getStroke(), aShape.getStroke())) setStroke(SnapUtils.clone(aShape.getStroke()));
-    if(!SnapUtils.equals(getFill(), aShape.getFill())) setFill(SnapUtils.clone(aShape.getFill()));
-    if(!SnapUtils.equals(getEffect(), aShape.getEffect())) setEffect(aShape.getEffect());
+    setStroke(aShape.getStroke());
+    setFill(aShape.getFill());
+    setEffect(aShape.getEffect());
     
     // Copy Opacity and Visible
     setOpacity(aShape.getOpacity());
@@ -1795,6 +1797,62 @@ public boolean isStrokeOnTop()  { return false; }
  * Returns clip shape for shape.
  */
 public Shape getClipShape()  { return null; }
+
+/**
+ * Add listener.
+ */
+public void addPropChangeListener(PropChangeListener aLsnr)
+{
+    if(_pcs==PropChangeSupport.EMPTY) _pcs = new PropChangeSupport(this);
+    _pcs.addPropChangeListener(aLsnr);
+}
+
+/**
+ * Remove listener.
+ */
+public void removePropChangeListener(PropChangeListener aLsnr)  { _pcs.removePropChangeListener(aLsnr); }
+
+/**
+ * Adds a deep change listener to shape to listen for shape changes and property changes received by shape.
+ */
+public void addDeepChangeListener(DeepChangeListener aLsnr)
+{
+    if(_pcs==PropChangeSupport.EMPTY) _pcs = new PropChangeSupport(this);
+    _pcs.addDeepChangeListener(aLsnr);
+}
+
+/**
+ * Removes a deep change listener from shape.
+ */
+public void removeDeepChangeListener(DeepChangeListener aLsnr)  { _pcs.removeDeepChangeListener(aLsnr); }
+
+/**
+ * Fires a property change for given property name, old value, new value and index.
+ */
+protected void firePropChange(String aProp, Object oldVal, Object newVal)
+{
+    if(!_pcs.hasListener(aProp)) return;
+    PropChange pc = new PropChange(this, aProp, oldVal, newVal);
+    firePropChange(pc);
+}
+
+/**
+ * Fires a property change for given property name, old value, new value and index.
+ */
+protected void firePropChange(String aProp, Object oldVal, Object newVal, int anIndex)
+{
+    if(!_pcs.hasListener(aProp)) return;
+    PropChange pc = new PropChange(this, aProp, oldVal, newVal, anIndex);
+    firePropChange(pc);
+}
+
+/**
+ * Fires a given property change.
+ */
+protected void firePropChange(PropChange aPC)
+{
+    _pcs.firePropChange(aPC);
+}
 
 /**
  * Returns the value for given key.
