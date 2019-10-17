@@ -147,9 +147,6 @@ public void respondUI(ViewEvent anEvent)
     // Handle SelPathView
     if(anEvent.equals("SelPathView") && anEvent.isMouseRelease())
         setVisible(9);
-    
-    // Reset ui
-    resetUI();
 }
 
 /**

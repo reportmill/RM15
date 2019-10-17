@@ -216,6 +216,7 @@ public double getRoll()  { return getProxy().getRoll(); }
 public void setRoll(double aValue)
 {
     getProxy().setRoll(aValue);
+    relayoutParent();
 }
 
 /**
