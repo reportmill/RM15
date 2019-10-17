@@ -45,24 +45,24 @@ public class RMGraph extends RMParentShape {
     // The layout of the section items values
     ItemLayout                _itemsLayout = ItemLayout.Abreast;
 
-    // The graph area value axis
-    RMGraphPartValueAxis      _valueAxis = new RMGraphPartValueAxis();
-    
-    // The graph area label axis
-    RMGraphPartLabelAxis      _labelAxis = new RMGraphPartLabelAxis();
-    
     // The graph area bar shape
     RMGraphPartBars           _bars = new RMGraphPartBars();
     
     // The graph area pie shape
     RMGraphPartPie            _pie = new RMGraphPartPie();
     
-    // The graph area 3D shape
-    RMScene3D                 _3d;
-
+    // The graph area value axis
+    RMGraphPartValueAxis      _valueAxis = new RMGraphPartValueAxis();
+    
+    // The graph area label axis
+    RMGraphPartLabelAxis      _labelAxis = new RMGraphPartLabelAxis();
+    
     // The graph area series shape
     List <RMGraphPartSeries>  _series = new ArrayList();
     
+    // The graph area 3D shape
+    RMScene3D                 _3d;
+
     // Whether to draw graph in 3D
     boolean                   _draw3D = true;
     
@@ -98,7 +98,10 @@ public class RMGraph extends RMParentShape {
  */
 public RMGraph()
 {
+    _bars._parent = this;
     _pie._parent = this;
+    _valueAxis._parent = this;
+    _labelAxis._parent = this;
 }
     
 /**
@@ -299,8 +302,11 @@ public int getSeriesCount()  { return getKeyCount(); }
  */
 public RMGraphPartSeries getSeries(int anIndex)
 {
-    // Make sure there are a sufficient number of series and return series at given index
-    while(anIndex>=_series.size()) _series.add(new RMGraphPartSeries(this));
+    // Make sure there are a sufficient number of series
+    while(anIndex>=_series.size())
+        _series.add(new RMGraphPartSeries(this));
+        
+    // Return series at given index
     return _series.get(anIndex);
 }
 
@@ -313,7 +319,8 @@ public RMScene3D get3D()
     if(_3d!=null) return _3d;
 
     // Create and return
-    RMScene3D p3d = new RMScene3D(); p3d.setDepth(100); p3d.setYaw(8); p3d.setPitch(11); p3d.setFocalLength(8*72);
+    RMScene3D p3d = new RMScene3D();
+    p3d.setDepth(100); p3d.setYaw(8); p3d.setPitch(11); p3d.setFocalLength(8*72);
     p3d.getCamera().addPropChangeListener(pc -> thr3DPropChange(pc));
     return _3d = p3d;
 }
@@ -323,7 +330,8 @@ void thr3DPropChange(PropChange anEvent)
 {
     repaint();
     RMScene3D p3d = getChildCount()>0 && getChild(0) instanceof RMScene3D? (RMScene3D)getChild(0) : null;
-    if(p3d!=null) p3d.copy3D(get3D());
+    if(p3d!=null)
+        p3d.copy3D(get3D());
 }
 
 /**
@@ -369,7 +377,8 @@ public void setShowLegend(boolean aFlag)
     // If legend requested, but not present, create it, configure and add to parent
     if(aFlag && legend==null && getParent()!=null) {
         legend = new RMGraphLegend();
-        legend.setColor(RMColor.white); legend.setStrokeColor(RMColor.black);
+        legend.setColor(RMColor.white);
+        legend.setStrokeColor(RMColor.black);
         legend.setEffect(new ShadowEffect(5, new Color(0,0,0,.65),5,5));
         legend.setBounds(getMaxX() + 5, getY(), 90, 40);
         getParent().addChild(legend); // Add just before area
@@ -393,7 +402,8 @@ public void setColorItems(boolean aValue)
     if(aValue==isColorItems()) return;
     firePropChange("ColorItems", _colorItems, _colorItems = aValue);
     relayout();
-    if(getLegend()!=null) getLegend().resetItems();
+    if(getLegend()!=null)
+        getLegend().resetItems();
 }
 
 /**
@@ -413,7 +423,8 @@ public void setColorKey(String aKey)
     // Set value and update graph/legend
     firePropChange("ColorKey", _colorKey, _colorKey = key);
     relayout();
-    if(getLegend()!=null) getLegend().resetItems();
+    if(getLegend()!=null)
+        getLegend().resetItems();
 }
 
 /**
@@ -473,13 +484,6 @@ protected void layoutImpl()
     // Recreate and add sample graph
     removeChildren();
     addChild(createSampleGraph());
-    
-    // Reset parts and make sure they are installed
-    _parts = new RMShape[2 + getKeyCount()]; _partNames = new String[_parts.length];
-    _parts[0] = getValueAxis(); _parts[1] = getLabelAxis();
-    _partNames[0] = "Value Axis"; _partNames[1] = "Label Axis";
-    for(int i=0; i<getKeyCount(); i++) { _parts[i+2] = getSeries(i); _partNames[i+2] = "Series "+(i+1); }
-    for(RMShape part : _parts) if(part.getParent()!=this) addChild(part);
 }
 
 /**
@@ -558,78 +562,6 @@ public RMParentShape rpgAll(ReportOwner anRptOwner, RMShape aParent, boolean isS
  * Override to suppress background paint.
  */
 public void paintShape(Painter aPntr)  { }
-
-/**
- * Override to paint GraphArea parts.
- */
-protected void paintShapeOver_THIS_SHOULD_GO(Painter aPntr)
-{
-    // Do normal version
-    super.paintShapeOver(aPntr);
-    
-    // Get font/metrics
-    if(_font==null) _font = new Font("Arial", 10);
-    
-    // Get FontBoxes
-    aPntr.setFont(_font); aPntr.setStroke(Stroke.Stroke1);
-    _fboxes = new FontBox[getPartCount()]; double x = 3, h = 14;
-    for(int i=0, iMax=getPartCount(); i<iMax; i++) { String string = getPartName(i);
-        Rect fbox = aPntr.getStringBounds(string);
-        double w = fbox.getWidth(), fa = Math.ceil(_font.getAscent());
-        double y = getHeight() - h - 3, dy = (h - fbox.getHeight())/2, by = y + dy + fa;
-        _fboxes[i] = new FontBox(x, y, w + 10, h, x + 5, by);
-        x += 3 + w + 10;
-    }
-    
-    for(int i=0, iMax=getPartCount(); i<iMax; i++) { String part = getPartName(i); FontBox fbox = getFontBox(i);
-        boolean isSel = RMShapePaintProps.isSelected(aPntr, getPart(i));
-        Color c = Color.LIGHTBLUE.brighter().brighter(); if(isSel) c = c.brighter();
-        aPntr.setFont(_font); if(isSel) aPntr.setFont(_font.getBold());
-        aPntr.setColor(c); aPntr.fill(fbox);
-        aPntr.setColor(Color.BLACK); aPntr.draw(fbox);
-        aPntr.drawString(part, fbox.getTextX(), fbox.getTextY());
-    }
-}
-
-RMShape _parts[] = new RMShape[0]; String _partNames[] = new String[0];
-Font _font;
-FontBox _fboxes[];
-
-/**
- * Returns the number of graph parts.
- */
-public int getPartCount()  { return getParts().length; }
-
-/**
- * Returns the individual part at index.
- */
-public RMShape getPart(int anIndex)  { return getParts()[anIndex]; }
-
-/**
- * Returns the individual part at index.
- */
-public String getPartName(int anIndex)  { return _partNames[anIndex]; }
-
-/**
- * Returns the parts.
- */
-public RMShape[] getParts()  { return _parts; }
-
-/**
- * Returns the font box for part at index.
- */
-public FontBox getFontBox(int anIndex)  { return _fboxes!=null? _fboxes[anIndex] : null; }
-
-/**
- * Returns the part rect.
- */
-public static class FontBox extends Rect {
-    double _tx, _ty;
-    public FontBox(double anX, double aY, double aW, double aH, double aTX, double aTY)
-    { super(anX, aY, aW, aH); _tx = aTX; _ty = aTY; }
-    public double getTextX()  { return _tx; }
-    public double getTextY()  { return _ty; }
-}
 
 /**
  * Return ProxyShape.

@@ -9,7 +9,6 @@ import com.reportmill.graphics.RMColor;
 import com.reportmill.graphics.RMStroke;
 import com.reportmill.shape.*;
 import java.util.*;
-import snap.gfx.Point;
 import snap.util.*;
 import snap.view.*;
 import snap.viewx.ColorDock;
@@ -39,6 +38,9 @@ public class RMGraphTool <T extends RMGraph> extends RMTool <T> implements RMSor
     
     // Assistant tool for 3D
     RMScene3DTool             _3dTool = new Scene3DTool();
+    
+    // Whether tool is current in mouse drag loop to change 3D
+    boolean                   _inScene3DMouseLoop;
 
 /**
  * Override to forward to proxy tools.
@@ -395,35 +397,27 @@ private static RMGraph createSampleGraph()
  */
 public void mousePressed(T aGraph, ViewEvent anEvent)
 {
-    // See if point hit Graph part
-    if(1>2) {
-    Point point = getEditor().convertToShape(anEvent.getX(), anEvent.getY(), aGraph);
-    for(int i=0, iMax=aGraph.getPartCount(); i<iMax; i++)
-        if(aGraph.getFontBox(i).contains(point.getX(), point.getY()))
-            _hitChild = aGraph.getParts()[i];
-    }
-    
     // See if 3D is available
-    if(_hitChild==null && isSuperSelected(aGraph) && aGraph.isDraw3D()) {
-        _hitChild = aGraph.get3D();
-        _hitChild.processEvent(createShapeEvent(_hitChild, anEvent));
+    if(isSuperSelected(aGraph) && aGraph.isDraw3D()) {
+        RMScene3D s3d = aGraph.get3D();
+        s3d.processEvent(createShapeEvent(s3d, anEvent));
         getEditor().setSuperSelectedShape(aGraph);
-    }
-    
-    if(_hitChild!=null)
         anEvent.consume();
+        _inScene3DMouseLoop = true;
+    }
 }
-RMShape _hitChild;
 
 /**
  * Event handler for editing.
  */
-public void mouseDragged(T aGraphArea, ViewEvent anEvent)
+public void mouseDragged(T aGraph, ViewEvent anEvent)
 {
     // If child is scene3d, forward mouse event to child and consume event
-    if(_hitChild instanceof RMScene3D)
-        _hitChild.processEvent(createShapeEvent(_hitChild, anEvent));
-    if(_hitChild!=null) anEvent.consume();
+    if(_inScene3DMouseLoop) {
+        RMScene3D s3d = aGraph.get3D();
+        s3d.processEvent(createShapeEvent(s3d, anEvent));
+        anEvent.consume();
+    }
 }
 
 /**
@@ -431,12 +425,12 @@ public void mouseDragged(T aGraphArea, ViewEvent anEvent)
  */
 public void mouseReleased(T aGraph, ViewEvent anEvent)
 {
-    if(_hitChild instanceof RMScene3D)
-        _hitChild.processEvent(createShapeEvent(_hitChild, anEvent));
-    else if(_hitChild!=null)
-        getEditor().setSelectedShape(_hitChild);
-    if(_hitChild!=null) anEvent.consume();
-    _hitChild = null;
+    if(_inScene3DMouseLoop) {
+        RMScene3D s3d = aGraph.get3D();
+        s3d.processEvent(createShapeEvent(s3d, anEvent));
+        anEvent.consume();
+        _inScene3DMouseLoop = false;
+    }
 }
 
 /**
