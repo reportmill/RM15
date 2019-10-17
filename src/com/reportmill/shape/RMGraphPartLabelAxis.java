@@ -84,6 +84,15 @@ public void setFont(RMFont aFont)
 }
 
 /**
+ * Override to trigger layout.
+ */
+public void setRoll(double aValue)
+{
+    super.setRoll(aValue);
+    relayoutParent();
+}
+
+/**
  * XML archival.
  */
 public XMLElement toXML(XMLArchiver anArchiver)

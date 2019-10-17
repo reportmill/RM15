@@ -48,7 +48,11 @@ public String getTitle()  { return _title!=null? _title : (_title=getTitleDefaul
 /**
  * Sets the title of the series.
  */
-public void setTitle(String aTitle)  { _title = aTitle; }
+public void setTitle(String aTitle)
+{
+    _title = aTitle;
+    relayoutParent();
+}
 
 /**
  * Returns the default title.
@@ -71,6 +75,7 @@ public void setPosition(LabelPos aPosition)
 {
     if(aPosition==getPosition()) return;
     firePropChange("Position", _position, _position = aPosition);
+    relayoutParent();
 }
 
 /**
@@ -95,6 +100,16 @@ public RMTextShape getLabelShape(LabelPos aPosition)
 }
 
 /**
+ * Sets the label shape text for position.
+ */
+public void setLabelText(LabelPos aPosition, String aString)
+{
+    RMTextShape ts = getLabelShape(aPosition);
+    ts.setText(aString);
+    relayoutParent();
+}
+
+/**
  * Returns the first active position.
  */
 public LabelPos getFirstActivePosition()
@@ -108,67 +123,100 @@ public LabelPos getFirstActivePosition()
 /**
  * Returns the proxy, determined by the current position.
  */
-public RMTextShape getProxy()  { return getLabelShape(getPosition()); }
+public RMTextShape getProxy()
+{
+    return getLabelShape(getPosition());
+}
 
 /** Override to handle proxy. */
 public RMStroke getStroke()  { return getProxy().getStroke(); }
 
 /** Override to handle proxy. */
-public void setStroke(RMStroke aStroke)  { getProxy().setStroke(aStroke); }
+public void setStroke(RMStroke aStroke)
+{
+    getProxy().setStroke(aStroke);
+}
 
 /** Override to handle proxy. */
 public RMFill getFill()  { return getProxy().getFill(); }
 
 /** Override to handle proxy. */
-public void setFill(RMFill aFill)  { getProxy().setFill(aFill); }
+public void setFill(RMFill aFill)
+{
+    getProxy().setFill(aFill);
+}
 
 /** Override to handle proxy. */
 public Effect getEffect()  { return getProxy().getEffect(); }
 
 /** Override to handle proxy. */
-public void setEffect(Effect anEffect)  { getProxy().setEffect(anEffect); }
+public void setEffect(Effect anEffect)
+{
+    getProxy().setEffect(anEffect);
+}
 
 /** Override to handle proxy. */
 public double getOpacity()  { return getProxy().getOpacity(); }
 
 /** Override to handle proxy. */
-public void setOpacity(double aValue)  { getProxy().setOpacity(aValue); }
+public void setOpacity(double aValue)
+{
+    getProxy().setOpacity(aValue);
+}
 
 /** Override to handle proxy. */
 public RMColor getTextColor()  { return getProxy().getTextColor(); }
 
 /** Override to handle proxy. */
-public void setTextColor(RMColor aColor)  { getProxy().setTextColor(aColor); }
+public void setTextColor(RMColor aColor)
+{
+    getProxy().setTextColor(aColor);
+}
 
 /** Override to handle proxy. */
 public RMFont getFont()  { return getProxy().getFont(); }
 
 /** Override to handle proxy. */
-public void setFont(RMFont aFont)  { getProxy().setFont(aFont); }
+public void setFont(RMFont aFont)
+{
+    getProxy().setFont(aFont);
+}
 
 /** Override to handle proxy. */
 public boolean isUnderlined()  { return getProxy().isUnderlined(); }
 
 /** Override to handle proxy. */
-public void setUnderlined(boolean aFlag)  { getProxy().setUnderlined(aFlag); }
+public void setUnderlined(boolean aFlag)
+{
+    getProxy().setUnderlined(aFlag);
+}
 
 /** Override to handle proxy. */
 public RMFormat getFormat()  { return getProxy().getFormat(); }
 
 /** Override to handle proxy. */
-public void setFormat(RMFormat aFormat)  { getProxy().setFormat(aFormat); }
+public void setFormat(RMFormat aFormat)
+{
+    getProxy().setFormat(aFormat);
+}
 
 /** Override to handle proxy. */
 public String getURL()  { return getProxy()!=null? getProxy().getURL() : super.getURL(); }
 
 /** Override to handle proxy. */
-public void setURL(String aURL)  { getProxy().setURL(aURL); }
+public void setURL(String aURL)
+{
+    getProxy().setURL(aURL);
+}
 
 /** Override to handle proxy. */
 public double getRoll()  { return getProxy().getRoll(); }
 
 /** Override to handle proxy. */
-public void setRoll(double aValue)  { getProxy().setRoll(aValue); }
+public void setRoll(double aValue)
+{
+    getProxy().setRoll(aValue);
+}
 
 /**
  * XML archival.

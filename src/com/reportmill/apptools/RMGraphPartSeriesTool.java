@@ -37,11 +37,13 @@ public void resetUI()
     // Get the selected series shape
     RMGraphPartSeries series = getSelectedShape(); if(series==null) return;
     
-    // Update TitleText, SeriesText, LabelRollSpinner, LabelPositionsList
+    // Update TitleText, LabelPositionsList
     setViewValue("TitleText", series.getTitle());
+    setViewSelItem("LabelPositionsList", series.getPosition());
+    
+    // Update SeriesText, LabelRollSpinner
     setViewValue("SeriesText", series.getLabelShape(series.getPosition()).getText());
     setViewValue("LabelRollSpinner", series.getRoll());
-    setViewSelItem("LabelPositionsList", series.getPosition());
     
     // Update SeriesButtons
     RMGraph graph = getSelGraph();
@@ -68,11 +70,17 @@ public void respondUI(ViewEvent anEvent)
     // Get the selected series shape
     RMGraphPartSeries series = getSelectedShape(); if(series==null) return;
     
-    // Handle TitleText, SeriesText, LabelRollSpinner, LabelPositionsList
-    if(anEvent.equals("TitleText")) series.setTitle(anEvent.getStringValue());
-    if(anEvent.equals("SeriesText")) series.getLabelShape(series.getPosition()).setText(anEvent.getStringValue());
-    if(anEvent.equals("LabelRollSpinner")) series.setRoll(anEvent.getFloatValue());
-    if(anEvent.equals("LabelPositionsList")) series.setPosition(LabelPos.valueOf(anEvent.getStringValue()));
+    // Handle TitleText, SeriesText
+    if(anEvent.equals("TitleText"))
+        series.setTitle(anEvent.getStringValue());
+    if(anEvent.equals("LabelPositionsList"))
+        series.setPosition(LabelPos.valueOf(anEvent.getStringValue()));
+
+    // LabelRollSpinner, LabelPositionsList
+    if(anEvent.equals("SeriesText"))
+        series.setLabelText(series.getPosition(), anEvent.getStringValue());
+    if(anEvent.equals("LabelRollSpinner"))
+        series.setRoll(anEvent.getFloatValue());
     
     // Handle SeriesButton
     String name = anEvent.getName();
@@ -87,10 +95,6 @@ public void respondUI(ViewEvent anEvent)
         RMShape ps = graph.getSeries(ind);
         graph.setProxyShape(ps);
     }
-    
-    // Rebuild Graph
-    RMGraph graph = (RMGraph)series.getParent();
-    graph.relayout(); graph.repaint();
 }
 
 /**

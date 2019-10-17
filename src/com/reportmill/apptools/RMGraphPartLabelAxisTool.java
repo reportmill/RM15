@@ -44,10 +44,6 @@ public void respondUI(ViewEvent anEvent)
     if(anEvent.equals("ShowGridLinesCheckBox")) labelAxis.setShowGridLines(anEvent.getBoolValue());
     if(anEvent.equals("ItemKeyText")) labelAxis.setItemKey(anEvent.getStringValue());
     if(anEvent.equals("LabelRollSpinner")) labelAxis.setRoll(anEvent.getFloatValue());
-
-    // Rebuild Graph
-    RMGraph graph = (RMGraph)labelAxis.getParent();
-    graph.relayout(); graph.repaint();
 }
 
 /**

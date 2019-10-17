@@ -202,9 +202,6 @@ public void respondUI(ViewEvent anEvent)
     // Get currently selected graph (just return if null)
     RMGraph graph = getSelectedGraph(); if(graph==null) return;
     
-    // Register graph for repaint/revalidate
-    graph.repaint();
-
     // Handle ListKeyText
     if(anEvent.equals("ListKeyText")) {
         graph.setDatasetKey(StringUtils.delete(anEvent.getStringValue(), "@"));

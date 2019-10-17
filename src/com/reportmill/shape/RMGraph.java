@@ -553,13 +553,25 @@ public RMParentShape rpgAll(ReportOwner anRptOwner, RMShape aParent)  { return r
  */
 public RMParentShape rpgAll(ReportOwner anRptOwner, RMShape aParent, boolean isSample)
 {
+    _proxyDisable = true;
     RMGraph.Type type = getType();
     RMParentShape rpg = null;
     if(type==RMGraph.Type.Bar || type==RMGraph.Type.BarH) rpg = new RMGraphRPGBar(this, anRptOwner).getGraphShape();
     else if(type==RMGraph.Type.Pie) rpg = new RMGraphRPGPie(this, anRptOwner).getGraphShape();
     else rpg = new RMGraphRPGLine(this, anRptOwner).getGraphShape(); // Type Area, Line, Scatter
     if(!isSample) rpgBindings(anRptOwner, rpg);
+    _proxyDisable = false;
     return rpg;
+}
+
+/**
+ * Override to suppress ProxyShape.
+ */
+public void paint(Painter aPntr)
+{
+    _proxyDisable = true;
+    super.paint(aPntr);
+    _proxyDisable = false;
 }
 
 /**
@@ -595,7 +607,10 @@ private boolean useProxy()
 /**
  * Override to allow for ProxyShape.
  */
-public RMFill getFill()  { return useProxy()? _proxyShape.getFill() : super.getFill(); }
+public RMFill getFill()
+{
+    return useProxy()? _proxyShape.getFill() : super.getFill();
+}
 
 /**
  * Override to allow for ProxyShape and trigger relayout.
@@ -621,6 +636,25 @@ public void setStroke(RMStroke aStroke)
     if(_proxyShape!=null)
         _proxyShape.setStroke(aStroke);
     else super.setStroke(aStroke);
+    relayout();
+}
+
+/**
+ * Override to allow for ProxyShape.
+ */
+public Effect getEffect()
+{
+    return useProxy()? _proxyShape.getEffect() : super.getEffect();
+}
+
+/**
+ * Override to allow for ProxyShape and trigger relayout.
+ */
+public void setEffect(Effect anEffect)
+{
+    if(_proxyShape!=null)
+        _proxyShape.setEffect(anEffect);
+    else super.setEffect(anEffect);
     relayout();
 }
 
@@ -656,6 +690,25 @@ public void setTextColor(RMColor aColor)
     if(_proxyShape!=null)
         _proxyShape.setTextColor(aColor);
     else super.setTextColor(aColor);
+    relayout();
+}
+
+/**
+ * Override to allow for ProxyShape.
+ */
+public double getOpacity()
+{
+    return useProxy()? _proxyShape.getOpacity() : super.getOpacity();
+}
+
+/**
+ * Override to allow for ProxyShape and trigger relayout.
+ */
+public void setOpacity(double aValue)
+{
+    if(_proxyShape!=null)
+        _proxyShape.setOpacity(aValue);
+    else super.setOpacity(aValue);
     relayout();
 }
 

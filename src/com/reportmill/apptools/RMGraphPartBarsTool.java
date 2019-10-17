@@ -33,9 +33,6 @@ public void respondUI(ViewEvent anEvent)
     // Get the selected value axis
     RMGraphPartBars bars = getSelectedShape(); if(bars==null) return;
     
-    // Register GraphArea for repaint/revalidate (shouldn't need this)
-    getSelectedGraph().repaint(); getSelectedGraph().relayout();
-    
     // Handle BarGapSpinner, SetGapSpinner, BarCountSpinner
     if(anEvent.equals("BarGapSpinner")) bars.setBarGap(anEvent.getFloatValue());
     if(anEvent.equals("SetGapSpinner")) bars.setSetGap(anEvent.getFloatValue());

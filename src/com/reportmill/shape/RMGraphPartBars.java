@@ -26,7 +26,11 @@ public float getBarGap()  { return _barGap; }
 /**
  * Sets width of the gap between bars in a set as a fraction of bar width.
  */
-public void setBarGap(float aValue)  { _barGap = aValue; }
+public void setBarGap(float aValue)
+{
+    _barGap = aValue;
+    relayoutParent();
+}
 
 /**
  * Returns the width of the gap between sets as a fraction of chart area.
@@ -36,7 +40,11 @@ public float getSetGap()  { return _setGap; }
 /**
  * Sets the width of the gap between sets as a fraction of chart area.
  */
-public void setSetGap(float aValue)  { _setGap = aValue; }
+public void setSetGap(float aValue)
+{
+    _setGap = aValue;
+    relayoutParent();
+}
 
 /**
  * Returns the minimum number of bars for the graph to provide space for in a section.
@@ -46,7 +54,11 @@ public int getBarCount()  { return _barCount; }
 /**
  * Sets the minimum number of bars for the graph to provide space for in a section.
  */
-public void setBarCount(int aValue)  { _barCount = aValue; }
+public void setBarCount(int aValue)
+{
+    _barCount = aValue;
+    relayoutParent();
+}
 
 /**
  * XML archival.

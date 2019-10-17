@@ -55,10 +55,6 @@ public void respondUI(ViewEvent anEvent)
         valueAxis.setAxisMax(anEvent.getStringValue().length()>0? anEvent.getFloatValue() : Float.MIN_VALUE);
     if(anEvent.equals("AxisCountSpinner"))
         valueAxis.setAxisCount(anEvent.getIntValue());
-    
-    // Rebuild Graph
-    RMGraph graph = (RMGraph)valueAxis.getParent();
-    graph.relayout(); graph.repaint();
 }
 
 /**
