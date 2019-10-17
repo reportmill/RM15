@@ -23,9 +23,10 @@ public RMGraphRPGLine(RMGraph aGraph, ReportOwner anRptOwner)  { super(aGraph, a
  */
 public void addBars()
 {
-    // Get Graph.Type and Graph.Draw3D
+    // Get graph attributes: Graph.Type, Graph.Draw3D, Graph.ColorItems
     RMGraph.Type graphType = _graph.getType();
     boolean draw3D = _graph.isDraw3D();
+    boolean colorItems = _graph.isColorItems();
     
     // Iterate over series
     for(int i=0, iMax=getSeriesCount(); i<iMax; i++) { RMGraphSeries series = getSeries(i);
@@ -76,40 +77,36 @@ public void addBars()
             _barShape.addBar(lineShape, i);
         }
         
-        // If scatter or 2D line, add boxes
-        //if(graphType==RMGraph.Type.Scatter || (graphType==RMGraph.Type.Line && !_graph.isDraw3D())) {
-        if(graphType!=null) {
+        // Iterate over series items
+        for(int j=0, jMax=series.getItemCount(); j<jMax; j++) { RMGraphSeries.Item seriesItem = series.getItem(j);
             
-            // Iterate over series items
-            for(int j=0, jMax=series.getItemCount(); j<jMax; j++) { RMGraphSeries.Item seriesItem = series.getItem(j);
-                
-                // Get bounds of bar chart bar
-                Rect barBounds = getBarBounds(i, j);
-                
-                // Get line graph point
-                double lineX = barBounds.getMidX();
-                double lineY = barBounds.getMinY();
-                
-                // Create new linePointShape
-                RMShape linePointShape = new RMRectShape();
-                
-                // Get inset
-                int inset = graphType==RMGraph.Type.Scatter? 4 : 2;
-                
-                // Set bounds
-                linePointShape.setBounds(lineX - inset, lineY - inset, inset*2, inset*2);
-                
-                // Set bar color
-                linePointShape.setColor(color);
-                linePointShape.setStrokeColor(color.darker().darker());
-                
-                // Add line point shape
-                if(graphType==RMGraph.Type.Scatter || (graphType==RMGraph.Type.Line && !draw3D))
-                    _barShape.addBar(linePointShape, i);
-                
-                // Set bar in series-value
-                seriesItem.setBar(linePointShape);
-            }
+            // Get bounds of bar chart bar
+            Rect barBounds = getBarBounds(i, j);
+            
+            // Get line graph point
+            double lineX = barBounds.getMidX();
+            double lineY = barBounds.getMinY();
+            
+            // Create new linePointShape
+            RMShape linePointShape = new RMRectShape();
+            
+            // Get inset
+            int inset = graphType==RMGraph.Type.Scatter? 4 : 2;
+            
+            // Set bounds
+            linePointShape.setBounds(lineX - inset, lineY - inset, inset*2, inset*2);
+            
+            // Set bar color
+            RMColor col = colorItems? getColor(j) : color;
+            linePointShape.setColor(col);
+            linePointShape.setStrokeColor(col.darker().darker());
+            
+            // Add line point shape
+            if(graphType==RMGraph.Type.Scatter || (graphType==RMGraph.Type.Line && !draw3D))
+                _barShape.addBar(linePointShape, i);
+            
+            // Set bar in series-value
+            seriesItem.setBar(linePointShape);
         }
     }
 }
