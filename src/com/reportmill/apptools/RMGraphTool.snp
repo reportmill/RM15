@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ColView FillWidth="true">
   <font name="Arial" size="12" />
-  <RowView PrefHeight="40" Padding="2,4,3,4" Align="CENTER" FillHeight="true">
-    <ToggleButton Name="GraphTypeBarButton" PrefWidth="36" Padding="4" ToolTip="Bar Graph" image="Graph_Bar.png" Position="CENTER_LEFT" ToggleGroup="gtypebg" />
-    <ToggleButton Name="GraphTypeBarHButton" PrefWidth="36" Padding="4" ToolTip="Horizontal Bar Graph" image="Graph_BarHorz.png" Position="CENTER" ToggleGroup="gtypebg" />
-    <ToggleButton Name="GraphTypeAreaButton" PrefWidth="36" Padding="4" ToolTip="Area Graph" image="Graph_Area.png" Position="CENTER" ToggleGroup="gtypebg" />
-    <ToggleButton Name="GraphTypeLineButton" PrefWidth="36" Padding="4" ToolTip="Line Graph" image="Graph_Line.png" Position="CENTER" ToggleGroup="gtypebg" />
-    <ToggleButton Name="GraphTypeScatterButton" PrefWidth="36" Padding="4" ToolTip="Scatter Graph" image="Graph_Scatter.png" Position="CENTER" ToggleGroup="gtypebg" />
-    <ToggleButton Name="GraphTypePieButton" PrefWidth="36" Padding="4" ToolTip="Pie Graph" image="Graph_Pie.png" Position="CENTER_RIGHT" ToggleGroup="gtypebg" />
+  <RowView PrefHeight="40" Align="CENTER" Padding="2,4,3,4" FillHeight="true">
+    <ToggleButton Name="GraphTypeBarButton" PrefWidth="36" Padding="4" ToolTip="Bar Graph" image="Graph_Bar.png" Position="CENTER_LEFT" Group="gtypebg" />
+    <ToggleButton Name="GraphTypeBarHButton" PrefWidth="36" Padding="4" ToolTip="Horizontal Bar Graph" image="Graph_BarHorz.png" Position="CENTER" Group="gtypebg" />
+    <ToggleButton Name="GraphTypeAreaButton" PrefWidth="36" Padding="4" ToolTip="Area Graph" image="Graph_Area.png" Position="CENTER" Group="gtypebg" />
+    <ToggleButton Name="GraphTypeLineButton" PrefWidth="36" Padding="4" ToolTip="Line Graph" image="Graph_Line.png" Position="CENTER" Group="gtypebg" />
+    <ToggleButton Name="GraphTypeScatterButton" PrefWidth="36" Padding="4" ToolTip="Scatter Graph" image="Graph_Scatter.png" Position="CENTER" Group="gtypebg" />
+    <ToggleButton Name="GraphTypePieButton" PrefWidth="36" Padding="4" ToolTip="Pie Graph" image="Graph_Pie.png" Position="CENTER_RIGHT" Group="gtypebg" />
   </RowView>
   <RowView Padding="3,4,3,4" Spacing="3">
     <Label PrefWidth="68" PrefHeight="18" text="Dataset Key:" />
@@ -15,20 +15,22 @@
   </RowView>
   <RowView Padding="3,4,3,4" Spacing="3">
     <Label PrefWidth="62" PrefHeight="18" text="Filter Expr:" />
-    <TextField Name="FilterText" PrefHeight="20" GrowWidth="true"  />
+    <TextField Name="FilterText" PrefHeight="20" GrowWidth="true" />
   </RowView>
   <RowView Padding="3,4,3,4">
     <Label PrefWidth="100" PrefHeight="18" text="Key(s):" />
     <Label PrefWidth="145" PrefHeight="18" Align="CENTER_RIGHT" LeanX="RIGHT" text="(Comma Separated)" />
   </RowView>
   <BoxView Padding="0,4,3,4" FillWidth="true">
-    <TextView Name="KeysText" PrefHeight="50" FireActionOnEnterKey="true" />
+    <TextView Name="KeysText" PrefHeight="50" FireActionOnEnterKey="true">
+      <font name="Arial" size="11" />
+    </TextView>
   </BoxView>
   <BoxView Padding="3,4,0,4" FillWidth="true">
-    <TitleView Name="SortPanelBox" Padding="4,4,6,4" Title="Sorting" />
+    <TitleView Name="SortBox" Padding="4,4,6,4" Text="Sorting" Collapsible="true" Expanded="false" />
   </BoxView>
   <BoxView Padding="3,4,3,4" FillWidth="true">
-    <TitleView Title="View Options">
+    <TitleView Name="ViewBox" Padding="5,4,5,4" Text="View Options" Collapsible="true">
       <ColView Padding="0,4,5,4" Spacing="4" FillWidth="true">
         <font name="Arial" size="10" />
         <RowView Spacing="10">
@@ -46,28 +48,42 @@
       </ColView>
     </TitleView>
   </BoxView>
-  <BoxView Name="MultiKeyLayoutBox" Padding="0,4,3,4" FillWidth="true" >
-    <TitleView Title="Multi-Key Layout">
+  <BoxView Name="MultiKeyLayoutBox" Padding="0,4,3,4" FillWidth="true">
+    <TitleView Padding="2" Text="Multi-Key Layout">
       <RowView Padding="2,5,5,5" Spacing="8">
         <ColView GrowWidth="true" FillWidth="true">
-          <Label PrefHeight="14" text=" Series" >
+          <Label PrefHeight="14" text=" Series">
             <font name="Arial" size="10" />
           </Label>
-          <ListView Name="SectionLayoutList" PrefWidth="80" PrefHeight="58" />
+          <ListView Name="SectionLayoutList" PrefWidth="80" PrefHeight="58">
+            <LineBorder Color="#c0c0c0" />
+          </ListView>
         </ColView>
         <ColView GrowWidth="true" FillWidth="true">
-          <Label PrefHeight="14" text=" Items" >
+          <Label PrefHeight="14" text=" Items">
             <font name="Arial" size="10" />
           </Label>
-          <ListView Name="ItemsLayoutList" PrefWidth="80" PrefHeight="58" />
+          <ListView Name="ItemsLayoutList" PrefWidth="80" PrefHeight="58">
+            <LineBorder Color="#c0c0c0" />
+          </ListView>
         </ColView>
       </RowView>
     </TitleView>
   </BoxView>
   <BoxView Padding="3,4,3,4" FillWidth="true">
-    <TitleView Name="TypeBox" Padding="5,4,5,4" Title="Bars" Collapsible="true" />
+    <TitleView Name="TypeBox" Padding="5,4,5,4" Text="Bars" Collapsible="true" Expanded="false" />
   </BoxView>
   <BoxView Padding="3,4,3,4" FillWidth="true">
-    <TitleView Name="3DBox" Padding="5,4,5,4" Title="3D" Collapsible="true" />
+    <TitleView Name="ValueAxisBox" Padding="5,4,5,4" Text="Value Axis" Collapsible="true" Expanded="false" />
   </BoxView>
+  <BoxView Padding="3,4,3,4" FillWidth="true">
+    <TitleView Name="LabelAxisBox" Padding="5,4,5,4" Text="Label Axis" Collapsible="true" Expanded="false" />
+  </BoxView>
+  <BoxView Padding="3,4,3,4" FillWidth="true">
+    <TitleView Name="SeriesBox" Padding="5,4,5,4" Text="Series" Collapsible="true" Expanded="false" />
+  </BoxView>
+  <BoxView Padding="3,4,3,4" FillWidth="true">
+    <TitleView Name="3DBox" Padding="5,4,5,4" Text="3D" Collapsible="true" Expanded="false" />
+  </BoxView>
+  <Label Name="ProxyLabel" Align="CENTER" Padding="4" LeanY="BOTTOM" text="Font/Color changes now apply to Graph" Spacing="0" />
 </ColView>

@@ -56,7 +56,7 @@ public void addBars()
         
         // If area or 3D line, set fill color and stroke to black
         RMColor color = getColor(i);
-        if(_graph.getType()==RMGraph.Type.Area || _graph.getDraw3D()) {
+        if(_graph.getType()==RMGraph.Type.Area || _graph.isDraw3D()) {
             lineShape.setColor(color);
             lineShape.setStrokeColor(color.darker().darker());
         }
@@ -72,7 +72,7 @@ public void addBars()
             _barShape.addBar(lineShape, i);
         
         // If scatter or 2D line, add boxes
-        if(_graph.getType()==RMGraph.Type.Scatter || (_graph.getType()==RMGraph.Type.Line && !_graph.getDraw3D())) {
+        if(_graph.getType()==RMGraph.Type.Scatter || (_graph.getType()==RMGraph.Type.Line && !_graph.isDraw3D())) {
             
             // Iterate over series items
             for(int j=0, jMax=series.getItemCount(); j<jMax; j++) { RMGraphSeries.Item seriesItem = series.getItem(j);

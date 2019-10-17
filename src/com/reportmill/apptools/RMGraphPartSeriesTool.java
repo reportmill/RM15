@@ -2,15 +2,20 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.apptools;
+import com.reportmill.app.RMEditor;
 import com.reportmill.shape.*;
 import com.reportmill.shape.RMGraphPartSeries.LabelPos;
+import snap.util.StringUtils;
 import snap.view.*;
 
 /**
- * Provides UI editing for graph part series.
+ * RMTool subclass to provide UI editing for RMGraphPartSeries.
  */
 public class RMGraphPartSeriesTool <T extends RMGraphPartSeries> extends RMTool <T> {
 
+    // The selected series index
+    int      _selIndex;
+    
 /**
  * Initialize UI panel.
  */
@@ -37,6 +42,22 @@ public void resetUI()
     setViewValue("SeriesText", series.getLabelShape(series.getPosition()).getText());
     setViewValue("LabelRollSpinner", series.getRoll());
     setViewSelItem("LabelPositionsList", series.getPosition());
+    
+    // Update SeriesButtons
+    RMGraph graph = getSelGraph();
+    int seriesCount = graph.getSeriesCount();
+    View seriesRowView = getView("SeriesButton1").getParent();
+    seriesRowView.setVisible(seriesCount>1);
+
+    // Update SeriesButtons
+    if(seriesRowView.isVisible()) {
+        int selIndex = getSelSeriesIndex() + 1;
+        for(int i=1; i<=3; i++) {
+            ToggleButton btn = getView("SeriesButton" + i, ToggleButton.class);
+            btn.setSelected(i==selIndex);
+            btn.setVisible(i-1<seriesCount);
+        }
+    }
 }
 
 /**
@@ -53,6 +74,13 @@ public void respondUI(ViewEvent anEvent)
     if(anEvent.equals("LabelRollSpinner")) series.setRoll(anEvent.getFloatValue());
     if(anEvent.equals("LabelPositionsList")) series.setPosition(LabelPos.valueOf(anEvent.getStringValue()));
     
+    // Handle SeriesButton
+    String name = anEvent.getName();
+    if(name.startsWith("SeriesButton")) {
+        int ind = StringUtils.intValue(name);
+        setSelSeriesIndex(ind);
+    }
+    
     // Rebuild Graph
     RMGraph graph = (RMGraph)series.getParent();
     graph.relayout(); graph.repaint();
@@ -67,6 +95,50 @@ private void configureLabelsPositionListCell(ListCell <LabelPos> aCell)
     RMGraphPartSeries series = getSelectedShape(); if(series==null) return;
     boolean active = series.getLabelShape(item).length()>0;
     if(active) aCell.setFont(aCell.getFont().getBold());
+}
+
+/**
+ * Returns the selected series index.
+ */
+public int getSelSeriesIndex()
+{
+    RMGraph graph = getSelGraph();
+    _selIndex = Math.max(_selIndex, graph!=null? graph.getSeriesCount() -1 : -1);
+    return _selIndex;
+}
+
+/**
+ * Sets the selected series index.
+ */
+public void setSelSeriesIndex(int anIndex)
+{
+    if(anIndex==_selIndex) return;
+    _selIndex = anIndex;
+}
+
+/**
+ * Returns the currently selected RMGraphPartSeries.
+ */
+public T getSelectedShape()  { return (T)getSelSeries(); }
+
+/**
+ * Returns the currently selected RMGraphPartSeries.
+ */
+public RMGraphPartSeries getSelSeries()
+{
+    RMGraph graph = getSelGraph(); if(graph==null) return null;
+    int ind = getSelSeriesIndex(); if(ind<0) return null;
+    return graph.getSeries(ind);
+}
+
+/**
+ * Returns the currently selected graph area shape.
+ */
+public RMGraph getSelGraph()
+{
+    RMEditor e = getEditor(); if(e==null) return null;
+    RMShape selShape = e.getSelectedOrSuperSelectedShape();
+    return selShape instanceof RMGraph? (RMGraph)selShape : null;
 }
 
 /**

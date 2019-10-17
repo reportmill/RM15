@@ -34,7 +34,7 @@ public RMGraphRPGPie(RMGraph aGraph, ReportOwner anRptOwner)
  */
 protected RMParentShape createGraphShape()
 {
-    return _graph.getDraw3D()? new PieGraphShape3D(_graph) : new PieGraphShape2D(_graph);
+    return _graph.isDraw3D()? new PieGraphShape3D(_graph) : new PieGraphShape2D(_graph);
 }
 
 /**

@@ -3,13 +3,14 @@
  */
 package com.reportmill.shape;
 import com.reportmill.base.*;
+import com.reportmill.graphics.RMColor;
 import com.reportmill.graphics.RMFont;
 import snap.util.*;
 
 /**
  * This shape is used by graph area to hold attributes of the value axis.
  */
-public class RMGraphPartValueAxis extends RMShape {
+public class RMGraphPartValueAxis extends RMTextShape {
 
     // Whether to draw axis labels
     boolean       _showAxisLabels = true;
@@ -35,6 +36,9 @@ public class RMGraphPartValueAxis extends RMShape {
     // The format
     RMFormat      _format = RMNumberFormat.BASIC;
     
+    // The text color
+    RMColor       _textColor = RMColor.black;
+    
 /**
  * Returns whether the graph draws axis labels.
  */
@@ -43,7 +47,11 @@ public boolean getShowAxisLabels()  { return _showAxisLabels; }
 /**
  * Sets whether the graph draws axis labels.
  */
-public void setShowAxisLabels(boolean aFlag)  { _showAxisLabels = aFlag; }
+public void setShowAxisLabels(boolean aFlag)
+{
+    _showAxisLabels = aFlag;
+    relayoutParent();
+}
 
 /**
  * Returns whether the graph draws the major axis.
@@ -53,7 +61,11 @@ public boolean getShowMajorGrid()  { return _showMajorGrid; }
 /**
  * Sets whether the graph draws the major axis.
  */
-public void setShowMajorGrid(boolean aFlag)  { _showMajorGrid = aFlag; }
+public void setShowMajorGrid(boolean aFlag)
+{
+    _showMajorGrid = aFlag;
+    relayoutParent();
+}
 
 /**
  * Returns whether the graph draws the minor axis.
@@ -63,7 +75,11 @@ public boolean getShowMinorGrid()  { return _showMinorGrid; }
 /**
  * Sets whether the graph draws the minor axis.
  */
-public void setShowMinorGrid(boolean aFlag)  { _showMinorGrid = aFlag; }
+public void setShowMinorGrid(boolean aFlag)
+{
+    _showMinorGrid = aFlag;
+    relayoutParent();
+}
 
 /**
  * Returns the axis minimum.
@@ -73,7 +89,11 @@ public float getAxisMin()  { return _axisMin; }
 /**
  * Sets the axis minimum.
  */
-public void setAxisMin(float aValue)  { _axisMin = aValue; }
+public void setAxisMin(float aValue)
+{
+    _axisMin = aValue;
+    relayoutParent();
+}
 
 /**
  * Returns the axis maximum.
@@ -83,7 +103,11 @@ public float getAxisMax()  { return _axisMax; }
 /**
  * Sets the axis maximum.
  */
-public void setAxisMax(float aValue)  { _axisMax = aValue; }
+public void setAxisMax(float aValue)
+{
+    _axisMax = aValue;
+    relayoutParent();
+}
 
 /**
  * Returns the number of increments in the axis.
@@ -93,41 +117,68 @@ public int getAxisCount()  { return _axisCount; }
 /**
  * Sets the number of increments in the axis.
  */
-public void setAxisCount(int aValue)  { _axisCount = aValue; }
-
-/**
- * Returns whether font has been set.
- */
-public boolean isFontSet()  { return _font!=null; }
+public void setAxisCount(int aValue)
+{
+    _axisCount = aValue;
+    relayoutParent();
+}
 
 /**
  * Return current font.
  */
-public RMFont getFont()  { return _font!=null? _font : RMFont.Helvetica10; }
+public RMFont getFont() // { return _font!=null? _font : RMFont.Helvetica10; }
+{
+    RMFont font = isFontSet()? super.getFont() : RMFont.Helvetica10;
+    return font;
+}
 
 /**
  * Set current font.
  */
 public void setFont(RMFont aFont)
 {
-    _font = aFont;
-    RMParentShape par = getParent(); if(par!=null) { par.repaint(); par.relayout(); }
+    if(getXString().length()==0)
+        getXString().addChars(" ");
+    super.setFont(aFont); //_font = aFont;
+    relayoutParent();
 }
 
 /**
  * Returns the format for the shape.
  */
-public RMFormat getFormat()  { return _format; }
+public RMFormat getFormat()  //{ return _format; }
+{
+    RMFormat format = super.getFormat();
+    return format!=null? format : RMNumberFormat.BASIC;
+}
 
 /**
  * Sets the format for the shape.
  */
 public void setFormat(RMFormat aFormat)
 {
-    _format = aFormat;
-    RMParentShape par = getParent(); if(par!=null) { par.repaint(); par.relayout(); }
+    if(getXString().length()==0)
+        getXString().addChars(" ");
+    super.setFormat(aFormat); //_format = aFormat;
+    relayoutParent();
 }
     
+/**
+ * Override to allow for ProxyShape.
+ */
+//public RMColor getTextColor()  { return _textColor; }
+
+/**
+ * Override to allow for ProxyShape and trigger relayout.
+ */
+public void setTextColor(RMColor aColor)
+{
+    if(getXString().length()==0)
+        getXString().addChars(" ");
+    super.setTextColor(aColor); //_textColor = aColor;
+    relayoutParent();
+}
+
 /**
  * XML archival.
  */
@@ -144,9 +195,11 @@ public XMLElement toXML(XMLArchiver anArchiver)
     if(_axisMax!=Float.MIN_VALUE) e.add("axis-max", _axisMax);
     if(_axisCount>0) e.add("axis-count", _axisCount);
     
-    // Archive format
-    if(getFormat()!=RMNumberFormat.BASIC)
-        e.add(getFormat().toXML(anArchiver));
+    // Archive Format
+    //if(getFormat()!=RMNumberFormat.BASIC) e.add(getFormat().toXML(anArchiver));
+        
+    // Archive TextColor
+    //if(!SnapUtils.equals(getTextColor(), RMColor.black))  e.add("TextColor", getTextColor().toHexString());
     
     // Return xml element
     return e;
@@ -172,6 +225,10 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
     XMLElement fxml = anElement.getElement("format");
     if(fxml!=null)
         setFormat(anArchiver.fromXML(fxml, RMNumberFormat.class, null));
+        
+    // Unarchive TextColor
+    //String textColorStr = anElement.getAttributeValue("TextColor");
+    //if(textColorStr!=null) setTextColor(RMColor.get(textColorStr));
 
     // Return this graph
     return this;

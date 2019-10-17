@@ -67,7 +67,7 @@ public RMGraphRPGBar(RMGraph aGraph, ReportOwner anRptOwner)
  */
 protected RMParentShape createGraphShape()
 {
-    return _graph.getDraw3D()? new RMGraphRPGBar3D(_graph) : new BarGraphShape2D(_graph);
+    return _graph.isDraw3D()? new RMGraphRPGBar3D(_graph) : new BarGraphShape2D(_graph);
 }
 
 /**
@@ -391,7 +391,7 @@ private void addValueAxisLabels()
 
         // Get string for intervalNumber
         String str = format.format(interval);
-        RMXString xstr = new RMXString(str, valueAxis.getFont());
+        RMXString xstr = new RMXString(str, valueAxis.getFont(), valueAxis.getTextColor());
         xstr.setParagraph(RMParagraph.CENTERED, 0, xstr.length());
         
         // Create new text for label, copy value axis text shape attributes and size to fit

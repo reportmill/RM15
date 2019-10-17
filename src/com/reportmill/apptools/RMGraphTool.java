@@ -20,16 +20,25 @@ import snap.viewx.ColorDock;
 public class RMGraphTool <T extends RMGraph> extends RMTool <T> implements RMSortPanel.Owner {
     
     // The sort panel
-    RMSortPanel             _sortPanel;
+    RMSortPanel               _sortPanel;
 
     // Assistant tool for Bars
-    RMGraphPartBarsTool     _barTool = new RMGraphPartBarsTool();
+    RMGraphPartBarsTool       _barTool = new RMGraphPartBarsTool();
     
     // Assistant tool for Pie
-    RMGraphPartPieTool      _pieTool = new RMGraphPartPieTool();
+    RMGraphPartPieTool        _pieTool = new RMGraphPartPieTool();
+    
+    // Assistant tool for ValueAxis
+    RMGraphPartValueAxisTool  _valueAxisTool = new RMGraphPartValueAxisTool();
+    
+    // Assistant tool for LabelAxis
+    RMGraphPartLabelAxisTool  _labelAxisTool = new RMGraphPartLabelAxisTool();
+    
+    // Assistant tool for Series
+    RMGraphPartSeriesTool     _seriesTool = new RMGraphPartSeriesTool();
     
     // Assistant tool for 3D
-    RMScene3DTool           _3dTool = new Scene3DTool();
+    RMScene3DTool             _3dTool = new Scene3DTool();
 
 /**
  * Override to forward to proxy tools.
@@ -39,6 +48,9 @@ public void setEditor(RMEditor anEditor)
     super.setEditor(anEditor);
     _barTool.setEditor(anEditor);
     _pieTool.setEditor(anEditor);
+    _valueAxisTool.setEditor(anEditor);
+    _labelAxisTool.setEditor(anEditor);
+    _seriesTool.setEditor(anEditor);
     _3dTool.setEditor(anEditor);
 }
 
@@ -53,9 +65,21 @@ protected void initUI()
     _sortPanel.setSelectedPane(1);
     
     // Add SortPanel to main tab content
-    TitleView sortBox = getView("SortPanelBox", TitleView.class);
+    TitleView sortBox = getView("SortBox", TitleView.class);
     _sortPanel.getView("SortingLabel").setVisible(false);
     sortBox.setContent(_sortPanel.getUI());
+    
+    // Add ValueAxis UI
+    TitleView valueAxisBox = getView("ValueAxisBox", TitleView.class);
+    valueAxisBox.setContent(_valueAxisTool.getUI());
+    
+    // Add LabelAxis UI
+    TitleView labelAxisBox = getView("LabelAxisBox", TitleView.class);
+    labelAxisBox.setContent(_labelAxisTool.getUI());
+    
+    // Add Series UI
+    TitleView seriesBox = getView("SeriesBox", TitleView.class);
+    seriesBox.setContent(_seriesTool.getUI());
     
     // Add 3D UI
     TitleView thr3dBox = getView("3DBox", TitleView.class);
@@ -122,24 +146,42 @@ protected void resetUI()
     // Update ColorItemsCheckBox, ShowLegendCheckBox, Draw3DCheckBox
     setViewValue("ColorItemsCheckBox", graph.isColorItems());
     setViewValue("ShowLegendCheckBox", graph.isShowLegend());
-    setViewValue("Draw3DCheckBox", graph.getDraw3D());
+    setViewValue("Draw3DCheckBox", graph.isDraw3D());
     
     // Update ColorKeyText
     setViewValue("ColorKeyText", graph.getColorKey());
     
-    // Make 3D controls visible if graph draws 3D
-    getView("3DBox").setVisible(graph.getDraw3D());
+    // Make SeriesBox visible if graph key is set
+    getView("SeriesBox").setVisible(graph.getKeyCount()>0);
+    
+    // Make 3DBox visible if graph draws 3D
+    getView("3DBox").setVisible(graph.isDraw3D());
     
     // Make MultiKeyLayoutBox visible is more than one key
     getView("MultiKeyLayoutBox").setVisible(graph.getKeyCount()>1);
     
+    // Update ProxyLabel
+    String str = "Font/Color changes now apply to ";
+    RMShape proxy = graph.getProxyShape();
+    if(proxy instanceof RMGraphPartValueAxis) str += "Value Axis";
+    else if(proxy instanceof RMGraphPartLabelAxis) str += "Label Axis";
+    else if(proxy instanceof RMGraphPartSeries) str += "Series " + (_seriesTool.getSelSeriesIndex() + 1);
+    else str += "Graph";
+    setViewValue("ProxyLabel", str);
+    
     // Update SortPanel, 
     _sortPanel.resetLater();
-    if(_barTool.isUISet() && _barTool.getUI().isShowing())
+    if(_barTool.isShowing())
         _barTool.resetLater();
-    else if(_pieTool.isUISet() && _pieTool.getUI().isShowing())
+    else if(_pieTool.isShowing())
         _pieTool.resetLater();
-    else if(_3dTool.isUISet() && _3dTool.getUI().isShowing())
+    if(_valueAxisTool.isShowing())
+        _valueAxisTool.resetLater();
+    if(_labelAxisTool.isShowing())
+        _labelAxisTool.resetLater();
+    if(_seriesTool.isShowing())
+        _seriesTool.resetLater();
+    if(_3dTool.isShowing())
         _3dTool.resetLater();
 }
 
@@ -232,12 +274,52 @@ public void respondUI(ViewEvent anEvent)
         if(ckey!=null && ckey.length()>0)
             graph.setColorItems(true);
     }
+    
+    // Handle any box click: Close other boxes
+    if(anEvent.getName().endsWith("Box"))
+        titleViewExpandedChanged(anEvent);
 }
+
+/**
+ * Called when a TitleView.Expanded change happens.
+ */
+private void titleViewExpandedChanged(ViewEvent anEvent)
+{
+    // Get TitleView name and whether modifer key is down
+    String name = anEvent.getName();
+    boolean modDown = anEvent.isShiftDown() || anEvent.isShortcutDown();
+    
+    // If not one of the BoxNames, just return
+    if(!ArrayUtils.contains(BoxNames, name)) return;
+    
+    // Get TitleView for name
+    TitleView tview = getView(name, TitleView.class); if(tview==null) return;
+    if(tview.isExpanded()) return;
+    
+    // Close other TitleViews
+    if(!modDown) {
+        for(String bname : BoxNames)
+            if(!bname.equals(name))
+                getView(bname, TitleView.class).setExpandedAnimated(false);
+    }
+
+    // Change Proxy
+    RMGraph graph = getSelectedGraph();
+    switch(name) {
+        case "ValueAxisBox": graph.setProxyShape(graph.getValueAxis()); break;
+        case "LabelAxisBox": graph.setProxyShape(graph.getLabelAxis()); break;
+        case "SeriesBox": graph.setProxyShape(_seriesTool.getSelSeries()); break;
+        default: graph.setProxyShape(null); break;
+    }
+}
+
+// Array of TitleView names
+private String BoxNames[] = { "SortBox", "ViewBox", "TypeBox", "ValueAxisBox", "LabelAxisBox", "SeriesBox", "3DBox" };
 
 /**
  * Returns the selected graph.
  */
-public RMGraph getSelectedGraph()  { return ClassUtils.getInstance(getSelectedShape(), RMGraph.class); }
+public RMGraph getSelectedGraph()  { return getSelectedShape(); }
 
 /**
  * Returns the graph's grouping.
@@ -314,13 +396,15 @@ private static RMGraph createSampleGraph()
 public void mousePressed(T aGraph, ViewEvent anEvent)
 {
     // See if point hit Graph part
+    if(1>2) {
     Point point = getEditor().convertToShape(anEvent.getX(), anEvent.getY(), aGraph);
     for(int i=0, iMax=aGraph.getPartCount(); i<iMax; i++)
         if(aGraph.getFontBox(i).contains(point.getX(), point.getY()))
             _hitChild = aGraph.getParts()[i];
+    }
     
     // See if 3D is available
-    if(_hitChild==null && isSuperSelected(aGraph) && aGraph.getDraw3D()) {
+    if(_hitChild==null && isSuperSelected(aGraph) && aGraph.isDraw3D()) {
         _hitChild = aGraph.get3D();
         _hitChild.processEvent(createShapeEvent(_hitChild, anEvent));
         getEditor().setSuperSelectedShape(aGraph);

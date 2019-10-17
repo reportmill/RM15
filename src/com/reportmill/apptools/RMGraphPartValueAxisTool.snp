@@ -1,14 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<SpringView width="262" height="284" PrefWidth="262" PrefHeight="284">
-  <CheckBox Name="ShowLabelsCheckBox" x="68" y="26" width="120" height="17" text="Show Axis Labels" />
-  <CheckBox Name="ShowMajorGridCheckBox" x="68" y="48" width="149" height="17" text="Show Major Grid Lines" />
-  <CheckBox Name="ShowMinorGridCheckBox" x="68" y="70" width="149" height="17" text="Show Minor Grid Lines" />
-  <Label x="61" y="147" width="55" height="22" text="Axis Min:" />
-  <TextField Name="AxisMinText" x="116" y="147" width="62" height="22" Align="CENTER" />
-  <Spinner Name="LabelRollSpinner" x="116" y="103" width="62" height="22" Value="0" />
-  <Label x="62" y="103" width="54" height="22" text="Rotation:" />
-  <Label x="61" y="174" width="55" height="22" text="Axis Max:" />
-  <TextField Name="AxisMaxText" x="116" y="174" width="62" height="22" Align="CENTER" />
-  <Label x="62" y="202" width="55" height="20" text="Count:" />
-  <Spinner Name="AxisCountSpinner" x="116" y="202" width="62" height="22" Min="0" Value="0" />
-</SpringView>
+<ColView Padding="4" Spacing="4" FillWidth="true">
+  <RowView GrowWidth="true">
+    <ColView GrowHeight="true" Spacing="4">
+      <CheckBox Name="ShowLabelsCheckBox" text="Show Axis Labels" />
+      <CheckBox Name="ShowMajorGridCheckBox" text="Show Major Grid Lines" />
+      <CheckBox Name="ShowMinorGridCheckBox" text="Show Minor Grid Lines" />
+    </ColView>
+  </RowView>
+  <RowView Padding="2,2,0,2" GrowWidth="true">
+    <Label PrefWidth="60" text="Axis Min:" Spacing="0" />
+    <TextField Name="AxisMinText" PrefWidth="75" />
+  </RowView>
+  <RowView Padding="2,2,0,2" GrowWidth="true">
+    <Label PrefWidth="60" text="Axis Max:" Spacing="0" />
+    <TextField Name="AxisMaxText" PrefWidth="75" />
+  </RowView>
+  <RowView Padding="2,2,0,2" GrowWidth="true">
+    <Label PrefWidth="60" text="Count:" />
+    <Spinner Name="AxisCountSpinner" PrefWidth="75" Align="CENTER" Min="0" Value="0" />
+  </RowView>
+  <RowView Padding="2" GrowWidth="true">
+    <Label PrefWidth="60" text="Rotation:" />
+    <Spinner Name="LabelRollSpinner" PrefWidth="75" Align="CENTER" Padding="0" Value="0" />
+  </RowView>
+</ColView>

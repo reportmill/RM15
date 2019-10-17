@@ -34,7 +34,11 @@ public class RMGraphPartSeries extends RMShape {
 /**
  * Creates a new series part.
  */
-public RMGraphPartSeries(RMGraph aGraph)  { _graph = aGraph; }
+public RMGraphPartSeries(RMGraph aGraph)
+{
+    _graph = aGraph;
+    setParent(_graph);
+}
 
 /**
  * Returns the title of the series.

@@ -2,14 +2,15 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.apptools;
+import com.reportmill.app.RMEditor;
 import com.reportmill.shape.*;
-import snap.view.ViewEvent;
+import snap.view.*;
 
 /**
- * Provides UI editing for graph part value axis
+ * RMTool subclass to provide UI editing for RMGraphPartValueAxis.
  */
 public class RMGraphPartValueAxisTool <T extends RMGraphPartValueAxis> extends RMTool <T> {
-
+    
 /**
  * Resets UI panel controls.
  */
@@ -64,6 +65,25 @@ public void respondUI(ViewEvent anEvent)
  * Override to return tool shape class.
  */
 public Class <T> getShapeClass()  { return (Class<T>)RMGraphPartValueAxis.class; }
+
+/**
+ * Returns the currently selected RMGraphPartBars.
+ */
+public T getSelectedShape()
+{
+    RMGraph graph = getSelectedGraph();
+    return graph!=null? (T)graph.getValueAxis() : null;
+}
+
+/**
+ * Returns the currently selected graph area shape.
+ */
+public RMGraph getSelectedGraph()
+{
+    RMEditor e = getEditor(); if(e==null) return null;
+    RMShape selShape = e.getSelectedOrSuperSelectedShape();
+    return selShape instanceof RMGraph? (RMGraph)selShape : null;
+}
 
 /**
  * Returns the name of the graph inspector.

@@ -1,14 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<SpringView width="262" height="284" PrefWidth="262" PrefHeight="284">
-  <Label x="8" y="20" width="34" height="22" text="Title:" />
-  <TextField Name="TitleText" x="42" y="20" width="213" height="22" />
-  <Label x="8" y="183" width="48" height="22" text="Text:" />
-  <TextField Name="SeriesText" x="56" y="183" width="180" height="22" />
-  <Spinner Name="LabelRollSpinner" x="56" y="211" width="62" height="22" Max="90" />
-  <Label x="8" y="211" width="48" height="22" text="Rotation:" />
-  <ListView Name="LabelPositionsList" x="8" y="94" width="228" height="80">
-    <font name="Arial" size="12" />
-  </ListView>
-  <Label x="8" y="71" width="196" height="22" text="Bar/Wedge Labels:" />
-  <Separator x="8" y="56" width="244" height="12" />
-</SpringView>
+<ColView FillWidth="true">
+  <RowView Padding="4" GrowWidth="true" Spacing="4">
+    <Label text="Series:" />
+    <ToggleButton Name="SeriesButton1" PrefWidth="22" PrefHeight="22" Padding="2" text="1" Selected="true" />
+    <ToggleButton Name="SeriesButton2" PrefWidth="22" PrefHeight="22" Padding="2" text="2" />
+    <ToggleButton Name="SeriesButton3" PrefWidth="22" PrefHeight="22" Padding="2" text="3" />
+  </RowView>
+  <RowView Padding="4" GrowWidth="true" Spacing="4">
+    <Label text="Title:" />
+    <TextField Name="TitleText" GrowWidth="true" />
+  </RowView>
+  <ColView Padding="4" GrowHeight="true" Spacing="4" FillWidth="true">
+    <Label text="Bar/Wedge Labels:" />
+    <ListView Name="LabelPositionsList" MinWidth="155" PrefHeight="80" GrowHeight="true">
+      <LineBorder Color="#c0c0c0" />
+      <font name="Arial" size="12" />
+    </ListView>
+  </ColView>
+  <RowView Padding="4" GrowWidth="true" Spacing="4">
+    <Label text="Text:" />
+    <TextField Name="SeriesText" GrowWidth="true" />
+  </RowView>
+  <RowView Padding="4" GrowWidth="true" Spacing="4">
+    <Label text="Rotation:" />
+    <Spinner Name="LabelRollSpinner" PrefWidth="75" Max="90" />
+  </RowView>
+</ColView>

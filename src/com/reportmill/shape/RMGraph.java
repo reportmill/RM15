@@ -75,6 +75,12 @@ public class RMGraph extends RMParentShape {
     // This list of colors this graph uses
     List                      _colors;
     
+    // A standin shape for editor to allow setting fill, stroke, font of component shapes
+    RMShape                   _proxyShape;
+    
+    // Whether to ignore proxy
+    boolean                   _proxyDisable;
+    
     // The shared default list of colors all graphs use
     static List <RMColor>     _defaultColors;
     
@@ -323,6 +329,11 @@ void thr3DPropChange(PropChange anEvent)
 /**
  * Returns whether the graph draws in 3D.
  */
+public boolean isDraw3D()  { return _draw3D; }
+
+/**
+ * Returns whether the graph draws in 3D.
+ */
 public boolean getDraw3D()  { return _draw3D; }
 
 /**
@@ -551,7 +562,7 @@ public void paintShape(Painter aPntr)  { }
 /**
  * Override to paint GraphArea parts.
  */
-protected void paintShapeOver(Painter aPntr)
+protected void paintShapeOver_THIS_SHOULD_GO(Painter aPntr)
 {
     // Do normal version
     super.paintShapeOver(aPntr);
@@ -621,20 +632,84 @@ public static class FontBox extends Rect {
 }
 
 /**
- * Override to trigger relayout.
+ * Return ProxyShape.
  */
-public void setFill(RMFill aFill)  { super.setFill(aFill); relayout(); }
+public RMShape getProxyShape()  { return _proxyShape; }
 
 /**
- * Sets the stroke for this shape, with an option to turn on drawsStroke.
+ * Sets the ProxyShape.
  */
-public void setStroke(RMStroke aStroke)  { super.setStroke(aStroke); relayout(); }
+public void setProxyShape(RMShape aShape)
+{
+    _proxyShape = aShape;
+}
+
+/**
+ * Whether to use proxy.
+ */
+private boolean useProxy()
+{
+    if(_proxyShape==null) return false;
+    if(isInLayout()) return false;
+    if(_proxyDisable) return false;
+    return true;
+}
+
+/**
+ * Override to allow for ProxyShape.
+ */
+public RMFill getFill()  { return useProxy()? _proxyShape.getFill() : super.getFill();
+}
+
+/**
+ * Override to allow for ProxyShape and trigger relayout.
+ */
+public void setFill(RMFill aFill)
+{
+    if(_proxyShape!=null)
+        _proxyShape.setFill(aFill);
+    else super.setFill(aFill);
+    relayout();
+}
+
+/**
+ * Override to allow for ProxyShape.
+ */
+public RMStroke getStroke()  { return useProxy()? _proxyShape.getStroke() : super.getStroke(); }
+
+/**
+ * Override to allow for ProxyShape and trigger relayout.
+ */
+public void setStroke(RMStroke aStroke)
+{
+    if(_proxyShape!=null)
+        _proxyShape.setStroke(aStroke);
+    else super.setStroke(aStroke);
+    relayout();
+}
+
+/**
+ * Override to allow for ProxyShape.
+ */
+public RMColor getTextColor()  { return useProxy()? _proxyShape.getTextColor() : super.getTextColor(); }
+
+/**
+ * Override to allow for ProxyShape and trigger relayout.
+ */
+public void setTextColor(RMColor aColor)
+{
+    if(_proxyShape!=null)
+        _proxyShape.setTextColor(aColor);
+    else super.setTextColor(aColor);
+    relayout();
+}
 
 /**
  * Standard clone implementation.
  */
 public RMGraph clone()
 {
+    _proxyDisable = true;
     RMGraph clone = (RMGraph)super.clone();
     clone._keys = new ArrayList(_keys);
     clone._grouping = _grouping.clone();
@@ -644,6 +719,7 @@ public RMGraph clone()
     clone._pie = (RMGraphPartPie)_pie.clone();
     clone._3d = (RMScene3D)get3D().clone();
     clone._series = SnapUtils.cloneDeep(_series); for(RMGraphPartSeries s : clone._series) s._graph = clone;
+    _proxyDisable = false;
     return clone;
 }
 
@@ -652,6 +728,7 @@ public RMGraph clone()
  */
 protected XMLElement toXMLShape(XMLArchiver anArchiver)
 {
+    _proxyDisable = true;
     // Archive basic shape attributes and reset element name and set type
     XMLElement e = super.toXMLShape(anArchiver); e.setName("graph");
     e.add("type", getGraphTypeString());
@@ -708,6 +785,7 @@ protected XMLElement toXMLShape(XMLArchiver anArchiver)
     }
     
     // Return xml element
+    _proxyDisable = false;
     return e;
 }
 
