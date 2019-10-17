@@ -30,7 +30,11 @@ public boolean getShowAxisLabels()  { return _showAxisLabels; }
 /**
  * Sets whether the graph shows axis labels.
  */
-public void setShowAxisLabels(boolean aFlag)  { _showAxisLabels = aFlag; }
+public void setShowAxisLabels(boolean aFlag)
+{
+    _showAxisLabels = aFlag;
+    relayoutParent();
+}
 
 /**
  * Returns whether the graph shows grid lines between label axis sections.
@@ -40,7 +44,11 @@ public boolean getShowGridLines()  { return _showGridLines; }
 /**
  * Sets whether the graph shows grid lines between label axis sections.
  */
-public void setShowGridLines(boolean aFlag)  { _showGridLines = aFlag; }
+public void setShowGridLines(boolean aFlag)
+{
+    _showGridLines = aFlag;
+    relayoutParent();
+}
 
 /**
  * Returns the item key.
@@ -50,7 +58,11 @@ public String getItemKey()  { return _itemKey; }
 /**
  * Sets the item key.
  */
-public void setItemKey(String aKey)  { _itemKey = aKey; }
+public void setItemKey(String aKey)
+{
+    _itemKey = aKey;
+    relayoutParent();
+}
 
 /**
  * Returns whether font has been set.
@@ -68,7 +80,7 @@ public RMFont getFont()  { return _font!=null? _font : RMFont.Helvetica10; }
 public void setFont(RMFont aFont)
 {
     _font = aFont;
-    RMParentShape par = getParent(); if(par!=null) { par.repaint(); par.relayout(); }
+    relayoutParent();
 }
 
 /**

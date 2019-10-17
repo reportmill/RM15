@@ -77,8 +77,15 @@ public void respondUI(ViewEvent anEvent)
     // Handle SeriesButton
     String name = anEvent.getName();
     if(name.startsWith("SeriesButton")) {
+        
+        // Set SelSeriesIndex for button
         int ind = StringUtils.intValue(name);
         setSelSeriesIndex(ind);
+        
+        // Set Graph.ProxyShape
+        RMGraph graph = getSelGraph();
+        RMShape ps = graph.getSeries(ind);
+        graph.setProxyShape(ps);
     }
     
     // Rebuild Graph

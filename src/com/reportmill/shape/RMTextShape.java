@@ -160,8 +160,9 @@ public boolean isAllTextVisible()  { return !getTextBox().isOutOfRoom(); }
  */
 public RMFont getFont()
 {
-    if(isTextEditorSet()) return getTextEditor().getFont();
-    else return getXString().getFontAt(0);
+    if(isTextEditorSet())
+        return getTextEditor().getFont();
+    return getXString().getFontAt(0);
 }
 
 /**
@@ -169,7 +170,8 @@ public RMFont getFont()
  */
 public void setFont(RMFont aFont)
 {
-    if(isTextEditorSet()) getTextEditor().setFont(aFont);
+    if(isTextEditorSet())
+        getTextEditor().setFont(aFont);
     else getXString().setAttribute(aFont);
 }
 
@@ -178,8 +180,9 @@ public void setFont(RMFont aFont)
  */
 public RMFormat getFormat()
 {
-    if(isTextEditorSet()) return getTextEditor().getFormat();
-    else return getXString().getRunAt(0).getFormat();
+    if(isTextEditorSet())
+        return getTextEditor().getFormat();
+    return getXString().getRunAt(0).getFormat();
 }
 
 /**
@@ -187,7 +190,8 @@ public RMFormat getFormat()
  */
 public void setFormat(RMFormat aFormat)
 {
-    if(isTextEditorSet()) getTextEditor().setFormat(aFormat);
+    if(isTextEditorSet())
+        getTextEditor().setFormat(aFormat);
     else getXString().setAttribute(aFormat, 0, length());
 }
 
@@ -206,8 +210,9 @@ public void setTextColor(RMColor aColor)  { getXString().setAttribute(aColor); }
  */
 public boolean isUnderlined()
 {
-    if(isTextEditorSet()) return getTextEditor().isUnderlined();
-    else return getRichText().getRunAt(0).isUnderlined();
+    if(isTextEditorSet())
+        return getTextEditor().isUnderlined();
+    return getRichText().getRunAt(0).isUnderlined();
 }
 
 /**
@@ -215,7 +220,8 @@ public boolean isUnderlined()
  */
 public void setUnderlined(boolean aFlag)
 {
-    if(isTextEditorSet()) getTextEditor().setUnderlined(aFlag);
+    if(isTextEditorSet())
+        getTextEditor().setUnderlined(aFlag);
     else getRichText().setStyleValue(TextStyle.UNDERLINE_KEY, aFlag? 1 : 0, 0, length());
 }
 
@@ -224,8 +230,9 @@ public void setUnderlined(boolean aFlag)
  */
 public Border getTextBorder()
 {
-    if(isTextEditorSet()) return getTextEditor().getTextBorder();
-    else return getRichText().getRunAt(0).getBorder();
+    if(isTextEditorSet())
+        return getTextEditor().getTextBorder();
+    return getRichText().getRunAt(0).getBorder();
 }
 
 /**
@@ -233,7 +240,8 @@ public Border getTextBorder()
  */
 public void setTextBorder(Border aBorder)
 {
-    if(isTextEditorSet()) getTextEditor().setTextBorder(aBorder);
+    if(isTextEditorSet())
+        getTextEditor().setTextBorder(aBorder);
     else getRichText().setStyleValue(TextStyle.BORDER_KEY,aBorder,0,length());
 }
 
@@ -242,8 +250,9 @@ public void setTextBorder(Border aBorder)
  */
 public AlignX getAlignmentX()
 {
-    if(isTextEditorSet()) return getTextEditor().getAlignX();
-    else return getXString().getAlignX();
+    if(isTextEditorSet())
+        return getTextEditor().getAlignX();
+    return getXString().getAlignX();
 }
 
 /**
@@ -251,7 +260,8 @@ public AlignX getAlignmentX()
  */
 public void setAlignmentX(AlignX anAlignX)
 {
-    if(isTextEditorSet()) getTextEditor().setAlignX(anAlignX);
+    if(isTextEditorSet())
+        getTextEditor().setAlignX(anAlignX);
     else getXString().setAlignX(anAlignX);
 }
 
@@ -345,8 +355,9 @@ public void setMultiline(boolean aValue)
  */
 public float getCharSpacing()
 {
-    if(isTextEditorSet()) return getTextEditor().getCharSpacing();
-    else return getXString().getRun(0).getCharSpacing();
+    if(isTextEditorSet())
+        return getTextEditor().getCharSpacing();
+    return getXString().getRun(0).getCharSpacing();
 }
 
 /**
@@ -354,7 +365,8 @@ public float getCharSpacing()
  */
 public void setCharSpacing(float aValue)
 {
-    if(isTextEditorSet()) getTextEditor().setCharSpacing(aValue);
+    if(isTextEditorSet())
+        getTextEditor().setCharSpacing(aValue);
     else getXString().setAttribute(RMTextStyle.CHAR_SPACING_KEY, aValue==0? null : aValue);
 }
 
@@ -363,8 +375,9 @@ public void setCharSpacing(float aValue)
  */
 public float getLineSpacing()
 {
-    if(isTextEditorSet()) return getTextEditor().getLineSpacing();
-    else return getXString().getParagraphAt(0).getLineSpacing();
+    if(isTextEditorSet())
+        return getTextEditor().getLineSpacing();
+    return getXString().getParagraphAt(0).getLineSpacing();
 }
 
 /**
@@ -372,9 +385,12 @@ public float getLineSpacing()
  */
 public void setLineSpacing(float aHeight)
 {
-    if(isTextEditorSet()) getTextEditor().setLineSpacing(aHeight);
-    else { RMParagraph ps = getXString().getParagraphAt(0).deriveLineSpacing(aHeight);
-        getXString().setParagraph(ps, 0, length()); }
+    if(isTextEditorSet())
+        getTextEditor().setLineSpacing(aHeight);
+    else {
+        RMParagraph ps = getXString().getParagraphAt(0).deriveLineSpacing(aHeight);
+        getXString().setParagraph(ps, 0, length());
+    }
 }
 
 /**
@@ -382,8 +398,9 @@ public void setLineSpacing(float aHeight)
  */
 public float getLineGap()
 {
-    if(isTextEditorSet()) return getTextEditor().getLineGap();
-    else return getXString().getParagraphAt(0).getLineGap();
+    if(isTextEditorSet())
+        return getTextEditor().getLineGap();
+    return getXString().getParagraphAt(0).getLineGap();
 }
 
 /**
@@ -391,9 +408,12 @@ public float getLineGap()
  */
 public void setLineGap(float aHeight)
 {
-    if(isTextEditorSet()) getTextEditor().setLineGap(aHeight);
-    else { RMParagraph ps = getXString().getParagraphAt(0).deriveLineGap(aHeight);
-        getXString().setParagraph(ps, 0, length()); }
+    if(isTextEditorSet())
+        getTextEditor().setLineGap(aHeight);
+    else {
+        RMParagraph ps = getXString().getParagraphAt(0).deriveLineGap(aHeight);
+        getXString().setParagraph(ps, 0, length());
+    }
 }
 
 /**
@@ -401,8 +421,9 @@ public void setLineGap(float aHeight)
  */
 public float getLineHeightMin()
 {
-    if(isTextEditorSet()) return getTextEditor().getLineHeightMin();
-    else return getXString().getParagraphAt(0).getLineHeightMin();
+    if(isTextEditorSet())
+        return getTextEditor().getLineHeightMin();
+    return getXString().getParagraphAt(0).getLineHeightMin();
 }
 
 /**
@@ -410,9 +431,12 @@ public float getLineHeightMin()
  */
 public void setLineHeightMin(float aHeight)
 {
-    if(isTextEditorSet()) getTextEditor().setLineHeightMin(aHeight);
-    else { RMParagraph ps = getXString().getParagraphAt(0).deriveLineHeightMin(aHeight);
-        getXString().setParagraph(ps, 0, length()); }
+    if(isTextEditorSet())
+        getTextEditor().setLineHeightMin(aHeight);
+    else {
+        RMParagraph ps = getXString().getParagraphAt(0).deriveLineHeightMin(aHeight);
+        getXString().setParagraph(ps, 0, length());
+    }
 }
 
 /**
@@ -420,8 +444,9 @@ public void setLineHeightMin(float aHeight)
  */
 public float getLineHeightMax()
 {
-    if(isTextEditorSet()) return getTextEditor().getLineHeightMax();
-    else return getXString().getParagraphAt(0).getLineHeightMax();
+    if(isTextEditorSet())
+        return getTextEditor().getLineHeightMax();
+    return getXString().getParagraphAt(0).getLineHeightMax();
 }
 
 /**
@@ -429,9 +454,12 @@ public float getLineHeightMax()
  */
 public void setLineHeightMax(float aHeight)
 {
-    if(isTextEditorSet()) getTextEditor().setLineHeightMax(aHeight);
-    else { RMParagraph ps = getXString().getParagraphAt(0).deriveLineHeightMax(aHeight);
-        getXString().setParagraph(ps, 0, length()); }
+    if(isTextEditorSet())
+        getTextEditor().setLineHeightMax(aHeight);
+    else {
+        RMParagraph ps = getXString().getParagraphAt(0).deriveLineHeightMax(aHeight);
+        getXString().setParagraph(ps, 0, length());
+    }
 }
 
 /**

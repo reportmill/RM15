@@ -2,6 +2,7 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.shape;
+import com.reportmill.base.RMFormat;
 import com.reportmill.base.RMGrouping;
 import com.reportmill.graphics.*;
 import java.util.*;
@@ -92,6 +93,9 @@ public class RMGraph extends RMParentShape {
     
     // Constants for item layouts
     public enum ItemLayout { Abreast, Stacked, Layered };
+    
+    // Constants for properties
+    public static final String ProxyShape_Prop = "ProxyShape";
     
 /**
  * Creates an RMGraph.
@@ -573,7 +577,8 @@ public RMShape getProxyShape()  { return _proxyShape; }
  */
 public void setProxyShape(RMShape aShape)
 {
-    _proxyShape = aShape;
+    if(aShape==_proxyShape) return;
+    firePropChange(ProxyShape_Prop, _proxyShape, _proxyShape = aShape);
 }
 
 /**
@@ -590,8 +595,7 @@ private boolean useProxy()
 /**
  * Override to allow for ProxyShape.
  */
-public RMFill getFill()  { return useProxy()? _proxyShape.getFill() : super.getFill();
-}
+public RMFill getFill()  { return useProxy()? _proxyShape.getFill() : super.getFill(); }
 
 /**
  * Override to allow for ProxyShape and trigger relayout.
@@ -623,6 +627,25 @@ public void setStroke(RMStroke aStroke)
 /**
  * Override to allow for ProxyShape.
  */
+public RMFont getFont()
+{
+    return useProxy()? _proxyShape.getFont() : super.getFont();
+}
+
+/**
+ * Override to allow for ProxyShape and trigger relayout.
+ */
+public void setFont(RMFont aFont)
+{
+    if(_proxyShape!=null)
+        _proxyShape.setFont(aFont);
+    else super.setFont(aFont);
+    relayout();
+}
+
+/**
+ * Override to allow for ProxyShape.
+ */
 public RMColor getTextColor()  { return useProxy()? _proxyShape.getTextColor() : super.getTextColor(); }
 
 /**
@@ -633,6 +656,22 @@ public void setTextColor(RMColor aColor)
     if(_proxyShape!=null)
         _proxyShape.setTextColor(aColor);
     else super.setTextColor(aColor);
+    relayout();
+}
+
+/**
+ * Override to allow for ProxyShape.
+ */
+public RMFormat getFormat()  { return useProxy()? _proxyShape.getFormat() : super.getFormat(); }
+
+/**
+ * Override to allow for ProxyShape and trigger relayout.
+ */
+public void setFormat(RMFormat aFormat)
+{
+    if(_proxyShape!=null)
+        _proxyShape.setFormat(aFormat);
+    else super.setFormat(aFormat);
     relayout();
 }
 

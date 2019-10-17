@@ -93,6 +93,9 @@ public class RMDocument extends RMParentShape {
 
     // Unit Enumerations
     public enum Unit { Inch, Point, CM, MM, Pica }
+    
+    // Constants for property changes
+    public static final String SelPageIndex_Prop = "SelPageIndex";
 
 /** Initialize ReportMill. */
 static { ReportMill.init(); }
@@ -248,7 +251,7 @@ public void setSelPageIndex(int anIndex)
 {
     int index = Math.min(anIndex, getPageCount()-1);
     if(index==_selIndex) return;
-    firePropChange("SelectedPage", _selIndex, _selIndex = index);
+    firePropChange(SelPageIndex_Prop, _selIndex, _selIndex = index);
     relayout(); // Rebuild
 }
 

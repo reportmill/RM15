@@ -937,6 +937,24 @@ private void setDataSourceAnimFrame(double dx, double dy)
 public Object getDataSourceDataset()  { RMDataSource ds = getDataSource(); return ds!=null? ds.getDataset() : null; }
 
 /**
+ * Resets the editor pane later.
+ */
+public void resetEditorPaneLater()
+{
+    RMEditorPane ep = getEditorPane();
+    ep.resetLater();
+}
+
+/**
+ * Resets the editor pane later.
+ */
+public void resetEditorPaneOnMouseUp()
+{
+    RMEditorPane ep = getEditorPane();
+    ViewUtils.runOnMouseUp(() -> ep.resetLater());
+}
+
+/**
  * Called to undo the last edit operation in the editor.
  */
 public void undo()
@@ -991,7 +1009,7 @@ public void deepChange(Object aShape, PropChange aPC)
     addUndoChange(aPC);
     
     // Reset EditorPane UI
-    RMEditorPane ep = getEditorPane(); ep.resetLater();
+    resetEditorPaneLater();
 }
 
 /**
@@ -1002,9 +1020,14 @@ protected void addUndoChange(PropChange aPC)
     // Get undoer (just return if null)
     Undoer undoer = getUndoer(); if(undoer==null) return;
     
+    // Handle some changes special
+    String pname = aPC.getPropName();
+    if(pname==RMGraph.ProxyShape_Prop) {
+        resetEditorPaneOnMouseUp(); return; }
+    
     // If no undos and change is RMDocument.SelectedPage or RMTableGroup.MainTable, just return
-    if(!undoer.hasUndos()) { String pname = aPC.getPropName();
-        if(pname=="SelectedPage") return;
+    if(!undoer.hasUndos()) {
+        if(pname==RMDocument.SelPageIndex_Prop) return;
         if(pname=="MainTable") return;
         if(pname=="Version") return;
     }
@@ -1037,7 +1060,7 @@ protected void saveUndoerChanges()
     undoer.saveChanges();
     
     // Reset EditorPane
-    RMEditorPane ep = getEditorPane(); ep.resetLater();
+    resetEditorPaneLater();
 }
 
 /**

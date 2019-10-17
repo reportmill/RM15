@@ -441,7 +441,7 @@ protected void docDidPropChange(PropChange anEvent)
 {
     // Handle SelectedPageIndex, PageSize, PageLayout
     String pname = anEvent.getPropertyName();
-    if(pname.equals("SelectedPage") || pname.equals("PageSize") || pname.equals("PageLayout")) {
+    if(pname.equals(RMDocument.SelPageIndex_Prop) || pname.equals("PageSize") || pname.equals("PageLayout")) {
         relayout(); setZoomToFitFactor(); repaint();
         firePropChange("ContentChange" + pname, anEvent.getOldValue(), anEvent.getNewValue());
     }

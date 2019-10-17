@@ -47,6 +47,13 @@ public class RMTool <T extends RMShape> extends ViewOwner {
     public static final byte HandleN = 6;
     public static final byte HandleS = 7;
 
+    // Constants for font keys
+    public static final String FontName_Key = "FontName";
+    public static final String FontFamily_Key = "FontFamily";
+    public static final String FontSize_Key = "FontSize";
+    public static final String FontBold_Key = "FontBold";
+    public static final String FontItalic_Key = "FontItalic";
+
 /**
  * Returns the shape class that this tool handles.
  */
@@ -220,122 +227,108 @@ public void setFont(RMEditor anEditor, RMShape aShape, RMFont aFont)  { aShape.s
  */
 public RMFont getFontDeep(RMEditor anEditor, RMShape aShape)
 {
+    // Look for font from shape
     RMFont font = getFont(anEditor, aShape);
-    for(int i=0, iMax=aShape.getChildCount(); i<iMax && font==null; i++) font = aShape.getChild(i).getFont();
+    
+    // If not found, look for font in children
+    for(int i=0, iMax=aShape.getChildCount(); i<iMax && font==null; i++)
+        font = aShape.getChild(i).getFont();
+    
+    // If not found, look for font with child tools (recurse)
     for(int i=0, iMax=aShape.getChildCount(); i<iMax && font==null; i++) {
         RMShape child = aShape.getChild(i); RMTool tool = getTool(child);
         font = tool.getFontDeep(anEditor, child);
     }
+    
+    // Return font
     return font;
 }
 
 /**
  * Sets the font family for given shape.
  */
-public void setFontFamily(RMEditor anEditor, RMShape aShape, RMFont aFont)
+public void setFontKey(RMEditor anEditor, RMShape aShape, String aKey, Object aVal)
 {
-    // Get new font for given font family font and current shape font size/style and set
-    RMFont font = getFont(anEditor, aShape), font2 = aFont;
-    if(font!=null) {
-        if(font.isBold()!=font2.isBold() && font2.getBold()!=null) font2 = font2.getBold();
-        if(font.isItalic()!=font2.isItalic() && font2.getItalic()!=null) font2 = font2.getItalic();
-        font2 = font2.deriveFont(font.getSize());
+    switch(aKey) {
+        
+        // Handle FontName
+        case FontName_Key: {
+            
+            // Get new font for name and current shape size and set
+            RMFont aFont = (RMFont)aVal;
+            RMFont font = getFont(anEditor, aShape);
+            RMFont font2 = font!=null? aFont.deriveFont(font.getSize()) : aFont;
+            setFont(anEditor, aShape, font2);
+            break;
+        }
+        
+        // Handle FontFamily
+        case FontFamily_Key: {
+            
+            // Get new font for given font family font and current shape font size/style and set
+            RMFont aFont = (RMFont)aVal;
+            RMFont font = getFont(anEditor, aShape), font2 = aFont;
+            if(font!=null) {
+                if(font.isBold()!=font2.isBold() && font2.getBold()!=null) font2 = font2.getBold();
+                if(font.isItalic()!=font2.isItalic() && font2.getItalic()!=null) font2 = font2.getItalic();
+                font2 = font2.deriveFont(font.getSize());
+            }
+            setFont(anEditor, aShape, font2);
+            break;
+        }
+        
+        // Handle FontSize
+        case FontSize_Key: {
+            
+            // Get new font for current shape font at new size and set
+            double aSize = SnapUtils.doubleValue(aVal);
+            boolean isRelative = aSize<0; aSize = Math.abs(aSize);
+            RMFont font = getFont(anEditor, aShape); if(font==null) return;
+            RMFont font2 = isRelative? font.deriveFont(font.getSize() + aSize) : font.deriveFont(aSize);
+            setFont(anEditor, aShape, font2);
+            break;
+        }
+        
+        // Handle FontBold
+        case FontBold_Key: {
+            
+            // Get new font
+            boolean aFlag = SnapUtils.boolValue(aVal);
+            RMFont font = getFont(anEditor, aShape); if(font==null || font.isBold()==aFlag) return;
+            RMFont font2 = font.getBold(); if(font2==null) return;
+            setFont(anEditor, aShape, font2);
+            break;
+        }
+        
+        // Handle FontItalic
+        case FontItalic_Key: {
+            
+            // Get new font
+            boolean aFlag = SnapUtils.boolValue(aVal);
+            RMFont font = getFont(anEditor, aShape); if(font==null || font.isItalic()==aFlag) return;
+            RMFont font2 = font.getItalic(); if(font2==null) return;
+            setFont(anEditor, aShape, font2);
+            break;
+        }
+        
+        // Handle anything else
+        default: System.err.println("RMTool.setFontKey: Unknown key: " + aKey)   ;
     }
-    setFont(anEditor, aShape, font2);
 }
 
 /**
  * Sets the font family for given shape.
  */
-public void setFontFamilyDeep(RMEditor anEditor, RMShape aShape, RMFont aFont)
+public void setFontKeyDeep(RMEditor anEditor, RMShape aShape, String aKey, Object aVal)
 {
-    // Set FontFamily for shape and recurse for children
-    setFontFamily(anEditor, aShape, aFont);
+    // Set font key for shape
+    setFontKey(anEditor, aShape, aKey, aVal);
+    
+    // Set for children
     for(int i=0, iMax=aShape.getChildCount(); i<iMax; i++) { RMShape child = aShape.getChild(i);
-        RMTool tool = getTool(child); tool.setFontFamilyDeep(anEditor, child, aFont); }
-}
-
-/**
- * Sets the font name for given shape.
- */
-public void setFontName(RMEditor anEditor, RMShape aShape, RMFont aFont)
-{
-    // Get new font for name and current shape size and set
-    RMFont font = getFont(anEditor, aShape);
-    RMFont font2 = font!=null? aFont.deriveFont(font.getSize()) : aFont;
-    setFont(anEditor, aShape, font2);
-}
-
-/**
- * Sets the font name for given shape.
- */
-public void setFontNameDeep(RMEditor anEditor, RMShape aShape, RMFont aFont)
-{
-    // Set Font name for shape and recurse for children
-    setFontName(anEditor, aShape, aFont);
-    for(int i=0, iMax=aShape.getChildCount(); i<iMax; i++) { RMShape child = aShape.getChild(i);
-        RMTool tool = getTool(child); tool.setFontNameDeep(anEditor, child, aFont); }
-}
-
-/**
- * Sets the font size for given shape.
- */
-public void setFontSize(RMEditor anEditor, RMShape aShape, double aSize, boolean isRelative)
-{
-    // Get new font for current shape font at new size and set
-    RMFont font = getFont(anEditor, aShape); if(font==null) return;
-    RMFont font2 = isRelative? font.deriveFont(font.getSize() + aSize) : font.deriveFont(aSize);
-    setFont(anEditor, aShape, font2);
-}
-
-/**
- * Sets the font size for given shape.
- */
-public void setFontSizeDeep(RMEditor anEditor, RMShape aShape, double aSize, boolean isRelative)
-{
-    setFontSize(anEditor, aShape, aSize, isRelative);
-    for(int i=0, iMax=aShape.getChildCount(); i<iMax; i++) { RMShape child = aShape.getChild(i);
-        RMTool tool = getTool(child); tool.setFontSizeDeep(anEditor, child, aSize, isRelative); }    
-}
-
-/**
- * Sets the font to bold or not bold for given shape.
- */
-public void setFontBold(RMEditor anEditor, RMShape aShape, boolean aFlag)
-{
-    RMFont font = getFont(anEditor, aShape); if(font==null || font.isBold()==aFlag) return;
-    RMFont font2 = font.getBold(); if(font2==null) return;
-    setFont(anEditor, aShape, font2);
-}
-
-/**
- * Sets the font to bold or not bold for given shape and its children.
- */
-public void setFontBoldDeep(RMEditor anEditor, RMShape aShape, boolean aFlag)
-{
-    setFontBold(anEditor, aShape, aFlag);
-    for(int i=0, iMax=aShape.getChildCount(); i<iMax; i++) { RMShape child = aShape.getChild(i);
-        RMTool tool = getTool(child); tool.setFontBoldDeep(anEditor, child, aFlag); }    
-}
-
-/**
- * Sets the font to italic or not italic for given shape.
- */
-public void setFontItalic(RMEditor anEditor, RMShape aShape, boolean aFlag)
-{
-    RMFont font = getFont(anEditor, aShape); if(font==null || font.isItalic()==aFlag) return;
-    RMFont font2 = font.getItalic(); if(font2==null) return;
-    setFont(anEditor, aShape, font2);
-}
-
-/**
- * Sets the font to italic or not italic for given shape and its children.
- */
-public void setFontItalicDeep(RMEditor anEditor, RMShape aShape, boolean aFlag)
-{
-    setFontItalic(anEditor, aShape, aFlag);
-    for(int i=0, iMax=aShape.getChildCount(); i<iMax; i++) { RMShape child = aShape.getChild(i);
-        RMTool tool = getTool(child); tool.setFontItalicDeep(anEditor, child, aFlag); }    
+        RMTool tool = getTool(child);
+        tool.setFontKeyDeep(anEditor, child, aKey, aVal);
+    }
 }
 
 /**

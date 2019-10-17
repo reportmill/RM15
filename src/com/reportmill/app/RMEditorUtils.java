@@ -667,7 +667,7 @@ public static void setFontFamily(RMEditor anEditor, Font aFont)
     for(int i=0, iMax=anEditor.getSelectedOrSuperSelectedShapeCount(); i<iMax; i++) {
         RMShape shape = anEditor.getSelectedOrSuperSelectedShape(i);
         RMTool tool = anEditor.getTool(shape);
-        tool.setFontFamilyDeep(anEditor, shape, font);
+        tool.setFontKeyDeep(anEditor, shape, RMTool.FontFamily_Key, font);
     }
 }
 
@@ -680,7 +680,7 @@ public static void setFontName(RMEditor anEditor, Font aFont)
     for(int i=0, iMax=anEditor.getSelectedOrSuperSelectedShapeCount(); i<iMax; i++) {
         RMShape shape = anEditor.getSelectedOrSuperSelectedShape(i);
         RMTool tool = anEditor.getTool(shape);
-        tool.setFontNameDeep(anEditor, shape, font);
+        tool.setFontKeyDeep(anEditor, shape, RMTool.FontName_Key, font);
     }
 }
 
@@ -692,7 +692,7 @@ public static void setFontSize(RMEditor anEditor, float aSize, boolean isRelativ
     for(int i=0, iMax=anEditor.getSelectedOrSuperSelectedShapeCount(); i<iMax; i++) {
         RMShape shape = anEditor.getSelectedOrSuperSelectedShape(i);
         RMTool tool = anEditor.getTool(shape);
-        tool.setFontSizeDeep(anEditor, shape, aSize, isRelative);
+        tool.setFontKeyDeep(anEditor, shape, RMTool.FontSize_Key, isRelative? -aSize : aSize);
     }
 }
 
@@ -705,7 +705,7 @@ public static void setFontBold(RMEditor anEditor, boolean aFlag)
     for(int i=0, iMax=anEditor.getSelectedOrSuperSelectedShapeCount(); i<iMax; i++) {
         RMShape shape = anEditor.getSelectedOrSuperSelectedShape(i);
         RMTool tool = anEditor.getTool(shape);
-        tool.setFontBoldDeep(anEditor, shape, aFlag);
+        tool.setFontKeyDeep(anEditor, shape, RMTool.FontBold_Key, aFlag);
     }
 }
 
@@ -718,7 +718,7 @@ public static void setFontItalic(RMEditor anEditor, boolean aFlag)
     for(int i=0, iMax=anEditor.getSelectedOrSuperSelectedShapeCount(); i<iMax; i++) {
         RMShape shape = anEditor.getSelectedOrSuperSelectedShape(i);
         RMTool tool = anEditor.getTool(shape);
-        tool.setFontItalicDeep(anEditor, shape, aFlag);
+        tool.setFontKeyDeep(anEditor, shape, RMTool.FontItalic_Key, aFlag);
     }
 }
 

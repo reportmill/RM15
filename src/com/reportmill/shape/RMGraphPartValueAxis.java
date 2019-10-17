@@ -5,6 +5,7 @@ package com.reportmill.shape;
 import com.reportmill.base.*;
 import com.reportmill.graphics.RMColor;
 import com.reportmill.graphics.RMFont;
+import snap.gfx.*;
 import snap.util.*;
 
 /**
@@ -30,14 +31,18 @@ public class RMGraphPartValueAxis extends RMTextShape {
     // The number of axis steps
     int           _axisCount = 0;
     
-    // The font
-    RMFont        _font;
+    // Whether shape is unarchiving
+    boolean       _unarchiving;
     
-    // The format
-    RMFormat      _format = RMNumberFormat.BASIC;
-    
-    // The text color
-    RMColor       _textColor = RMColor.black;
+/**
+ * Creates RMGraphPartValueAxis.
+ */
+public RMGraphPartValueAxis()
+{
+    TextStyle dstyle = getRichText().getDefaultStyle();
+    TextStyle dstyle2 = dstyle.copyFor(RMFont.Helvetica10);
+    getRichText().setDefaultStyle(dstyle2);
+}
     
 /**
  * Returns whether the graph draws axis labels.
@@ -124,29 +129,20 @@ public void setAxisCount(int aValue)
 }
 
 /**
- * Return current font.
- */
-public RMFont getFont() // { return _font!=null? _font : RMFont.Helvetica10; }
-{
-    RMFont font = isFontSet()? super.getFont() : RMFont.Helvetica10;
-    return font;
-}
-
-/**
  * Set current font.
  */
 public void setFont(RMFont aFont)
 {
-    if(getXString().length()==0)
+    if(getXString().length()==0 && !_unarchiving)
         getXString().addChars(" ");
-    super.setFont(aFont); //_font = aFont;
+    super.setFont(aFont);
     relayoutParent();
 }
 
 /**
  * Returns the format for the shape.
  */
-public RMFormat getFormat()  //{ return _format; }
+public RMFormat getFormat()
 {
     RMFormat format = super.getFormat();
     return format!=null? format : RMNumberFormat.BASIC;
@@ -159,14 +155,9 @@ public void setFormat(RMFormat aFormat)
 {
     if(getXString().length()==0)
         getXString().addChars(" ");
-    super.setFormat(aFormat); //_format = aFormat;
+    super.setFormat(aFormat);
     relayoutParent();
 }
-    
-/**
- * Override to allow for ProxyShape.
- */
-//public RMColor getTextColor()  { return _textColor; }
 
 /**
  * Override to allow for ProxyShape and trigger relayout.
@@ -175,7 +166,7 @@ public void setTextColor(RMColor aColor)
 {
     if(getXString().length()==0)
         getXString().addChars(" ");
-    super.setTextColor(aColor); //_textColor = aColor;
+    super.setTextColor(aColor);
     relayoutParent();
 }
 
@@ -195,12 +186,6 @@ public XMLElement toXML(XMLArchiver anArchiver)
     if(_axisMax!=Float.MIN_VALUE) e.add("axis-max", _axisMax);
     if(_axisCount>0) e.add("axis-count", _axisCount);
     
-    // Archive Format
-    //if(getFormat()!=RMNumberFormat.BASIC) e.add(getFormat().toXML(anArchiver));
-        
-    // Archive TextColor
-    //if(!SnapUtils.equals(getTextColor(), RMColor.black))  e.add("TextColor", getTextColor().toHexString());
-    
     // Return xml element
     return e;
 }
@@ -211,7 +196,9 @@ public XMLElement toXML(XMLArchiver anArchiver)
 public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
 {
     // Unarchive basic shape attributes
+    _unarchiving = true;
     super.fromXML(anArchiver, anElement);
+    _unarchiving = false;
     
     // Unarchive ShowAxisLabels, ShowMajorGrid, ShowMinorGrid, AxisMin, AxisMax, AxisCount
     setShowAxisLabels(anElement.getAttributeBoolValue("show-labels", true));
@@ -220,15 +207,6 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
     if(anElement.hasAttribute("axis-min")) setAxisMin(anElement.getAttributeFloatValue("axis-min"));
     if(anElement.hasAttribute("axis-max")) setAxisMax(anElement.getAttributeFloatValue("axis-max"));
     if(anElement.hasAttribute("axis-count")) setAxisCount(anElement.getAttributeIntValue("axis-count"));
-
-    // Unarchive format
-    XMLElement fxml = anElement.getElement("format");
-    if(fxml!=null)
-        setFormat(anArchiver.fromXML(fxml, RMNumberFormat.class, null));
-        
-    // Unarchive TextColor
-    //String textColorStr = anElement.getAttributeValue("TextColor");
-    //if(textColorStr!=null) setTextColor(RMColor.get(textColorStr));
 
     // Return this graph
     return this;

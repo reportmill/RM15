@@ -39,6 +39,9 @@ public class RMGraphTool <T extends RMGraph> extends RMTool <T> implements RMSor
     // Assistant tool for 3D
     RMScene3DTool             _3dTool = new Scene3DTool();
     
+    // The last graph that was the selected graph
+    RMGraph                   _lastSelGraph;
+    
     // Whether tool is current in mouse drag loop to change 3D
     boolean                   _inScene3DMouseLoop;
 
@@ -104,6 +107,10 @@ protected void resetUI()
 {
     // Get currently selected graph (just return if null)
     RMGraph graph = getSelectedGraph(); if(graph==null) return;
+    
+    // If selected graph has changed, try to make Graph.ProxyShape consitent
+    if(graph!=_lastSelGraph)
+        selGraphChanged();
     
     // Ensure Bar/Pie specific tab is installed
     boolean isPie = graph.getType()==RMGraph.Type.Pie;
@@ -296,7 +303,13 @@ private void titleViewExpandedChanged(ViewEvent anEvent)
     
     // Get TitleView for name
     TitleView tview = getView(name, TitleView.class); if(tview==null) return;
-    if(tview.isExpanded()) return;
+    
+    // If closing, clear Graph.ProxyShape and return
+    if(tview.isExpanded()) {
+        RMGraph graph = getSelectedGraph();
+        graph.setProxyShape(null);
+        return;
+    }
     
     // Close other TitleViews
     if(!modDown) {
@@ -317,6 +330,36 @@ private void titleViewExpandedChanged(ViewEvent anEvent)
 
 // Array of TitleView names
 private String BoxNames[] = { "SortBox", "ViewBox", "TypeBox", "ValueAxisBox", "LabelAxisBox", "SeriesBox", "3DBox" };
+
+/**
+ * Called when the selected graph changes.
+ */
+private void selGraphChanged()
+{
+    // Get selected graph
+    RMGraph graph = getSelectedGraph();
+    
+    // If LastSelGraph not set, just set and return
+    if(_lastSelGraph==null) {
+        _lastSelGraph = graph; return; }
+    
+    // Make new graph.ProxyShape consistent with old
+    RMShape proxyShape = _lastSelGraph.getProxyShape();
+    if(proxyShape instanceof RMGraphPartValueAxis)
+        graph.setProxyShape(graph.getValueAxis());
+    else if(proxyShape instanceof RMGraphPartLabelAxis)
+        graph.setProxyShape(graph.getLabelAxis());
+    else if(proxyShape instanceof RMGraphPartSeries) {
+        int ind = _seriesTool.getSelSeriesIndex();
+        int ind2 = Math.min(ind, graph.getSeriesCount()-1);
+        RMShape ps2 = ind2>=0? graph.getSeries(ind2) : null;
+        graph.setProxyShape(ps2);
+    }
+    else graph.setProxyShape(null);
+    
+    // Set LastSelGraph to graph
+    _lastSelGraph = graph;
+}
 
 /**
  * Returns the selected graph.
@@ -356,6 +399,15 @@ public boolean getAcceptsChildren(RMShape aShape)  { return true; }
  * Overridden to make graph not ungroupable.
  */
 public boolean isUngroupable(RMShape aShape)  { return false; }
+
+/**
+ * Override to suppress setting font on sample graph.
+ */
+@Override
+public void setFontKeyDeep(RMEditor anEditor, RMShape aShape, String aKey, Object aVal)
+{
+    setFontKey(anEditor, aShape, aKey, aVal);
+}
 
 /**
  * Adds a new graph instance to the given editor with the given dataset key.
