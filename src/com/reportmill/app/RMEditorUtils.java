@@ -692,7 +692,8 @@ public static void setFontSize(RMEditor anEditor, float aSize, boolean isRelativ
     for(int i=0, iMax=anEditor.getSelectedOrSuperSelectedShapeCount(); i<iMax; i++) {
         RMShape shape = anEditor.getSelectedOrSuperSelectedShape(i);
         RMTool tool = anEditor.getTool(shape);
-        tool.setFontKeyDeep(anEditor, shape, RMTool.FontSize_Key, isRelative? -aSize : aSize);
+        String key = isRelative? RMTool.FontSizeDelta_Key : RMTool.FontSize_Key;
+        tool.setFontKeyDeep(anEditor, shape, key, aSize);
     }
 }
 

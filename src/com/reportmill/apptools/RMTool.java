@@ -51,6 +51,7 @@ public class RMTool <T extends RMShape> extends ViewOwner {
     public static final String FontName_Key = "FontName";
     public static final String FontFamily_Key = "FontFamily";
     public static final String FontSize_Key = "FontSize";
+    public static final String FontSizeDelta_Key = "FontSizeDelta";
     public static final String FontBold_Key = "FontBold";
     public static final String FontItalic_Key = "FontItalic";
 
@@ -249,6 +250,10 @@ public RMFont getFontDeep(RMEditor anEditor, RMShape aShape)
  */
 public void setFontKey(RMEditor anEditor, RMShape aShape, String aKey, Object aVal)
 {
+    // Get current font
+    RMFont font = getFont(anEditor, aShape);
+    
+    // Handle given key
     switch(aKey) {
         
         // Handle FontName
@@ -256,7 +261,6 @@ public void setFontKey(RMEditor anEditor, RMShape aShape, String aKey, Object aV
             
             // Get new font for name and current shape size and set
             RMFont aFont = (RMFont)aVal;
-            RMFont font = getFont(anEditor, aShape);
             RMFont font2 = font!=null? aFont.deriveFont(font.getSize()) : aFont;
             setFont(anEditor, aShape, font2);
             break;
@@ -267,10 +271,12 @@ public void setFontKey(RMEditor anEditor, RMShape aShape, String aKey, Object aV
             
             // Get new font for given font family font and current shape font size/style and set
             RMFont aFont = (RMFont)aVal;
-            RMFont font = getFont(anEditor, aShape), font2 = aFont;
+            RMFont font2 = aFont;
             if(font!=null) {
-                if(font.isBold()!=font2.isBold() && font2.getBold()!=null) font2 = font2.getBold();
-                if(font.isItalic()!=font2.isItalic() && font2.getItalic()!=null) font2 = font2.getItalic();
+                if(font.isBold()!=font2.isBold() && font2.getBold()!=null)
+                    font2 = font2.getBold();
+                if(font.isItalic()!=font2.isItalic() && font2.getItalic()!=null)
+                    font2 = font2.getItalic();
                 font2 = font2.deriveFont(font.getSize());
             }
             setFont(anEditor, aShape, font2);
@@ -281,10 +287,18 @@ public void setFontKey(RMEditor anEditor, RMShape aShape, String aKey, Object aV
         case FontSize_Key: {
             
             // Get new font for current shape font at new size and set
-            double aSize = SnapUtils.doubleValue(aVal);
-            boolean isRelative = aSize<0; aSize = Math.abs(aSize);
-            RMFont font = getFont(anEditor, aShape); if(font==null) return;
-            RMFont font2 = isRelative? font.deriveFont(font.getSize() + aSize) : font.deriveFont(aSize);
+            double aSize = SnapUtils.doubleValue(aVal); if(font==null) return;
+            RMFont font2 = font.deriveFont(aSize);
+            setFont(anEditor, aShape, font2);
+            break;
+        }
+        
+        // Handle FontSizeDelta
+        case FontSizeDelta_Key: {
+            
+            // Get new font for current shape font at new size and set
+            double aSize = SnapUtils.doubleValue(aVal); if(font==null) return;
+            RMFont font2 = font.deriveFont(font.getSize() + aSize);
             setFont(anEditor, aShape, font2);
             break;
         }
@@ -294,7 +308,7 @@ public void setFontKey(RMEditor anEditor, RMShape aShape, String aKey, Object aV
             
             // Get new font
             boolean aFlag = SnapUtils.boolValue(aVal);
-            RMFont font = getFont(anEditor, aShape); if(font==null || font.isBold()==aFlag) return;
+            if(font==null || font.isBold()==aFlag) return;
             RMFont font2 = font.getBold(); if(font2==null) return;
             setFont(anEditor, aShape, font2);
             break;
@@ -305,7 +319,7 @@ public void setFontKey(RMEditor anEditor, RMShape aShape, String aKey, Object aV
             
             // Get new font
             boolean aFlag = SnapUtils.boolValue(aVal);
-            RMFont font = getFont(anEditor, aShape); if(font==null || font.isItalic()==aFlag) return;
+            if(font==null || font.isItalic()==aFlag) return;
             RMFont font2 = font.getItalic(); if(font2==null) return;
             setFont(anEditor, aShape, font2);
             break;
