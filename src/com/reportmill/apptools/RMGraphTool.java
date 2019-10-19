@@ -146,11 +146,9 @@ protected void resetUI()
     setViewValue("ItemsLayoutList", graph.getItemsLayout());
 
     // Get the color dock, reset colors and update
-    ColorDock colorDock = getView("ColorDock", ColorDock.class);
     List <RMColor> colors = graph.getColors();
-    colorDock.resetColors();
-    for(int i=0, iMax=Math.min(colors.size(), colorDock.getSwatchCount()); i<iMax; i++)
-        colorDock.setColor(colors.get(i), i); 
+    ColorDock cdock = getView("ColorDock", ColorDock.class);
+    cdock.setColors(colors);
     
     // Update ColorItemsCheckBox, ShowLegendCheckBox, Draw3DCheckBox
     setViewValue("ColorItemsCheckBox", graph.isColorItems());
