@@ -26,64 +26,48 @@
       <font name="Arial" size="11" />
     </TextView>
   </BoxView>
-  <BoxView Padding="3,4,0,4" FillWidth="true">
-    <TitleView Name="SortBox" Padding="4,4,6,4" Text="Sorting" Collapsible="true" Expanded="false" />
-  </BoxView>
-  <BoxView Padding="3,4,3,4" FillWidth="true">
-    <TitleView Name="ViewBox" Padding="5,4,5,4" Text="View Options" Collapsible="true">
-      <ColView Padding="0,4,5,4" Spacing="4" FillWidth="true">
-        <font name="Arial" size="10" />
-        <RowView Spacing="10">
-          <ColorDock Name="ColorDock" PrefWidth="109" PrefHeight="44" />
-          <ColView>
-            <CheckBox Name="ShowLegendCheckBox" text="Show Legend" />
-            <CheckBox Name="ColorItemsCheckBox" text="Color Items" />
-            <CheckBox Name="Draw3DCheckBox" text="Draw 3D" />
-          </ColView>
-        </RowView>
-        <RowView Spacing="3">
-          <Label text="Color Key:" />
-          <TextField Name="ColorKeyText" GrowWidth="true" />
-        </RowView>
-      </ColView>
-    </TitleView>
-  </BoxView>
-  <BoxView Name="MultiKeyLayoutBox" Padding="0,4,3,4" FillWidth="true">
-    <TitleView Padding="2" Text="Multi-Key Layout">
-      <RowView Padding="2,5,5,5" Spacing="8">
-        <ColView GrowWidth="true" FillWidth="true">
-          <Label PrefHeight="14" text=" Series">
-            <font name="Arial" size="10" />
-          </Label>
-          <ListView Name="SectionLayoutList" PrefWidth="80" PrefHeight="58">
-            <LineBorder Color="#c0c0c0" />
-          </ListView>
-        </ColView>
-        <ColView GrowWidth="true" FillWidth="true">
-          <Label PrefHeight="14" text=" Items">
-            <font name="Arial" size="10" />
-          </Label>
-          <ListView Name="ItemsLayoutList" PrefWidth="80" PrefHeight="58">
-            <LineBorder Color="#c0c0c0" />
-          </ListView>
+  <TitleView Name="SortBox" Margin="3,4,2,4" Padding="2" Text="Sorting" TitleStyle="Button" Collapsible="true" Expanded="false" />
+  <TitleView Name="ViewBox" Margin="0,4,2,4" Padding="2" Text="View Options" TitleStyle="Button" Collapsible="true">
+    <ColView Padding="0,4,5,4" Spacing="4" FillWidth="true">
+      <font name="Arial" size="10" />
+      <RowView Spacing="10">
+        <ColorDock Name="ColorDock" PrefWidth="109" PrefHeight="44" />
+        <ColView>
+          <CheckBox Name="ShowLegendCheckBox" text="Show Legend" />
+          <CheckBox Name="ColorItemsCheckBox" text="Color Items" />
+          <CheckBox Name="Draw3DCheckBox" text="Draw 3D" />
         </ColView>
       </RowView>
-    </TitleView>
-  </BoxView>
-  <BoxView Padding="3,4,3,4" FillWidth="true">
-    <TitleView Name="TypeBox" Padding="5,4,5,4" Text="Bars" Collapsible="true" Expanded="false" />
-  </BoxView>
-  <BoxView Padding="3,4,3,4" FillWidth="true">
-    <TitleView Name="ValueAxisBox" Padding="5,4,5,4" Text="Value Axis" Collapsible="true" Expanded="false" />
-  </BoxView>
-  <BoxView Padding="3,4,3,4" FillWidth="true">
-    <TitleView Name="LabelAxisBox" Padding="5,4,5,4" Text="Label Axis" Collapsible="true" Expanded="false" />
-  </BoxView>
-  <BoxView Padding="3,4,3,4" FillWidth="true">
-    <TitleView Name="SeriesBox" Padding="5,4,5,4" Text="Series" Collapsible="true" Expanded="false" />
-  </BoxView>
-  <BoxView Padding="3,4,3,4" FillWidth="true">
-    <TitleView Name="3DBox" Padding="5,4,5,4" Text="3D" Collapsible="true" Expanded="false" />
-  </BoxView>
-  <Label Name="ProxyLabel" Align="CENTER" Padding="4" LeanY="BOTTOM" text="Font/Color changes now apply to Graph" Spacing="0" />
+      <RowView Spacing="3">
+        <Label text="Color Key:" />
+        <TextField Name="ColorKeyText" GrowWidth="true" />
+      </RowView>
+    </ColView>
+  </TitleView>
+  <TitleView Name="MultiKeyLayoutBox" Margin="2,4,2,4" Padding="2" Text="Multi-Key Layout" TitleStyle="Button" Collapsible="true">
+    <RowView Padding="2,5,5,5" Spacing="8">
+      <ColView GrowWidth="true" FillWidth="true">
+        <Label PrefHeight="14" text=" Series">
+          <font name="Arial" size="10" />
+        </Label>
+        <ListView Name="SectionLayoutList" PrefWidth="80" PrefHeight="58">
+          <LineBorder Color="#c0c0c0" />
+        </ListView>
+      </ColView>
+      <ColView GrowWidth="true" FillWidth="true">
+        <Label PrefHeight="14" text=" Items">
+          <font name="Arial" size="10" />
+        </Label>
+        <ListView Name="ItemsLayoutList" PrefWidth="80" PrefHeight="58">
+          <LineBorder Color="#c0c0c0" />
+        </ListView>
+      </ColView>
+    </RowView>
+  </TitleView>
+  <TitleView Name="TypeBox" Margin="0,4,2,4" Padding="2" Text="Bars" TitleStyle="Button" Collapsible="true" Expanded="false" />
+  <TitleView Name="ValueAxisBox" Margin="0,4,2,4" Padding="2" Text="Value Axis" TitleStyle="Button" Collapsible="true" Expanded="false" />
+  <TitleView Name="LabelAxisBox" Margin="0,4,2,4" Padding="2" Text="Label Axis" TitleStyle="Button" Collapsible="true" Expanded="false" />
+  <TitleView Name="SeriesBox" Margin="0,4,2,4" Padding="2" Text="Series" TitleStyle="Button" Collapsible="true" Expanded="false" />
+  <TitleView Name="3DBox" Margin="0,4,2,4" Padding="2" Text="3D" TitleStyle="Button" Collapsible="true" Expanded="false" />
+  <Label Name="ProxyLabel" Align="CENTER" Padding="2" LeanY="BOTTOM" text="Font/Color changes now apply to Graph" Spacing="0" />
 </ColView>
