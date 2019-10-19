@@ -25,7 +25,7 @@ public class RMPageLayer implements Cloneable {
     boolean         _locked = false;
     
     // The children in this layer
-    List <RMShape>  _children = new Vector();
+    List <RMShape>  _children = new ArrayList();
     
     // Constants defining the state of the layer
     public static final int StateVisible = 0;
@@ -227,9 +227,17 @@ public void sendShapesToBack(List shapes)
  */
 public Object clone()
 {
+    // Do normal clone
     RMPageLayer clone; try { clone = (RMPageLayer)super.clone(); }
     catch(CloneNotSupportedException e) { throw new RuntimeException(e); }
-    clone._children = SnapUtils.clone(_children);
+    
+    // Clone children
+    clone._children = new ArrayList(_children.size());
+    for(RMShape shp : _children) {
+        clone._children.add(shp);
+    }
+    
+    // Return clone
     return clone;
 }
 
