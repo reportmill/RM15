@@ -368,11 +368,17 @@ public RMGrouping clone()
     RMGrouping clone = null; try { clone = (RMGrouping)super.clone(); }
     catch(CloneNotSupportedException e) { throw new RuntimeException(e); }
     
-    // Clear PropChangeSupport and return
+    // Clear PropChangeSupport
     clone._pcs = PropChangeSupport.EMPTY;
     
-    // Clone sorts, TopNSort and return
-    clone._sorts = new ArrayList(_sorts.size()); for(RMSort s : _sorts) clone._sorts.add(s.clone());
+    // Clone Sorts
+    clone._sorts = new ArrayList(_sorts.size());
+    for(RMSort s : _sorts) {
+        RMSort s2 = s.clone();
+        clone.addSort(s2);
+    }
+    
+    // Clone TopNSort and return
     clone._topNSort = (RMTopNSort)_topNSort.clone();
     return clone;
 }

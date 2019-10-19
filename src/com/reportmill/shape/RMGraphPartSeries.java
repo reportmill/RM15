@@ -32,15 +32,6 @@ public class RMGraphPartSeries extends RMShape {
     public enum LabelPos { Top, Middle, Bottom, Above, Below }
 
 /**
- * Creates a new series part.
- */
-public RMGraphPartSeries(RMGraph aGraph)
-{
-    _graph = aGraph;
-    setParent(_graph);
-}
-
-/**
  * Returns the title of the series.
  */
 public String getTitle()  { return _title!=null? _title : (_title=getTitleDefault()); }

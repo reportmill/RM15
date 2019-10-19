@@ -11,7 +11,7 @@ import snap.util.*;
 public class RMGrouper implements Cloneable, XMLArchiver.Archivable {
     
     // The list of groupings
-    List <RMGrouping>   _groupings = new Vector();
+    List <RMGrouping>   _groupings = new ArrayList();
 
     // Selected group index (editing only)
     int                 _selectedGroupingIndex = 0;
@@ -262,7 +262,11 @@ public RMGrouper clone()
     clone._pcs = PropChangeSupport.EMPTY;
     
     // Clone deep grouping
-    clone._groupings = SnapUtils.cloneDeep(_groupings);
+    clone._groupings = new ArrayList();
+    for(RMGrouping grp : _groupings) {
+        RMGrouping grp2 = grp.clone();
+        clone.addGrouping(grp2);
+    }
     
     // Return clone
     return clone;

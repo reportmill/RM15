@@ -308,10 +308,20 @@ public RMGraphPartSeries getSeries(int anIndex)
 {
     // Make sure there are a sufficient number of series
     while(anIndex>=_series.size())
-        _series.add(new RMGraphPartSeries(this));
+        addSeries(new RMGraphPartSeries());
         
     // Return series at given index
     return _series.get(anIndex);
+}
+
+/**
+ * Adds a new series.
+ */
+protected void addSeries(RMGraphPartSeries aSeries)
+{
+    _series.add(aSeries);
+    aSeries._graph = this;
+    aSeries.setParent(this);
 }
 
 /**
@@ -501,14 +511,20 @@ protected boolean isHittable(RMShape aChild)  { return false; }
 private RMShape createSampleGraph()
 {
     // Get copy of graph so we can apply sample data, keys, axis, etc.
-    RMGraph graph = (RMGraph)cloneDeep(); graph.clearKeys(); // Clear and add graph keys
-    for(int i=0, iMax=Math.max(getKeyCount(), 1); i<iMax; i++) graph.addKey("test" + i);
-    graph.setFilterKey(null); // Reset filter key
+    RMGraph graph = (RMGraph)cloneDeep();
+    
+    // Clear and add graph keys, reset filter key
+    graph.clearKeys();
+    for(int i=0, iMax=Math.max(getKeyCount(), 1); i<iMax; i++)
+        graph.addKey("test" + i);
+    graph.setFilterKey(null);
     
     // Do rpg for graph and return
-    ReportOwner ro = new ReportOwner(); ro.addModelObject(getSampleObjects());
-    RMParentShape graphRPG = graph.rpgAll(ro, graph, true);
-    graphRPG.setXY(0,0); graphRPG.layout(); // Move to (0,0) and layout
+    ReportOwner rownr= new ReportOwner();
+    rownr.addModelObject(getSampleObjects());
+    RMParentShape graphRPG = graph.rpgAll(rownr, graph, true);
+    graphRPG.setXY(0,0);
+    graphRPG.layout();
     return graphRPG;
 }
 
@@ -742,7 +758,11 @@ public RMGraph clone()
     clone._bars = (RMGraphPartBars)_bars.clone();
     clone._pie = (RMGraphPartPie)_pie.clone();
     clone._3d = (RMScene3D)get3D().clone();
-    clone._series = SnapUtils.cloneDeep(_series); for(RMGraphPartSeries s : clone._series) s._graph = clone;
+    clone._series = new ArrayList();
+    for(RMGraphPartSeries s : _series) {
+        RMGraphPartSeries s2 = (RMGraphPartSeries)s.clone();
+        clone.addSeries(s2);
+    }
     _proxyDisable = false;
     return clone;
 }
@@ -864,9 +884,9 @@ protected void fromXMLShape(XMLArchiver anArchiver, XMLElement anElement)
     
     // Unarchive series
     for(int i=anElement.indexOf("series"); i>=0; i=anElement.indexOf("series", i+1)) { XMLElement sxml =anElement.get(i);
-        RMGraphPartSeries series = new RMGraphPartSeries(this);
+        RMGraphPartSeries series = new RMGraphPartSeries();
         series.fromXML(anArchiver, sxml);
-        _series.add(series);
+        addSeries(series);
     }
     
     // Unarchive Draw3d, ColorItems
