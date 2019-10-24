@@ -114,6 +114,11 @@
     <MenuItem />
     <MenuItem Name="PrefsMenuItem" text="Preferences..." />
   </Menu>
+  <Menu Name="ThemeMenu" text="Theme">
+    <MenuItem Name="StandardThemeMenuItem" text="Standard" />
+    <MenuItem Name="LightThemeMenuItem" text="Light" />
+    <MenuItem Name="DarkThemeMenuItem" text="Dark" />
+  </Menu>
   <Menu Name="HelpMenu" text="Help">
     <MenuItem Name="SupportPageMenuItem" text="Support Page" />
     <MenuItem Name="TutorialMenuItem" text="Tutorial" />
