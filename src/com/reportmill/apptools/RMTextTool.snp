@@ -24,7 +24,7 @@
       </RowView>
     </ColView>
   </TitleView>
-  <TitleView MinHeight="30" Padding="8,8,8,8" title="Misc. Options" Collapsible="true">
+  <TitleView MinHeight="30" Padding="8,8,8,8" title="Misc. Options" Collapsible="true" Expanded="false">
     <RowView Spacing="5">
       <ColView Spacing="4">
         <CheckBox Name="ShowBorderCheckBox" text="Always Show Border" />
@@ -41,7 +41,7 @@
       </ColView>
     </RowView>
   </TitleView>
-  <TitleView MinHeight="30" Padding="8,8,8,8" title="Advanced Options" Collapsible="true">
+  <TitleView MinHeight="30" Padding="8,8,8,8" title="Advanced Options" Collapsible="true" Expanded="false">
     <ColView Spacing="4" FillWidth="true">
       <RowView Spacing="4">
         <Label PrefWidth="75" text="Char Spacing:" />

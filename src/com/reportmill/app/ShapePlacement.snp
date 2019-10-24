@@ -41,7 +41,7 @@
         <CheckBox Name="ScaleSymetricCheckBox" text="Scale Symetrically" Selected="true" />
       </ColView>
     </TitleView>
-    <TitleView Padding="5,8,9,8" Title="Skew" Collapsible="true">
+    <TitleView Padding="5,8,9,8" Title="Skew" Collapsible="true" Expanded="false">
       <ColView Spacing="5" FillWidth="true">
         <RowView Spacing="4">
           <Label text="X:" />
@@ -55,7 +55,7 @@
         </RowView>
       </ColView>
     </TitleView>
-    <TitleView Padding="5,8,8,8" Title="Autosizing" Collapsible="true">
+    <TitleView Padding="5,8,8,8" Title="Autosizing" Collapsible="true" Expanded="false">
       <ColView FillWidth="true">
         <RowView Padding="6,5,12,5" Spacing="30">
           <ColView Spacing="2" Align="TOP_CENTER">
