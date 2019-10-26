@@ -118,6 +118,7 @@
     <MenuItem Name="StandardThemeMenuItem" text="Standard" />
     <MenuItem Name="LightThemeMenuItem" text="Light" />
     <MenuItem Name="DarkThemeMenuItem" text="Dark" />
+    <MenuItem Name="BlackAndWhiteThemeMenuItem" text="Black & White" />
   </Menu>
   <Menu Name="HelpMenu" text="Help">
     <MenuItem Name="SupportPageMenuItem" text="Support Page" />

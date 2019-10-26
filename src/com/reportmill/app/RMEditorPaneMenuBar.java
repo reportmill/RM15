@@ -212,10 +212,11 @@ protected void respondUI(ViewEvent anEvent)
     if(anEvent.equals("AddColumnMenuItem")) RMTableRowTool.addColumn(editor);
     if(anEvent.equals("SplitColumnMenuItem")) RMEditorUtils.splitHorizontal(editor);
     
-    // Handle Theme menus: StandardThemeMenuItem, LightThemeMenuItem, DarkThemeMenuItem
+    // Handle Theme menus: StandardThemeMenuItem, LightThemeMenuItem, DarkThemeMenuItem, BlackAndWhiteThemeMenuItem
     if(anEvent.equals("StandardThemeMenuItem")) ViewTheme.setThemeForName("Standard");
     if(anEvent.equals("LightThemeMenuItem")) ViewTheme.setThemeForName("Light");
     if(anEvent.equals("DarkThemeMenuItem")) ViewTheme.setThemeForName("Dark");
+    if(anEvent.equals("BlackAndWhiteThemeMenuItem")) ViewTheme.setThemeForName("BlackAndWhite");
 }
 
 }
