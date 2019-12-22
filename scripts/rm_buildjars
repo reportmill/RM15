@@ -1,6 +1,7 @@
 
 echo "Buildjars RM15"
-cd /Temp/RM15/bin
+RMHOME="/Users/jeff/Eclipse"
+cd $RMHOME/RM15/bin
 date "+%b-%d-%y %H:%M" > com/reportmill/BuildInfo.txt
 
 echo "Creating ReportMill15.jar"
