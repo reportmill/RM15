@@ -110,8 +110,8 @@ protected void respondUI(ViewEvent anEvent)
     if(anEvent.equals("MoviesMenuItem")) RMEditorPaneUtils.openSample("Movies");
     if(anEvent.equals("MoviesGraphMenuItem")) RMEditorPaneUtils.openSample("MoviesGraph");
     if(anEvent.equals("MoviesLabelsMenuItem")) RMEditorPaneUtils.openSample("MoviesLabels");
-    if(anEvent.equals("HollywoodMenuItem"))RMEditorPaneUtils.openSample("Jar:/com/reportmill/examples/HollywoodDB.xml");
-    if(anEvent.equals("SalesMenuItem")) RMEditorPaneUtils.openSample("Jar:/com/reportmill/examples/Sales.xml");
+    if(anEvent.equals("HollywoodMenuItem"))RMEditorPaneUtils.openSample("Jar:/reportmill/examples/HollywoodDB.xml");
+    if(anEvent.equals("SalesMenuItem")) RMEditorPaneUtils.openSample("Jar:/reportmill/examples/Sales.xml");
         
     // Handle Edit menu items
     if(anEvent.equals("UndoMenuItem") || anEvent.equals("UndoButton")) editor.undo();
