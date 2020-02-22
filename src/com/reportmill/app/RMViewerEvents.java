@@ -5,6 +5,8 @@ package com.reportmill.app;
 import com.reportmill.shape.*;
 import java.util.*;
 import snap.gfx.*;
+import snap.text.TextBox;
+import snap.text.TextSel;
 import snap.util.ListUtils;
 import snap.view.*;
 

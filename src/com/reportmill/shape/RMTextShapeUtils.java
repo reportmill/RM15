@@ -4,6 +4,9 @@
 package com.reportmill.shape;
 import com.reportmill.graphics.*;
 import snap.gfx.*;
+import snap.text.TextBox;
+import snap.text.TextBoxLine;
+import snap.text.TextBoxRun;
 
 /**
  * Utility methods for some esoteric text functionality.

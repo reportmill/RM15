@@ -5,7 +5,7 @@ package com.reportmill.base;
 import com.reportmill.shape.RMDocument;
 import java.util.*;
 import java.text.*;
-import snap.gfx.TextStyle;
+import snap.text.TextStyle;
 import snap.util.*;
 
 /**

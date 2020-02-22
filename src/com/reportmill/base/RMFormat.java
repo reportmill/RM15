@@ -2,7 +2,7 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.base;
-import snap.gfx.TextFormat;
+import snap.text.TextFormat;
 
 /**
  * An interface for RM format classes (they all should get/set format strings, format objects and archive XML).

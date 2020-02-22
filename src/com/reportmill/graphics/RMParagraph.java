@@ -2,7 +2,7 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.graphics;
-import snap.gfx.TextLineStyle;
+import snap.text.TextLineStyle;
 import snap.util.*;
 
 /**

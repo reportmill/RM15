@@ -7,6 +7,9 @@ import com.reportmill.graphics.*;
 import java.util.*;
 import java.util.List;
 import snap.gfx.*;
+import snap.text.RichText;
+import snap.text.TextBox;
+import snap.text.TextStyle;
 import snap.util.*;
 
 /**
@@ -56,7 +59,7 @@ public class RMTextShape extends RMRectShape {
     RMLinkedText           _linkedText;
     
     // A text box to manage RichText in shape bounds
-    TextBox                _textBox;
+    TextBox _textBox;
 
     // The text editor, if one has been set
     RMTextEditor           _textEdtr;

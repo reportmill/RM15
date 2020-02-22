@@ -5,7 +5,7 @@ package com.reportmill.base;
 import com.reportmill.graphics.*;
 import java.text.*;
 import java.util.Locale;
-import snap.gfx.TextStyle;
+import snap.text.TextStyle;
 import snap.util.*;
 
 /**

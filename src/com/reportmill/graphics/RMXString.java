@@ -6,7 +6,8 @@ import com.reportmill.base.*;
 import static com.reportmill.graphics.RMTextStyle.*;
 import com.reportmill.shape.*;
 import java.util.*;
-import snap.gfx.*;
+
+import snap.text.*;
 import snap.util.*;
 
 /**
@@ -23,7 +24,7 @@ import snap.util.*;
 public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.Archivable {
 
     // The RichText
-    RichText             _rtext;
+    RichText _rtext;
 
 /**
  * Creates an empty RMXString.
@@ -413,7 +414,7 @@ public RMXString rpgClone(ReportOwner anRptOwner, Object userInfo, RMShape aShap
                 RMFormat format = keyRun.getFormat();
                 if(!(format instanceof RMNumberFormat)) format = RMNumberFormat.PLAIN;
                 valString = format.format(val);
-                snap.gfx.TextStyle style = format.formatStyle(val);
+                TextStyle style = format.formatStyle(val);
                 if(style!=null) valString = new RMXString((String)valString, style.getColor());
             }
 

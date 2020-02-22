@@ -5,6 +5,7 @@ package com.reportmill.graphics;
 import com.reportmill.base.RMFormat;
 import com.reportmill.shape.RMArchiver;
 import snap.gfx.*;
+import snap.text.*;
 import snap.util.*;
 import snap.view.*;
 
@@ -15,10 +16,10 @@ import snap.view.*;
 public class RMTextEditor {
     
     // The text box
-    TextBox             _tbox;
+    TextBox _tbox;
     
     // The RichText
-    RichText            _text;
+    RichText _text;
     
     // The XString being edited
     RMXString           _xstr;

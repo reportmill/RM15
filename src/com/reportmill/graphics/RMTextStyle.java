@@ -4,6 +4,7 @@
 package com.reportmill.graphics;
 import com.reportmill.base.RMFormat;
 import snap.gfx.*;
+import snap.text.TextStyle;
 
 /**
  * A class to hold style attributes for a text run.
@@ -11,7 +12,7 @@ import snap.gfx.*;
 public class RMTextStyle implements Cloneable {
 
     // The style
-    TextStyle          _style;
+    TextStyle _style;
     
     // Constants for style attribute keys
     public static final String FONT_KEY = TextStyle.FONT_KEY;

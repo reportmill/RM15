@@ -3,7 +3,9 @@
  */
 package com.reportmill.graphics;
 import com.reportmill.base.*;
-import snap.gfx.*;
+import snap.text.RichTextLine;
+import snap.text.RichTextRun;
+import snap.text.TextStyle;
 
 /**
  * The Run class represents a range of characters in an xstring that share common attributes.
@@ -16,13 +18,13 @@ public class RMXStringRun implements CharSequence {
     RMXString     _xstr;
     
     // The rich text line
-    RichTextLine  _rline;
+    RichTextLine _rline;
     
     // The start/end char index of this run in string
     int           _start, _end;
     
     // The attributes of the Run (Font, Color, etc.)
-    TextStyle     _style;
+    TextStyle _style;
     
 /**
  * Creates a new run.

@@ -5,7 +5,7 @@ package com.reportmill.shape;
 import com.reportmill.base.*;
 import com.reportmill.graphics.RMColor;
 import com.reportmill.graphics.RMFont;
-import snap.gfx.*;
+import snap.text.TextStyle;
 import snap.util.*;
 
 /**
