@@ -489,7 +489,7 @@ public void paste()
     Clipboard cboard = Clipboard.get();
     if(cboard.hasData(RM_XSTRING_TYPE)) {
         byte bytes[] = cboard.getDataBytes(RM_XSTRING_TYPE);
-        RMXString xStr = (RMXString)new RMArchiver().readObject(bytes);
+        RMXString xStr = (RMXString)new RMArchiver().readFromXMLBytes(bytes);
         replace(xStr.getRichText());
     }
     
