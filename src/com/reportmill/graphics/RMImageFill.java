@@ -103,7 +103,7 @@ public boolean isAbsolute()  { return _snap.isAbsolute(); }
  */
 public RMImageFill copyFor(Rect aRect, boolean isAbs)
 {
-    RMImageFill copy = (RMImageFill)clone(); copy._snap = _snap.copyFor(aRect, isAbs); return copy;
+    RMImageFill copy = (RMImageFill)clone(); copy._snap = _snap.copyForRectAndTile(aRect, isAbs); return copy;
 }
 
 /**

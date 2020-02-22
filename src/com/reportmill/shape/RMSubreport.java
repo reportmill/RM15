@@ -88,7 +88,7 @@ public void paintShape(Painter aPntr)
     
     // Paint rect on top
     Rect bnds = getBoundsInside();
-    aPntr.setPaint(getCoverFill().copyFor(bnds)); aPntr.fill(getPath());
+    aPntr.setPaint(getCoverFill().copyForRect(bnds)); aPntr.fill(getPath());
     aPntr.setPaint(Color.DARKGRAY); aPntr.draw(bnds);
 
     // Draw TableGroup button

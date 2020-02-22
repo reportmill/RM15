@@ -111,7 +111,7 @@ public GradientPaint snap()  { return _snap; }
  */
 public RMGradientFill copyForPoints(Point begin, Point end)
 {
-    RMGradientFill clone = clone(); clone._snap = _snap.copyFor(begin.x,begin.y,end.x,end.y); return clone;
+    RMGradientFill clone = clone(); clone._snap = _snap.copyForPoints(begin.x,begin.y,end.x,end.y); return clone;
 }
 
 /**

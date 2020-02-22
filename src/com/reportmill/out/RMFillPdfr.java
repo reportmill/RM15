@@ -96,7 +96,7 @@ public static void writeGradientFill(RMShape aShape, RMGradientFill aFill, PDFWr
     shading.put("Function", xref.addObject(function));
     
     // Get gradient paint and start/end
-    GradientPaint gpnt = aFill.snap().copyFor(aShape.getBoundsInside());
+    GradientPaint gpnt = aFill.snap().copyForRect(aShape.getBoundsInside());
     Point startPt = new Point(gpnt.getStartX(), gpnt.getStartY()), endPt = new Point(gpnt.getEndX(), gpnt.getEndY());
     
     // In pdf, coordinates of the gradient axis are defined in pattern space.  Pattern space is the same as the

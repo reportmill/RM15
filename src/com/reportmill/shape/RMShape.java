@@ -1751,7 +1751,7 @@ protected void paintShape(Painter aPntr)
     
     // Paint fill
     if(fill!=null) { //getFill().paint(aPntr, this);
-        aPntr.setPaint(fill.snap().copyFor(getBoundsInside()));
+        aPntr.setPaint(fill.snap().copyForRect(getBoundsInside()));
         aPntr.fill(getPath());
     }
     
