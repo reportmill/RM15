@@ -48,7 +48,7 @@ public static void copy(RMEditor anEditor)
             !(anEditor.getSelectedOrSuperSelectedShape() instanceof RMPage)) {
         
         // Get xml for selected shapes
-        XMLElement xml = new RMArchiver().writeObject(anEditor.getSelectedOrSuperSelectedShapes());
+        XMLElement xml = new RMArchiver().writeToXML(anEditor.getSelectedOrSuperSelectedShapes());
         String xmlStr = xml.toString();
         
         // Get System clipboard and add data as RMData and String (text/plain)
@@ -184,7 +184,7 @@ public static Object getShapesFromClipboard(RMEditor anEditor, Clipboard aCB)
 
     // Get unarchived object from clipboard bytes
     byte bytes[] = cboard.getDataBytes(RM_XML_TYPE);
-    Object obj = new RMArchiver().readObject(bytes);
+    Object obj = new RMArchiver().readFromXMLBytes(bytes);
 
     // A bit of a hack - remove any non-shapes (plugins for one)
     if(obj instanceof List) { List list = (List)obj;

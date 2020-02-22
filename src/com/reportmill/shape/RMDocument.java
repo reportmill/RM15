@@ -802,7 +802,7 @@ public XMLElement getXML()
 {
     layoutDeep();
     resolvePageReferences();
-    return new RMArchiver().writeObject(this);
+    return new RMArchiver().writeToXML(this);
 }
 
 /**

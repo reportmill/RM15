@@ -39,7 +39,7 @@ public RMDocument getDoc(Object aSource, RMDocument aBaseDoc)
     // Create archiver, read, set source and return
     setRootObject(aBaseDoc);
     
-    RMDocument doc = (RMDocument)readObject(url!=null? url : bytes);
+    RMDocument doc = (RMDocument) readFromXMLSource(url!=null? url : bytes);
     
     // Set Source URL and return
     doc.setSourceURL(getSourceURL());
