@@ -1,4 +1,6 @@
 package com.reportmill.app;
+import snap.geom.Point;
+import snap.geom.Rect;
 import snap.gfx.*;
 import snap.util.MathUtils;
 import snap.view.*;

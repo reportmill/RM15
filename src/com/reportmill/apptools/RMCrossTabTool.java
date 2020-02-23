@@ -5,6 +5,10 @@ package com.reportmill.apptools;
 import com.reportmill.app.RMEditor;
 import com.reportmill.shape.*;
 import java.util.*;
+
+import snap.geom.Point;
+import snap.geom.Rect;
+import snap.geom.Shape;
 import snap.gfx.*;
 import snap.util.*;
 import snap.view.*;

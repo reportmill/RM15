@@ -3,6 +3,8 @@
  */
 package com.reportmill.graphics;
 import java.util.*;
+
+import snap.geom.Point;
 import snap.gfx.*;
 import snap.gfx.GradientPaint.Stop;
 import snap.util.*;

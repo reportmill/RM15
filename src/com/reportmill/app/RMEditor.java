@@ -7,6 +7,10 @@ import com.reportmill.base.RMDataSource;
 import com.reportmill.graphics.RMTextEditor;
 import com.reportmill.shape.*;
 import java.util.*;
+
+import snap.geom.Point;
+import snap.geom.Rect;
+import snap.geom.Shape;
 import snap.gfx.*;
 import snap.util.*;
 import snap.view.*;
@@ -35,7 +39,7 @@ public class RMEditor extends RMViewer implements DeepChangeListener {
     RMEditorDnD         _dragHelper = createDragHelper();
     
     // A shape to be drawn if set to drag-over shape during drag and drop
-    Shape               _dragShape;
+    Shape _dragShape;
     
     // The select tool
     RMSelectTool        _selectTool;

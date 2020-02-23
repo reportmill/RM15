@@ -4,7 +4,7 @@
 package com.reportmill.out;
 import com.reportmill.shape.*;
 import java.util.*;
-import snap.gfx.Rect;
+import snap.geom.Rect;
 
 /**
  * This class creates a table from a given list of shapes.

@@ -3,7 +3,10 @@
  */
 package com.reportmill.shape;
 import com.reportmill.graphics.*;
-import snap.gfx.*;
+import snap.geom.Line;
+import snap.geom.Point;
+import snap.geom.Shape;
+import snap.geom.Transform;
 import snap.util.*;
 
 /**

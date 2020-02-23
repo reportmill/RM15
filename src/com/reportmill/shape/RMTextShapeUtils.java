@@ -3,6 +3,9 @@
  */
 package com.reportmill.shape;
 import com.reportmill.graphics.*;
+import snap.geom.Path;
+import snap.geom.Rect;
+import snap.geom.Shape;
 import snap.gfx.*;
 import snap.text.TextBox;
 import snap.text.TextBoxLine;

@@ -2,7 +2,7 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.shape;
-import snap.gfx.Point;
+import snap.geom.Point;
 import snap.view.*;
 
 /**

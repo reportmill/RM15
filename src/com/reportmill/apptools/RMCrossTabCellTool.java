@@ -6,6 +6,8 @@ import com.reportmill.app.*;
 import com.reportmill.base.RMGrouping;
 import com.reportmill.shape.*;
 import java.util.List;
+
+import snap.geom.Point;
 import snap.gfx.*;
 import snap.util.*;
 import snap.view.*;

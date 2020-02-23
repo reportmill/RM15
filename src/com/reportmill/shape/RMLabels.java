@@ -4,6 +4,8 @@
 package com.reportmill.shape;
 import com.reportmill.base.*;
 import java.util.List;
+
+import snap.geom.Rect;
 import snap.gfx.*;
 import snap.util.*;
 

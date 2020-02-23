@@ -6,6 +6,8 @@ import com.reportmill.shape.*;
 import com.reportmill.graphics.*;
 import java.io.*;
 import java.util.*;
+
+import snap.geom.Rect;
 import snap.gfx.*;
 import snap.util.ASCIICodec;
 

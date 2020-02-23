@@ -6,6 +6,10 @@ import com.reportmill.app.RMEditor;
 import com.reportmill.app.RMEditorProxGuide;
 import com.reportmill.shape.*;
 import java.util.*;
+
+import snap.geom.Point;
+import snap.geom.Rect;
+import snap.geom.Shape;
 import snap.gfx.*;
 import snap.util.ListUtils;
 import snap.view.ViewEvent;
@@ -24,7 +28,7 @@ public class RMSelectTool extends RMTool {
     DragMode        _dragMode = DragMode.None;
     
     // The point of last mouse
-    Point           _lastMousePoint;
+    Point _lastMousePoint;
     
     // A construct representing a shape whose handle was hit and the handle
     RMShapeHandle   _shapeHandle;
@@ -33,7 +37,7 @@ public class RMSelectTool extends RMTool {
     RMShape         _eventShape;
 
     // The current selection rect (during DragModeSelect)
-    Rect            _selRect = new Rect();
+    Rect _selRect = new Rect();
     
     // The list of shapes that will be selected (during DragModeSelect)
     List <RMShape>  _newSelShapes = new ArrayList();

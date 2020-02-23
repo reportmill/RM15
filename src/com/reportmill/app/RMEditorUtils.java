@@ -7,6 +7,9 @@ import com.reportmill.base.RMFormat;
 import com.reportmill.graphics.*;
 import com.reportmill.shape.*;
 import java.util.*;
+
+import snap.geom.Point;
+import snap.geom.Size;
 import snap.gfx.*;
 import snap.util.ListUtils;
 import snap.view.ViewUtils;

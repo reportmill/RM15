@@ -5,7 +5,7 @@ package com.reportmill.shape;
 import com.reportmill.base.RMGroup;
 import com.reportmill.base.RMKeyChain;
 import java.util.*;
-import snap.gfx.Rect;
+import snap.geom.Rect;
 import snap.util.MathUtils;
 
 /**

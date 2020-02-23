@@ -5,7 +5,7 @@ package com.reportmill.apptools;
 import com.reportmill.app.RMEditor;
 import com.reportmill.base.Entity;
 import com.reportmill.shape.*;
-import snap.gfx.Point;
+import snap.geom.Point;
 import snap.util.StringUtils;
 import snap.view.ViewEvent;
 

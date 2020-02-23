@@ -8,6 +8,8 @@ import com.reportmill.base.RMNumberFormat;
 import com.reportmill.graphics.*;
 import com.reportmill.shape.*;
 import java.util.*;
+
+import snap.geom.Pos;
 import snap.gfx.*;
 import snap.util.*;
 import snap.view.*;

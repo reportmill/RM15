@@ -5,6 +5,8 @@ package com.reportmill.app;
 import com.reportmill.base.*;
 import com.reportmill.shape.*;
 import java.util.*;
+
+import snap.geom.Rect;
 import snap.gfx.*;
 import snap.view.*;
 import snap.viewx.*;

@@ -3,7 +3,8 @@
  */
 package com.reportmill.shape;
 import com.reportmill.graphics.RMColor;
-import snap.gfx.*;
+import snap.geom.Path;
+import snap.geom.Rect;
 
 /**
  * This class generates (and represents) a RPG'd line graph area.

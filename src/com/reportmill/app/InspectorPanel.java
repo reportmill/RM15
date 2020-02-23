@@ -4,6 +4,7 @@
 package com.reportmill.app;
 import com.reportmill.apptools.*;
 import com.reportmill.shape.*;
+import snap.geom.Polygon;
 import snap.gfx.*;
 import snap.util.SnapUtils;
 import snap.view.*;

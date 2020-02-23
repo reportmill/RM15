@@ -4,6 +4,8 @@
 package com.reportmill.apptools;
 import com.reportmill.shape.*;
 import java.util.*;
+
+import snap.geom.Point;
 import snap.gfx.*;
 import snap.util.SnapUtils;
 import snap.view.*;

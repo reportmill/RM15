@@ -8,6 +8,9 @@ import com.reportmill.shape.*;
 import com.reportmill.graphics.*;
 import java.text.DecimalFormat;
 import java.util.*;
+
+import snap.geom.Point;
+import snap.geom.Rect;
 import snap.gfx.*;
 import snap.util.*;
 import snap.view.*;
@@ -28,7 +31,7 @@ public class RMTool <T extends RMShape> extends ViewOwner {
     RMShape                 _shape;
     
     // The mouse down point that initiated last tool mouse loop
-    Point                   _downPoint;
+    Point _downPoint;
     
     // A formatter for bounds fields
     static DecimalFormat    _fmt = new DecimalFormat("0.##");

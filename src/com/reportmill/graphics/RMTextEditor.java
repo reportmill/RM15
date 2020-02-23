@@ -4,6 +4,9 @@
 package com.reportmill.graphics;
 import com.reportmill.base.RMFormat;
 import com.reportmill.shape.RMArchiver;
+import snap.geom.Path;
+import snap.geom.Rect;
+import snap.geom.Shape;
 import snap.gfx.*;
 import snap.text.*;
 import snap.util.*;

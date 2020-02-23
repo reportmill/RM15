@@ -5,6 +5,10 @@ package com.reportmill.shape;
 import com.reportmill.base.RMGrouper;
 import com.reportmill.base.RMGrouping;
 import java.util.*;
+
+import snap.geom.Path;
+import snap.geom.Point;
+import snap.geom.Rect;
 import snap.gfx.*;
 import snap.util.*;
 

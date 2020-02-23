@@ -3,6 +3,7 @@
  */
 package com.reportmill.app;
 import com.reportmill.shape.RMDocument;
+import snap.geom.Pos;
 import snap.gfx.*;
 import snap.view.*;
 import snap.viewx.*;

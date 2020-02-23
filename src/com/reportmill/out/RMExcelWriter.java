@@ -10,6 +10,7 @@ import java.util.*;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.*;
 import org.apache.poi.ss.util.CellRangeAddress;
+import snap.geom.Rect;
 import snap.gfx.*;
 import snap.util.*;
 

@@ -5,7 +5,7 @@ package com.reportmill.app;
 import com.reportmill.graphics.RMXString;
 import com.reportmill.shape.*;
 import java.util.*;
-import snap.gfx.Point;
+import snap.geom.Point;
 import snap.util.*;
 import snap.view.*;
 

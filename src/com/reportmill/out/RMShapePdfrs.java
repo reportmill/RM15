@@ -6,6 +6,10 @@ import com.reportmill.gfx3d.*;
 import com.reportmill.graphics.*;
 import com.reportmill.shape.*;
 import java.util.*;
+
+import snap.geom.Insets;
+import snap.geom.Rect;
+import snap.geom.Shape;
 import snap.gfx.*;
 import snappdf.*;
 import snappdf.write.*;

@@ -5,6 +5,7 @@ package com.reportmill.apptools;
 import com.reportmill.app.RMEditor;
 import com.reportmill.graphics.*;
 import com.reportmill.shape.*;
+import snap.geom.*;
 import snap.gfx.*;
 import snap.view.*;
 

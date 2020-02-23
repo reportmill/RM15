@@ -1,4 +1,5 @@
 package com.reportmill.app;
+import snap.geom.*;
 import snap.gfx.*;
 import snap.util.SnapUtils;
 import snap.view.*;
@@ -25,7 +26,7 @@ public class DrawerView extends ParentView {
     View         _closeBox;
     
     // The round rect used for bounds shape
-    RoundRect    _roundRect;
+    RoundRect _roundRect;
     
     // Dedicated anim so nothing interferes with drawer open/close
     ViewAnim     _slideAnim;
@@ -34,7 +35,7 @@ public class DrawerView extends ParentView {
     boolean      _hiding;
     
     // The size of the draw last sized
-    Rect         _minBnds;
+    Rect _minBnds;
     
     // Constants
     public static final Effect SHADOW_EFFECT = new ShadowEffect(10, Color.GRAY, 0, 0);

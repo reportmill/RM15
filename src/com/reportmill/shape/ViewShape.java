@@ -1,5 +1,6 @@
 package com.reportmill.shape;
 import com.reportmill.graphics.RMFont;
+import snap.geom.Size;
 import snap.gfx.*;
 import snap.util.*;
 import snap.view.*;

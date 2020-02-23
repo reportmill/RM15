@@ -3,6 +3,8 @@
  */
 package com.reportmill.shape;
 import java.util.*;
+
+import snap.geom.Rect;
 import snap.gfx.*;
 import snap.util.*;
 
@@ -378,7 +380,7 @@ private static class SpringInfo {
 /**
  * A class to represent the children bounds.
  */
-private static class Box extends snap.gfx.Rect {
+private static class Box extends Rect {
 
     // The autosize settings
     String       _asize, _asize0;

@@ -6,6 +6,8 @@ import com.reportmill.app.*;
 import com.reportmill.shape.*;
 import com.reportmill.graphics.*;
 import java.util.List;
+
+import snap.geom.*;
 import snap.gfx.*;
 import snap.text.RichTextLine;
 import snap.text.RichTextRun;

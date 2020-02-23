@@ -5,6 +5,8 @@ package com.reportmill.shape;
 import com.reportmill.base.*;
 import com.reportmill.graphics.*;
 import java.util.*;
+
+import snap.geom.*;
 import snap.gfx.*;
 import snap.util.*;
 import snap.util.XMLArchiver.*;

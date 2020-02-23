@@ -2,6 +2,9 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.gfx3d;
+import snap.geom.Path;
+import snap.geom.PathIter;
+import snap.geom.Seg;
 import snap.gfx.*;
 import java.util.*;
 
@@ -29,7 +32,7 @@ public class Path3D extends Shape3D implements Cloneable {
     Point3D         _bbox[];
     
     // The cached path (2d)
-    Path            _path;
+    Path _path;
     
     // Cached pointers for iterating efficiently over the path
     int             _nextElementIndex = -100;

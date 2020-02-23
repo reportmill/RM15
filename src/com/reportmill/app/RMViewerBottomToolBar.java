@@ -2,6 +2,7 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.app;
+import snap.geom.*;
 import snap.gfx.*;
 import snap.util.SnapUtils;
 import snap.view.*;

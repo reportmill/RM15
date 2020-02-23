@@ -4,6 +4,7 @@
 package com.reportmill.shape;
 import com.reportmill.base.RMGroup;
 import com.reportmill.base.RMGrouping;
+import snap.geom.Insets;
 import snap.gfx.*;
 import snap.text.TextLineStyle;
 import snap.util.*;

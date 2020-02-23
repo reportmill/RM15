@@ -6,6 +6,10 @@ import com.reportmill.base.RMFormat;
 import com.reportmill.graphics.*;
 import java.util.*;
 import java.util.List;
+
+import snap.geom.Insets;
+import snap.geom.Rect;
+import snap.geom.Shape;
 import snap.gfx.*;
 import snap.text.RichText;
 import snap.text.TextBox;
@@ -29,7 +33,7 @@ public class RMTextShape extends RMRectShape {
     RMXString              _xstr;
     
     // The text margin (if different than default)
-    Insets                 _margin = getMarginDefault();
+    Insets _margin = getMarginDefault();
     
     // Vertical alignment of text
     AlignY                 _alignY = AlignY.Top;

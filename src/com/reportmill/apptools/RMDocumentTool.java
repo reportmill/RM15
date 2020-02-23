@@ -5,6 +5,7 @@ package com.reportmill.apptools;
 import com.reportmill.app.RMEditor;
 import com.reportmill.app.RMEditorProxGuide;
 import com.reportmill.shape.*;
+import snap.geom.Size;
 import snap.gfx.*;
 import snap.util.*;
 import snap.view.*;
@@ -15,7 +16,7 @@ import snap.view.*;
 public class RMDocumentTool <T extends RMDocument> extends RMTool <T> {
     
     // The array of supported paper sizes
-    static Size      _paperSizes[];
+    static Size _paperSizes[];
     
     // The array of supported paper size names
     static String    _paperSizeNames[];

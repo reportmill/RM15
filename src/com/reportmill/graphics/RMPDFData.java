@@ -4,6 +4,9 @@
 package com.reportmill.graphics;
 import java.lang.ref.WeakReference;
 import java.util.*;
+
+import snap.geom.Rect;
+import snap.geom.Transform;
 import snap.util.*;
 import snap.web.WebURL;
 import snappdf.*;

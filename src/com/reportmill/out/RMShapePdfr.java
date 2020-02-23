@@ -4,7 +4,8 @@
 package com.reportmill.out;
 import com.reportmill.graphics.*;
 import com.reportmill.shape.*;
-import snap.gfx.*;
+import snap.geom.Rect;
+import snap.geom.Shape;
 import snappdf.write.*;
 
 /**

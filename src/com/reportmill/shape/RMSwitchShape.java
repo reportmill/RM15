@@ -5,6 +5,8 @@ package com.reportmill.shape;
 import com.reportmill.base.RMKeyChain;
 import java.util.*;
 import java.util.List;
+
+import snap.geom.Point;
 import snap.gfx.*;
 import snap.util.*;
 

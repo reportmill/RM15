@@ -2,6 +2,10 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.shape;
+import snap.geom.Path;
+import snap.geom.Rect;
+import snap.geom.Shape;
+import snap.geom.Transform;
 import snap.gfx.*;
 import snap.util.*;
 
@@ -11,7 +15,7 @@ import snap.util.*;
 public class RMPolygonShape extends RMParentShape {
     
     // The explicit path associated with this shape
-    Path        _path;
+    Path _path;
     
 /**
  * Creates a new empty polygon shape.
@@ -39,7 +43,7 @@ public void setPath(Path aPath)  { _path = aPath; repaint(); }
 public void resetPath(Path newPath)
 {
     // Get the transform to parent shape coords
-    Transform toParentXF = getTransform();  
+    Transform toParentXF = getTransform();
 
     // Set the new path and new size
     setPath(newPath);

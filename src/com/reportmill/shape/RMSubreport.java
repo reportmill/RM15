@@ -4,6 +4,8 @@
 package com.reportmill.shape;
 import com.reportmill.base.RMKeyChain;
 import com.reportmill.graphics.*;
+import snap.geom.Rect;
+import snap.geom.Shape;
 import snap.gfx.*;
 import snap.util.*;
 

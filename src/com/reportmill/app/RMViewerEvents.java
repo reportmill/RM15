@@ -4,6 +4,11 @@
 package com.reportmill.app;
 import com.reportmill.shape.*;
 import java.util.*;
+
+import snap.geom.Ellipse;
+import snap.geom.Point;
+import snap.geom.Rect;
+import snap.geom.Shape;
 import snap.gfx.*;
 import snap.text.TextBox;
 import snap.text.TextSel;
@@ -35,13 +40,13 @@ public class RMViewerEvents {
     List <RMTextShape>  _selectedTexts = new ArrayList();
     
     // The down point for the last mouse loop (SELECT_TEXT/SELECT_IMAGE)
-    Point               _downPoint;
+    Point _downPoint;
 
     // The drag point for the last mouse loop (SELECT_TEXT/SELECT_IMAGE)
     Point               _dragPoint;
 
     // The paint area (SELECT_TEXT)
-    Shape               _paintArea = new Rect();
+    Shape _paintArea = new Rect();
     
     // The selection rect (SELECT_IMAGE)
     Rect                _rect = new Rect();

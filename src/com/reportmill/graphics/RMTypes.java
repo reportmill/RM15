@@ -2,8 +2,8 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.graphics;
-import snap.gfx.HPos;
-import snap.gfx.VPos;
+import snap.geom.HPos;
+import snap.geom.VPos;
 
 /**
  * Common types.
