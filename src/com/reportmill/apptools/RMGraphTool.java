@@ -168,7 +168,7 @@ protected void resetUI()
     getView("MultiKeyLayoutBox").setVisible(graph.getKeyCount()>1);
     
     // Update ProxyLabel
-    String str = "Font/Color changes now apply to ";
+    String str = "Style changes now apply to ";
     RMShape proxy = graph.getProxyShape();
     if(proxy instanceof RMGraphPartValueAxis) str += "Value Axis";
     else if(proxy instanceof RMGraphPartLabelAxis) str += "Label Axis";
