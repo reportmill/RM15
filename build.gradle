@@ -1,0 +1,26 @@
+
+plugins {
+    id 'java'
+    id 'application'
+}
+
+sourceSets.main.java.srcDirs = ['src']
+sourceSets.main.resources.srcDirs = ['src']
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+repositories {
+}
+
+dependencies {
+    compile project(':SnapKit')
+    compile project(':SnapPDF')
+    compile files('lib/eawt.jar')
+    compile files('lib/poi-3.7.jar')
+    compile files('lib/spell.jar')
+}
+
+mainClassName = 'com.reportmill.app.App'
