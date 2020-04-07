@@ -54,9 +54,10 @@ public static RMKeyChainFuncs getFunctionCall(Object aRoot, Object anObj, RMKeyC
         
         // If object doesn't implement the method, see if we have a Category implementation.
         // A category takes the target object as the first argument.
-        if(method==null) {
-            method = getMethod(name, ArrayUtils.add(argTypes, ClassUtils.getClass(anObj), 0));
-            if(method!=null)
+        if (method==null) {
+            Class argTypes2[] = ArrayUtils.add(argTypes, ClassUtils.getClass(anObj), 0);
+            method = getMethod(name, argTypes2);
+            if (method!=null)
                 args = ArrayUtils.add(args, anObj, 0);
         }
         
@@ -95,11 +96,14 @@ public Object invoke(Object anObj) throws InvocationTargetException, IllegalAcce
 private static Method getMethod(String aName, Class ... argClasses)
 {
     // Lookup method on RMKeyChainFuncs.class
-    Method meth = ClassUtils.getMethod(RMKeyChainFuncs.class, aName, argClasses); if(meth!=null) return meth;
+    Method meth = ClassUtils.getMethodBest(RMKeyChainFuncs.class, aName, argClasses);
+    if (meth!=null) return meth;
     
     // Lookup method on registered classes
-    for(Class cls : _funcClasses) { meth = ClassUtils.getMethod(cls, aName, argClasses);
-        if(meth!=null) return meth; }
+    for (Class cls : _funcClasses) {
+        meth = ClassUtils.getMethod(cls, aName, argClasses);
+        if (meth!=null) return meth;
+    }
         
     // Return null, since method not found
     return null;
