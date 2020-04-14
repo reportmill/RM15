@@ -16,9 +16,11 @@ jar cf ReportMill15.jar \
     -C ../../RM15/bin com/reportmill/out \
     -C ../../RM15/bin com/reportmill/shape \
     -C ../../SnapPDF/bin snappdf \
+    -C ../../SnapKit/bin snap/geom \
     -C ../../SnapKit/bin snap/gfx \
     -C ../../SnapKit/bin snap/parse \
     -C ../../SnapKit/bin snap/swing \
+    -C ../../SnapKit/bin snap/text \
     -C ../../SnapKit/bin snap/util \
     -C ../../SnapKit/bin snap/view \
     -C ../../SnapKit/bin snap/viewx \
