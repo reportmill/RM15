@@ -47,7 +47,8 @@ public static RMKeyChainFuncs getFunctionCall(Object aRoot, Object anObj, RMKeyC
     if(method==null) {
         
         // Create a Class array of the same size as the argument list loaded with Object.class
-        Class argTypes[] = new Class[argList.getChildCount()]; Arrays.fill(argTypes, Object.class);
+        Class argTypes[] = new Class[argList.getChildCount()];
+        Arrays.fill(argTypes, Object.class);
         
         // Look for method with given args
         method = ClassUtils.getMethodBest(cls, name, argTypes);
@@ -65,6 +66,14 @@ public static RMKeyChainFuncs getFunctionCall(Object aRoot, Object anObj, RMKeyC
         if(method==null)
             method = getMethod(name, argTypes);
         
+        // If object doesn't implement method, try to find category method for registered functions that takes args
+        if(method==null) {
+            Class argTypes2[] = ArrayUtils.add(argTypes, Object.class, 0);
+            method = getMethod(name, argTypes2);
+            if (method!=null)
+                args = ArrayUtils.add(args, anObj, 0);
+        }
+
         // If method not found, try again with var-arg Object array
         if(method==null) {
             method = getMethod(name, Object[].class);
@@ -96,7 +105,7 @@ public Object invoke(Object anObj) throws InvocationTargetException, IllegalAcce
 private static Method getMethod(String aName, Class ... argClasses)
 {
     // Lookup method on RMKeyChainFuncs.class
-    Method meth = ClassUtils.getMethodBest(RMKeyChainFuncs.class, aName, argClasses);
+    Method meth = ClassUtils.getMethod(RMKeyChainFuncs.class, aName, argClasses);
     if (meth!=null) return meth;
     
     // Lookup method on registered classes
@@ -214,8 +223,14 @@ public static Object RMRTF(Object aValue)
 }
 
 /** Returns the trueVal if condition is true, otherwise null. */
-public static Object RMConditional(Object v, Object t) { return SnapUtils.boolValue(v)? t : null; }
-public static Object RMConditional(Object v, Object t, Object f) { return SnapUtils.boolValue(v)? t : f; }
+public static Object RMConditional(Object v, Object t)
+{
+    return SnapUtils.boolValue(v)? t : null;
+}
+public static Object RMConditional(Object v, Object t, Object f)
+{
+    return SnapUtils.boolValue(v)? t : f;
+}
 
 /**
  * Returns true if given object string starts with given string.
