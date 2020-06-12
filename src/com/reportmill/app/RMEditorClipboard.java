@@ -6,6 +6,7 @@ import com.reportmill.graphics.RMXString;
 import com.reportmill.shape.*;
 import java.util.*;
 import snap.geom.Point;
+import snap.gfx.Image;
 import snap.util.*;
 import snap.view.*;
 
@@ -46,14 +47,24 @@ public static void copy(RMEditor anEditor)
     // If not text editing, add selected shapes (serialized) to pasteboard for DrawPboardType
     else if(!(anEditor.getSelectedOrSuperSelectedShape() instanceof RMDocument) &&
             !(anEditor.getSelectedOrSuperSelectedShape() instanceof RMPage)) {
-        
-        // Get xml for selected shapes
-        XMLElement xml = new RMArchiver().writeToXML(anEditor.getSelectedOrSuperSelectedShapes());
-        String xmlStr = xml.toString();
-        
-        // Get System clipboard and add data as RMData and String (text/plain)
+
+        // Get system clipboard
         Clipboard cb = Clipboard.getCleared();
+
+        // Get xml for selected shapes as string and add as RM_XML_TYPE
+        List <RMShape> shapes = anEditor.getSelectedOrSuperSelectedShapes();
+        XMLElement xml = new RMArchiver().writeToXML(shapes);
+        String xmlStr = xml.toString();
         cb.addData(RM_XML_TYPE, xmlStr);
+
+        // If only one shape, add as image too
+        RMShape shape = shapes.size()==1 ? anEditor.getSelectedShape() : null;
+        if (shape!=null) {
+            Image image = RMShapeUtils.createImage(shape, null);
+            cb.addData(image);
+        }
+
+        // Add RM_XML as plain string (probably stupid)
         cb.addData(xmlStr);
         
         // Reset Editor.LastCopyShape/LastPasteShape
