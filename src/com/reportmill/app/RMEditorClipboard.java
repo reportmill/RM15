@@ -54,7 +54,7 @@ public static void copy(RMEditor anEditor)
         // Get xml for selected shapes as string and add as RM_XML_TYPE
         List <RMShape> shapes = anEditor.getSelectedOrSuperSelectedShapes();
         XMLElement xml = new RMArchiver().writeToXML(shapes);
-        String xmlStr = xml.toString();
+        String xmlStr = xml.getString();
         cb.addData(RM_XML_TYPE, xmlStr);
 
         // If only one shape, add as image too
