@@ -38,7 +38,7 @@ public static boolean isEnabled()  { return _enabled; }
 public static void setEnabled(boolean aFlag)
 {
     _enabled=aFlag;
-    Prefs.get().set("ProximityGuide", aFlag);
+    Prefs.get().setValue("ProximityGuide", aFlag);
 }
 
 /**

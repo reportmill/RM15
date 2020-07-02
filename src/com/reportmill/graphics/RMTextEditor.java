@@ -857,6 +857,6 @@ public static final boolean isHyphenating()  { return _hyphenating; }
 /**
  * Sets whether layout tries to hyphenate wrapped words.
  */
-public static final void setHyphenating(boolean aValue)  { Prefs.get().set("Hyphenating", _hyphenating = aValue); }
+public static final void setHyphenating(boolean aValue)  { Prefs.get().setValue("Hyphenating", _hyphenating = aValue); }
 
 }

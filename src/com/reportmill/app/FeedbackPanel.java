@@ -24,8 +24,8 @@ public void showPanel(View aView)
     if(!dbox.showConfirmDialog(null)) return;
     
     // Update preferences and send feedback
-    Prefs.get().set("ExceptionUserName", getViewStringValue("UserText"));
-    Prefs.get().set("ExceptionEmail", getViewStringValue("EmailText"));
+    Prefs.get().setValue("ExceptionUserName", getViewStringValue("UserText"));
+    Prefs.get().setValue("ExceptionEmail", getViewStringValue("EmailText"));
     sendFeedback();
 }
 
@@ -34,8 +34,8 @@ public void showPanel(View aView)
  */
 public void initUI()
 {
-    setViewValue("UserText", Prefs.get().get("ExceptionUserName", ""));
-    setViewValue("EmailText", Prefs.get().get("ExceptionEmail", ""));
+    setViewValue("UserText", Prefs.get().getString("ExceptionUserName", ""));
+    setViewValue("EmailText", Prefs.get().getString("ExceptionEmail", ""));
     
     // Configure TypeComboBox
     String types[] = { "Bug Report", "Enhancement Request", "General Comment" };

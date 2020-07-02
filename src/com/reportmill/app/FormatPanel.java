@@ -40,11 +40,11 @@ public FormatPanel(RMEditorPane anEP)
     super(anEP); _shared = this;
     
     // Load standard number formats from preferences
-    String nums = Prefs.get().get("NumberFormats", getDefaultNumberFormatsString());
+    String nums = Prefs.get().getString("NumberFormats", getDefaultNumberFormatsString());
     setNumberFormatsString(nums);
     
     // Load standard date formats from preferences
-    String dates = Prefs.get().get("DateFormats2", getDefaultDateFormatsString());
+    String dates = Prefs.get().getString("DateFormats2", getDefaultDateFormatsString());
     setDateFormatsString(dates);
 }
 

@@ -68,7 +68,7 @@ public static String getLicense()
     try {
         String prefsKey = isApp? "HostProperties1" : "HostProperties2";
         Prefs prefs = Prefs.getPrefs(com.reportmill.Shell.class); //Preferences.userNodeForPackage(Shell.class);
-        _license = prefs.get(prefsKey, null);
+        _license = prefs.getString(prefsKey, null);
     }
     
     // Catch exceptions - in case security manager complains
@@ -94,7 +94,7 @@ public static void setLicense(String aLicense, boolean isPersistent, boolean isA
         String prefsKey = isApp? "HostProperties1" : "HostProperties2";
 
         // Put license for prefs key (or remove if null) and flush preferences
-        if(aLicense!=null) prefs.set(prefsKey, aLicense);
+        if(aLicense!=null) prefs.setValue(prefsKey, aLicense);
         else prefs.remove(prefsKey);
         prefs.flush();
     }

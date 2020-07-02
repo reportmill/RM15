@@ -125,7 +125,7 @@ protected void respondUI(ViewEvent anEvent)
     // Edit -> CheckSpellingAsYouTypeMenuItem
     if(anEvent.equals("CheckSpellingAsYouTypeMenuItem")) {
         RMTextEditor.isSpellChecking = anEvent.getBooleanValue();
-        Prefs.get().set("SpellChecking", RMTextEditor.isSpellChecking);
+        Prefs.get().setValue("SpellChecking", RMTextEditor.isSpellChecking);
         editor.repaint();
     }
     

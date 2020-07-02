@@ -30,7 +30,7 @@ public void showPanel(View aView)
 public void initUI()
 {
     // Set LicenseText & EnableExceptionsCheckBox
-    setViewValue("LicenseText", Prefs.get().get("HostProperties1", null));
+    setViewValue("LicenseText", Prefs.get().getString("HostProperties1", null));
     setViewValue("EnableExceptionsCheckBox", Prefs.get().getBoolean("ExceptionReportingEnabled", true));
     
     // Set NumberFormatsText & DateFormatsText
@@ -72,7 +72,7 @@ public boolean apply()
     ReportMill.setLicense(licenseKey, true, true);
 
     // Save the exception reporting pref
-    Prefs.get().set("ExceptionReportingEnabled", getViewBoolValue("EnableExceptionsCheckBox"));
+    Prefs.get().setValue("ExceptionReportingEnabled", getViewBoolValue("EnableExceptionsCheckBox"));
     
     // Get pref panel number formats and the original number formats
     String nums = getViewStringValue("NumberFormatsText");
@@ -94,7 +94,7 @@ public boolean apply()
         // Add new format string to default (clear it if it's the default)
         if(nums.equals(_formatPanel.getDefaultNumberFormatsString()))
             nums = null;
-        Prefs.get().set("NumberFormats", nums);
+        Prefs.get().setValue("NumberFormats", nums);
     }
     
     // Get pref panel date formats and original date formats
@@ -117,7 +117,7 @@ public boolean apply()
         // Add new format string to default (clear it if it's the default)
         if(dates.equals(_formatPanel.getDefaultDateFormatsString()))
             dates = null;
-        Prefs.get().set("DateFormats2", dates);
+        Prefs.get().setValue("DateFormats2", dates);
     }
     
     // Flush properties to registry and return true
