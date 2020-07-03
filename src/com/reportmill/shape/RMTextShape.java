@@ -160,7 +160,7 @@ public int getVisibleEnd()  { return getTextBox().getEnd(); }
 /**
  * Returns whether all characters can be visibly rendered in text bounds.
  */
-public boolean isAllTextVisible()  { return !getTextBox().isOutOfRoom(); }
+public boolean isAllTextVisible()  { return !getTextBox().isTextOutOfBounds(); }
 
 /**
  * Returns the font for char 0.
@@ -657,7 +657,13 @@ protected void updateTextBox()
     _textBox.setBoundsPath(!(getPath() instanceof Rect) || getPerformsWrap()? getPath() : null);
     _textBox.setHyphenate(RMTextEditor.isHyphenating());
     _textBox.setFontScale(1);
-    if(_fitText) _textBox.scaleTextToFit();
+
+    // Handle FitText: With hack to avoid text wrapping for data columns
+    if (_fitText) {
+        if (getHeight()<50 && getWidth()>getHeight()*3)
+            _textBox.setWrapLines(false);
+        _textBox.scaleTextToFit();
+    }
 }
 
 /**
