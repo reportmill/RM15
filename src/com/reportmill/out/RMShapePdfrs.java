@@ -37,22 +37,24 @@ public static class RMTextShapePdfr <T extends RMTextShape> extends RMShapePdfr 
         super.writeShape(aTextShape, aWriter);
         
         // If not editable, just write out text and return
-        if(!aTextShape.isEditable()) {
+        if (!aTextShape.isEditable()) {
             PDFWriterText.writeText(aWriter, aTextShape.getTextBox()); return; }
         
         // Writing PDF Widget Annotation: Get pdf page object and bump PDF version to 1.4
         PDFPageWriter pwriter = aWriter.getPageWriter();
         
         // Get TextShape info
-        String name = aTextShape.getName(); if(name==null) name = "Text Box " + aWriter.getAcroFormFieldCount();
-        String pdfName = name!=null && name.length()>0? '(' + name + ')' : null;
-        String text = aTextShape.getText(), pdfText = text!=null && text.length()>0? '(' + text + ')' : null;
+        String name = aTextShape.getName();
+        String pdfName = name!=null && name.length()>0 ? '(' + name + ')' : null;
+        String text = aTextShape.getText();
+        String pdfText = text!=null && text.length()>0 ? '(' + text + ')' : null;
         
         // Get ViewShape frame in PDF page coords (minus text insets)
         RMShape page = aTextShape.getPageShape();
         Rect frame = aTextShape.localToParent(aTextShape.getBoundsInside(), page).getBounds();
         frame.y = page.getHeight() - frame.getMaxY();
-        Insets ins = aTextShape.getMargin(); frame.x += ins.left; frame.y += ins.bottom;
+        Insets ins = aTextShape.getMargin();
+        frame.x += ins.left; frame.y += ins.bottom;
         frame.width -= ins.getWidth(); frame.height -= ins.getHeight();
         
         // Create and add annotation to page
@@ -60,9 +62,12 @@ public static class RMTextShapePdfr <T extends RMTextShape> extends RMShapePdfr 
         pwriter.addAnnotation(widget);
         
         // Set Annotation Flags, Field-Type
-        Map map = widget.getAnnotationMap(); map.put("P", aWriter.getXRefTable().getRefString(pwriter));
-        map.put("F", 4); map.put("FT", "/Tx"); // Makes widget printable textfield
-        if(aTextShape.isMultiline()) map.put("Ff", 1<<12);
+        Map map = widget.getAnnotationMap();
+        map.put("P", aWriter.getXRefTable().getRefString(pwriter));
+        map.put("F", 4);
+        map.put("FT", "/Tx"); // Makes widget printable textfield
+        if (aTextShape.isMultiline())
+            map.put("Ff", 1<<12);
         
         // Get font name and set in Default Appearance
         Font font = aTextShape.getFont();
@@ -71,12 +76,18 @@ public static class RMTextShapePdfr <T extends RMTextShape> extends RMShapePdfr 
         map.put("DA", "(0 0 0 rg " + fontName + ' ' + fontSize + " Tf)");
         
         // Set Widget Name, alt name, value, default value and fonts dict
-        if(pdfName!=null) map.put("T", pdfName); // Name
-        if(pdfName!=null) map.put("TU", pdfName); // Alternate name (ToolTip)
-        if(pdfText!=null) { map.put("V", pdfText); map.put("DV", pdfText); } // Value/Default value
+        if (pdfName!=null)
+            map.put("T", pdfName); // Name
+        if (pdfName!=null)
+            map.put("TU", pdfName); // Alternate name (ToolTip)
+        if (pdfText!=null) {
+            map.put("V", pdfText);
+            map.put("DV", pdfText);
+        }
         
         // Set Widget Default Resources dict
-        Object fonts = aWriter.getFonts(), fontsXRef = aWriter.getXRefTable().getRefString(fonts);
+        Object fonts = aWriter.getFonts();
+        Object fontsXRef = aWriter.getXRefTable().getRefString(fonts);
         Map drDict = Collections.singletonMap("Font", fontsXRef);
         map.put("DR", drDict);
     }
@@ -94,7 +105,7 @@ public static class RMImageShapePdfr <T extends RMImageShape> extends RMShapePdf
         super.writeShape(anImageShape, aWriter);
         
         // Get image data (just return if missing) and image name and add image
-        Image img = anImageShape.getImage(); if(img==null) return;
+        Image img = anImageShape.getImage(); if (img==null) return;
         String iname = aWriter.getImageName(img);
         aWriter.addImage(img);
     
@@ -103,7 +114,7 @@ public static class RMImageShapePdfr <T extends RMImageShape> extends RMShapePdf
         pdfPage.gsave();
         
         // Apply clip if needed
-        if(anImageShape.getRadius()>.001) {
+        if (anImageShape.getRadius()>.001) {
             Shape path = anImageShape.getPath();
             pdfPage.writePath(path); pdfPage.append("W n ");
         }
@@ -133,10 +144,10 @@ public static class RMPDFShapePdfr <T extends RMPDFShape> extends RMShapePdfr <T
         super.writeShape(aPDFShape, aWriter);
         
         // Get PDF data (just return if missing or invalid)
-        RMPDFData pdata = aPDFShape.getPDFData(); if(pdata==null) return;
+        RMPDFData pdata = aPDFShape.getPDFData(); if (pdata==null) return;
         
         // Get pdf page (just return if no page contents - which is apparently legal)
-        PDFPage page = pdata.getPDFFile().getPage(pdata.getPageIndex()); if(page.getPageContentsStream()==null) return;
+        PDFPage page = pdata.getPDFFile().getPage(pdata.getPageIndex()); if (page.getPageContentsStream()==null) return;
         String iname = String.valueOf(System.identityHashCode(page)); //aWriter.getImageName(pdata);
     
         // Add pdf data
@@ -149,11 +160,12 @@ public static class RMPDFShapePdfr <T extends RMPDFShape> extends RMShapePdfr <T
         pdfPage.setLineJoin(0);
         
         // Apply clip if needed
-        //if(aPDFShape.getRadius()>.1) { Shape p = aPDFShape.getPath(); pdfPage.writePath(p); pdfPage.append("W n "); }
+        //if (aPDFShape.getRadius()>.1) { Shape p = aPDFShape.getPath(); pdfPage.writePath(p); pdfPage.append("W n "); }
         
         // Get image bounds width and height divided by PDF size (pdfImage writes out scale of imageBounds/imageSize)
         Rect bounds = aPDFShape.getImageBounds();
-        double width = bounds.width/pdata.getWidth(), height = bounds.height/pdata.getHeight();
+        double width = bounds.width/pdata.getWidth();
+        double height = bounds.height/pdata.getHeight();
     
         // Apply CTM - image coords are flipped from page coords ( (0,0) at upper-left )
         pdfPage.writeTransform(width, 0, 0, -height, bounds.x, bounds.getMaxY());
@@ -204,10 +216,11 @@ public static class RMScene3DPdfr <T extends RMScene3D> extends RMShapePdfr <T> 
         // Write Path3Ds
         Camera camera = aScene3D.getCamera();
         List <Path3D> paths = camera.getPaths();
-        for(Path3D path : paths) {
+        for (Path3D path : paths) {
             writePath(aScene3D, path, aWriter);
-            if(path.getLayers().size()>0) for(Path3D layer : path.getLayers())
-                writePath(aScene3D, layer, aWriter);
+            if (path.getLayers().size()>0)
+                for (Path3D layer : path.getLayers())
+                    writePath(aScene3D, layer, aWriter);
         }
     }
     
@@ -216,21 +229,22 @@ public static class RMScene3DPdfr <T extends RMScene3D> extends RMShapePdfr <T> 
     {
         // Get path, fill and stroke
         Shape path = aPath.getPath();
-        Color fillColor = aPath.getColor(), strokeColor = aPath.getStrokeColor();
+        Color fillColor = aPath.getColor();
+        Color strokeColor = aPath.getStrokeColor();
         PDFPageWriter pdfPage = aWriter.getPageWriter();
         
         // Get opacity and set if needed
         double op = aPath.getOpacity();
-        if(op<1) { pdfPage.gsave(); pdfPage.setOpacity(op*aScene3D.getOpacityDeep()); }
+        if (op<1) { pdfPage.gsave(); pdfPage.setOpacity(op*aScene3D.getOpacityDeep()); }
         
         // Do fill and stroke
-        if(fillColor!=null)
+        if (fillColor!=null)
             SnapPaintPdfr.writeShapeFill(path, fillColor, aWriter);
-        if(strokeColor!=null)
+        if (strokeColor!=null)
             SnapPaintPdfr.writeShapeStroke(path, aPath.getStroke(), strokeColor, aWriter);
             
         // Reset opacity if needed
-        if(op<1) pdfPage.grestore();
+        if (op<1) pdfPage.grestore();
     }
 }
 
@@ -246,23 +260,32 @@ public static class ViewShapePdfr <T extends ViewShape> extends RMShapePdfr <T> 
         super.writeShape(aViewShape, aWriter);
         
         // Get ViewShape info
-        String name = aViewShape.getName(); if(name==null) name = "Text Box " + aWriter.getAcroFormFieldCount();
-        String pdfName = name!=null && name.length()>0? '(' + name + ')' : null;
-        String type = aViewShape.getViewType(), fieldType = getFieldType(type);
-        boolean isText = type==ViewShape.TextField_Type, isTextMultiline = isText && aViewShape.isMultiline();
-        String text = aViewShape.getText(), pdfText = text!=null && text.length()>0? '(' + text + ')' : null;
-        boolean isButton = fieldType=="/Btn", isRadio = type==ViewShape.RadioButton_Type;
+        String name = aViewShape.getName();
+        String pdfName = name!=null && name.length()>0 ? '(' + name + ')' : null;
+        String type = aViewShape.getViewType();
+        String fieldType = getFieldType(type);
+        boolean isText = type==ViewShape.TextField_Type;
+        boolean isTextMultiline = isText && aViewShape.isMultiline();
+        String text = aViewShape.getText();
+        String pdfText = text!=null && text.length()>0 ? '(' + text + ')' : null;
+        boolean isButton = fieldType=="/Btn";
+        boolean isRadio = type==ViewShape.RadioButton_Type;
         boolean isCheckBox = type==ViewShape.CheckBox_Type;
         
         // Get flags field
-        int flags = 0; if(isTextMultiline) flags |= 1<<12;
-        if(isRadio) flags |= 1<<15; else if(isButton && !isCheckBox) flags |= 1<<16;
+        int flags = 0;
+        if (isTextMultiline) flags |= 1<<12;
+        if (isRadio) flags |= 1<<15;
+        else if (isButton && !isCheckBox) flags |= 1<<16;
         
         // Get ViewShape frame in PDF page coords (minus text insets)
         Rect frame = aViewShape.localToParent(aViewShape.getBoundsInside(), null).getBounds();
         frame.setY(aViewShape.getPageShape().getHeight() - frame.getMaxY());
-        if(isText) { Insets ins = new Insets(2); frame.x += ins.left; frame.y += ins.bottom;
-            frame.width -= ins.getWidth(); frame.height -= ins.getHeight(); }
+        if (isText) {
+            Insets ins = new Insets(2);
+            frame.x += ins.left; frame.y += ins.bottom;
+            frame.width -= ins.getWidth(); frame.height -= ins.getHeight();
+        }
         
         // Create and add annotation to page
         PDFAnnotation widget = new PDFAnnotation.Widget(frame, "");
@@ -271,22 +294,29 @@ public static class ViewShapePdfr <T extends ViewShape> extends RMShapePdfr <T> 
         
         // Set Annotation Flags, Field-Type
         Map map = widget.getAnnotationMap(); //map.put("P", xrefs.getRefString(pwriter));
-        map.put("F", 4); map.put("FT", fieldType); // Makes widget printable and field type
-        if(flags!=0) map.put("Ff", flags);
+        map.put("F", 4);
+        map.put("FT", fieldType); // Makes widget printable and field type
+        if (flags!=0)
+            map.put("Ff", flags);
         
         // Get font name and set in Default Appearance
         Font font = aViewShape.getFont();
         PDFFontEntry fontEntry = aWriter.getFontEntry(font, 0);
-        String fontName = '/' + fontEntry.getPDFName(); int fontSize = (int)font.getSize();
+        String fontName = '/' + fontEntry.getPDFName();
+        int fontSize = (int)font.getSize();
         map.put("DA", "(0 0 0 rg " + fontName + ' ' + fontSize + " Tf)");
         
         // Set Widget Name, alt name, value, default value and fonts dict
-        if(pdfName!=null) map.put("T", pdfName); // Name
-        if(pdfName!=null) map.put("TU", pdfName); // Alternate name (ToolTip)
-        if(pdfText!=null) { map.put("V", pdfText); map.put("DV", pdfText); } // Value/Default value
+        if (pdfName!=null) map.put("T", pdfName); // Name
+        if (pdfName!=null) map.put("TU", pdfName); // Alternate name (ToolTip)
+        if (pdfText!=null) {
+            map.put("V", pdfText);
+            map.put("DV", pdfText);
+        }
         
         // Set Widget Default Resources dict
-        Object fonts = aWriter.getFonts(), fontsXRef = aWriter.getXRefTable().getRefString(fonts);
+        Object fonts = aWriter.getFonts();
+        Object fontsXRef = aWriter.getXRefTable().getRefString(fonts);
         Map drDict = Collections.singletonMap("Font", fontsXRef);
         map.put("DR", drDict);
         
@@ -305,8 +335,11 @@ public static class ViewShapePdfr <T extends ViewShape> extends RMShapePdfr <T> 
     {
         switch(aViewType) {
             case ViewShape.TextField_Type: return "/Tx";
-            case ViewShape.Button_Type: case ViewShape.RadioButton_Type: case ViewShape.CheckBox_Type: return "/Btn";
-            case ViewShape.ListView_Type: case ViewShape.ComboBox_Type: return "/Ch";
+            case ViewShape.Button_Type:
+            case ViewShape.RadioButton_Type:
+            case ViewShape.CheckBox_Type: return "/Btn";
+            case ViewShape.ListView_Type:
+            case ViewShape.ComboBox_Type: return "/Ch";
             default: System.err.println("RMShapePdfrs.ViewShapePdfr: Unknown view type"); return "/Tx";
         }
     }
@@ -315,13 +348,13 @@ public static class ViewShapePdfr <T extends ViewShape> extends RMShapePdfr <T> 
 /**
  * Returns a shared RMPDFShapePdfr.
  */
-public static RMPDFShapePdfr getPDFShapePdfr()  { return _pspdfr!=null? _pspdfr : (_pspdfr=new RMPDFShapePdfr()); }
+public static RMPDFShapePdfr getPDFShapePdfr()  { return _pspdfr!=null ? _pspdfr : (_pspdfr=new RMPDFShapePdfr()); }
 private static RMPDFShapePdfr _pspdfr;
 
 /**
  * Returns a shared ViewShapePdfr.
  */
-public static ViewShapePdfr getViewShapePdfr()  { return _vspdfr!=null? _vspdfr : (_vspdfr=new ViewShapePdfr()); }
+public static ViewShapePdfr getViewShapePdfr()  { return _vspdfr!=null ? _vspdfr : (_vspdfr=new ViewShapePdfr()); }
 private static ViewShapePdfr _vspdfr;
 
 }
