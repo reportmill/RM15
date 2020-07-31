@@ -45,9 +45,10 @@ public static class RMTextShapePdfr <T extends RMTextShape> extends RMShapePdfr 
         
         // Get TextShape info
         String name = aTextShape.getName();
-        String pdfName = name!=null && name.length()>0 ? '(' + name + ')' : null;
+        String pdfName = name!=null && name.length()>0 ? name : "Text Box " + aWriter.getAcroFormFieldCount();
+        String tooTip = name!=null && name.length()>0 ? name : null;
         String text = aTextShape.getText();
-        String pdfText = text!=null && text.length()>0 ? '(' + text + ')' : null;
+        String pdfText = text!=null && text.length()>0 ? text : null;
         
         // Get ViewShape frame in PDF page coords (minus text insets)
         RMShape page = aTextShape.getPageShape();
@@ -72,17 +73,18 @@ public static class RMTextShapePdfr <T extends RMTextShape> extends RMShapePdfr 
         // Get font name and set in Default Appearance
         Font font = aTextShape.getFont();
         PDFFontEntry fontEntry = aWriter.getFontEntry(font, 0);
-        String fontName = '/' + fontEntry.getPDFName(); int fontSize = (int)font.getSize();
+        String fontName = '/' + fontEntry.getPDFName();
+        int fontSize = (int)font.getSize();
         map.put("DA", "(0 0 0 rg " + fontName + ' ' + fontSize + " Tf)");
         
         // Set Widget Name, alt name, value, default value and fonts dict
         if (pdfName!=null)
-            map.put("T", pdfName); // Name
-        if (pdfName!=null)
-            map.put("TU", pdfName); // Alternate name (ToolTip)
+            map.put("T", '(' + pdfName + ')'); // Name
+        if (tooTip!=null)
+            map.put("TU", '(' + tooTip + ')'); // Alternate name (ToolTip)
         if (pdfText!=null) {
-            map.put("V", pdfText);
-            map.put("DV", pdfText);
+            map.put("V", '(' + pdfText + ')');
+            map.put("DV", '(' + pdfText + ')');
         }
         
         // Set Widget Default Resources dict
