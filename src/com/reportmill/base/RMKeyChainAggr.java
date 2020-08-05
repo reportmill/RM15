@@ -16,6 +16,9 @@ import snap.util.*;
  */
 public class RMKeyChainAggr {
 
+    // Constant for
+    private static final String METHOD_NOT_FOUND = "METHOD_NOT_FOUND";
+
 /**
  * Evaluates a given keychain on a given List.
  */
@@ -32,7 +35,7 @@ public static Object getValue(Object aRoot, List aList, RMKeyChain aKeyChain)
         // Get key and try to invoke built-in aggr
         String key = kchain.getChildString(0);
         Object value = invokeBuiltIn(key, aList, tail);
-        if(value!="NOT_FOUND")
+        if(value!=METHOD_NOT_FOUND)
             return value;
 
         // Look for aggr method in registered classes
@@ -54,7 +57,7 @@ public static Object getValue(Object aRoot, List aList, RMKeyChain aKeyChain)
         
         // Try to ivoke built-in aggr
         Object val = invokeBuiltIn(key, aList, args);
-        if(val!="NOT_FOUND")
+        if(val!=METHOD_NOT_FOUND)
             return tail!=null? RMKeyChain.getValue(aRoot, val, tail) : val;
         
         // Look for aggr method in registered classes
@@ -99,7 +102,7 @@ private static Object invokeBuiltIn(String aKey, List aList, RMKeyChain aKeyChai
         case "group": return group(aList, aKeyChain);
         case "join": return join(aList, aKeyChain);
         case "listOf": return listOf(aList, aKeyChain);
-        default: return "NOT_FOUND";
+        default: return METHOD_NOT_FOUND;
     }
 }
 
@@ -118,9 +121,17 @@ private synchronized static Method getAggrMethod(String aName)
  */
 private static Method getAggrMethodImpl(String aName)
 {
+    // Lookup method in this class
+    Method meth = ClassUtils.getMethod(RMKeyChainAggr.class, aName, _argClasses);
+    if (meth!=null)
+        return meth;
+
     // Lookup method on registered classes
-    for(Class cls : RMKeyChainFuncs._funcClasses) { Method meth = ClassUtils.getMethod(cls, aName, _argClasses);
-        if(meth!=null) return meth; }
+    for(Class cls : RMKeyChainFuncs._funcClasses) {
+        meth = ClassUtils.getMethod(cls, aName, _argClasses);
+        if (meth!=null)
+            return meth;
+    }
         
     // Return null method placeholder, since method not found
     return _emptyMeth;
