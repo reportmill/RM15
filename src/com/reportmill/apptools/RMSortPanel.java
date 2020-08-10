@@ -132,8 +132,8 @@ public void respondUI(ViewEvent anEvent)
         else {
         
             // Get row and column of SortingTable selection and set grouping SelectedSortIndex
-            int row = _sortsTable.getSelRow();
-            int col = _sortsTable.getSelCol();
+            int row = _sortsTable.getSelRowIndex();
+            int col = _sortsTable.getSelColIndex();
             grouping.setSelectedSortIndex(row);
         
             // If selected sort order column, flip selected sort
@@ -167,14 +167,14 @@ public void respondUI(ViewEvent anEvent)
     
     // Handle MoveSortUpMenuItem
     if(anEvent.equals("MoveSortUpMenuItem")) {
-        int loc = _sortsTable.getSelRow();
+        int loc = _sortsTable.getSelRowIndex();
         if(loc>0)
             grouping.moveSort(loc, loc - 1);        
     }
     
     // Handle MoveSortDownMenuItem
     if(anEvent.equals("MoveSortDownMenuItem")) {
-        int loc = _sortsTable.getSelRow();
+        int loc = _sortsTable.getSelRowIndex();
         if(loc<_sortsTable.getRowCount() - 1)
             grouping.moveSort(loc, loc + 1);        
     }
