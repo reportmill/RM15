@@ -203,10 +203,10 @@ protected void respondUI(ViewEvent anEvent)
     if(anEvent.equals("PrefsMenuItem")) new PreferencesPanel().showPanel(epane.getUI());
     
     // Handle SupportPageMenuItem, TutorialMenuItem, BasicAPIMenuItem, TablesMenuItem
-    if(anEvent.equals("SupportPageMenuItem")) URLUtils.openURL("http://reportmill.com/support");
-    if(anEvent.equals("TutorialMenuItem")) URLUtils.openURL("http://reportmill.com/support/tutorial.pdf");
-    if(anEvent.equals("BasicAPIMenuItem")) URLUtils.openURL("http://reportmill.com/support/BasicApi.pdf");
-    if(anEvent.equals("TablesMenuItem")) URLUtils.openURL("http://reportmill.com/support/tables.pdf");
+    if(anEvent.equals("SupportPageMenuItem")) URLUtils.openURL("https://reportmill.com/support");
+    if(anEvent.equals("TutorialMenuItem")) URLUtils.openURL("https://reportmill.com/support/tutorial.pdf");
+    if(anEvent.equals("BasicAPIMenuItem")) URLUtils.openURL("https://reportmill.com/support/BasicApi.pdf");
+    if(anEvent.equals("TablesMenuItem")) URLUtils.openURL("https://reportmill.com/support/tables.pdf");
     
     // Handle AddColumnMenuItem, SplitColumnMenuItem (from right mouse pop-up)
     if(anEvent.equals("AddColumnMenuItem")) RMTableRowTool.addColumn(editor);

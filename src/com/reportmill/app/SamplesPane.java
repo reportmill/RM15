@@ -31,7 +31,7 @@ public class SamplesPane extends ViewOwner {
     SheetDialogBox     _dbox;
     
     // Constants
-    private static final String SAMPLES_ROOT = "http://reportmill.com/rmsamples/";
+    private static final String SAMPLES_ROOT = "https://reportmill.com/rmsamples/";
     private static final Effect SHADOW = new ShadowEffect();
     private static final Effect SHADOW_SEL = new ShadowEffect(10, Color.get("#038ec3"), 0, 0);
     

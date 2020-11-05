@@ -277,7 +277,7 @@ private Object getRMKey(String key)
     if(key.equals("RMUserHome")) return System.getProperty("user.home");
     if(key.equals("RMProps")) return System.getProperties().toString();
     if(key.equals("RMJeff")) return "Jeffrey James Martin";
-    if(key.equals("RMLogo")) return "http://mini.reportmill.com/images/RM-Logo.gif";
+    if(key.equals("RMLogo")) return "https://mini.reportmill.com/images/RM-Logo.gif";
     if(key.equals("RMHTML")) return "<html><b>Howdy Doody</b></html>";
     if(key.equals("RMJapanese"))
         return new String("\u3053\u3093\u306b\u3061\u306f\u3001\u4e16\u754c\u306e\u4eba\u3005\uff01");

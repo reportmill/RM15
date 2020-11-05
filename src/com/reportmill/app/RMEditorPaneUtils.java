@@ -146,7 +146,7 @@ public static void previewXLS(RMEditorPane anEP)
         
         // If user answered "open", open poi doc url
         if(answer==0)
-            URLUtils.openURL("http://reportmill.com/support/Excel.html");
+            URLUtils.openURL("https://reportmill.com/support/Excel.html");
     }
 }
 
