@@ -331,6 +331,18 @@ public RMShape divideShapeFromTop(double anAmount)
 }
 
 /**
+ * Override to clear object refs.
+ */
+@Override
+public RMParentShape clone()
+{
+    RMSpringShape clone = (RMSpringShape) super.clone();
+    clone._cboxes = null;
+    clone._childLsnr = null;
+    return clone;
+}
+
+/**
  * Called to update child SpringInfo on bounds change.
  */
 protected void childPropChanged(PropChange anEvent)
