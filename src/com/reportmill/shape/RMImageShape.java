@@ -294,7 +294,8 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
     String rname = anElement.getAttributeValue("resource");
     if(rname!=null) {
         byte bytes[] = anArchiver.getResource(rname);
-        if(RMPDFData.canRead(bytes)) return new RMPDFShape().fromXML(anArchiver, anElement);
+        if (RMPDFData.canRead(bytes))
+            return new RMPDFShape().fromXML(anArchiver, anElement);
         _imgRef = ImageRef.getImageRef(bytes);
     }
     
@@ -322,8 +323,18 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
     }
     
     // Legacy: If Fill is ImageFill and no ImageRef+Key or ImageFill.ImageRef, set ImageRef from IFill and clear fill
-    if(getFill() instanceof RMImageFill) { RMImageFill ifill = (RMImageFill)getFill();
-        XMLElement fill = anElement.get("fill"); ImageRef iref = ifill.getImageRef();
+    if (getFill() instanceof RMImageFill) { RMImageFill ifill = (RMImageFill) getFill();
+
+        // If ImageFill.ImageRef.Source is byte array and PDF, return PDF shape
+        ImageRef iref = ifill.getImageRef();
+        if (iref.getSource() instanceof byte[]) {
+            byte[] bytes = (byte[]) iref.getSource();
+            if (RMPDFData.canRead(bytes))
+                return new RMPDFShape(bytes);
+        }
+
+        // Try
+        XMLElement fill = anElement.get("fill");
         if(getImageRef()==null && !ifill.isTiled()) { // && getKey()==null) {
             int fs = fill.getAttributeIntValue("fillstyle", 0); // Stretch=0, Tile=1, Fit=2, FitIfNeeded=3
             if(fs==0) { setImageRef(iref); setFill(null); setGrowToFit(true); setPreserveRatio(false); }
