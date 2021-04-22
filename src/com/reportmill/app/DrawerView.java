@@ -457,19 +457,19 @@ protected void layoutImpl()  { BoxView.layout(this, getContent(), null, true, tr
 /**
  * Override to handle DrawerY.
  */
-public Object getValue(String aPropName)
+public Object getPropValue(String aPropName)
 {
     if(aPropName=="DrawerY") return getMargin().top;
-    return super.getValue(aPropName);
+    return super.getPropValue(aPropName);
 }
 
 /**
  * Override to handle DrawerY.
  */
-public void setValue(String aPropName, Object aValue)
+public void setPropValue(String aPropName, Object aValue)
 {
     if(aPropName=="DrawerY") setDrawerY(SnapUtils.doubleValue(aValue));
-    else super.setValue(aPropName, aValue);
+    else super.setPropValue(aPropName, aValue);
 }
 
 /**

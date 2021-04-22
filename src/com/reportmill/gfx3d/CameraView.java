@@ -261,25 +261,25 @@ protected void cameraChanged(PropChange aPC)
 /**
  * Returns the value for given key.
  */
-public Object getValue(String aPropName)
+public Object getPropValue(String aPropName)
 {
     if(aPropName.equals(Yaw_Prop)) return getYaw();
     if(aPropName.equals(Pitch_Prop)) return getPitch();
     if(aPropName.equals(Roll_Prop)) return getRoll();
     if(aPropName.equals(OffsetZ_Prop)) return getOffsetZ();
-    return super.getValue(aPropName);
+    return super.getPropValue(aPropName);
 }
 
 /**
  * Sets the value for given key.
  */
-public void setValue(String aPropName, Object aValue)
+public void setPropValue(String aPropName, Object aValue)
 {
     if(aPropName.equals(Yaw_Prop)) setYaw(SnapUtils.doubleValue(aValue));
     else if(aPropName.equals(Pitch_Prop)) setPitch(SnapUtils.doubleValue(aValue));
     else if(aPropName.equals(Roll_Prop)) setRoll(SnapUtils.doubleValue(aValue));
     else if(aPropName.equals(OffsetZ_Prop)) setOffsetZ(SnapUtils.doubleValue(aValue));
-    else super.setValue(aPropName, aValue);
+    else super.setPropValue(aPropName, aValue);
 }
 
 }
