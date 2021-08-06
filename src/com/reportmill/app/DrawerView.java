@@ -452,7 +452,7 @@ protected double getPrefHeightImpl(double aW)  { return BoxView.getPrefHeight(th
 /**
  * Override to layout content.
  */
-protected void layoutImpl()  { BoxView.layout(this, getContent(), null, true, true); }
+protected void layoutImpl()  { BoxView.layout(this, getContent(), true, true); }
 
 /**
  * Override to handle DrawerY.
