@@ -327,7 +327,7 @@ public Object fromXML(XMLArchiver anArchiver, XMLElement anElement)
 
         // If ImageFill.ImageRef.Source is byte array and PDF, return PDF shape
         ImageRef iref = ifill.getImageRef();
-        if (iref.getSource() instanceof byte[]) {
+        if (iref!= null && iref.getSource() instanceof byte[]) {
             byte[] bytes = (byte[]) iref.getSource();
             if (RMPDFData.canRead(bytes))
                 return new RMPDFShape(bytes);
