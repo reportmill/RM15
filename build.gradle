@@ -22,24 +22,24 @@ dependencies {
 
     // If Local SnapKit project, use that, otherwise use latest GitHub repo
     if (findProject(':SnapKit') != null) { println 'Using local SnapKit project'
-        compile project(':SnapKit') }
+        implementation project(':SnapKit') }
     else { println 'Using latest SnapKit GitHub repo'
         implementation 'com.github.reportmill:SnapKit:master-SNAPSHOT'  }
 
     // If Local SnapPDF project, use that, otherwise use latest GitHub repo
     if (findProject(':SnapPDF') != null) { println 'Using local SnapPDF project'
-        compile project(':SnapPDF') }
+        implementation project(':SnapPDF') }
     else { println 'Using latest SnapPDF GitHub repo'
         implementation 'com.github.reportmill:SnapPDF:master-SNAPSHOT'  }
 
     // For MacOS mappings
-    compile files('lib/eawt.jar')
+    implementation files('lib/eawt.jar')
 
     // For Excel generation
-    compile files('lib/poi-3.7.jar')
+    implementation files('lib/poi-3.7.jar')
 
     // For spelling
-    compile files('lib/spell.jar')
+    implementation files('lib/spell.jar')
 }
 
 mainClassName = 'com.reportmill.app.App'
