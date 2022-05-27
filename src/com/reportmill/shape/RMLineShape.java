@@ -176,7 +176,7 @@ public static class ArrowHead extends RMPolygonShape {
         _originInPath = new Point(x,y);
         
         // Get origin in shape coords from origin in path coords
-        _originInShape = Transform.getTrans(_path.getBounds(), getBoundsInside()).transform(x, y);
+        _originInShape = Transform.getTransformBetweenRects(_path.getBounds(), getBoundsInside()).transformXY(x, y);
     }
 }
 

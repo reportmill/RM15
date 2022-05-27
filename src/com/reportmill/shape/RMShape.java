@@ -1009,7 +1009,7 @@ public boolean isDescendant(RMShape aShape)  { return aShape!=null && aShape.isA
 public Point localToParent(double aX, double aY)
 {
     if(isTransformSimple()) return new Point(aX+getX(),aY+getY());
-    return getLocalToParent().transform(aX, aY);
+    return getLocalToParent().transformXY(aX, aY);
 }
 
 /**
@@ -1050,13 +1050,13 @@ public Shape localToParent(Shape aShape, RMShape aPar)  { return aShape.copyFor(
 public Point parentToLocal(double aX, double aY)
 {
     if(isTransformSimple()) return new Point(aX-getX(),aY-getY());
-    return getParentToLocal().transform(aX, aY);
+    return getParentToLocal().transformXY(aX, aY);
 }
 
 /**
  * Converts a point from given parent to local.
  */
-public Point parentToLocal(double aX, double aY, RMShape aPar)  { return getParentToLocal(aPar).transform(aX,aY); }
+public Point parentToLocal(double aX, double aY, RMShape aPar)  { return getParentToLocal(aPar).transformXY(aX,aY); }
 
 /**
  * Converts a point from parent to local.

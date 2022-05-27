@@ -6,7 +6,6 @@ import snap.geom.Path;
 import snap.geom.Rect;
 import snap.geom.Shape;
 import snap.geom.Transform;
-import snap.gfx.*;
 import snap.util.*;
 
 /**
@@ -51,7 +50,7 @@ public void resetPath(Path newPath)
     setSize(bounds.getWidth(), bounds.getHeight());
         
     // Transform to parent for new x & y
-    Rect boundsInParent = bounds.clone(); toParentXF.transform(boundsInParent);
+    Rect boundsInParent = bounds.clone(); toParentXF.transformRect(boundsInParent);
     setFrameXY(boundsInParent.getXY());
 }
 
