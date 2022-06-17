@@ -11,6 +11,7 @@ import java.util.*;
 
 import snap.geom.Pos;
 import snap.gfx.*;
+import snap.props.Undoer;
 import snap.util.*;
 import snap.view.*;
 import snap.viewx.*;

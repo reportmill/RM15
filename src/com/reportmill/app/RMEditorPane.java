@@ -8,6 +8,7 @@ import java.util.*;
 
 import snap.geom.Rect;
 import snap.gfx.*;
+import snap.props.PropChange;
 import snap.view.*;
 import snap.viewx.*;
 import snap.web.*;

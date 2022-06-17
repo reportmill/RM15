@@ -11,6 +11,8 @@ import snap.geom.Insets;
 import snap.geom.Rect;
 import snap.geom.Shape;
 import snap.gfx.*;
+import snap.props.PropChange;
+import snap.props.PropChangeListener;
 import snap.text.RichText;
 import snap.text.TextBox;
 import snap.text.TextStyle;
@@ -72,7 +74,7 @@ public class RMTextShape extends RMRectShape {
     static Insets          _marginDefault = new Insets(1, 2, 0, 2);
     
     // A listener to handle rich text changes
-    PropChangeListener     _richTextLsnr = pc -> richTextDidPropChange(pc);
+    PropChangeListener _richTextLsnr = pc -> richTextDidPropChange(pc);
     
     // Constants for overflow behavior during RPG
     public static final byte WRAP_NONE = 0;

@@ -1,7 +1,7 @@
 package com.reportmill.gfx3d;
 import snap.geom.Rect;
 import snap.gfx.*;
-import snap.util.PropChange;
+import snap.props.PropChange;
 import snap.util.SnapUtils;
 import snap.view.*;
 

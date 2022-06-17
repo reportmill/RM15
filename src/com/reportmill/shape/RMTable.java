@@ -10,6 +10,7 @@ import snap.geom.Path;
 import snap.geom.Point;
 import snap.geom.Rect;
 import snap.gfx.*;
+import snap.props.PropChangeListener;
 import snap.util.*;
 
 /**

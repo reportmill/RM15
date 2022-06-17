@@ -4,8 +4,8 @@
 package com.reportmill.app;
 import com.reportmill.shape.*;
 import snap.gfx.*;
-import snap.util.PropChangeListener;
-import snap.util.Undoer;
+import snap.props.PropChangeListener;
+import snap.props.Undoer;
 
 /**
  * A shape to act as root of shape to be viewed.

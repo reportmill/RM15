@@ -8,6 +8,7 @@ import com.reportmill.graphics.*;
 import java.util.*;
 import java.util.List;
 import snap.gfx.*;
+import snap.props.PropChange;
 import snap.util.*;
 
 /**

@@ -6,6 +6,8 @@ import java.util.*;
 
 import snap.geom.Rect;
 import snap.gfx.*;
+import snap.props.PropChange;
+import snap.props.PropChangeListener;
 import snap.util.*;
 
 /**
@@ -23,7 +25,7 @@ public class RMSpringShape extends RMParentShape {
     Box                 _cboxes[];
     
     // The PropChangeListener to notify of changes in child
-    PropChangeListener  _childLsnr;
+    PropChangeListener _childLsnr;
     
     // Constants for positions above and below
     enum Position { Above, Below };

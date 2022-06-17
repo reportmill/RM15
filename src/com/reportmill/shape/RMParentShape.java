@@ -8,6 +8,9 @@ import java.util.List;
 import snap.geom.Point;
 import snap.geom.Rect;
 import snap.geom.Shape;
+import snap.props.DeepChangeListener;
+import snap.props.PropChange;
+import snap.props.PropChangeListener;
 import snap.util.*;
 
 /**
@@ -25,10 +28,10 @@ public class RMParentShape extends RMShape implements PropChange.DoChange {
     boolean        _inLayout, _inLayoutDeep;
 
     // A listener to catch child PropChange (for editor undo)
-    PropChangeListener  _childPCL;
+    PropChangeListener _childPCL;
     
     // A listener to catch child DeepChange (for editor undo)
-    DeepChangeListener  _childDCL;
+    DeepChangeListener _childDCL;
     
     // Constants for properties
     public static final String Child_Prop = "Child";

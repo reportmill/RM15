@@ -8,6 +8,7 @@ import java.util.*;
 
 import snap.geom.*;
 import snap.gfx.*;
+import snap.props.*;
 import snap.util.*;
 import snap.util.XMLArchiver.*;
 import snap.view.*;
@@ -71,7 +72,7 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     RMSharedMap    _attrMap = SHARED_MAP;
     
     // The PropChangeSupport
-    PropChangeSupport  _pcs = PropChangeSupport.EMPTY;
+    PropChangeSupport _pcs = PropChangeSupport.EMPTY;
 
     // A shared/root RMSharedMap (cloned to turn on shared flag)
     static final RMSharedMap SHARED_MAP = new RMSharedMap().clone();

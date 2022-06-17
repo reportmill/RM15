@@ -4,6 +4,7 @@
 package com.reportmill.app;
 import com.reportmill.apptools.RMTableRowTool;
 import com.reportmill.graphics.*;
+import snap.props.Undoer;
 import snap.util.*;
 import snap.view.*;
 import snap.viewx.RecentFiles;

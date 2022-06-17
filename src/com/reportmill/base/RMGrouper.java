@@ -3,6 +3,10 @@
  */
 package com.reportmill.base;
 import java.util.*;
+
+import snap.props.PropChange;
+import snap.props.PropChangeListener;
+import snap.props.PropChangeSupport;
 import snap.util.*;
 
 /**
@@ -17,10 +21,10 @@ public class RMGrouper implements Cloneable, XMLArchiver.Archivable {
     int                 _selectedGroupingIndex = 0;
     
     // The PropChangeSupport
-    PropChangeSupport   _pcs = PropChangeSupport.EMPTY;
+    PropChangeSupport _pcs = PropChangeSupport.EMPTY;
     
     // A listener to catch RMGrouping PropChange
-    PropChangeListener  _groupingLsnr = pc -> groupingDidPropChange(pc);
+    PropChangeListener _groupingLsnr = pc -> groupingDidPropChange(pc);
     
 /**
  * Creates an empty grouper.

@@ -12,6 +12,10 @@ import snap.geom.Point;
 import snap.geom.Rect;
 import snap.geom.Shape;
 import snap.gfx.*;
+import snap.props.DeepChangeListener;
+import snap.props.PropChange;
+import snap.props.UndoSet;
+import snap.props.Undoer;
 import snap.util.*;
 import snap.view.*;
 

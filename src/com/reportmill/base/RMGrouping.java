@@ -3,6 +3,10 @@
  */
 package com.reportmill.base;
 import java.util.*;
+
+import snap.props.PropChange;
+import snap.props.PropChangeListener;
+import snap.props.PropChangeSupport;
 import snap.util.*;
 
 /**
@@ -44,7 +48,7 @@ public class RMGrouping implements Cloneable, XMLArchiver.Archivable {
     int              _selectedSortIndex = -1;
 
     // The PropChangeSupport
-    PropChangeSupport  _pcs = PropChangeSupport.EMPTY;
+    PropChangeSupport _pcs = PropChangeSupport.EMPTY;
 
 /**
  * Creates an empty grouping.

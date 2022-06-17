@@ -8,6 +8,9 @@ import snap.geom.Point;
 import snap.geom.Rect;
 import snap.geom.Shape;
 import snap.gfx.*;
+import snap.props.PropChange;
+import snap.props.PropChangeListener;
+import snap.props.PropChangeSupport;
 import snap.util.*;
 import snap.view.ViewEvent;
 
@@ -74,7 +77,7 @@ public class Camera {
     int            _dragConstraint;
     
     // The PropChangeSupport
-    protected PropChangeSupport    _pcs = PropChangeSupport.EMPTY;
+    protected PropChangeSupport _pcs = PropChangeSupport.EMPTY;
 
     // Constants for mouse drag constraints
     public final int CONSTRAIN_NONE = 0;

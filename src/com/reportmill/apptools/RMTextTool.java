@@ -9,9 +9,10 @@ import java.util.List;
 
 import snap.geom.*;
 import snap.gfx.*;
+import snap.props.PropChange;
+import snap.props.PropChangeListener;
 import snap.text.RichTextLine;
 import snap.text.RichTextRun;
-import snap.util.*;
 import snap.view.*;
 
 /**
@@ -35,7 +36,7 @@ public class RMTextTool <T extends RMTextShape> extends RMTool <T> {
     boolean            _moveTableColumn;
 
     // A Listener for RichText PropChange
-    PropChangeListener  _richTextLsnr = pc -> richTextDidPropChange(pc);
+    PropChangeListener _richTextLsnr = pc -> richTextDidPropChange(pc);
 
 /**
  * Initialize UI panel.
