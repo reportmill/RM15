@@ -39,7 +39,7 @@ public Map readObject(Object aSource)  { return readObject(aSource, null); }
 public Map readObject(Object aSource, Schema aSchema)
 {
     // Get root element for source
-    XMLElement rootXML = XMLElement.getElement(aSource);
+    XMLElement rootXML = XMLElement.readFromXMLSource(aSource);
     
     // If root is null, return null
     if(rootXML==null)
