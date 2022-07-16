@@ -51,7 +51,7 @@ public static RMKeyChainFuncs getFunctionCall(Object aRoot, Object anObj, RMKeyC
         Arrays.fill(argTypes, Object.class);
         
         // Look for method with given args
-        method = ClassUtils.getMethodBest(cls, name, argTypes);
+        method = MethodUtils.getMethodBest(cls, name, argTypes);
         
         // If object doesn't implement the method, see if we have a Category implementation.
         // A category takes the target object as the first argument.
