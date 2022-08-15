@@ -68,8 +68,8 @@ public Map getDataset()
     // If file not found, see if it is in same directory as Document.SourceURL
     if(file==null && _docURL!=null) {
         WebFile dfile = _docURL.getFile(), dir = dfile.getParent();
-        file = dir.getFile(url.getPathName());
-        if(file==null) file = dir.getFile("Dataset.xml");
+        file = dir.getFileForName(url.getPathName());
+        if(file==null) file = dir.getFileForName("Dataset.xml");
         if(file!=null) _url = file.getURL();
     }
     
