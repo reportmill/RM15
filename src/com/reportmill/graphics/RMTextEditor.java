@@ -449,7 +449,8 @@ public void replace(RichText aRichText, int aStart, int anEnd, boolean doUpdateS
     // Iterate over string runs and do replace for each one individually
     int start = aStart, end = anEnd;
     for(RichTextLine line : aRichText.getLines()) {
-        for(RichTextRun run : line.getRuns()) {
+        BaseTextRun[] lineRuns = line.getRuns();
+        for(BaseTextRun run : lineRuns) {
             replace(run.getString(), run.getStyle(), start, end, false);
             start = end = start + run.length();
         }

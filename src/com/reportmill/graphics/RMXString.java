@@ -189,7 +189,7 @@ public RMXStringRun getRunLast()  { int rc = getRunCount(); return getRun(rc-1);
 public RMXStringRun getRunAt(int anIndex)
 {
     RichTextLine line = _rtext.getLineForCharIndex(anIndex);
-    RichTextRun run = line.getRunAt(anIndex - line.getStart());
+    BaseTextRun run = line.getRunForCharIndex(anIndex - line.getStart());
     return new RMXStringRun(this, line, run);
 }
 

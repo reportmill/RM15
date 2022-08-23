@@ -6,13 +6,12 @@ import com.reportmill.app.*;
 import com.reportmill.shape.*;
 import com.reportmill.graphics.*;
 import java.util.List;
-
 import snap.geom.*;
 import snap.gfx.*;
 import snap.props.PropChange;
 import snap.props.PropChangeListener;
-import snap.text.RichTextLine;
-import snap.text.RichTextRun;
+import snap.text.BaseTextLine;
+import snap.text.BaseTextRun;
 import snap.view.*;
 
 /**
@@ -91,8 +90,8 @@ public void resetUI()
     
     // Get xstring font size and scale up to 12pt if any string run is smaller
     double fsize = 12;
-    for(RichTextLine line : text.getRichText().getLines())
-        for(RichTextRun run : line.getRuns())
+    for(BaseTextLine line : text.getRichText().getLines())
+        for(BaseTextRun run : line.getRuns())
             fsize = Math.min(fsize, run.getFont().getSize());
     _textArea.setFontScale(fsize<12? 12/fsize : 1);
     
