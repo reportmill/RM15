@@ -165,16 +165,29 @@ public RMXStringRun getRun()  { return getRun(0); }
 /**
  * Returns the number of runs in this XString.
  */
-public int getRunCount()  { int rc = 0; for(RichTextLine ln : _rtext.getLines()) rc += ln.getRunCount(); return rc; }
+public int getRunCount()
+{
+    int rc = 0;
+    for(BaseTextLine ln : _rtext.getLines())
+        rc += ln.getRunCount();
+    return rc;
+}
 
 /**
  * Returns the specific Run at the given index in this XString.
  */
 public RMXStringRun getRun(int anIndex)
 {
-    int index = anIndex; RMXStringRun run = null;
-    for(RichTextLine line : _rtext.getLines()) { int rc = line.getRunCount();
-        if(index<rc) { run = new RMXStringRun(this, line, line.getRun(index)); break; } else index -= rc; }
+    int index = anIndex;
+    RMXStringRun run = null;
+    for(BaseTextLine line : _rtext.getLines()) {
+        int rc = line.getRunCount();
+        if(index<rc) {
+            run = new RMXStringRun(this, line, line.getRun(index));
+            break;
+        }
+        else index -= rc;
+    }
     return run;
 }
 
