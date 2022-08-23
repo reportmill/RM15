@@ -188,7 +188,7 @@ public RMXStringRun getRunLast()  { int rc = getRunCount(); return getRun(rc-1);
  */
 public RMXStringRun getRunAt(int anIndex)
 {
-    RichTextLine line = _rtext.getLineAt(anIndex);
+    RichTextLine line = _rtext.getLineForCharIndex(anIndex);
     RichTextRun run = line.getRunAt(anIndex - line.getStart());
     return new RMXStringRun(this, line, run);
 }
@@ -240,7 +240,7 @@ public RMFont getFontAt(int anIndex)  { return getRunAt(anIndex).getFont(); }
  */
 public RMParagraph getParagraphAt(int anIndex)
 {
-    RichTextLine line = _rtext.getLineAt(anIndex);
+    RichTextLine line = _rtext.getLineForCharIndex(anIndex);
     return new RMParagraph(line.getLineStyle());
 }
 
