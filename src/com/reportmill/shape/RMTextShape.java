@@ -221,7 +221,7 @@ public boolean isUnderlined()
 {
     if(isTextEditorSet())
         return getTextEditor().isUnderlined();
-    return getRichText().getRunAt(0).isUnderlined();
+    return getRichText().getRunForCharIndex(0).isUnderlined();
 }
 
 /**
@@ -241,7 +241,7 @@ public Border getTextBorder()
 {
     if(isTextEditorSet())
         return getTextEditor().getTextBorder();
-    return getRichText().getRunAt(0).getBorder();
+    return getRichText().getRunForCharIndex(0).getBorder();
 }
 
 /**

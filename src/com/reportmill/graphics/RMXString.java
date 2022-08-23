@@ -110,7 +110,7 @@ public void addChars(CharSequence theChars, TextStyle aStyle, int anIndex)
  */
 public void addChars(CharSequence theChars, Object ... theAttrs)
 {
-    TextStyle style = _rtext.getStyleAt(length());
+    TextStyle style = _rtext.getStyleForCharIndex(length());
     Object attr0 = theAttrs!=null && theAttrs.length>0? theAttrs[0] : null;
     if(attr0 instanceof TextStyle) style = (TextStyle)attr0;
     else if(attr0 instanceof RMTextStyle) style = ((RMTextStyle)attr0)._style;
@@ -124,7 +124,7 @@ public void addChars(CharSequence theChars, Object ... theAttrs)
 public void addChars(CharSequence theChars, Map theAttrs)
 {
     int index = length();
-    TextStyle style = _rtext.getStyleAt(index); if(theAttrs!=null) style = style.copyFor(theAttrs);
+    TextStyle style = _rtext.getStyleForCharIndex(index); if(theAttrs!=null) style = style.copyFor(theAttrs);
     addChars(theChars, style, index);
 }
 
@@ -201,7 +201,7 @@ public RMXStringRun getRunLast()  { int rc = getRunCount(); return getRun(rc-1);
  */
 public RMXStringRun getRunAt(int anIndex)
 {
-    RichTextLine line = _rtext.getLineForCharIndex(anIndex);
+    BaseTextLine line = _rtext.getLineForCharIndex(anIndex);
     BaseTextRun run = line.getRunForCharIndex(anIndex - line.getStart());
     return new RMXStringRun(this, line, run);
 }
@@ -253,7 +253,7 @@ public RMFont getFontAt(int anIndex)  { return getRunAt(anIndex).getFont(); }
  */
 public RMParagraph getParagraphAt(int anIndex)
 {
-    RichTextLine line = _rtext.getLineForCharIndex(anIndex);
+    BaseTextLine line = _rtext.getLineForCharIndex(anIndex);
     return new RMParagraph(line.getLineStyle());
 }
 
