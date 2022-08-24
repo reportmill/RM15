@@ -155,7 +155,11 @@ public void addString(RMXString xStr, int anIndex)  { _rtext.addText(xStr._rtext
 /**
  * Replaces the chars in given range, with given XString.
  */
-public void replaceString(RMXString xStr, int aStart, int aEnd)  { _rtext.replaceText(xStr._rtext, aStart, aEnd); }
+public void replaceString(RMXString xStr, int aStart, int aEnd)
+{
+    _rtext.removeChars(aStart, aEnd);
+    _rtext.addText(xStr._rtext, aStart);
+}
 
 /**
  * Returns the XString head run.
