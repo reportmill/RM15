@@ -287,7 +287,7 @@ public void setAlignX(AlignX anAlignX)
 /**
  * Returns an XString for given char range.
  */
-public RMXString substring(int aStart, int aEnd)  { return new RMXString(_rtext.subtext(aStart,aEnd)); }
+public RMXString substring(int aStart, int aEnd)  { return new RMXString(_rtext.copyForRange(aStart,aEnd)); }
 
 /**
  * Replaces any occurrence of consecutive newlines with a single newline.
