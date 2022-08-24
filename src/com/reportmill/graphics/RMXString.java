@@ -150,7 +150,7 @@ public void replaceChars(CharSequence theChars, RMTextStyle aStyle, int aStart, 
 /**
  * Adds an XString to this string at given index.
  */
-public void addString(RMXString xStr, int anIndex)  { _rtext.addText(xStr._rtext, anIndex); }
+public void addString(RMXString xStr, int anIndex)  { _rtext.addTextDoc(xStr._rtext, anIndex); }
 
 /**
  * Replaces the chars in given range, with given XString.
@@ -158,7 +158,7 @@ public void addString(RMXString xStr, int anIndex)  { _rtext.addText(xStr._rtext
 public void replaceString(RMXString xStr, int aStart, int aEnd)
 {
     _rtext.removeChars(aStart, aEnd);
-    _rtext.addText(xStr._rtext, aStart);
+    _rtext.addTextDoc(xStr._rtext, aStart);
 }
 
 /**
