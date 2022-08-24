@@ -397,7 +397,7 @@ private Shape getTextSelectionArea()
         Point p2 = getViewer().convertToShape(_dragPoint.x, _dragPoint.y, text);
         
         // Configure text editor for text
-        tbox.setRichText(text.getRichText());
+        tbox.setTextDoc(text.getRichText());
         tbox.setBounds(0, 0, text.getWidth(), text.getHeight());
         
         // Get text selection for point, path for selection (int viewer coords) and add

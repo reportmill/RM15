@@ -649,7 +649,7 @@ public TextBox getTextBox()
  */
 protected void updateTextBox()
 {
-    _textBox.setRichText(getXString().getRichText());
+    _textBox.setTextDoc(getXString().getRichText());
     Insets pad = getMargin(); double pl = pad.left, pr = pad.right, pt = pad.top, pb = pad.bottom;
     double w = getWidth() - pl - pr, h = getHeight() - pt - pb; if(w<0) w = 0; if(h<0) h = 0;
     _textBox.setBounds(pl, pt, w, h);

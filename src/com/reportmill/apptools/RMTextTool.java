@@ -79,7 +79,7 @@ public void resetUI()
     setViewValue("AlignBottomButton", text.getAlignmentY()==RMTypes.AlignY.Bottom);
     
     // Set TextView RichText and selection
-    _textArea.setRichText(text.getRichText());
+    _textArea.setTextDoc(text.getRichText());
     if(ted!=null)
         _textArea.setSel(ted.getSelStart(), ted.getSelEnd());
 
