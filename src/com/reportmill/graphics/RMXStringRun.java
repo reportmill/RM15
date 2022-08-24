@@ -3,8 +3,8 @@
  */
 package com.reportmill.graphics;
 import com.reportmill.base.*;
-import snap.text.BaseTextLine;
-import snap.text.BaseTextRun;
+import snap.text.TextLine;
+import snap.text.TextRun;
 import snap.text.TextStyle;
 
 /**
@@ -18,7 +18,7 @@ public class RMXStringRun implements CharSequence {
     RMXString     _xstr;
     
     // The rich text line
-    BaseTextLine _rline;
+    TextLine _rline;
     
     // The start/end char index of this run in string
     int           _start, _end;
@@ -29,7 +29,7 @@ public class RMXStringRun implements CharSequence {
 /**
  * Creates a new run.
  */
-protected RMXStringRun(RMXString anXStr, BaseTextLine aLine, BaseTextRun aRun)
+protected RMXStringRun(RMXString anXStr, TextLine aLine, TextRun aRun)
 {
     _xstr = anXStr; _rline = aLine;
     _start = aLine.getStart() + aRun.getStart();

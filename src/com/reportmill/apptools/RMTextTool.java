@@ -10,8 +10,8 @@ import snap.geom.*;
 import snap.gfx.*;
 import snap.props.PropChange;
 import snap.props.PropChangeListener;
-import snap.text.BaseTextLine;
-import snap.text.BaseTextRun;
+import snap.text.TextLine;
+import snap.text.TextRun;
 import snap.view.*;
 
 /**
@@ -90,8 +90,8 @@ public void resetUI()
     
     // Get xstring font size and scale up to 12pt if any string run is smaller
     double fsize = 12;
-    for(BaseTextLine line : text.getRichText().getLines())
-        for(BaseTextRun run : line.getRuns())
+    for(TextLine line : text.getRichText().getLines())
+        for(TextRun run : line.getRuns())
             fsize = Math.min(fsize, run.getFont().getSize());
     _textArea.setFontScale(fsize<12? 12/fsize : 1);
     

@@ -172,7 +172,7 @@ public RMXStringRun getRun()  { return getRun(0); }
 public int getRunCount()
 {
     int rc = 0;
-    for(BaseTextLine ln : _rtext.getLines())
+    for(TextLine ln : _rtext.getLines())
         rc += ln.getRunCount();
     return rc;
 }
@@ -184,7 +184,7 @@ public RMXStringRun getRun(int anIndex)
 {
     int index = anIndex;
     RMXStringRun run = null;
-    for(BaseTextLine line : _rtext.getLines()) {
+    for(TextLine line : _rtext.getLines()) {
         int rc = line.getRunCount();
         if(index<rc) {
             run = new RMXStringRun(this, line, line.getRun(index));
@@ -205,8 +205,8 @@ public RMXStringRun getRunLast()  { int rc = getRunCount(); return getRun(rc-1);
  */
 public RMXStringRun getRunAt(int anIndex)
 {
-    BaseTextLine line = _rtext.getLineForCharIndex(anIndex);
-    BaseTextRun run = line.getRunForCharIndex(anIndex - line.getStart());
+    TextLine line = _rtext.getLineForCharIndex(anIndex);
+    TextRun run = line.getRunForCharIndex(anIndex - line.getStart());
     return new RMXStringRun(this, line, run);
 }
 
@@ -257,7 +257,7 @@ public RMFont getFontAt(int anIndex)  { return getRunAt(anIndex).getFont(); }
  */
 public RMParagraph getParagraphAt(int anIndex)
 {
-    BaseTextLine line = _rtext.getLineForCharIndex(anIndex);
+    TextLine line = _rtext.getLineForCharIndex(anIndex);
     return new RMParagraph(line.getLineStyle());
 }
 
