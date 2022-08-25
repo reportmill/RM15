@@ -157,7 +157,7 @@ public int getVisibleStart()  { return 0; }
 /**
  * Returns the last character index visible in this text.
  */
-public int getVisibleEnd()  { return getTextBox().getEnd(); }
+public int getVisibleEnd()  { return getTextBox().getEndCharIndex(); }
 
 /**
  * Returns whether all characters can be visibly rendered in text bounds.
@@ -653,7 +653,7 @@ protected void updateTextBox()
     Insets pad = getMargin(); double pl = pad.left, pr = pad.right, pt = pad.top, pb = pad.bottom;
     double w = getWidth() - pl - pr, h = getHeight() - pt - pb; if(w<0) w = 0; if(h<0) h = 0;
     _textBox.setBounds(pl, pt, w, h);
-    _textBox.setStart(getVisibleStart());
+    _textBox.setStartCharIndex(getVisibleStart());
     _textBox.setLinked(getLinkedText()!=null);
     _textBox.setAlignY(getAlignmentY().vpos());
     _textBox.setBoundsPath(!(getPath() instanceof Rect) || getPerformsWrap()? getPath() : null);

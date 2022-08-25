@@ -165,7 +165,7 @@ public TextBoxLine getLine(int anIndex)  { return getTextBox().getLine(anIndex);
 public TextBoxLine getLineAt(int anIndex)
 {
     TextBox tbox = getTextBox();
-    return tbox.getLineAt(anIndex - tbox.getStart());
+    return tbox.getLineAt(anIndex - tbox.getStartCharIndex());
 }
 
 /**
@@ -174,7 +174,7 @@ public TextBoxLine getLineAt(int anIndex)
 public TextBoxLine getSelStartLine()
 {
     TextBox tbox = getTextBox();
-    return tbox.getLineAt(getSelStart() - tbox.getStart());
+    return tbox.getLineAt(getSelStart() - tbox.getStartCharIndex());
 }
 
 /**
@@ -772,8 +772,8 @@ public Shape getSpellingPath()
         word=SpellCheck.getMisspelledWord(string, word.getEnd())) {
         
         // Get word bounds
-        int start = word.getStart(); if(start>=tbox.getEnd()) break;
-        int end = word.getEnd(); if(end>tbox.getEnd()) end = tbox.getEnd();
+        int start = word.getStart(); if(start>=tbox.getEndCharIndex()) break;
+        int end = word.getEnd(); if(end>tbox.getEndCharIndex()) end = tbox.getEndCharIndex();
         
         // If text editor selection starts in word bounds, just continue - they are still working on this word
         if(start<=getSelStart() && getSelStart()<=end)
@@ -793,11 +793,11 @@ public Shape getSpellingPath()
             
             // If starting line, adjust x1 for starting character
             if(i==startLineIndex)
-                x1 = line.getXForChar(start - line.getStart() - tbox.getStart());
+                x1 = line.getXForChar(start - line.getStart() - tbox.getStartCharIndex());
             
             // If ending line, adjust x2 for ending character
             if(i==endLineIndex)
-                x2 = line.getXForChar(end - line.getStart() - tbox.getStart());
+                x2 = line.getXForChar(end - line.getStart() - tbox.getStartCharIndex());
             
             // Append rect for line to path
             path.moveTo(x1,y); path.lineTo(x2,y);
