@@ -165,7 +165,7 @@ public TextBoxLine getLine(int anIndex)  { return getTextBox().getLine(anIndex);
 public TextBoxLine getLineAt(int anIndex)
 {
     TextBox tbox = getTextBox();
-    return tbox.getLineAt(anIndex - tbox.getStartCharIndex());
+    return tbox.getLineForCharIndex(anIndex - tbox.getStartCharIndex());
 }
 
 /**
@@ -174,7 +174,7 @@ public TextBoxLine getLineAt(int anIndex)
 public TextBoxLine getSelStartLine()
 {
     TextBox tbox = getTextBox();
-    return tbox.getLineAt(getSelStart() - tbox.getStartCharIndex());
+    return tbox.getLineForCharIndex(getSelStart() - tbox.getStartCharIndex());
 }
 
 /**
