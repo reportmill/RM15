@@ -8,46 +8,55 @@ import snap.view.ViewEvent;
 /**
  * Provides UI editing for RMGraphLegend.
  */
-public class RMGraphLegendTool <T extends RMGraphLegend> extends RMParentShapeTool <T> {
+public class RMGraphLegendTool<T extends RMGraphLegend> extends RMParentShapeTool<T> {
 
-/**
- * Override to configure UI.
- */
-protected void initUI()  { enableEvents("LegendText", DragDrop); }
+    /**
+     * Override to configure UI.
+     */
+    protected void initUI()
+    {
+        enableEvents("LegendText", DragDrop);
+    }
 
-/**
- * Reset UI.
- */
-public void resetUI()
-{
-    // Get selected legend
-    RMGraphLegend leg = getSelectedShape();
-    
-    // Update LegendText
-    setViewText("LegendText", leg.getLegendText());
-}
+    /**
+     * Reset UI.
+     */
+    public void resetUI()
+    {
+        // Get selected legend
+        RMGraphLegend leg = getSelectedShape();
 
-/**
- * Respond UI.
- */
-protected void respondUI(ViewEvent anEvent)
-{
-    // Get selected legend
-    RMGraphLegend leg = getSelectedShape();
-    
-    // Handle LegendText (Action and DragDrop)
-    if(anEvent.equals("LegendText"))
-        leg.setLegendText(anEvent.getStringValue());
-}
+        // Update LegendText
+        setViewText("LegendText", leg.getLegendText());
+    }
 
-/**
- * Returns the name of the graph inspector.
- */
-public String getWindowTitle()  { return "Graph Legend Inspector"; }
+    /**
+     * Respond UI.
+     */
+    protected void respondUI(ViewEvent anEvent)
+    {
+        // Get selected legend
+        RMGraphLegend leg = getSelectedShape();
 
-/**
- * Override to make RMGraphLegend not super-selectable. 
- */
-public boolean isSuperSelectable(RMShape aShape)  { return false; }
+        // Handle LegendText (Action and DragDrop)
+        if (anEvent.equals("LegendText"))
+            leg.setLegendText(anEvent.getStringValue());
+    }
+
+    /**
+     * Returns the name of the graph inspector.
+     */
+    public String getWindowTitle()
+    {
+        return "Graph Legend Inspector";
+    }
+
+    /**
+     * Override to make RMGraphLegend not super-selectable.
+     */
+    public boolean isSuperSelectable(RMShape aShape)
+    {
+        return false;
+    }
 
 }

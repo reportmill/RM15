@@ -10,71 +10,96 @@ import snap.gfx.*;
 public abstract class Shape3D {
 
     // Shape fill
-    Color      _color;
-    
+    Color _color;
+
     // Shape stroke
-    Stroke     _stroke = Stroke.Stroke1;
-    
+    Stroke _stroke = Stroke.Stroke1;
+
     // Shape Stroke color
-    Color      _strokeColor;
-    
+    Color _strokeColor;
+
     // Shape opacity
-    double     _opacity = 1;
-    
+    double _opacity = 1;
+
     // Whether to fix stroke color
-    boolean    _fixEdges;
-    
-/**
- * Returns the color of shape.
- */
-public Color getColor()  { return _color; }
+    boolean _fixEdges;
 
-/**
- * Sets the color of shape.
- */
-public void setColor(Color aColor)  { _color = aColor; }
+    /**
+     * Returns the color of shape.
+     */
+    public Color getColor()
+    {
+        return _color;
+    }
 
-/**
- * Returns the stroke of shape.
- */
-public Stroke getStroke()  { return _stroke; }
+    /**
+     * Sets the color of shape.
+     */
+    public void setColor(Color aColor)
+    {
+        _color = aColor;
+    }
 
-/**
- * Sets the stroke of shape.
- */
-public void setStroke(Stroke aStroke)
-{
-    _stroke = aStroke;
-}
+    /**
+     * Returns the stroke of shape.
+     */
+    public Stroke getStroke()
+    {
+        return _stroke;
+    }
 
-/**
- * Returns the stroke color of shape.
- */
-public void setStroke(Color aColor, double aWidth) { setStrokeColor(aColor); setStroke(Stroke.getStrokeRound(aWidth)); }
+    /**
+     * Sets the stroke of shape.
+     */
+    public void setStroke(Stroke aStroke)
+    {
+        _stroke = aStroke;
+    }
 
-/**
- * Returns the stroke color of shape.
- */
-public Color getStrokeColor()  { return _fixEdges? _color : _strokeColor; }
+    /**
+     * Returns the stroke color of shape.
+     */
+    public void setStroke(Color aColor, double aWidth)
+    {
+        setStrokeColor(aColor);
+        setStroke(Stroke.getStrokeRound(aWidth));
+    }
 
-/**
- * Sets the stroke color of shape.
- */
-public void setStrokeColor(Color aColor)  { _strokeColor = aColor; }
+    /**
+     * Returns the stroke color of shape.
+     */
+    public Color getStrokeColor()
+    {
+        return _fixEdges ? _color : _strokeColor;
+    }
 
-/**
- * Returns the opacity of shape.
- */
-public double getOpacity()  { return _opacity; }
+    /**
+     * Sets the stroke color of shape.
+     */
+    public void setStrokeColor(Color aColor)
+    {
+        _strokeColor = aColor;
+    }
 
-/**
- * Sets the opacity of shape.
- */
-public void setOpacity(double aValue)  { _opacity = aValue; }
+    /**
+     * Returns the opacity of shape.
+     */
+    public double getOpacity()
+    {
+        return _opacity;
+    }
 
-/**
- * Returns the array of Path3D that can render this shape.
- */
-public abstract Path3D[] getPath3Ds();
+    /**
+     * Sets the opacity of shape.
+     */
+    public void setOpacity(double aValue)
+    {
+        _opacity = aValue;
+    }
+
+    /**
+     * Returns the array of Path3D that can render this shape.
+     */
+    public abstract Path3D[] getPath3Ds();
 
 }

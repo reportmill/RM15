@@ -11,54 +11,59 @@ import snap.view.ViewEvent;
  */
 public class RMGraphPartBarsTool extends RMTool {
 
-/**
- * Resets UI panel controls.
- */
-public void resetUI()
-{
-    // Get the selected value axis
-    RMGraphPartBars bars = getSelectedShape(); if(bars==null) return;
-    
-    // Update BarGapSpinner, SetGapSpinner, BarCountSpinner
-    setViewValue("BarGapSpinner", bars.getBarGap());
-    setViewValue("SetGapSpinner", bars.getSetGap());  
-    setViewValue("BarCountSpinner", bars.getBarCount());
-}
+    /**
+     * Resets UI panel controls.
+     */
+    public void resetUI()
+    {
+        // Get the selected value axis
+        RMGraphPartBars bars = getSelectedShape();
+        if (bars == null) return;
 
-/**
- * Responds to UI panel controls.
- */
-public void respondUI(ViewEvent anEvent)
-{
-    // Get the selected value axis
-    RMGraphPartBars bars = getSelectedShape(); if(bars==null) return;
-    
-    // Handle BarGapSpinner, SetGapSpinner, BarCountSpinner
-    if(anEvent.equals("BarGapSpinner")) bars.setBarGap(anEvent.getFloatValue());
-    if(anEvent.equals("SetGapSpinner")) bars.setSetGap(anEvent.getFloatValue());
-    if(anEvent.equals("BarCountSpinner")) bars.setBarCount(anEvent.getIntValue());
-}
+        // Update BarGapSpinner, SetGapSpinner, BarCountSpinner
+        setViewValue("BarGapSpinner", bars.getBarGap());
+        setViewValue("SetGapSpinner", bars.getSetGap());
+        setViewValue("BarCountSpinner", bars.getBarCount());
+    }
 
-/**
- * Returns the currently selected RMGraphPartBars.
- */
-public RMGraphPartBars getSelectedShape()
-{
-    RMGraph graph = getSelectedGraph();
-    return graph!=null? graph.getBars() : null;
-}
+    /**
+     * Responds to UI panel controls.
+     */
+    public void respondUI(ViewEvent anEvent)
+    {
+        // Get the selected value axis
+        RMGraphPartBars bars = getSelectedShape();
+        if (bars == null) return;
 
-/**
- * Returns the currently selected graph area shape.
- */
-public RMGraph getSelectedGraph()
-{
-    return ClassUtils.getInstance(super.getSelectedShape(), RMGraph.class);
-}
+        // Handle BarGapSpinner, SetGapSpinner, BarCountSpinner
+        if (anEvent.equals("BarGapSpinner")) bars.setBarGap(anEvent.getFloatValue());
+        if (anEvent.equals("SetGapSpinner")) bars.setSetGap(anEvent.getFloatValue());
+        if (anEvent.equals("BarCountSpinner")) bars.setBarCount(anEvent.getIntValue());
+    }
 
-/**
- * Returns the name of the graph inspector.
- */
-public String getWindowTitle()  { return "Graph Bars Inspector"; }
+    /**
+     * Returns the currently selected RMGraphPartBars.
+     */
+    public RMGraphPartBars getSelectedShape()
+    {
+        RMGraph graph = getSelectedGraph();
+        return graph != null ? graph.getBars() : null;
+    }
+
+    /**
+     * Returns the currently selected graph area shape.
+     */
+    public RMGraph getSelectedGraph()
+    {
+        return ClassUtils.getInstance(super.getSelectedShape(), RMGraph.class);
+    }
+
+    /**
+     * Returns the name of the graph inspector.
+     */
+    public String getWindowTitle()
+    {
+        return "Graph Bars Inspector";
+    }
 
 }

@@ -11,275 +11,385 @@ import snap.view.*;
 public class CameraView extends ParentView {
 
     // The Camera
-    Camera      _camera;
-    
+    Camera _camera;
+
     // The Scene
-    Scene3D     _scene;
+    Scene3D _scene;
 
     // Constants for properties
-    public static String   Yaw_Prop = "Yaw";
-    public static String   Pitch_Prop = "Pitch";
-    public static String   Roll_Prop = "Roll";
-    public static String   OffsetZ_Prop = "OffsetZ";
-    
-/**
- * Creates a CameraView.
- */
-public CameraView()
-{
-    _scene = new Scene3D();
-    _camera = _scene.getCamera();
-    _camera.addPropChangeListener(pce -> cameraChanged(pce));
-    enableEvents(MousePress, MouseDrag, MouseRelease);
-}
+    public static String Yaw_Prop = "Yaw";
+    public static String Pitch_Prop = "Pitch";
+    public static String Roll_Prop = "Roll";
+    public static String OffsetZ_Prop = "OffsetZ";
 
-/**
- * Returns the camera as a vector.
- */
-public Camera getCamera()  { return _camera; }
+    /**
+     * Creates a CameraView.
+     */
+    public CameraView()
+    {
+        _scene = new Scene3D();
+        _camera = _scene.getCamera();
+        _camera.addPropChangeListener(pce -> cameraChanged(pce));
+        enableEvents(MousePress, MouseDrag, MouseRelease);
+    }
 
-/**
- * Returns the Scene3D.
- */
-public Scene3D getScene()  { return _scene; }
+    /**
+     * Returns the camera as a vector.
+     */
+    public Camera getCamera()
+    {
+        return _camera;
+    }
 
-/**
- * Returns the depth of the scene.
- */
-public double getDepth()  { return _camera.getDepth(); }
+    /**
+     * Returns the Scene3D.
+     */
+    public Scene3D getScene()
+    {
+        return _scene;
+    }
 
-/**
- * Sets the depth of the scene.
- */
-public void setDepth(double aValue)  { _camera.setDepth(aValue); }
+    /**
+     * Returns the depth of the scene.
+     */
+    public double getDepth()
+    {
+        return _camera.getDepth();
+    }
 
-/**
- * Returns the rotation about the Y axis in degrees.
- */
-public double getYaw()  { return _camera.getYaw(); }
+    /**
+     * Sets the depth of the scene.
+     */
+    public void setDepth(double aValue)
+    {
+        _camera.setDepth(aValue);
+    }
 
-/**
- * Sets the rotation about the Y axis in degrees.
- */
-public void setYaw(double aValue)  { _camera.setYaw(aValue); }
+    /**
+     * Returns the rotation about the Y axis in degrees.
+     */
+    public double getYaw()
+    {
+        return _camera.getYaw();
+    }
 
-/**
- * Returns the rotation about the X axis in degrees.
- */
-public double getPitch()  { return _camera.getPitch(); }
+    /**
+     * Sets the rotation about the Y axis in degrees.
+     */
+    public void setYaw(double aValue)
+    {
+        _camera.setYaw(aValue);
+    }
 
-/**
- * Sets the rotation about the X axis in degrees.
- */
-public void setPitch(double aValue)  { _camera.setPitch(aValue); }
+    /**
+     * Returns the rotation about the X axis in degrees.
+     */
+    public double getPitch()
+    {
+        return _camera.getPitch();
+    }
 
-/**
- * Returns the rotation about the Z axis in degrees.
- */
-public double getRoll()  { return _camera.getRoll(); }
+    /**
+     * Sets the rotation about the X axis in degrees.
+     */
+    public void setPitch(double aValue)
+    {
+        _camera.setPitch(aValue);
+    }
 
-/**
- * Sets the rotation about the Z axis in degrees.
- */
-public void setRoll(double aValue)  { _camera.setRoll(aValue); }
+    /**
+     * Returns the rotation about the Z axis in degrees.
+     */
+    public double getRoll()
+    {
+        return _camera.getRoll();
+    }
 
-/**
- * Returns the focal length of the camera (derived from the field of view and with view size).
- */
-public double getFocalLength()  { return _camera.getFocalLength(); }
+    /**
+     * Sets the rotation about the Z axis in degrees.
+     */
+    public void setRoll(double aValue)
+    {
+        _camera.setRoll(aValue);
+    }
 
-/**
- * Sets the focal length of the camera. Two feet is normal (1728 points).
- */
-public void setFocalLength(double aValue)  { _camera.setFocalLength(aValue); }
+    /**
+     * Returns the focal length of the camera (derived from the field of view and with view size).
+     */
+    public double getFocalLength()
+    {
+        return _camera.getFocalLength();
+    }
 
-/**
- * Returns the Z offset of the scene (for zooming).
- */
-public double getOffsetZ()  { return _camera.getOffsetZ(); }
+    /**
+     * Sets the focal length of the camera. Two feet is normal (1728 points).
+     */
+    public void setFocalLength(double aValue)
+    {
+        _camera.setFocalLength(aValue);
+    }
 
-/**
- * Sets the Z offset of the scene (for zooming).
- */
-public void setOffsetZ(double aValue)  { _camera.setOffsetZ(aValue); }
+    /**
+     * Returns the Z offset of the scene (for zooming).
+     */
+    public double getOffsetZ()
+    {
+        return _camera.getOffsetZ();
+    }
 
-/**
- * Returns whether scene is rendered in pseudo 3d.
- */
-public boolean isPseudo3D()  { return _camera.isPseudo3D(); }
+    /**
+     * Sets the Z offset of the scene (for zooming).
+     */
+    public void setOffsetZ(double aValue)
+    {
+        _camera.setOffsetZ(aValue);
+    }
 
-/**
- * Sets whether scene is rendered in pseudo 3d.
- */
-public void setPseudo3D(boolean aFlag)  { _camera.setPseudo3D(aFlag); }
+    /**
+     * Returns whether scene is rendered in pseudo 3d.
+     */
+    public boolean isPseudo3D()
+    {
+        return _camera.isPseudo3D();
+    }
 
-/**
- * Returns the skew angle for X by Z.
- */
-public double getPseudoSkewX()  { return _camera.getPseudoSkewX(); }
+    /**
+     * Sets whether scene is rendered in pseudo 3d.
+     */
+    public void setPseudo3D(boolean aFlag)
+    {
+        _camera.setPseudo3D(aFlag);
+    }
 
-/**
- * Sets the skew angle for X by Z.
- */
-public void setPseudoSkewX(double anAngle)  { _camera.setPseudoSkewX(anAngle); }
+    /**
+     * Returns the skew angle for X by Z.
+     */
+    public double getPseudoSkewX()
+    {
+        return _camera.getPseudoSkewX();
+    }
 
-/**
- * Returns the skew angle for Y by Z.
- */
-public double getPseudoSkewY()  { return _camera.getPseudoSkewY(); }
+    /**
+     * Sets the skew angle for X by Z.
+     */
+    public void setPseudoSkewX(double anAngle)
+    {
+        _camera.setPseudoSkewX(anAngle);
+    }
 
-/**
- * Sets the skew angle for Y by Z.
- */
-public void setPseudoSkewY(double anAngle)  { _camera.setPseudoSkewY(anAngle); }
+    /**
+     * Returns the skew angle for Y by Z.
+     */
+    public double getPseudoSkewY()
+    {
+        return _camera.getPseudoSkewY();
+    }
 
-/**
- * Returns the field of view of the camera (derived from focalLength).
- */
-public double getFieldOfView()  { return _camera.getFieldOfView(); }
+    /**
+     * Sets the skew angle for Y by Z.
+     */
+    public void setPseudoSkewY(double anAngle)
+    {
+        _camera.setPseudoSkewY(anAngle);
+    }
 
-/**
- * Sets the field of view of the camera.
- */
-public void setFieldOfView(double aValue)  { _camera.setFieldOfView(aValue); }
+    /**
+     * Returns the field of view of the camera (derived from focalLength).
+     */
+    public double getFieldOfView()
+    {
+        return _camera.getFieldOfView();
+    }
 
-/**
- * Returns the number of shapes in the shape list.
- */
-public int getShapeCount()  { return _scene.getShapeCount(); }
+    /**
+     * Sets the field of view of the camera.
+     */
+    public void setFieldOfView(double aValue)
+    {
+        _camera.setFieldOfView(aValue);
+    }
 
-/**
- * Returns the specific shape at the given index from the shape list.
- */
-public Shape3D getShape(int anIndex)  { return _scene.getShape(anIndex); }
+    /**
+     * Returns the number of shapes in the shape list.
+     */
+    public int getShapeCount()
+    {
+        return _scene.getShapeCount();
+    }
 
-/**
- * Adds a shape to the end of the shape list.
- */
-public void addShape(Shape3D aShape)  { _scene.addShape(aShape); }
+    /**
+     * Returns the specific shape at the given index from the shape list.
+     */
+    public Shape3D getShape(int anIndex)
+    {
+        return _scene.getShape(anIndex);
+    }
 
-/**
- * Removes the shape at the given index from the shape list.
- */
-public void removeShapes()  { _scene.removeShapes(); }
+    /**
+     * Adds a shape to the end of the shape list.
+     */
+    public void addShape(Shape3D aShape)
+    {
+        _scene.addShape(aShape);
+    }
 
-/**
- * Returns a path in camera coords for given path in local coords.
- */
-public Path3D localToCamera(Path3D aPath)  { return _scene.localToCamera(aPath); }
+    /**
+     * Removes the shape at the given index from the shape list.
+     */
+    public void removeShapes()
+    {
+        _scene.removeShapes();
+    }
 
-/**
- * Returns the given vector in camera coords.
- */
-public Vector3D localToCameraForVector(double x, double y, double z)  { return _scene.localToCameraForVector(x,y,z); }
+    /**
+     * Returns a path in camera coords for given path in local coords.
+     */
+    public Path3D localToCamera(Path3D aPath)
+    {
+        return _scene.localToCamera(aPath);
+    }
 
-/**
- * Returns whether a vector is facing camera.
- */
-public boolean isFacing(Vector3D aV3D)  { return _camera.isFacing(aV3D); }
+    /**
+     * Returns the given vector in camera coords.
+     */
+    public Vector3D localToCameraForVector(double x, double y, double z)
+    {
+        return _scene.localToCameraForVector(x, y, z);
+    }
 
-/**
- * Returns whether a vector is facing away from camera.
- */
-public boolean isFacingAway(Vector3D aV3D)  { return _camera.isFacingAway(aV3D); }
+    /**
+     * Returns whether a vector is facing camera.
+     */
+    public boolean isFacing(Vector3D aV3D)
+    {
+        return _camera.isFacing(aV3D);
+    }
 
-/**
- * Returns whether a Path3d is facing camera.
- */
-public boolean isFacing(Path3D aPath)  { return _camera.isFacing(aPath); }
+    /**
+     * Returns whether a vector is facing away from camera.
+     */
+    public boolean isFacingAway(Vector3D aV3D)
+    {
+        return _camera.isFacingAway(aV3D);
+    }
 
-/**
- * Returns whether a Path3d is facing away from camera.
- */
-public boolean isFacingAway(Path3D aPath)  { return _camera.isFacingAway(aPath); }
+    /**
+     * Returns whether a Path3d is facing camera.
+     */
+    public boolean isFacing(Path3D aPath)
+    {
+        return _camera.isFacing(aPath);
+    }
 
-/**
- * Rebuilds display list of Path3Ds from Shapes.
- */
-protected void layoutImpl()  { }
+    /**
+     * Returns whether a Path3d is facing away from camera.
+     */
+    public boolean isFacingAway(Path3D aPath)
+    {
+        return _camera.isFacingAway(aPath);
+    }
 
-/**
- * Paints shape children.
- */
-protected void paintChildren(Painter aPntr)
-{
-    // Paint Scene paths
-    _camera.paintPaths(aPntr);
-    
-    // Do normal version
-    super.paintChildren(aPntr);
-}
+    /**
+     * Rebuilds display list of Path3Ds from Shapes.
+     */
+    protected void layoutImpl()
+    {
+    }
 
-/**
- * Viewer method.
- */
-public void processEvent(ViewEvent anEvent)  { _camera.processEvent(anEvent); }
+    /**
+     * Paints shape children.
+     */
+    protected void paintChildren(Painter aPntr)
+    {
+        // Paint Scene paths
+        _camera.paintPaths(aPntr);
 
-/**
- * Override to forward to Scene3D.
- */
-public void setWidth(double aValue)  { super.setWidth(aValue); _camera.setWidth(aValue); }
+        // Do normal version
+        super.paintChildren(aPntr);
+    }
 
-/**
- * Override to forward to Scene3D.
- */
-public void setHeight(double aValue)  { super.setHeight(aValue); _camera.setHeight(aValue); }
+    /**
+     * Viewer method.
+     */
+    public void processEvent(ViewEvent anEvent)
+    {
+        _camera.processEvent(anEvent);
+    }
 
-/**
- * Override to account for Scene3D bounds.
- */
-public void repaint()
-{
-    Rect bnds = getBoundsMarked();
-    repaintInParent(bnds);
-}
+    /**
+     * Override to forward to Scene3D.
+     */
+    public void setWidth(double aValue)
+    {
+        super.setWidth(aValue);
+        _camera.setWidth(aValue);
+    }
 
-/**
- * Override to account for Scene3D bounds.
- */
-public Rect getBoundsMarked()
-{
-    Rect bounds = getBoundsLocal();
-    Rect camBnds = _camera.getSceneBounds();
-    if(camBnds.x<bounds.x) bounds.x = camBnds.x;
-    if(camBnds.y<bounds.y) bounds.y = camBnds.y;
-    if(camBnds.getMaxX()>bounds.getMaxX()) bounds.width = camBnds.getMaxX() - bounds.x;
-    if(camBnds.getMaxY()>bounds.getMaxY()) bounds.height = camBnds.getMaxY() - bounds.y;
-    bounds.inset(-2);
-    return bounds;
-}
+    /**
+     * Override to forward to Scene3D.
+     */
+    public void setHeight(double aValue)
+    {
+        super.setHeight(aValue);
+        _camera.setHeight(aValue);
+    }
 
-/**
- * Called when scene changes.
- */
-protected void cameraChanged(PropChange aPC)
-{
-    //_pcs.fireDeepChange(this, aPC);
-    relayout(); repaint();
-}
+    /**
+     * Override to account for Scene3D bounds.
+     */
+    public void repaint()
+    {
+        Rect bnds = getBoundsMarked();
+        repaintInParent(bnds);
+    }
 
-/**
- * Returns the value for given key.
- */
-public Object getPropValue(String aPropName)
-{
-    if(aPropName.equals(Yaw_Prop)) return getYaw();
-    if(aPropName.equals(Pitch_Prop)) return getPitch();
-    if(aPropName.equals(Roll_Prop)) return getRoll();
-    if(aPropName.equals(OffsetZ_Prop)) return getOffsetZ();
-    return super.getPropValue(aPropName);
-}
+    /**
+     * Override to account for Scene3D bounds.
+     */
+    public Rect getBoundsMarked()
+    {
+        Rect bounds = getBoundsLocal();
+        Rect camBnds = _camera.getSceneBounds();
+        if (camBnds.x < bounds.x) bounds.x = camBnds.x;
+        if (camBnds.y < bounds.y) bounds.y = camBnds.y;
+        if (camBnds.getMaxX() > bounds.getMaxX()) bounds.width = camBnds.getMaxX() - bounds.x;
+        if (camBnds.getMaxY() > bounds.getMaxY()) bounds.height = camBnds.getMaxY() - bounds.y;
+        bounds.inset(-2);
+        return bounds;
+    }
 
-/**
- * Sets the value for given key.
- */
-public void setPropValue(String aPropName, Object aValue)
-{
-    if(aPropName.equals(Yaw_Prop)) setYaw(SnapUtils.doubleValue(aValue));
-    else if(aPropName.equals(Pitch_Prop)) setPitch(SnapUtils.doubleValue(aValue));
-    else if(aPropName.equals(Roll_Prop)) setRoll(SnapUtils.doubleValue(aValue));
-    else if(aPropName.equals(OffsetZ_Prop)) setOffsetZ(SnapUtils.doubleValue(aValue));
-    else super.setPropValue(aPropName, aValue);
-}
+    /**
+     * Called when scene changes.
+     */
+    protected void cameraChanged(PropChange aPC)
+    {
+        //_pcs.fireDeepChange(this, aPC);
+        relayout();
+        repaint();
+    }
+
+    /**
+     * Returns the value for given key.
+     */
+    public Object getPropValue(String aPropName)
+    {
+        if (aPropName.equals(Yaw_Prop)) return getYaw();
+        if (aPropName.equals(Pitch_Prop)) return getPitch();
+        if (aPropName.equals(Roll_Prop)) return getRoll();
+        if (aPropName.equals(OffsetZ_Prop)) return getOffsetZ();
+        return super.getPropValue(aPropName);
+    }
+
+    /**
+     * Sets the value for given key.
+     */
+    public void setPropValue(String aPropName, Object aValue)
+    {
+        if (aPropName.equals(Yaw_Prop)) setYaw(SnapUtils.doubleValue(aValue));
+        else if (aPropName.equals(Pitch_Prop)) setPitch(SnapUtils.doubleValue(aValue));
+        else if (aPropName.equals(Roll_Prop)) setRoll(SnapUtils.doubleValue(aValue));
+        else if (aPropName.equals(OffsetZ_Prop)) setOffsetZ(SnapUtils.doubleValue(aValue));
+        else super.setPropValue(aPropName, aValue);
+    }
 
 }

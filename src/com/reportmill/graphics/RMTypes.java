@@ -16,20 +16,36 @@ public interface RMTypes {
         CenterLeft, Center, CenterRight,
         BottomLeft, BottomCenter, BottomRight
     }
-    
+
     // Constants for horizontal alignment
-    public enum AlignX { Left, Right, Center, Full;
-    
+    public enum AlignX {
+        Left, Right, Center, Full;
+
         // Conversions to/from Snap
-        public HPos hpos() { return this==Left? HPos.LEFT : this==Center? HPos.CENTER : HPos.RIGHT; }
-        public static AlignX get(HPos aPos) { return aPos==HPos.LEFT? Left : aPos==HPos.CENTER? Center : Right; }
+        public HPos hpos()
+        {
+            return this == Left ? HPos.LEFT : this == Center ? HPos.CENTER : HPos.RIGHT;
+        }
+
+        public static AlignX get(HPos aPos)
+        {
+            return aPos == HPos.LEFT ? Left : aPos == HPos.CENTER ? Center : Right;
+        }
     }
 
     // Constants for vertical alignment
-    public enum AlignY { Top, Middle, Bottom;
-    
+    public enum AlignY {
+        Top, Middle, Bottom;
+
         // Conversions to/from Snap
-        public VPos vpos() { return this==Top? VPos.TOP : this==Middle? VPos.CENTER : VPos.BOTTOM; }
-        public static AlignY get(VPos aPos) { return aPos==VPos.TOP? Top : aPos==VPos.CENTER? Middle : Bottom; }
+        public VPos vpos()
+        {
+            return this == Top ? VPos.TOP : this == Middle ? VPos.CENTER : VPos.BOTTOM;
+        }
+
+        public static AlignY get(VPos aPos)
+        {
+            return aPos == VPos.TOP ? Top : aPos == VPos.CENTER ? Middle : Bottom;
+        }
     }
 }

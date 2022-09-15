@@ -13,7 +13,7 @@ public class RMTextStyle implements Cloneable {
 
     // The style
     TextStyle _style;
-    
+
     // Constants for style attribute keys
     public static final String FONT_KEY = TextStyle.FONT_KEY;
     public static final String COLOR_KEY = TextStyle.COLOR_KEY;
@@ -23,92 +23,128 @@ public class RMTextStyle implements Cloneable {
     public static final String OUTLINE_KEY = TextStyle.BORDER_KEY;
     public static final String SCRIPTING_KEY = TextStyle.SCRIPTING_KEY;
     public static final String CHAR_SPACING_KEY = TextStyle.CHAR_SPACING_KEY;
-    
-/**
- * Creates a new RMTextStyle.
- */
-public RMTextStyle(TextStyle aStyle)  { _style = aStyle; }
 
-/**
- * Returns the font for this run.
- */
-public RMFont getFont()  { return RMFont.get(_style.getFont()); }
+    /**
+     * Creates a new RMTextStyle.
+     */
+    public RMTextStyle(TextStyle aStyle)
+    {
+        _style = aStyle;
+    }
 
-/**
- * Returns the color for this run.
- */
-public RMColor getColor()  { return RMColor.get(_style.getColor()); }
+    /**
+     * Returns the font for this run.
+     */
+    public RMFont getFont()
+    {
+        return RMFont.get(_style.getFont());
+    }
 
-/**
- * Returns whether this run is underlined.
- */
-public boolean isUnderlined()  { return _style.isUnderlined(); }
+    /**
+     * Returns the color for this run.
+     */
+    public RMColor getColor()
+    {
+        return RMColor.get(_style.getColor());
+    }
 
-/**
- * Returns the scripting for this run (1=SuperScripting, -1=Subscripting, 0=none).
- */
-public int getScripting()  { return _style.getScripting(); }
+    /**
+     * Returns whether this run is underlined.
+     */
+    public boolean isUnderlined()
+    {
+        return _style.isUnderlined();
+    }
 
-/**
- * Returns the char spacing.
- */
-public double getCharSpacing()  { return _style.getCharSpacing(); }
+    /**
+     * Returns the scripting for this run (1=SuperScripting, -1=Subscripting, 0=none).
+     */
+    public int getScripting()
+    {
+        return _style.getScripting();
+    }
 
-/**
- * Returns the format.
- */
-public RMFormat getFormat()  { return (RMFormat)_style.getFormat(); }
+    /**
+     * Returns the char spacing.
+     */
+    public double getCharSpacing()
+    {
+        return _style.getCharSpacing();
+    }
 
-/**
- * Returns the text border.
- */
-public Border getBorder()  { return _style.getBorder(); }
+    /**
+     * Returns the format.
+     */
+    public RMFormat getFormat()
+    {
+        return (RMFormat) _style.getFormat();
+    }
 
-/**
- * Clone for Style value.
- */
-public RMTextStyle copyFor(Object ... theVals)
-{
-    RMTextStyle cln = clone(); cln._style = _style.copyFor(theVals); return cln;
-}
+    /**
+     * Returns the text border.
+     */
+    public Border getBorder()
+    {
+        return _style.getBorder();
+    }
 
-/**
- * Clone with key/value.
- */
-public RMTextStyle copyFor(String aKey, Object aValue)
-{
-    RMTextStyle clone = clone(); //if(aKey.equals(OUTLINE_KEY)) clone._outline = (Outline)aValue;
-    clone._style = _style.copyFor(aKey, aValue);
-    return clone;
-}
+    /**
+     * Clone for Style value.
+     */
+    public RMTextStyle copyFor(Object... theVals)
+    {
+        RMTextStyle cln = clone();
+        cln._style = _style.copyFor(theVals);
+        return cln;
+    }
 
-/**
- * Standard clone implementation.
- */
-public RMTextStyle clone()
-{
-    try { return (RMTextStyle)super.clone(); }
-    catch(CloneNotSupportedException e) { throw new RuntimeException(e); }
-}
+    /**
+     * Clone with key/value.
+     */
+    public RMTextStyle copyFor(String aKey, Object aValue)
+    {
+        RMTextStyle clone = clone(); //if(aKey.equals(OUTLINE_KEY)) clone._outline = (Outline)aValue;
+        clone._style = _style.copyFor(aKey, aValue);
+        return clone;
+    }
 
-/**
- * Standard equals implementation.
- */
-public boolean equals(Object anObj)
-{
-    if(anObj==this) return true;
-    RMTextStyle other = anObj instanceof RMTextStyle? (RMTextStyle)anObj : null; if(other==null) return false;
-    return other._style.equals(_style);
-}
+    /**
+     * Standard clone implementation.
+     */
+    public RMTextStyle clone()
+    {
+        try {
+            return (RMTextStyle) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-/**
- * Standard toString implementation.
- */
-public String toString()  { return _style.toString(); }
+    /**
+     * Standard equals implementation.
+     */
+    public boolean equals(Object anObj)
+    {
+        if (anObj == this) return true;
+        RMTextStyle other = anObj instanceof RMTextStyle ? (RMTextStyle) anObj : null;
+        if (other == null) return false;
+        return other._style.equals(_style);
+    }
 
-/**
- * Returns the most likely key for a given style attribute.
- */
-public static String getStyleKey(Object anAttr)  { return TextStyle.getStyleKey(anAttr); }
+    /**
+     * Standard toString implementation.
+     */
+    public String toString()
+    {
+        return _style.toString();
+    }
+
+    /**
+     * Returns the most likely key for a given style attribute.
+     */
+    public static String getStyleKey(Object anAttr)
+    {
+        return TextStyle.getStyleKey(anAttr);
+    }
 
 }

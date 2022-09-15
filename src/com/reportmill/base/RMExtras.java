@@ -2,13 +2,10 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.base;
-
 import com.reportmill.graphics.*;
 import com.reportmill.out.RMPDFWriter;
 import com.reportmill.shape.*;
-
 import java.util.*;
-
 import snap.geom.Rect;
 import snap.util.*;
 import snap.web.WebURL;
@@ -398,9 +395,15 @@ public class RMExtras {
             budget = aBudget;
         }
 
-        public String getName()  { return name; }
+        public String getName()
+        {
+            return name;
+        }
 
-        public float getBudget()  { return budget; }
+        public float getBudget()
+        {
+            return budget;
+        }
     }
 
     /**
@@ -424,28 +427,46 @@ public class RMExtras {
             movieRoles = theRoles;
         }
 
-        public String getTitle()  { return title; }
+        public String getTitle()
+        {
+            return title;
+        }
 
-        public Category getCategory()  { return category; }
+        public Category getCategory()
+        {
+            return category;
+        }
 
-        public Date getShowDate()  { return showDate; }
+        public Date getShowDate()
+        {
+            return showDate;
+        }
 
-        public String getRating()  { return rating; }
+        public String getRating()
+        {
+            return rating;
+        }
 
-        public Studio getStudio()  { return studio; }
+        public Studio getStudio()
+        {
+            return studio;
+        }
 
         public List getStudio2()
         {
             return Arrays.asList(MapUtils.newMap("Studio", studio, "ListType", "XJ-27"));
         }
 
-        public List<MovieRole> getMovieRoles()  { return movieRoles; }
+        public List<MovieRole> getMovieRoles()
+        {
+            return movieRoles;
+        }
     }
 
     /**
      * Movie category constant type.
      */
-    public enum Category { Adventure, Comedy, Drama, Thriller }
+    public enum Category {Adventure, Comedy, Drama, Thriller}
 
     /**
      * A movie role class.
@@ -460,9 +481,15 @@ public class RMExtras {
             actorName = anActorName;
         }
 
-        public String getName()  { return name; }
+        public String getName()
+        {
+            return name;
+        }
 
-        public String getActorName()  { return actorName; }
+        public String getActorName()
+        {
+            return actorName;
+        }
     }
 
     /**

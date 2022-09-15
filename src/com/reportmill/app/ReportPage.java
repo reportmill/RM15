@@ -10,20 +10,23 @@ import snap.viewx.WebPage;
  */
 public class ReportPage extends WebPage {
 
-/**
- * Creates a file pane for the given file in the requested mode.
- */
-protected View createUI()
-{
-    RMViewerPane vpane = new RMViewerPane();
-    vpane.getViewer().setDoc(getFile());
-    return vpane.getUI();
-}
+    /**
+     * Creates a file pane for the given file in the requested mode.
+     */
+    protected View createUI()
+    {
+        RMViewerPane vpane = new RMViewerPane();
+        vpane.getViewer().setDoc(getFile());
+        return vpane.getUI();
+    }
 
-/**
- * Override to return UI file.
- */
-public Object getUISource()  { return getFile(); }
+    /**
+     * Override to return UI file.
+     */
+    public Object getUISource()
+    {
+        return getFile();
+    }
 
 /**
  * Creates a file pane for the given file in the requested mode.

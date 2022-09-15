@@ -9,106 +9,146 @@ import snap.text.TextStyle;
 
 /**
  * The Run class represents a range of characters in an xstring that share common attributes.
- * 
+ * <p>
  * This class makes a point to treat its attributes map as read-only so they can be shared among multiple runs.
  */
 public class RMXStringRun implements CharSequence {
-    
+
     // The xstring that this run is a part of
-    RMXString     _xstr;
-    
+    RMXString _xstr;
+
     // The rich text line
     TextLine _rline;
-    
+
     // The start/end char index of this run in string
-    int           _start, _end;
-    
+    int _start, _end;
+
     // The attributes of the Run (Font, Color, etc.)
     TextStyle _style;
-    
-/**
- * Creates a new run.
- */
-protected RMXStringRun(RMXString anXStr, TextLine aLine, TextRun aRun)
-{
-    _xstr = anXStr; _rline = aLine;
-    _start = aLine.getStart() + aRun.getStart();
-    _end = aLine.getStart() + aRun.getEnd();
-    _style = aRun.getStyle();
-}
 
-/**
- * Returns the start character index for this run.
- */
-public int start()  { return _start; }
+    /**
+     * Creates a new run.
+     */
+    protected RMXStringRun(RMXString anXStr, TextLine aLine, TextRun aRun)
+    {
+        _xstr = anXStr;
+        _rline = aLine;
+        _start = aLine.getStart() + aRun.getStart();
+        _end = aLine.getStart() + aRun.getEnd();
+        _style = aRun.getStyle();
+    }
 
-/**
- * Returns the end character index for this run.
- */
-public int end()  { return _end; }
+    /**
+     * Returns the start character index for this run.
+     */
+    public int start()
+    {
+        return _start;
+    }
 
-/**
- * Returns the length in characters for this run.
- */
-public int length()  { return _end - _start; }
+    /**
+     * Returns the end character index for this run.
+     */
+    public int end()
+    {
+        return _end;
+    }
 
-/**
- * CharSequence method returning character at given index.
- */
-public char charAt(int anIndex)  { return _xstr.charAt(_start + anIndex); }
+    /**
+     * Returns the length in characters for this run.
+     */
+    public int length()
+    {
+        return _end - _start;
+    }
 
-/**
- * CharSequence method return character sequence for range.
- */
-public CharSequence subSequence(int aStart, int anEnd) { return _xstr.subSequence(_start+aStart, _start+anEnd); }
+    /**
+     * CharSequence method returning character at given index.
+     */
+    public char charAt(int anIndex)
+    {
+        return _xstr.charAt(_start + anIndex);
+    }
 
-/**
- * Returns the text style.
- */
-public RMTextStyle getStyle()  { return new RMTextStyle(_style); }
+    /**
+     * CharSequence method return character sequence for range.
+     */
+    public CharSequence subSequence(int aStart, int anEnd)
+    {
+        return _xstr.subSequence(_start + aStart, _start + anEnd);
+    }
 
-/**
- * Returns the font for this run.
- */
-public RMFont getFont()  { return getStyle().getFont(); }
+    /**
+     * Returns the text style.
+     */
+    public RMTextStyle getStyle()
+    {
+        return new RMTextStyle(_style);
+    }
 
-/**
- * Returns the color for this run.
- */
-public RMColor getColor()  { return getStyle().getColor(); }
+    /**
+     * Returns the font for this run.
+     */
+    public RMFont getFont()
+    {
+        return getStyle().getFont();
+    }
 
-/**
- * Returns the format for this run.
- */
-public RMFormat getFormat()  { return getStyle().getFormat(); }
+    /**
+     * Returns the color for this run.
+     */
+    public RMColor getColor()
+    {
+        return getStyle().getColor();
+    }
 
-/**
- * Returns the paragraph for this run.
- */
-public RMParagraph getParagraph()  { return new RMParagraph(_rline.getLineStyle()); }
+    /**
+     * Returns the format for this run.
+     */
+    public RMFormat getFormat()
+    {
+        return getStyle().getFormat();
+    }
 
-/**
- * Returns whether this run is underlined.
- */
-public boolean isUnderlined()  { return getStyle().isUnderlined(); }
+    /**
+     * Returns the paragraph for this run.
+     */
+    public RMParagraph getParagraph()
+    {
+        return new RMParagraph(_rline.getLineStyle());
+    }
 
-/**
- * Returns the char spacing.
- */
-public float getCharSpacing()  { return (float)getStyle().getCharSpacing(); }
+    /**
+     * Returns whether this run is underlined.
+     */
+    public boolean isUnderlined()
+    {
+        return getStyle().isUnderlined();
+    }
 
-/**
- * Return next run.
- */
-public RMXStringRun getNext()
-{
-    if(_end==_xstr.length()) return null;
-    return _xstr.getRunAt(_end);
-}
+    /**
+     * Returns the char spacing.
+     */
+    public float getCharSpacing()
+    {
+        return (float) getStyle().getCharSpacing();
+    }
 
-/**
- * Returns a string representation of this run.
- */
-public String toString()  { return _xstr.subSequence(_start, _end).toString(); }
+    /**
+     * Return next run.
+     */
+    public RMXStringRun getNext()
+    {
+        if (_end == _xstr.length()) return null;
+        return _xstr.getRunAt(_end);
+    }
+
+    /**
+     * Returns a string representation of this run.
+     */
+    public String toString()
+    {
+        return _xstr.subSequence(_start, _end).toString();
+    }
 
 }
