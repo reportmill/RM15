@@ -160,14 +160,6 @@ public class RMParagraph implements Cloneable, RMTypes, XMLArchiver.Archivable {
     }
 
     /**
-     * Returns the tab index for the given location.
-     */
-    public int getTabIndex(double aLoc)
-    {
-        return _lstyle.getTabIndex(aLoc);
-    }
-
-    /**
      * Returns a paragraph identical to the receiver, but with the given alignment.
      */
     public RMParagraph deriveAligned(AlignX anAlign)
