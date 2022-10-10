@@ -266,7 +266,7 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
     public RMXStringRun getRunAt(int anIndex)
     {
         TextLine line = _rtext.getLineForCharIndex(anIndex);
-        TextRun run = line.getRunForCharIndex(anIndex - line.getStart());
+        TextRun run = line.getRunForCharIndex(anIndex - line.getStartCharIndex());
         return new RMXStringRun(this, line, run);
     }
 

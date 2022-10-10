@@ -1012,11 +1012,11 @@ public class RMTextEditor {
 
                 // If starting line, adjust x1 for starting character
                 if (i == startLineIndex)
-                    x1 = line.getXForChar(start - line.getStart() - tbox.getStartCharIndex());
+                    x1 = line.getXForChar(start - line.getStartCharIndex() - tbox.getStartCharIndex());
 
                 // If ending line, adjust x2 for ending character
                 if (i == endLineIndex)
-                    x2 = line.getXForChar(end - line.getStart() - tbox.getStartCharIndex());
+                    x2 = line.getXForChar(end - line.getStartCharIndex() - tbox.getStartCharIndex());
 
                 // Append rect for line to path
                 path.moveTo(x1, y);
