@@ -15,8 +15,44 @@ import snappdf.write.*;
  */
 public class RMPDFWriter extends PDFWriter {
 
+    // The author
+    private String  _author = "ReportMill User";
+
+    // The creator
+    private String  _creator;
+
     // Map of unique PDF datas
-    List<RMPDFData> _pdfDatas = new ArrayList();
+    private List<RMPDFData>  _pdfDatas = new ArrayList<>();
+
+    /**
+     * Returns the author.
+     */
+    public String getAuthor()  { return _author; }
+
+    /**
+     * Sets the author.
+     */
+    public void setAuthor(String aValue)  { _author = aValue; }
+
+    /**
+     * Returns the creator.
+     */
+    public String getCreator()
+    {
+        // If set, just return
+        if (_creator != null) return _creator;
+
+        // Create default and return
+        String version = "ReportMill " + ReportMill.getVersion();
+        String build = ", Build: " + ReportMill.getBuildInfo();
+        String jvm = ", JVM: " + System.getProperty("java.version");
+        return version + build + jvm;
+    }
+
+    /**
+     * Sets the creator.
+     */
+    public void setCreator(String aValue)  { _creator = aValue; }
 
     /**
      * Returns a PDF byte array for a given RMDocument.
@@ -60,14 +96,11 @@ public class RMPDFWriter extends PDFWriter {
         // Get doc pdf attributes
         _compress = aDoc.getCompress();
 
-        // Set PDF file author
-        if (_pfile.getAuthor() == null) _pfile.setAuthor("ReportMill User");
-
-        // Set PDF file creator
-        String version = "ReportMill " + ReportMill.getVersion();
-        String build = ", Build: " + ReportMill.getBuildInfo();
-        String jvm = ", JVM: " + System.getProperty("java.version");
-        _pfile.setCreator(version + build + jvm);
+        // Set PDF file author / creator
+        if (_pfile.getAuthor() == null)
+            _pfile.setAuthor(getAuthor());
+        if (_pfile.getCreator() == null)
+            _pfile.setCreator(getCreator());
 
         // Iterate over doc pages
         for (int i = 0, iMax = aDoc.getPageCount(); i < iMax; i++) {
@@ -113,7 +146,7 @@ public class RMPDFWriter extends PDFWriter {
         appendln("%%EOF");
 
         // Now get actual pdf bytes
-        byte pdfBytes[] = toByteArray();
+        byte[] pdfBytes = toByteArray();
 
         // If version string was bumped during generation, go back and update header
         if (!_pfile.getVersionString().equals(versionStr)) {

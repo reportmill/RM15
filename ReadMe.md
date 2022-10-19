@@ -1,28 +1,21 @@
-
-Eclipse Build Instructions
+Overview
 --------------------------
 
-1. Create New Java Project with this project directory (really just need src and lib).
+ReportMill is a Java application reporting tool available for dynamically generating reports and web pages from Java applications in formats such as HTML, PDF, CSV, Excel, RTF and Swing. ReportMill combines an easy-to-use page layout application and a powerful Java API in a single compact jar file, which is easy to integrate into custom Java applications for the desktop and web.
 
-2. Go to Project Properties -> Java Build Path -> Libraries and add all lib jars.
+Build Instructions
+--------------------------
 
-3. (Optional) Go to Project Properties-> Java Compiler -> Errors/Warnings and set:
-	- Potential programming problems: Serializable class without serialVersionUID: Ignore
-	- Potential programming problems: Incomplete ‘switch’ cases on enum: Ignore
-	- Generic types -> Uncheck generic type operation: Ignore
-	- Generic types -> Usage of a raw type: Ignore
+This project is a gradle project, which should import easily into any standard Java IDE. It can also be built and run from the command line like this:
 
-4. Go to Run Configurations and add new Java Application configuration with main class:
-	- ReportMill: com.reportmill.App
-	- SnapCode: snap.app.App
+    ./gradlew build
+    ./gradlew run
 
-5. (ReportMill Only) Optionally delete SnapCode app packages: snap.app, snap.debug, snap.javafx, snap.javaparse,
-	snap.javatext, snap.project, snap.studio 
+Product information is available here: https://reportmill.com/product/
 
-	
+Download of build jars is available here: https://reportmill.com/rm14/
+
 Jar Versions
 ---------------
 
-	- tools.jar: 8u05
-	- jgit.jar: org.eclipse.jgit-3.6.1.201501031845-r.jar
-	- jsch.jar: jsch-0.1.51.jar
+	- poi-3.7.jar: Poi 3.7
