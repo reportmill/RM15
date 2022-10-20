@@ -867,7 +867,7 @@ public class RMTextShape extends RMRectShape {
 
         // Trim line ends from end of string to prevent extra empty line height
         int len = string.length(), end = len;
-        while (end > 0 && StringUtils.isLineEndChar(string.charAt(end - 1))) end--;
+        while (end > 0 && CharSequenceUtils.isLineEndChar(string.charAt(end - 1))) end--;
         if (end != len)
             string.removeChars(end, len);
 
