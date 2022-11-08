@@ -14,38 +14,6 @@ import snap.viewx.ColorWell;
  */
 public class RMStrokeTool extends RMFillTool {
 
-    // The last list of strokes provided to UI
-    List<RMStroke> _strokes;
-
-    /**
-     * Returns a list of strokes for all MainEditor selected shapes (creating stand-ins for selected shapes with no stroke).
-     */
-    public List<RMStroke> getStrokes()
-    {
-        return _strokes;
-    }
-
-    /**
-     * Returns a list of strokes for all MainEditor selected shapes (creating stand-ins for selected shapes with no stroke).
-     */
-    private List<RMStroke> createStrokes()
-    {
-        RMEditor editor = getEditor();
-        List<RMStroke> strokes = new ArrayList();
-        for (RMShape shape : editor.getSelectedOrSuperSelectedShapes())
-            strokes.add(shape.getStroke() != null ? shape.getStroke() : new RMStroke());
-        return _strokes = strokes;
-    }
-
-    /**
-     * Override to load Strokes list.
-     */
-    public void processResetUI()
-    {
-        _strokes = createStrokes();
-        super.processResetUI();
-    }
-
     /**
      * Reset UI controls.
      */
@@ -54,7 +22,8 @@ public class RMStrokeTool extends RMFillTool {
         // Get currently selected shape
         RMShape shape = getEditor().getSelectedOrSuperSelectedShape();
         RMStroke stroke = shape.getStroke();
-        if (stroke == null) stroke = new RMStroke();
+        if (stroke == null)
+            stroke = new RMStroke();
 
         // Update StrokeColorWell, StrokeWidthText, StrokeWidthThumb, DashArrayText, DashPhaseSpinner
         setViewValue("StrokeColorWell", stroke.getColor());
@@ -69,10 +38,9 @@ public class RMStrokeTool extends RMFillTool {
      */
     public void respondUI(ViewEvent anEvent)
     {
-        // Get editor selected shapes and selected shape
+        // Get editor selected shapes
         RMEditor editor = getEditor();
         List<RMShape> shapes = editor.getSelectedOrSuperSelectedShapes();
-        RMShape shape = editor.getSelectedOrSuperSelectedShape();
 
         // Handle StrokeColorWell - get color and set in selected shapes
         if (anEvent.equals("StrokeColorWell")) {
@@ -108,7 +76,5 @@ public class RMStrokeTool extends RMFillTool {
                 shp.setStroke(stroke.deriveDashPhase(dphase));
             }
         }
-
     }
-
 }
