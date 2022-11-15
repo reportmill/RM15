@@ -65,15 +65,12 @@ task buildExecJar(type: Jar) {
     exclude('**/rmtests/**')
     exclude('**/test/**')
     exclude('**/font_metrics.properties')
-    with jar
+    with jar {
+        processResources {
+            finalizedBy ('buildInfo')
+        }
+    }
 }
-
-tasks.named('jar') {
-    dependsOn ('buildInfo')
-    finalizedBy ('buildInfo')
-    finalizedBy ('HHHHHHHHHHHHHHHHHHHHHH--------------------HHHHHHHHHHHHHHHHHH----------------HHHHHHHHHHH')
-}
-
 
 tasks.register('buildInfo') {
     doLast {
