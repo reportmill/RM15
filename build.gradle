@@ -43,3 +43,45 @@ dependencies {
 }
 
 mainClassName = 'com.reportmill.app.App'
+
+/**
+ * Build executable jar SnapChartsAll.jar.
+ *
+ * We could use the standard jar task just by using jar { ... } and deleting 'baseName' and 'with jar' lines.
+ */
+task buildExecJar(type: Jar) {
+    manifest {
+        attributes(
+            'Main-Class': 'com.reportmill.app.App',
+            'Application-Name': 'RMStudio15',
+            'Permissions': 'all-permissions'
+        )
+    }
+    archiveBaseName = 'RMStudio15'
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    exclude('**/org/**')
+    exclude('**/rmtests/**')
+    exclude('**/test/**')
+    exclude('**/font_metrics.properties')
+    with jar
+}
+
+tasks.named('jar') {
+    dependsOn ('buildInfo')
+    finalizedBy ('buildInfo')
+    finalizedBy ('HHHHHHHHHHHHHHHHHHHHHH--------------------HHHHHHHHHHHHHHHHHH----------------HHHHHHHHHHH')
+}
+
+
+tasks.register('buildInfo') {
+    doLast {
+        exec {
+            workingDir '.'
+            executable "date"
+            args "+%b-%d-%y %H:%M"
+            standardOutput new FileOutputStream('build/resources/main/com/reportmill/BuildInfo.txt')
+        }
+    }
+}
