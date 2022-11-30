@@ -6,6 +6,7 @@ import snap.gfx.*;
 import snap.util.*;
 import snap.view.*;
 import snap.viewx.DialogBox;
+import snap.viewx.DialogSheet;
 import snap.web.WebResponse;
 import snap.web.WebURL;
 
@@ -27,7 +28,7 @@ public class SamplesPane extends ViewOwner {
     int _selIndex;
 
     // The dialog box
-    SheetDialogBox _dbox;
+    DialogSheet _dbox;
 
     // Constants
     private static final String SAMPLES_ROOT = "https://reportmill.com/rmsamples/";
@@ -43,9 +44,10 @@ public class SamplesPane extends ViewOwner {
         _epane = anEP;
         ChildView aView = (ChildView) anEP.getUI();
 
-        _dbox = new SheetDialogBox();
+        _dbox = new DialogSheet();
         _dbox.setContent(getUI());
         _dbox.showConfirmDialog(aView);
+        _dbox.addPropChangeListener(pc -> dialogBoxClosed(), DialogBox.Showing_Prop);
     }
 
     /**
@@ -53,7 +55,7 @@ public class SamplesPane extends ViewOwner {
      */
     void dialogBoxClosed()
     {
-        if (_dbox._cancelled) return;
+        if (_dbox.isCancelled()) return;
         _epane.getEditor().setDoc(getDoc(_selIndex));
         _epane.getEditor().requestFocus();
     }
@@ -423,101 +425,4 @@ public class SamplesPane extends ViewOwner {
         pntr.flush();
         return img;
     }
-
-    /**
-     * A DialogBox subclass that shows as a sheet.
-     */
-    private class SheetDialogBox extends DialogBox {
-
-        // The parent view hosting the SheetDialogBox
-        ChildView _hostView;
-
-        // The BoxView to hold/clip the UI
-        BoxView _clipBox;
-
-        // Whether the dialog box was cancelled
-        boolean _cancelled;
-
-        /**
-         * Show Dialog in sheet.
-         */
-        protected boolean showPanel(View aView)
-        {
-            // Get given view as HostView
-            _hostView = aView instanceof ChildView ? (ChildView) aView : null;
-            if (_hostView == null) return super.showPanel(aView);
-
-            // Make Other views invisible to mouse clicks
-            for (View v : _hostView.getChildren()) v.setPickable(false);
-
-            // Create/configure UI
-            View ui = getUI();
-            ui.setManaged(false);
-            ui.setFill(ViewUtils.getBackFill());
-            ui.setBorder(Color.DARKGRAY, 1);
-            Size size = ui.getPrefSize();
-            ui.setSize(size);
-
-            // Create box to hold/clip UI
-            _clipBox = new BoxView(ui);
-            _clipBox.setSize(size);
-            _clipBox.setManaged(false);
-            _clipBox.setLeanX(HPos.CENTER);
-            _clipBox.setClipToBounds(true);
-
-            // Add UI box to HostView
-            _hostView.addChild(_clipBox);
-
-            // Configure UI to animate in and start
-            ui.setTransY(-size.height);
-            ui.getAnim(1000).setTransY(-1).play();
-
-            // Make sure stage and Builder.FirstFocus are focused
-            runLater(() -> notifyDidShow());
-
-            return true;
-        }
-
-        /**
-         * Hide dialog.
-         */
-        protected void hide()
-        {
-            // Configure UI to animate out and start
-            View ui = getUI();
-            ViewAnim anim = ui.getAnimCleared(1000);
-            anim.setTransY(-ui.getHeight());
-            anim.setOnFinish(() -> hideAnimDone()).needsFinish().play();
-        }
-
-        /**
-         * Called when hide() animation finishes.
-         */
-        private void hideAnimDone()
-        {
-            // Remove UI, reset everything pickable and notify of close
-            _hostView.removeChild(_clipBox);
-            for (View v : _hostView.getChildren()) v.setPickable(true);
-            dialogBoxClosed();
-        }
-
-        /**
-         * Override to set cancelled flag.
-         */
-        public void confirm()
-        {
-            _cancelled = false;
-            hide();
-        }
-
-        /**
-         * Override to set cancelled flag.
-         */
-        public void cancel()
-        {
-            _cancelled = true;
-            hide();
-        }
-    }
-
 }
