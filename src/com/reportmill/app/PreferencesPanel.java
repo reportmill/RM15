@@ -31,8 +31,8 @@ public class PreferencesPanel extends ViewOwner {
     public void initUI()
     {
         // Set LicenseText & EnableExceptionsCheckBox
-        setViewValue("LicenseText", Prefs.get().getString("HostProperties1", null));
-        setViewValue("EnableExceptionsCheckBox", Prefs.get().getBoolean("ExceptionReportingEnabled", true));
+        setViewValue("LicenseText", Prefs.getDefaultPrefs().getString("HostProperties1", null));
+        setViewValue("EnableExceptionsCheckBox", Prefs.getDefaultPrefs().getBoolean("ExceptionReportingEnabled", true));
 
         // Set NumberFormatsText & DateFormatsText
         setViewValue("NumberFormatsText", _formatPanel.getNumberFormatsString());
@@ -74,7 +74,7 @@ public class PreferencesPanel extends ViewOwner {
         ReportMill.setLicense(licenseKey, true, true);
 
         // Save the exception reporting pref
-        Prefs.get().setValue("ExceptionReportingEnabled", getViewBoolValue("EnableExceptionsCheckBox"));
+        Prefs.getDefaultPrefs().setValue("ExceptionReportingEnabled", getViewBoolValue("EnableExceptionsCheckBox"));
 
         // Get pref panel number formats and the original number formats
         String nums = getViewStringValue("NumberFormatsText");
@@ -98,7 +98,7 @@ public class PreferencesPanel extends ViewOwner {
             // Add new format string to default (clear it if it's the default)
             if (nums.equals(_formatPanel.getDefaultNumberFormatsString()))
                 nums = null;
-            Prefs.get().setValue("NumberFormats", nums);
+            Prefs.getDefaultPrefs().setValue("NumberFormats", nums);
         }
 
         // Get pref panel date formats and original date formats
@@ -123,11 +123,11 @@ public class PreferencesPanel extends ViewOwner {
             // Add new format string to default (clear it if it's the default)
             if (dates.equals(_formatPanel.getDefaultDateFormatsString()))
                 dates = null;
-            Prefs.get().setValue("DateFormats2", dates);
+            Prefs.getDefaultPrefs().setValue("DateFormats2", dates);
         }
 
         // Flush properties to registry and return true
-        Prefs.get().flush();
+        Prefs.getDefaultPrefs().flush();
         return true;
     }
 

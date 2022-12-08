@@ -40,10 +40,10 @@ public class RMTextEditor {
     double _downX, _downY;
 
     // Whether RM should be spell checking
-    public static boolean isSpellChecking = Prefs.get().getBoolean("SpellChecking", false);
+    public static boolean isSpellChecking = Prefs.getDefaultPrefs().getBoolean("SpellChecking", false);
 
     // Whether hyphenating is activated
-    static boolean _hyphenating = Prefs.get().getBoolean("Hyphenating", false);
+    static boolean _hyphenating = Prefs.getDefaultPrefs().getBoolean("Hyphenating", false);
 
     // The MIME type for reportmill xstring
     public static final String RM_XSTRING_TYPE = "reportmill/xstring";
@@ -1083,7 +1083,7 @@ public class RMTextEditor {
      */
     public static final void setHyphenating(boolean aValue)
     {
-        Prefs.get().setValue("Hyphenating", _hyphenating = aValue);
+        Prefs.getDefaultPrefs().setValue("Hyphenating", _hyphenating = aValue);
     }
 
 }

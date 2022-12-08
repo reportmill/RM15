@@ -135,7 +135,7 @@ public class RMEditorPaneMenuBar extends RMEditorPane.SupportPane {
         // Edit -> CheckSpellingAsYouTypeMenuItem
         if (anEvent.equals("CheckSpellingAsYouTypeMenuItem")) {
             RMTextEditor.isSpellChecking = anEvent.getBooleanValue();
-            Prefs.get().setValue("SpellChecking", RMTextEditor.isSpellChecking);
+            Prefs.getDefaultPrefs().setValue("SpellChecking", RMTextEditor.isSpellChecking);
             editor.repaint();
         }
 

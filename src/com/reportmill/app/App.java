@@ -5,7 +5,6 @@ package com.reportmill.app;
 //import com.apple.eawt.*;
 //import com.apple.eawt.AppEvent.*;
 import com.reportmill.base.ReportMill;
-import javax.swing.SwingUtilities;
 import snap.util.*;
 import snap.view.WindowView;
 import snap.viewx.DialogBox;
@@ -41,7 +40,7 @@ public class App {
 
         // Set default preferences
         Prefs prefs = Prefs.getPrefsForName("/com/reportmill");
-        Prefs.setPrefsDefault(prefs);
+        Prefs.setDefaultPrefs(prefs);
 
         // Mac specific stuff
         //if (SnapUtils.isMac) new AppleAppHandler().init();
@@ -105,7 +104,7 @@ public class App {
 
         // Flush Properties to registry and exit
         try {
-            Prefs.get().flush();
+            Prefs.getDefaultPrefs().flush();
         } catch (Exception e) {
             e.printStackTrace();
         }

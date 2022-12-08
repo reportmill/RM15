@@ -18,7 +18,7 @@ import snap.util.*;
 public class RMEditorProxGuide {
 
     // Whether proximity guides are enabled.
-    static boolean _enabled = Prefs.get().getBoolean("ProximityGuide", false);
+    static boolean _enabled = Prefs.getDefaultPrefs().getBoolean("ProximityGuide", false);
 
     // Whether bounds of parent shape are also check for proximity
     static boolean _includeSuperSelectedShape = false;
@@ -40,7 +40,7 @@ public class RMEditorProxGuide {
     public static void setEnabled(boolean aFlag)
     {
         _enabled = aFlag;
-        Prefs.get().setValue("ProximityGuide", aFlag);
+        Prefs.getDefaultPrefs().setValue("ProximityGuide", aFlag);
     }
 
     /**

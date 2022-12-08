@@ -41,11 +41,11 @@ public class FormatPanel extends RMEditorPane.SupportPane {
         _shared = this;
 
         // Load standard number formats from preferences
-        String nums = Prefs.get().getString("NumberFormats", getDefaultNumberFormatsString());
+        String nums = Prefs.getDefaultPrefs().getString("NumberFormats", getDefaultNumberFormatsString());
         setNumberFormatsString(nums);
 
         // Load standard date formats from preferences
-        String dates = Prefs.get().getString("DateFormats2", getDefaultDateFormatsString());
+        String dates = Prefs.getDefaultPrefs().getString("DateFormats2", getDefaultDateFormatsString());
         setDateFormatsString(dates);
     }
 

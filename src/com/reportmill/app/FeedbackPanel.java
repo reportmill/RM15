@@ -25,8 +25,8 @@ public class FeedbackPanel extends ViewOwner {
         if (!dbox.showConfirmDialog(null)) return;
 
         // Update preferences and send feedback
-        Prefs.get().setValue("ExceptionUserName", getViewStringValue("UserText"));
-        Prefs.get().setValue("ExceptionEmail", getViewStringValue("EmailText"));
+        Prefs.getDefaultPrefs().setValue("ExceptionUserName", getViewStringValue("UserText"));
+        Prefs.getDefaultPrefs().setValue("ExceptionEmail", getViewStringValue("EmailText"));
         sendFeedback();
     }
 
@@ -35,8 +35,8 @@ public class FeedbackPanel extends ViewOwner {
      */
     public void initUI()
     {
-        setViewValue("UserText", Prefs.get().getString("ExceptionUserName", ""));
-        setViewValue("EmailText", Prefs.get().getString("ExceptionEmail", ""));
+        setViewValue("UserText", Prefs.getDefaultPrefs().getString("ExceptionUserName", ""));
+        setViewValue("EmailText", Prefs.getDefaultPrefs().getString("ExceptionEmail", ""));
 
         // Configure TypeComboBox
         String types[] = {"Bug Report", "Enhancement Request", "General Comment"};
