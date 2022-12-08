@@ -67,7 +67,7 @@ public class ReportMill {
         // Get preferences for com.reportmill.Shell and prefs key (HostProperties1 for app, HostProperties2  for engine)
         try {
             String prefsKey = isApp ? "HostProperties1" : "HostProperties2";
-            Prefs prefs = Prefs.getPrefs(com.reportmill.Shell.class); //Preferences.userNodeForPackage(Shell.class);
+            Prefs prefs = Prefs.getPrefsForName("/com/reportmill");
             _license = prefs.getString(prefsKey, null);
         }
 
@@ -95,7 +95,7 @@ public class ReportMill {
         if (isPersistent) try {
 
             // Get preferences for com.reportmill.Shell and prefs key (HostProperties1 for app, HostProperties2  for engine)
-            Prefs prefs = Prefs.getPrefs(com.reportmill.Shell.class); //Preferences.userNodeForPackage(Shell.class);
+            Prefs prefs = Prefs.getPrefsForName("/com/reportmill");
             String prefsKey = isApp ? "HostProperties1" : "HostProperties2";
 
             // Put license for prefs key (or remove if null) and flush preferences

@@ -40,7 +40,8 @@ public class App {
         ReportMill.isApp = true;
 
         // Set default preferences
-        Prefs.setPrefsDefault(Prefs.getPrefs(com.reportmill.Shell.class));
+        Prefs prefs = Prefs.getPrefsForName("/com/reportmill");
+        Prefs.setPrefsDefault(prefs);
 
         // Mac specific stuff
         //if (SnapUtils.isMac) new AppleAppHandler().init();
