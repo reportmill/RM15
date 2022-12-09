@@ -90,7 +90,7 @@ public class ReportPageEditor extends ReportPage {
     {
         if (anEvent.isKeyPress() && anEvent.isShortcutDown()) {
             RMEditorPaneMenuBar mbar = _epane.getMenuBar();
-            mbar.getUI().fireEvent(anEvent);
+            mbar.getUI().dispatchEventToView(anEvent);
         }
     }
 

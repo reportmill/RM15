@@ -85,7 +85,8 @@ public class Trackball extends ParentView {
         _camera.setHeight(IMAGE_SIZE); // set X to 2 ???
 
         // Enable mouse/action events
-        enableEvents(MousePress, MouseDrag, MouseRelease, Action); //setFill(null);
+        setActionable(true);
+        enableEvents(MousePress, MouseDrag, MouseRelease);
         setPrefSize(IMAGE_SIZE, IMAGE_SIZE);
     }
 

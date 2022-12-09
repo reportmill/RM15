@@ -57,8 +57,8 @@ public class GradientStopPicker extends ParentView {
      */
     public GradientStopPicker()
     {
-        // Enable events
-        enableEvents(MousePress, MouseDrag, MouseMove, Action);
+        setActionable(true);
+        enableEvents(MousePress, MouseDrag, MouseMove);
         enableEvents(DragEvents);
     }
 

@@ -286,7 +286,7 @@ public class RMEditorPane extends RMViewerPane {
     protected void respondUI(ViewEvent anEvent)
     {
         // Forward on to menu bar
-        getMenuBar().fireEvent(anEvent);
+        getMenuBar().dispatchEventToOwner(anEvent);
 
         // Do normal version
         super.respondUI(anEvent);

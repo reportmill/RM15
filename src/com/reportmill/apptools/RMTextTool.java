@@ -601,13 +601,20 @@ public class RMTextTool<T extends RMTextShape> extends RMTool<T> {
 
             // If pressed was in overflow indicator box, add linked text (or select existing one)
             if (point.x >= text.getWidth() - 20 && point.x <= text.getWidth() - 10 && point.y >= text.getHeight() - 5) {
-                if (text.getLinkedText() == null) sendEvent("LinkedTextMenuItem");   // If not linked text, add it
-                else getEditor().setSelectedShape(text.getLinkedText());          // Otherwise, select it
-                return true;    // Return true so SelectTool goes to DragModeNone
+
+                // If no linkedText, add it
+                if (text.getLinkedText() == null)
+                    fireActionEventForObject("LinkedTextMenuItem", anEvent);
+
+                // Otherwise select it
+                else getEditor().setSelectedShape(text.getLinkedText());
+
+                // Return true so SelectTool goes to DragModeNone
+                return true;
             }
         }
 
-        // Return false is mouse point wasn't in overflow indicator box
+        // Return click not in overflow indicator box
         return false;
     }
 

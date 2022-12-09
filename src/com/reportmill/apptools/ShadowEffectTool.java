@@ -83,7 +83,8 @@ public class ShadowEffectTool extends EffectTool {
          */
         public OffsetPanel()
         {
-            enableEvents(MousePress, MouseDrag, MouseRelease, Action);
+            setActionable(true);
+            enableEvents(MousePress, MouseDrag, MouseRelease);
         }
 
         /**

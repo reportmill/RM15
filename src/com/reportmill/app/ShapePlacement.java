@@ -300,7 +300,8 @@ public class ShapePlacement extends RMEditorPane.SupportPane {
                 _images[i] = Image.get(getClass(), imageNames[i]);
 
             // Add mouse listener to send action
-            enableEvents(MouseRelease, Action);
+            setActionable(true);
+            enableEvents(MouseRelease);
         }
 
         /**
