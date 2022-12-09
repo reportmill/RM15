@@ -150,7 +150,7 @@ public class KeysPanel extends RMEditorPane.SupportPane {
         _keysBrowser.setCellConfigure(c -> configureKeysBrowserCell((ListCell) c));
 
         // Register KeysBrowser for click, drag
-        enableEvents(_keysBrowser, MouseRelease, DragGesture, View.DragSourceEnd);
+        enableEvents(_keysBrowser, MouseRelease, DragGesture, ViewEvent.Type.DragSourceEnd);
     }
 
     /**
