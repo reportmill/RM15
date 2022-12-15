@@ -69,7 +69,7 @@ public class FontPanel extends ViewOwner {
         if (_pdfFonts != null) return _pdfFonts;
         List pdfs = new ArrayList();
         for (String name : _pdfBuiltIns) {
-            Font font = Font.get(name, 12);
+            Font font = Font.getFont(name, 12);
             if (font != null) pdfs.add(font.getFamily());
         }
         return _pdfFonts = (String[]) pdfs.toArray(new String[0]);

@@ -248,7 +248,7 @@ public class RMEditorPaneToolBar extends RMEditorPane.SupportPane {
             String fontNames[] = Font.getFontNames(familyName);
             if (fontNames == null || fontNames.length == 0) return;
             String fontName = fontNames[0];
-            Font font = Font.get(fontName, 12);
+            Font font = Font.getFont(fontName, 12);
             RMEditorUtils.setFontFamily(editor, font);
             editor.requestFocus();
         }
