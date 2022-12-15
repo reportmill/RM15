@@ -75,7 +75,7 @@
       <string>ReportMill 15</string>
     </text>
     <shape x="62" y="28.85" width="294" height="80">
-      <effect type="reflection" reflection-height="1" fade-height="0.5" />
+      <effect type="reflection" />
       <text y="13.358" width="294" height="53.432" scaley="1.5" asize="~~~,~~~">
         <effect type="emboss" radius="4" />
         <font name="Futura Condensed Extra Bold" size="50" />
