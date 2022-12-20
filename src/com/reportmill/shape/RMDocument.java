@@ -406,8 +406,10 @@ public class RMDocument extends RMParentShape {
     public void setUnit(String aString)
     {
         try {
-            setUnit(SnapUtils.valueOfIC(Unit.class, aString));
-        } catch (Exception e) {
+            RMDocument.Unit unit = EnumUtils.valueOfIC(Unit.class, aString);
+            setUnit(unit);
+        }
+        catch (Exception e) {
             System.err.println("Unsupported Document.Unit: " + aString);
         }
     }
@@ -434,16 +436,11 @@ public class RMDocument extends RMParentShape {
     public float getUnitsMultiplier()
     {
         switch (getUnit()) {
-            case Inch:
-                return 72;
-            case CM:
-                return 28.34646f;
-            case MM:
-                return 2.834646f;
-            case Pica:
-                return 12;
-            default:
-                return 1;
+            case Inch: return 72;
+            case CM: return 28.34646f;
+            case MM: return 2.834646f;
+            case Pica: return 12;
+            default: return 1;
         }
     }
 

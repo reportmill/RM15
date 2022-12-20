@@ -1126,7 +1126,7 @@ public class RMTextShape extends RMRectShape {
         // Unarchive Margin, AlignmentY
         if (anElement.hasAttribute("margin")) setMarginString(anElement.getAttributeValue("margin"));
         if (anElement.hasAttribute("valign"))
-            setAlignmentY(SnapUtils.valueOfIC(AlignY.class, anElement.getAttributeValue("valign")));
+            setAlignmentY(EnumUtils.valueOfIC(AlignY.class, anElement.getAttributeValue("valign")));
 
         // Unarchive Wraps, PerformsWrap
         String wrap = anElement.getAttributeValue("wrap", "none");
