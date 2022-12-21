@@ -3,6 +3,7 @@
  */
 package com.reportmill.out;
 import com.reportmill.base.ReportMill;
+import com.reportmill.base.Voucher;
 import com.reportmill.graphics.*;
 import com.reportmill.shape.*;
 import java.text.SimpleDateFormat;
@@ -64,7 +65,7 @@ public class RMPDFWriter extends PDFWriter {
         aDoc.resolvePageReferences();
 
         // Add watermark
-        ReportMill.lc(aDoc);
+        Voucher.lc(aDoc);
 
         // Create PDFFile
         _pfile = new PDFFile();

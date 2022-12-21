@@ -3,6 +3,7 @@
  */
 package com.reportmill.app;
 import com.reportmill.base.ReportMill;
+import com.reportmill.base.Voucher;
 import snap.util.*;
 import snap.view.*;
 import snap.viewx.DialogBox;
@@ -62,7 +63,7 @@ public class PreferencesPanel extends ViewOwner {
         String licenseKey = StringUtils.min(getViewStringValue("LicenseText"));
 
         // If license is provided but invalid, complain and return
-        if (licenseKey != null && !ReportMill.checkString(licenseKey, true)) {
+        if (licenseKey != null && !Voucher.checkString(licenseKey, true)) {
             String msg = "The license key entered is invalid - please recheck and try again.";
             DialogBox dbox = new DialogBox("Invalid License");
             dbox.setErrorMessage(msg);
@@ -71,7 +72,7 @@ public class PreferencesPanel extends ViewOwner {
         }
 
         // Set license
-        ReportMill.setLicense(licenseKey, true, true);
+        Voucher.setLicense(licenseKey, true, true);
 
         // Save the exception reporting pref
         Prefs.getDefaultPrefs().setValue("ExceptionReportingEnabled", getViewBoolValue("EnableExceptionsCheckBox"));

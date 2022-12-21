@@ -24,13 +24,13 @@ public class Shell {
     /**
      * This is the static main method called when launching Java with this class.
      */
-    public static void main(String args[])
+    public static void main(String[] args)
     {
         // Turn on headless property and trigger ReportMill init message
         new ReportMill();
 
         // If no args, print usage
-        if (args.length == 0 || args[0] == "?") {
+        if (args.length == 0 || Objects.equals(args[0], "?")) {
             System.err.println("Usage:");
             System.err.println("  Licensing: -license <license_string>");
             System.err.println("  Testing: <template_path> <dataset_path> <output_path>");
@@ -70,11 +70,8 @@ public class Shell {
 
             // Check for paginate
             if (arg.equals("-paginate"))
-                try {
-                    paginate = new Boolean(!args[++i].equals("false"));
-                } catch (Exception e) {
-                    paginate = new Boolean(true);
-                }
+                try { paginate = Convert.booleanValue(args[++i]); }
+                catch (Exception e) { paginate = true; }
 
             // Check for test
             if (arg.equals("-test")) {
@@ -99,8 +96,9 @@ public class Shell {
 
             // Check for fonts: Get list of fonts and print
             if (arg.startsWith("-fonts")) {
-                String fonts[] = arg.equals("-fonts") ? RMFont.getFontNames() : RMFont.getFamilyNames();
-                for (int j = 0, jMax = fonts.length; j < jMax; j++) System.err.println(fonts[j]);
+                String[] fonts = arg.equals("-fonts") ? RMFont.getFontNames() : RMFont.getFamilyNames();
+                for (String font : fonts)
+                    System.err.println(font);
             }
 
             // If arg is -resave, just resave existing template (potentially used to update templates)
@@ -120,12 +118,12 @@ public class Shell {
 
         // If license was provided, install it
         if (license != null) {
-            if (ReportMill.checkString(license, false)) {
-                ReportMill.setLicense(license, true, false);
+            if (Voucher.checkString(license, false)) {
+                Voucher.setLicense(license, true, false);
                 System.err.println("License is valid and has been installed on host " + SnapUtils.getHostname() +
                         " for user " + System.getProperty("user.name") + ".");
             } else {
-                ReportMill.setLicense(null, true, false);
+                Voucher.setLicense(null, true, false);
                 System.err.println("Invalid license - please check string and re-enter. " +
                         "Call 214.513.1636 or send email to <support@reportmill.com> for support.");
             }
@@ -133,7 +131,7 @@ public class Shell {
 
         // If paginate wasn't specified, get it from outfile
         if (paginate == null && outfile != null)
-            paginate = new Boolean(StringUtils.endsWithIC(outfile, "pdf"));
+            paginate = StringUtils.endsWithIC(outfile, "pdf");
 
         // If we have rptfile, infile and outfile, generate report
         if (rptfile != null && infile != null && outfile != null) {
@@ -166,16 +164,14 @@ public class Shell {
             System.err.println("Generating Reports");
             time = System.currentTimeMillis();
             if (threads > 0) {
-                Thread threadArray[] = new Thread[4];
+                Thread[] threadArray = new Thread[4];
                 for (int i = 0; i < threads; i++)
                     threadArray[i] = new RPGThread(template, map, outfile, paginate, i, count);
                 for (int i = 0; i < threads; i++) threadArray[i].start();
-                for (int i = 0; i < threads; i++)
-                    try {
-                        threadArray[i].join();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                for (int i = 0; i < threads; i++) {
+                    try { threadArray[i].join(); }
+                    catch (Exception e) { e.printStackTrace(); }
+                }
             }
 
             // Generate reports, single threaded
@@ -202,16 +198,13 @@ public class Shell {
                 }
             }
 
-            // Null out template and data vars
-            template = null;
-            map = null;
-
             // Print done message
             seconds = (System.currentTimeMillis() - time) / 1000f;
             System.err.println("Generated Reports (" + seconds + " seconds)");
 
             // Hang if requested (useful for optimizeit)
-            if (hang) while (true) Thread.yield();
+            if (hang)
+                while (true) Thread.yield();
         }
 
         // Exit

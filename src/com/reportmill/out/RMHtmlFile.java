@@ -3,6 +3,7 @@
  */
 package com.reportmill.out;
 import com.reportmill.base.ReportMill;
+import com.reportmill.base.Voucher;
 import com.reportmill.graphics.*;
 import com.reportmill.shape.*;
 import java.io.File;
@@ -68,7 +69,7 @@ public class RMHtmlFile {
         _doc.resolvePageReferences();
 
         // Add watermark
-        ReportMill.lc(_doc);
+        Voucher.lc(_doc);
 
         // Create element for HTML and body and add pages
         XMLElement html = new XMLElement("html");
