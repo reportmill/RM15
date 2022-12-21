@@ -3,6 +3,7 @@
  */
 package com.reportmill.shape;
 import com.reportmill.base.*;
+import snap.util.ListUtils;
 import java.util.List;
 
 /**
@@ -13,10 +14,10 @@ class RMCrossTabRPG {
     /**
      * Sets a reportmill for this crosstab (which really gets the dataset and calls setObjects).
      */
-    public RMShape rpgCrossTab(ReportOwner anRptOwner, RMShape aParent, RMCrossTab aCTab)
+    public RMShape rpgCrossTab(ReportOwner anRptOwner, RMCrossTab aCTab)
     {
         // Get dataset: If parent TableRow available, get dataset from ReportOwner
-        List dataset = null;
+        List<?> dataset;
         RMShape parentTableRow = aCTab.getParent(RMTableRow.class);
         if (parentTableRow != null) {
 
@@ -37,7 +38,13 @@ class RMCrossTabRPG {
         //Object parentTableRowGroup = parentTableRow==null? null : anRptOwner.popDataStack();
 
         // Apply filter key to dataset
-        if (dataset != null) dataset = DataUtils.getFilteredList(dataset, aCTab.getFilterKey());
+        if (dataset != null) {
+            String filterKey = aCTab.getFilterKey();
+            if (filterKey != null && filterKey.length() > 0) {
+                RMKeyChain keyChain = RMKeyChain.getKeyChain(filterKey);
+                dataset = ListUtils.getFiltered(dataset, item -> RMKeyChain.getBoolValue(item, keyChain));
+            }
+        }
 
         // Get dataset as group
         RMGroup datasetGroup = dataset instanceof RMGroup ? (RMGroup) dataset : new RMGroup(dataset);
@@ -84,7 +91,7 @@ class RMCrossTabRPG {
     /**
      * Returns the cell group for a cell.
      */
-    private RMGroup getCellGroup(RMCrossTab aCtab, RMCrossTabCell aCell, RMGroup aDatasetGroup, List aDataset)
+    private RMGroup getCellGroup(RMCrossTab aCtab, RMCrossTabCell aCell, RMGroup aDatasetGroup, List<?> aDataset)
     {
         // Get cell grouping (if no grouping key, just return cell group)
         RMGrouping grouping = aCell.getGrouping();
@@ -166,7 +173,7 @@ class RMCrossTabRPG {
                         if (cellGroup.getKey() == null) {
 
                             // Get values from original cell group, so cell group will expand to the same number of groups
-                            List values = group.getAllValues(grouping.getKey());
+                            List<?> values = group.getAllValues(grouping.getKey());
 
                             // Group by grouping with explicit values
                             cellGroup.groupByKey(grouping.getKey(), values);
@@ -189,41 +196,46 @@ class RMCrossTabRPG {
      */
     void addNeededRows(RMCrossTab aCTab, RMCrossTabCell aCell, RMGroup aGroup)
     {
-        int row = aCell.getRow(), col = aCell.getCol(), rspan = aCell.getRowSpan(), ccount = aCTab.getColCount();
+        int row = aCell.getRow();
+        int col = aCell.getCol();
+        int rowSpan = aCell.getRowSpan();
+        int colCount = aCTab.getColCount();
         for (int g = 1, gMax = aGroup.size(); g < gMax; g++)
-            addRowsForGroup(aCTab, row + g * rspan, row, col, rspan, ccount);
+            addRowsForGroup(aCTab, row + g * rowSpan, row, col, rowSpan, colCount);
     }
 
     /**
      * Adds necessary rows for a header cell and a group.
      */
-    void addRowsForGroup(RMCrossTab aCTab, int index, int row, int col, int rspan, int ccount)
+    void addRowsForGroup(RMCrossTab aCTab, int index, int row, int col, int rowSpan, int colCount)
     {
         // Create new row cells for group
-        RMCrossTabCell cells[][] = new RMCrossTabCell[rspan][ccount];
-        for (int i = 0; i < rspan; i++)
-            for (int j = 0, jMax = ccount; j < jMax; j++) {
+        RMCrossTabCell[][] cells = new RMCrossTabCell[rowSpan][colCount];
+        for (int i = 0; i < rowSpan; i++)
+            for (int j = 0, jMax = colCount; j < jMax; j++) {
                 if (cells[i][j] != null) continue;
 
                 // If before ref column and cell spans ref cell, merge cell. If at or after ref column index, copy cell
                 RMCrossTabCell cell = aCTab.getCell(row + i, j), ncell = cell;
-                int nrspan = 1;
-                if (j < col && cell.getRowEnd() >= row + rspan - 1) nrspan = rspan;
+                int newRowSpan;
+                if (j < col && cell.getRowEnd() >= row + rowSpan - 1)
+                    newRowSpan = rowSpan;
                 else {
                     ncell = cell.clone();
-                    nrspan = Math.min(cell.getRowEnd() + 1 - row - i, rspan - i);
+                    newRowSpan = Math.min(cell.getRowEnd() + 1 - row - i, rowSpan - i);
                 }
 
                 // Pad cell into cells
-                for (int k = 0; k < nrspan; k++)
+                for (int k = 0; k < newRowSpan; k++)
                     for (int l = 0, lMax = ncell.getColSpan(); l < lMax; l++) cells[i + k][j + l] = ncell;
             }
 
         // Create new rows, add cells to row and add row to CrossTab
-        for (int i = 0; i < rspan; i++) {
-            RMCrossTabRow nrow = aCTab.getRow(row + i).clone();
-            for (int j = 0; j < ccount; j++) nrow.addCell(cells[i][j]);
-            aCTab.addRow(nrow, index + i);
+        for (int i = 0; i < rowSpan; i++) {
+            RMCrossTabRow newRow = aCTab.getRow(row + i).clone();
+            for (int j = 0; j < colCount; j++)
+                newRow.addCell(cells[i][j]);
+            aCTab.addRow(newRow, index + i);
         }
     }
 
@@ -232,41 +244,47 @@ class RMCrossTabRPG {
      */
     void addNeededColumns(RMCrossTab aCTab, RMCrossTabCell aCell, RMGroup aGroup)
     {
-        int row = aCell.getRow(), col = aCell.getCol(), cspan = aCell.getColSpan(), rcount = aCTab.getRowCount();
+        int row = aCell.getRow();
+        int col = aCell.getCol();
+        int colSpan = aCell.getColSpan();
+        int rowCount = aCTab.getRowCount();
         for (int g = 1, gMax = aGroup.size(); g < gMax; g++)
-            addColsForGroup(aCTab, col + g * cspan, row, col, cspan, rcount);
+            addColsForGroup(aCTab, col + g * colSpan, row, col, colSpan, rowCount);
     }
 
     /**
      * Adds necessary columns for a header cell and a group.
      */
-    void addColsForGroup(RMCrossTab aCTab, int index, int row, int col, int cspan, int rcount)
+    void addColsForGroup(RMCrossTab aCTab, int index, int row, int col, int colSpan, int rowCount)
     {
         // Create new column cells for group
-        RMCrossTabCell cells[][] = new RMCrossTabCell[rcount][cspan];
-        for (int i = 0; i < rcount; i++)
-            for (int j = 0; j < cspan; j++) {
+        RMCrossTabCell[][] cells = new RMCrossTabCell[rowCount][colSpan];
+        for (int i = 0; i < rowCount; i++)
+            for (int j = 0; j < colSpan; j++) {
                 if (cells[i][j] != null) continue;
 
                 // If before ref row and cell spans ref cell, merge cell. If at or after ref column index, copy cell.
                 RMCrossTabCell cell = aCTab.getCell(i, col + j), ncell = cell;
-                int ncspan = 1;
-                if (i < row && cell.getColEnd() >= col + cspan - 1) ncspan = cspan;
+                int newColSpan;
+                if (i < row && cell.getColEnd() >= col + colSpan - 1)
+                    newColSpan = colSpan;
                 else {
                     ncell = cell.clone();
-                    ncspan = Math.min(cell.getColEnd() + 1 - col - j, cspan - j);
+                    newColSpan = Math.min(cell.getColEnd() + 1 - col - j, colSpan - j);
                 }
 
                 // Pad cell into cells
-                for (int k = 0; k < ncspan; k++)
-                    for (int l = 0, lMax = ncell.getRowSpan(); l < lMax; l++) cells[i + l][j + k] = ncell;
+                for (int k = 0; k < newColSpan; k++)
+                    for (int l = 0, lMax = ncell.getRowSpan(); l < lMax; l++)
+                        cells[i + l][j + k] = ncell;
             }
 
         // Create new columns, add cells to column and add column to CrossTab
-        for (int j = 0; j < cspan; j++) {
-            RMCrossTabCol ncol = aCTab.getCol(col + j).clone();
-            for (int i = 0; i < rcount; i++) ncol.addCell(cells[i][j]);
-            aCTab.addCol(ncol, index + j);
+        for (int j = 0; j < colSpan; j++) {
+            RMCrossTabCol newCol = aCTab.getCol(col + j).clone();
+            for (int i = 0; i < rowCount; i++)
+                newCol.addCell(cells[i][j]);
+            aCTab.addCol(newCol, index + j);
         }
     }
 

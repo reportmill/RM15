@@ -9,7 +9,7 @@ import snap.util.*;
 /**
  * This class describes an attribute of an entity.
  */
-public class Property implements Comparable, XMLArchiver.Archivable {
+public class Property implements Comparable<Object>, XMLArchiver.Archivable {
 
     // The entity that owns this property
     Entity _entity;
@@ -36,23 +36,21 @@ public class Property implements Comparable, XMLArchiver.Archivable {
     String _relEntityName;
 
     // Constants for property types
-    public enum Type {String, Number, Date, Boolean, Enum, Binary, Relation, RelationList, Other}
+    public enum Type { String, Number, Date, Boolean, Enum, Binary, Relation, RelationList, Other }
 
     // Constants for number types
-    public enum NumberType {Byte, Short, Integer, Long, Float, Double, Decimal}
+    public enum NumberType { Byte, Short, Integer, Long, Float, Double, Decimal }
 
     // Constants for date types
     public enum DateType {DateOnly, DateTime}
 
     /**
-     * Creates a new property.
+     * Constructor.
      */
-    public Property()
-    {
-    }
+    public Property()  { }
 
     /**
-     * Creates a new property with given name.
+     * Constructor for given name.
      */
     public Property(String aName)
     {
@@ -74,17 +72,16 @@ public class Property implements Comparable, XMLArchiver.Archivable {
     public Property(String aName, Object aType)
     {
         setName(aName);
-        if (aType instanceof Type) setType((Type) aType);
-        else if (aType instanceof NumberType) setNumberType((NumberType) aType);
+        if (aType instanceof Type)
+            setType((Type) aType);
+        else if (aType instanceof NumberType)
+            setNumberType((NumberType) aType);
     }
 
     /**
      * Returns the entity that owns this property.
      */
-    public Entity getEntity()
-    {
-        return _entity;
-    }
+    public Entity getEntity()  { return _entity; }
 
     /**
      * Sets the entity that owns this property.
@@ -97,10 +94,7 @@ public class Property implements Comparable, XMLArchiver.Archivable {
     /**
      * Returns the name of this property.
      */
-    public String getName()
-    {
-        return _name;
-    }
+    public String getName()  { return _name; }
 
     /**
      * Sets the name of this property.
@@ -122,10 +116,7 @@ public class Property implements Comparable, XMLArchiver.Archivable {
     /**
      * Returns the type of this property.
      */
-    public Type getType()
-    {
-        return _type;
-    }
+    public Type getType()  { return _type; }
 
     /**
      * Sets the type of this property.
@@ -164,25 +155,18 @@ public class Property implements Comparable, XMLArchiver.Archivable {
 
         // If type still assumed Date, try two common date formats and return if either work, otherwise change to Number
         if (getType() == Type.Date) {
-            try {
-                new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(aSample);
-                return;
-            } catch (Exception e) {
-            }
-            try {
-                new SimpleDateFormat("yyyy-MM-dd").parse(aSample);
-                return;
-            } catch (Exception e) {
+            try { new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(aSample); return; }
+            catch (Exception e) { }
+            try { new SimpleDateFormat("yyyy-MM-dd").parse(aSample); return; }
+            catch (Exception e) {
                 setType(Type.Number);
             }
         }
 
         // If type still assumed Number, try common number format and return if it works, otherwise change to String
         if (getType() == Type.Number) {
-            try {
-                Float.parseFloat(aSample);
-                return;
-            } catch (Exception e) {
+            try { Float.parseFloat(aSample); return; }
+            catch (Exception e) {
                 setType(Type.String);
             }
         }
@@ -191,10 +175,7 @@ public class Property implements Comparable, XMLArchiver.Archivable {
     /**
      * Returns whether this property is a primary key.
      */
-    public boolean isPrimary()
-    {
-        return _primary;
-    }
+    public boolean isPrimary()  { return _primary; }
 
     /**
      * Sets whether this property is a primary key.
@@ -207,10 +188,7 @@ public class Property implements Comparable, XMLArchiver.Archivable {
     /**
      * Returns whether this property is private.
      */
-    public boolean isPrivate()
-    {
-        return _private;
-    }
+    public boolean isPrivate()  { return _private; }
 
     /**
      * Sets whether this property is private.
@@ -223,10 +201,7 @@ public class Property implements Comparable, XMLArchiver.Archivable {
     /**
      * Returns the number type.
      */
-    public NumberType getNumberType()
-    {
-        return _numberType;
-    }
+    public NumberType getNumberType()  { return _numberType; }
 
     /**
      * Sets the number type.
@@ -241,10 +216,7 @@ public class Property implements Comparable, XMLArchiver.Archivable {
     /**
      * Return default number type.
      */
-    public NumberType getNumberTypeDefault()
-    {
-        return NumberType.Double;
-    }
+    public NumberType getNumberTypeDefault()  { return NumberType.Double; }
 
     /**
      * Returns whether this property is a simple attribute.
@@ -324,11 +296,10 @@ public class Property implements Comparable, XMLArchiver.Archivable {
         Object value = DataUtils.convertValue(anObj, getType(), getNumberType());
 
         // Special case for Binary - gets converted to Base64 below in toString()
-        if (value == null && getType() == Type.Binary && anObj instanceof String)
-            try {
-                value = ASCIICodec.decodeBase64((String) anObj);
-            } catch (Exception e) {
-            }
+        if (value == null && getType() == Type.Binary && anObj instanceof String) {
+            try { value = ASCIICodec.decodeBase64((String) anObj); }
+            catch (Exception e) { }
+        }
 
         // Return value
         return value;
@@ -343,14 +314,9 @@ public class Property implements Comparable, XMLArchiver.Archivable {
         Object value = convertValue(aValue);
 
         // Handle specific property types
-        switch (getType()) {
-            case Number:
-                return DataUtils.toString((Number) value);
-            case Date:
-                return DataUtils.toString((Date) value);
-            default:
-                return SnapUtils.stringValue(value);
-        }
+        if (getType() == Type.Date)
+            return DataUtils.toString((Date) value);
+        return Convert.stringValue(value);
     }
 
     /**
@@ -364,8 +330,8 @@ public class Property implements Comparable, XMLArchiver.Archivable {
         if (other == null) return false;
 
         // Check Name, Type
-        if (!SnapUtils.equals(other._name, _name)) return false;
-        if (!SnapUtils.equals(other._type, _type)) return false;
+        if (!Objects.equals(other._name, _name)) return false;
+        if (!Objects.equals(other._type, _type)) return false;
 
         // Check Primary, Private
         if (other._primary != _primary) return false;
@@ -373,7 +339,7 @@ public class Property implements Comparable, XMLArchiver.Archivable {
 
         // Check NumberType, RelationEntityName
         if (getType() == Type.Number && other._numberType != _numberType) return false;
-        if (!SnapUtils.equals(other._relEntityName, _relEntityName)) return false;
+        if (!Objects.equals(other._relEntityName, _relEntityName)) return false;
 
         // Return true since all checks passed
         return true;
@@ -451,5 +417,4 @@ public class Property implements Comparable, XMLArchiver.Archivable {
     {
         return getName();
     }
-
 }

@@ -577,7 +577,8 @@ public class RMCrossTab extends RMParentShape {
      */
     public RMShape rpgAll(ReportOwner anRptOwner, RMShape aParent)
     {
-        return new RMCrossTabRPG().rpgCrossTab(anRptOwner, aParent, this);
+        RMCrossTabRPG crossTabRPG = new RMCrossTabRPG();
+        return crossTabRPG.rpgCrossTab(anRptOwner, this);
     }
 
     /**

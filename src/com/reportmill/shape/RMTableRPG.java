@@ -89,8 +89,7 @@ public class RMTableRPG extends RMParentShape {
         RMGroup group = getGroup(aTable);
 
         // Add Rows for group
-        RMTableRPG page = this;
-        while (page._nextPage != null) page = page._nextPage;
+        RMTableRPG page = getPageLast();
         page._table = aTable;
         RMTableRowRPG lastRow = null;
         while (!page.addRows(group, page._topRow, lastRow)) {
@@ -107,10 +106,24 @@ public class RMTableRPG extends RMParentShape {
      */
     protected RMGroup getGroup(RMTable aTable)
     {
-        List dataset = _rptOwner.getKeyChainListValue(aTable.getDatasetKey()); // Get dataset
-        if (dataset == null) dataset = new ArrayList();
-        dataset = DataUtils.getFilteredList(dataset, aTable.getFilterKey()); // Apply FilterKey
-        return aTable.getGrouper().groupObjects(dataset); // Do grouping
+        // Get dataset
+        List<?> dataset = _rptOwner.getKeyChainListValue(aTable.getDatasetKey());
+        if (dataset == null)
+            dataset = new ArrayList<>();
+
+        // Filter if needed
+        String filterKey = aTable.getFilterKey();
+        if (filterKey != null && filterKey.length() > 0) {
+            RMKeyChain keyChain = RMKeyChain.getKeyChain(filterKey);
+            dataset = ListUtils.getFiltered(dataset, item -> RMKeyChain.getBoolValue(item, keyChain));
+        }
+
+        // Do grouping
+        RMGrouper grouper = aTable.getGrouper();
+        RMGroup group = grouper.groupObjects(dataset);
+
+        // Return
+        return group;
     }
 
     /**
@@ -118,9 +131,10 @@ public class RMTableRPG extends RMParentShape {
      */
     public RMTableRPG getPageLast()
     {
-        RMTableRPG p = this;
-        while (p._nextPage != null) p = p._nextPage;
-        return p;
+        RMTableRPG page = this;
+        while (page._nextPage != null)
+            page = page._nextPage;
+        return page;
     }
 
     /**
@@ -341,10 +355,8 @@ public class RMTableRPG extends RMParentShape {
             row.rpgAll(_rptOwner, summaryRow, group, null);
 
             // If last summary was split, use remainder instead
-            if (theLastRow != null && theLastRow._row == summaryRow && theLastRow._split != null) {
+            if (theLastRow != null && theLastRow._row == summaryRow && theLastRow._split != null)
                 row = theLastRow._split;
-                theLastRow = null;
-            }
 
             // Add row (return if failed)
             if (!addRow(row, aParentRPG))

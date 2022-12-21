@@ -2,7 +2,7 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.base;
-import java.util.*;
+import snap.util.Convert;
 import snap.util.SnapUtils;
 import java.text.*;
 import java.util.Date;
@@ -12,11 +12,8 @@ import java.util.Date;
  */
 public class DataUtils {
 
-    // Decimal sysmbols for current local
-    static String _groupingSeparator = "" + new DecimalFormat().getDecimalFormatSymbols().getGroupingSeparator();
-
     // DateFormat for toString(date)
-    static SimpleDateFormat _dfmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    static SimpleDateFormat  _dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     /**
      * Converts a given value to a given type.
@@ -33,7 +30,7 @@ public class DataUtils {
     {
         // Handle String conversions
         if (aType == Property.Type.String)
-            return SnapUtils.stringValue(aValue);
+            return Convert.stringValue(aValue);
 
         // Handle Number conversions
         if (aType == Property.Type.Number) {
@@ -45,28 +42,22 @@ public class DataUtils {
             switch (aNumberType) {
                 case Byte:
                 case Short:
-                case Integer:
-                    return SnapUtils.getInteger(aValue);
-                case Long:
-                    return SnapUtils.longValue(aValue);
-                case Float:
-                    return SnapUtils.getFloat(aValue);
-                case Double:
-                    return SnapUtils.getDouble(aValue);
-                case Decimal:
-                    return SnapUtils.getBigDecimal(aValue);
-                default:
-                    return SnapUtils.numberValue(aValue);
+                case Integer: return Convert.getInteger(aValue);
+                case Long: return Convert.longValue(aValue);
+                case Float: return Convert.getFloat(aValue);
+                case Double: return Convert.getDouble(aValue);
+                case Decimal: return Convert.getBigDecimal(aValue);
+                default: return Convert.numberValue(aValue);
             }
         }
 
         // Handle Boolean conversions
         if (aType == Property.Type.Boolean)
-            return SnapUtils.booleanValue(aValue);
+            return Convert.booleanValue(aValue);
 
         // Handle Date conversions
         if (aType == Property.Type.Date)
-            return SnapUtils.getDate(aValue);
+            return Convert.getDate(aValue);
 
         // Handle Binary conversion
         if (aType == Property.Type.Binary)
@@ -77,40 +68,11 @@ public class DataUtils {
     }
 
     /**
-     * Returns a string for a number according to given NumberType.
-     */
-    public static String toString(Number aNumber)
-    {
-        return SnapUtils.stringValue(aNumber);
-    }
-
-    /**
      * Returns a string for a date according to given DateType.
      */
     public static String toString(Date aDate)
     {
-        return _dfmt.format(aDate);
-    }
-
-    /**
-     * Returns a filtered list (copy with given key chain string.
-     */
-    public static List getFilteredList(List aList, String aKeyChain)
-    {
-        // If key is null or zero length, just return copy
-        if (aKeyChain == null || aKeyChain.length() == 0) return new ArrayList(aList);
-
-        // Get key chain and new list
-        RMKeyChain keyChain = RMKeyChain.getKeyChain(aKeyChain);
-        List list = new ArrayList(aList.size());
-
-        // Iterate over list objects and add to new list if they satisfy key chain
-        for (Object object : aList)
-            if (RMKeyChain.getBoolValue(object, keyChain))
-                list.add(object);
-
-        // Return list
-        return list;
+        return _dateFormat.format(aDate);
     }
 
     /**
@@ -125,7 +87,7 @@ public class DataUtils {
         if (anObj instanceof Property) return ((Property) anObj).getType();
 
         // Get class
-        Class objClass = anObj instanceof Class ? (Class) anObj : anObj.getClass();
+        Class<?> objClass = anObj instanceof Class ? (Class<?>) anObj : anObj.getClass();
 
         // Handle String
         if (String.class.isAssignableFrom(objClass)) return Property.Type.String;
@@ -149,5 +111,4 @@ public class DataUtils {
         // Return TYPE_OTHER
         return Property.Type.Other;
     }
-
 }

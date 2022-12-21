@@ -5,6 +5,8 @@ package com.reportmill.shape;
 import com.reportmill.base.*;
 import com.reportmill.graphics.RMColor;
 import com.reportmill.shape.RMGraph.*;
+import snap.util.ListUtils;
+
 import java.util.*;
 
 /**
@@ -43,7 +45,7 @@ abstract class RMGraphRPG {
         _rptOwner = anRptOwner;
 
         // Get dataset: If parent TableRow was found, get dataset from table row group
-        List dataset = null;
+        List<?> dataset;
         String datasetKey = _graph.getDatasetKey();
         RMShape parentTableRow = _graph.getParent(RMTableRow.class);
         if (parentTableRow != null) {
@@ -70,9 +72,14 @@ abstract class RMGraphRPG {
         else dataset = anRptOwner.getKeyChainListValue(datasetKey);
 
         // Get filtered list from dataset and graph filter key
-        List filteredList = dataset;
-        if (dataset != null && _graph.getFilterKey() != null && _graph.getFilterKey().length() > 0)
-            filteredList = DataUtils.getFilteredList(dataset, _graph.getFilterKey());
+        List<?> filteredList = dataset;
+        if (dataset != null) {
+            String filterKey = _graph.getFilterKey();
+            if (filterKey != null && filterKey.length() > 0) {
+                RMKeyChain keyChain = RMKeyChain.getKeyChain(filterKey);
+                filteredList = ListUtils.getFiltered(filteredList, item -> RMKeyChain.getBoolValue(item, keyChain));
+            }
+        }
 
         // Get filtered list as group
         _objects = filteredList instanceof RMGroup ? (RMGroup) filteredList : new RMGroup(filteredList);
@@ -95,26 +102,17 @@ abstract class RMGraphRPG {
     /**
      * Returns the source graph.
      */
-    public RMGraph getGraph()
-    {
-        return _graph;
-    }
+    public RMGraph getGraph()  { return _graph; }
 
     /**
      * Returns the ReportOwner.
      */
-    public ReportOwner getReportOwner()
-    {
-        return _rptOwner;
-    }
+    public ReportOwner getReportOwner()  { return _rptOwner; }
 
     /**
      * Returns the graph shape.
      */
-    public RMParentShape getGraphShape()
-    {
-        return _graphShape;
-    }
+    public RMParentShape getGraphShape()  { return _graphShape; }
 
     /**
      * Creates the graph shape.
@@ -132,10 +130,7 @@ abstract class RMGraphRPG {
     /**
      * Returns the graph objects.
      */
-    public RMGroup getObjects()
-    {
-        return _objects;
-    }
+    public RMGroup getObjects()  { return _objects; }
 
     /**
      * Returns the number of series in this graph.
@@ -156,10 +151,7 @@ abstract class RMGraphRPG {
     /**
      * Returns the list of series.
      */
-    public List<RMGraphSeries> getSeries()
-    {
-        return _series;
-    }
+    public List<RMGraphSeries> getSeries()  { return _series; }
 
     /**
      * Returns the number of sections in this graph.
@@ -180,10 +172,7 @@ abstract class RMGraphRPG {
     /**
      * Returns the graph sections.
      */
-    public List<RMGraphSection> getSections()
-    {
-        return _sections;
-    }
+    public List<RMGraphSection> getSections()  { return _sections; }
 
     /**
      * Returns the colors.
@@ -194,21 +183,22 @@ abstract class RMGraphRPG {
         if (_colors != null) return _colors;
 
         // If no graph key, just use Graph.Colors
-        String ckey = _graph.getColorKey();
-        if (ckey == null)
-            return _colors = (List) _graph.getColors();
+        String colorKey = _graph.getColorKey();
+        if (colorKey == null)
+            return _colors = _graph.getColors();
 
         // Otherwise, get colors
         RMGraphSeries series = getSeries(0);
-        List<RMColor> colors = new ArrayList();
+        List<RMColor> colors = new ArrayList<>();
         for (int i = 0, iMax = series.getItemCount(); i < iMax; i++) {
             RMGraphSeries.Item item = series.getItem(i);
             Object obj = item.getGroup();
-            Object val = RMKeyChain.getValue(obj, ckey);
+            Object val = RMKeyChain.getValue(obj, colorKey);
             if (val instanceof String) {
-                RMColor c = RMColor.get((String) val);
-                if (c == null) c = _graph.getColor(i);
-                colors.add(c);
+                RMColor color = RMColor.get(val);
+                if (color == null)
+                    color = _graph.getColor(i);
+                colors.add(color);
             } else colors.add(_graph.getColor(i));
         }
 
@@ -240,12 +230,11 @@ abstract class RMGraphRPG {
         /**
          * Returns the GraphRPG.
          */
-        public RMGraphRPG getGraphRPG();
+        RMGraphRPG getGraphRPG();
 
         /**
          * Sets the RMGraphRPG.
          */
-        public void setGraphRPG(RMGraphRPG aGRPG);
+        void setGraphRPG(RMGraphRPG aGRPG);
     }
-
 }
