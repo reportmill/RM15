@@ -87,14 +87,33 @@ public class RMTableRPG extends RMParentShape {
     {
         // Get grouped objects
         RMGroup group = getGroup(aTable);
+        int maxPageCount = ReportMill.getMaxPageCount();
+        if (ReportMill.isApp) maxPageCount /= 2;
 
         // Add Rows for group
         RMTableRPG page = getPageLast();
         page._table = aTable;
         RMTableRowRPG lastRow = null;
-        while (!page.addRows(group, page._topRow, lastRow)) {
+
+        // Iterate over addRows()
+        while (true) {
+
+            // Add rows - if finished, just return
+            boolean finished = page.addRows(group, page._topRow, lastRow);
+            if (finished)
+                break;
+
+            // Otherwise, create new page and go again
             lastRow = page._lastRow;
             page = page.addPage();
+
+            // If Beyond bounds, try doubling page height once as a fallback, but just break if still generating
+            if (page._page >= maxPageCount) {
+                if (page._page > maxPageCount)
+                    break;
+                System.err.println("RMTableRPG.rpgTable: Exceeded Max pages for table: " + aTable.getName());
+                page._height *= 2;
+            }
         }
 
         // Move rows for last page to bottom

@@ -31,6 +31,9 @@ public class ReportMill {
     // The build info string from "BuildInfo.txt" (eg, "Aug-31-04")
     private static String _buildInfo;
 
+    // Maximum number of pages allowed in a report
+    private static int  _maxPageCount = 500;
+
     /**
      * An interface for classes than want to know about filled shapes.
      */
@@ -55,6 +58,16 @@ public class ReportMill {
         else if (anObj instanceof Object[]) return Arrays.asList((Object[]) anObj); // If Array, return List
         return anObj; // Return object
     }
+
+    /**
+     * Returns the maximum number of pages allowed in a report.
+     */
+    public static int getMaxPageCount()  { return _maxPageCount; }
+
+    /**
+     * Sets the maximum number of pages allowed in a report.
+     */
+    public static void setMaxPageCount(int aCount)  { _maxPageCount = aCount; }
 
     /**
      * Returns the ReportMill license string for the current user.
