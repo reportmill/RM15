@@ -91,7 +91,7 @@ public class ShapeGeneral extends RMEditorPane.SupportPane {
                 Clipboard dboard = anEvent.getClipboard();
                 anEvent.acceptDrag();
                 if (dboard.hasString()) {
-                    int row = _bindingsTable.getRowAt(anEvent.getX(), anEvent.getY());
+                    int row = _bindingsTable.getRowIndexForY(anEvent.getY());
                     if (row < 0) return;
                     String pname = shape.getPropNames()[row];
                     String bkey = KeysPanel.getDragKey();
