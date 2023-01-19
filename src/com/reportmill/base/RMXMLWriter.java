@@ -85,6 +85,8 @@ public class RMXMLWriter {
     public void setIncludeFields(boolean aFlag)
     {
         getSchemaMaker().setIncludeFields(aFlag);
+        if (aFlag)
+            Key.setAllowFields(aFlag);
     }
 
     /**
