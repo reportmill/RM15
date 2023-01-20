@@ -75,7 +75,7 @@ public class ReportMill {
     /**
      * Sets the ReportMill license string for the current user.
      */
-    public static void isLicensed()  { Voucher.isLicensed(); }
+    public static boolean isLicensed()  { return Voucher.isLicensed(); }
 
     /**
      * Returns the ReportMill license string for the current user.
