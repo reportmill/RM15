@@ -73,6 +73,11 @@ public class ReportMill {
     public static void setMaxPageCount(int aCount)  { _maxPageCount = aCount; }
 
     /**
+     * Sets the ReportMill license string for the current user.
+     */
+    public static void isLicensed()  { Voucher.isLicensed(); }
+
+    /**
      * Returns the ReportMill license string for the current user.
      */
     public static String getLicense()  { return Voucher.getLicense(); }
