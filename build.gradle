@@ -2,7 +2,11 @@
 plugins {
     id 'java'
     id 'application'
+    id 'maven-publish'
 }
+
+group 'com.reportmill'
+version '2023.01.02'
 
 sourceSets.main.java.srcDirs = ['src']
 sourceSets.main.resources.srcDirs = ['src']
@@ -42,7 +46,15 @@ dependencies {
     implementation files('lib/spell.jar')
 }
 
-mainClassName = 'com.reportmill.app.App'
+publishing {
+
+    publications {
+        gpr(MavenPublication) {
+            artifactId 'ReportMill'
+            from(components.java)
+        }
+    }
+}
 
 /**
  * Build executable jar SnapChartsAll.jar.
