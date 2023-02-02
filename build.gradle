@@ -1,12 +1,11 @@
 
 plugins {
-    id 'java'
     id 'application'
     id 'maven-publish'
 }
 
 group 'com.reportmill'
-version '2023.01.02'
+version '2023.02.02'
 
 sourceSets.main.java.srcDirs = ['src']
 sourceSets.main.resources.srcDirs = ['src']
@@ -36,9 +35,6 @@ dependencies {
     else { println 'Using latest SnapPDF GitHub repo'
         implementation 'com.github.reportmill:SnapPDF:master-SNAPSHOT'  }
 
-    // For MacOS mappings
-    implementation files('lib/eawt.jar')
-
     // For Excel generation
     implementation files('lib/poi-3.7.jar')
 
@@ -46,22 +42,11 @@ dependencies {
     implementation files('lib/spell.jar')
 }
 
-publishing {
-
-    publications {
-        gpr(MavenPublication) {
-            artifactId 'ReportMill'
-            from(components.java)
-        }
-    }
-}
-
 /**
- * Build executable jar SnapChartsAll.jar.
- *
- * We could use the standard jar task just by using jar { ... } and deleting 'baseName' and 'with jar' lines.
+ * Modify jar task to include all dependencies. (Could also have defined new: task jarAll(type: Jar) { ... }
  */
-task buildExecJar(type: Jar) {
+jar {
+    archiveBaseName = 'ReportMill15'
     manifest {
         attributes(
             'Main-Class': 'com.reportmill.app.App',
@@ -69,21 +54,34 @@ task buildExecJar(type: Jar) {
             'Permissions': 'all-permissions'
         )
     }
-    archiveBaseName = 'RMStudio15'
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
-    exclude('**/org/**')
-    exclude('**/rmtests/**')
-    exclude('**/test/**')
-    exclude('**/font_metrics.properties')
-    with jar {
-        processResources {
-            finalizedBy ('buildInfo')
+    exclude('**/org/**', '**/rmtests/**', '**/test/**', '**/font_metrics.properties')
+    processResources {
+        finalizedBy ('buildInfo')
+    }
+}
+
+/**
+ * Define package information.
+ */
+publishing {
+
+    // Packages
+    publications {
+
+        // Standard maven package
+        gpr(MavenPublication) {
+            artifactId 'ReportMill15'
+            from(components.java)
         }
     }
 }
 
+/**
+ * Writes the current build date into BuildInfo.txt, e.g.: Feb-02-23 09:31.
+ */
 tasks.register('buildInfo') {
     doLast {
         exec {
