@@ -40,7 +40,11 @@ Product information is available here: https://reportmill.com/product/
 
 Download of build jars is available here: https://reportmill.com/rm15/
 
-Jar Versions
+Java / Jar Versions
 ---------------
+
+ReportMill 15 supports Java version 8 and up.
+
+ReportMill uses poi, version 3.7:
 
 	- poi-3.7.jar: Poi 3.7
