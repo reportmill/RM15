@@ -73,9 +73,12 @@ publishing {
     publications {
 
         // Standard maven package
-        gpr(MavenPublication) {
+        gpr (MavenPublication) {
             artifactId 'ReportMill15'
             from(components.java)
+            pom.withXml {
+                asNode().dependencies.dependency.each { dep -> dep.parent().remove(dep) }
+            }
         }
     }
 
@@ -104,3 +107,8 @@ tasks.register('buildInfo') {
         }
     }
 }
+
+/**
+ * Disable Gradle Metadata file generation.
+ */
+tasks.withType(GenerateModuleMetadata) { enabled = false }
