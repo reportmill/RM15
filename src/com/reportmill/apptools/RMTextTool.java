@@ -630,34 +630,40 @@ public class RMTextTool<T extends RMTextShape> extends RMTool<T> {
         }
 
         // Get handle point in shape coords and shape parent coords
-        Point p1 = getHandlePoint(aShape, aHandle, false);
-        Point p2 = aShape.parentToLocal(toPoint);
+        Point handlePoint = getHandlePoint(aShape, aHandle, false);
+        Point dragPoint = aShape.parentToLocal(toPoint);
 
-        // Get whether left handle and width change
-        boolean left = aHandle == HandleW || aHandle == HandleNW || aHandle == HandleSW;
-        double dw = p2.getX() - p1.getX();
-        if (left) dw = -dw;
-        double nw = aShape.getWidth() + dw;
-        if (nw < 8) {
-            nw = 8;
-            dw = nw - aShape.getWidth();
+        // Get whether width change (adjust if left handle)
+        double deltaW = dragPoint.x - handlePoint.x;
+        boolean isLeftHandle = aHandle == HandleW || aHandle == HandleNW || aHandle == HandleSW;
+        if (isLeftHandle)
+            deltaW = -deltaW;
+
+        // Get new width
+        double newW = aShape.getWidth() + deltaW;
+        if (newW < 8) {
+            newW = 8;
+            deltaW = newW - aShape.getWidth();
         }
 
         // Get shape to adjust and new width (make sure it's no less than 8)
         int index = aShape.indexOf();
-        int index2 = left ? index - 1 : index + 1;
-        RMShape other = aShape.getParent().getChild(index2);
-        double nw2 = other.getWidth() - dw;
-        if (nw2 < 8) {
-            nw2 = 8;
-            dw = other.getWidth() - nw2;
-            nw = aShape.getWidth() + dw;
+        int otherShapeIndex = isLeftHandle ? index - 1 : index + 1;
+
+        // Get other shape
+        RMParentShape shapeParent = aShape.getParent();
+        RMShape otherShape = shapeParent.getChild(otherShapeIndex);
+        double otherShapeNewW = otherShape.getWidth() - deltaW;
+        if (otherShapeNewW < 8) {
+            otherShapeNewW = 8;
+            deltaW = otherShape.getWidth() - otherShapeNewW;
+            newW = aShape.getWidth() + deltaW;
         }
 
-        // Adjust shape and layout parent
-        aShape.setWidth(nw);
-        other.setWidth(nw2);
-        aShape.getParent().layout();
+        // Set new widths and layout parent
+        aShape.setWidth(newW);
+        otherShape.setWidth(otherShapeNewW);
+        shapeParent.layout();
     }
 
     /**

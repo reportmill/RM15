@@ -61,11 +61,6 @@ public class RMTableRow extends RMSwitchShape {
     public static final String VersionTopNOthers = "TopN Others";
     public static final String VersionSplitHeader = "Split Header";
 
-    // Constants for the methods to resize row columns when row is resized
-    public enum ColumnResizeMode {AllColumns, LastColumn}
-
-    ; // NextColumn, NextColumns, NoResize
-
     /**
      * Creates a plain, unstructured table row.
      */
@@ -128,8 +123,9 @@ public class RMTableRow extends RMSwitchShape {
         // If value already set, just return
         if (aFlag == _structured) return;
 
-        // Register for repaint (and thus undo)
+        // Repaint, relayout
         repaint();
+        relayout();
 
         // Set value and fire property change
         firePropChange("Structured", _structured, _structured = aFlag);
@@ -193,10 +189,13 @@ public class RMTableRow extends RMSwitchShape {
         firePropChange("SyncStructureWithAlternates", _syncStructureWithAlternates, _syncStructureWithAlternates = aFlag);
 
         // Iterate over alternates and sync structure
-        if (_syncStructureWithAlternates && getAlternates() != null)
-            for (RMTableRow alternate : (Collection<RMTableRow>) (Collection) getAlternates().values())
+        if (_syncStructureWithAlternates && getAlternates() != null) {
+            Collection<RMTableRow> alternateTableRows = (Collection<RMTableRow>) (Collection<?>) getAlternates().values();
+            for (RMTableRow alternate : alternateTableRows) {
                 if (alternate != this)
                     alternate.syncStructureWithShape(this);
+            }
+        }
     }
 
     /**
@@ -526,9 +525,12 @@ public class RMTableRow extends RMSwitchShape {
         }
 
         // Sync Structure With Alternates
-        if (getSyncStructureWithAlternates() && getAlternates() != null)
-            for (RMTableRow alternate : (Collection<RMTableRow>) (Collection) getAlternates().values())
+        if (getSyncStructureWithAlternates() && getAlternates() != null) {
+            Collection<RMTableRow> alternateTableRows = (Collection<RMTableRow>) (Collection<?>) getAlternates().values();
+            for (RMTableRow alternate : alternateTableRows) {
                 alternate.syncStructureWithShape(this);
+            }
+        }
 
         // Sync Structure With Row Above
         if (getSyncStructureWithRowAbove() && getRowAbove() != null)
