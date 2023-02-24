@@ -29,6 +29,15 @@ public class RMTableRowRPG extends RMSpringShape {
     RMTableRowRPG _split;
 
     /**
+     * Constructor.
+     */
+    public RMTableRowRPG()
+    {
+        super();
+        _growHeight = true;
+    }
+
+    /**
      * Generate Report for ReportOwner, RMTableRow and group.
      */
     public void rpgAll(ReportOwner anRptOwner, RMTableRow aRow, RMGroup aGroup, String aSuggestedVersion)

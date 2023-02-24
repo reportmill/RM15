@@ -14,6 +14,9 @@ import snap.util.*;
  */
 public class RMSpringShape extends RMParentShape {
 
+    // Whether to let this shape grow height to accommodate child PrefHeights - currently only TableRowRPG does this
+    protected boolean  _growHeight;
+
     // Whether springs resizing is disabled
     boolean _springsDisabled;
 
@@ -26,10 +29,35 @@ public class RMSpringShape extends RMParentShape {
     // The PropChangeListener to notify of changes in child
     PropChangeListener _childLsnr;
 
+    // Default value for grow height
+    private static boolean  _defaultGrowHeight = false;
+
     // Constants for positions above and below
     enum Position {Above, Below}
 
-    ;
+    /**
+     * Constructor.
+     */
+    public RMSpringShape()
+    {
+        super();
+        _growHeight = _defaultGrowHeight;
+    }
+
+    /**
+     * Returns whether to let this shape grow height to accommodate child pref heights.
+     */
+    public boolean isGrowHeight()  { return _growHeight; }
+
+    /**
+     * Sets whether to let this shape grow height to accommodate child pref heights.
+     */
+    public void setGrowHeight(boolean aValue)  { _growHeight = aValue; }
+
+    /**
+     * Sets default grown height for RMSpringShape (usually any grouped shapes).
+     */
+    public static void setDefaultGrowHeight(boolean aValue)  { _defaultGrowHeight = aValue; }
 
     /**
      * Return whether springs have been disabled.
@@ -65,8 +93,15 @@ public class RMSpringShape extends RMParentShape {
      */
     protected double getPrefHeightImpl(double aWidth)
     {
-        if (_cboxes == null) getChildBoxes();
-        return _bh;
+        // If GrowHeight, calc pref height from children PrefHeights
+        if (isGrowHeight()) {
+            if (_cboxes == null)
+                getChildBoxes();
+            return _bh;
+        }
+
+        // Otherwise, just return current height
+        return super.getPrefHeightImpl(aWidth);
     }
 
     /**
