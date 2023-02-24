@@ -14,19 +14,19 @@ import snap.util.MathUtils;
 public class RMTableRowRPG extends RMSpringShape {
 
     // The TableRow used to do RPG (and potentially an alternate)
-    RMTableRow _row, _row2;
+    protected RMTableRow _row, _row2;
 
     // The group
-    RMGroup _group;
+    protected RMGroup  _group;
 
     // The parent RPG row
-    RMTableRowRPG _parentRPG;
+    protected RMTableRowRPG  _parentRPG;
 
     // Child rows
-    List<RMTableRowRPG> _childRPGs;
+    protected List<RMTableRowRPG>  _childRPGs;
 
     // The split version of the row
-    RMTableRowRPG _split;
+    protected RMTableRowRPG  _split;
 
     /**
      * Constructor.
@@ -53,7 +53,8 @@ public class RMTableRowRPG extends RMSpringShape {
         _row2 = row;
         _group = aGroup; // Set ivars
         copyShape(row); // Copy attributes
-        if (_row2.isStructured()) setSpringsDisabled(true); // If structured, disable springs
+        if (_row2.isStructured())
+            setSpringsDisabled(true); // If structured, disable springs
         row.rpgChildren(anRptOwner, this); // RPG children
 
         // Set best height
@@ -62,8 +63,10 @@ public class RMTableRowRPG extends RMSpringShape {
 
         // Handle invisible shapes
         if (!_row2.isStructured()) {
-            if (_row2.getDeleteVerticalSpansOfHiddenShapes()) deleteVerticalSpansOfHiddenShapes();
-            else if (_row2.getShiftShapesBelowHiddenShapesUp()) shiftShapesBelowHiddenShapesUp();
+            if (_row2.getDeleteVerticalSpansOfHiddenShapes())
+                deleteVerticalSpansOfHiddenShapes();
+            else if (_row2.getShiftShapesBelowHiddenShapesUp())
+                shiftShapesBelowHiddenShapesUp();
         }
 
         // Do bindings RPG
@@ -165,7 +168,7 @@ public class RMTableRowRPG extends RMSpringShape {
      */
     public void addChildRPG(RMTableRowRPG aRow)
     {
-        if (_childRPGs == null) _childRPGs = new ArrayList();
+        if (_childRPGs == null) _childRPGs = new ArrayList<>();
         _childRPGs.add(aRow);
         aRow._parentRPG = this;
     }
@@ -179,15 +182,19 @@ public class RMTableRowRPG extends RMSpringShape {
         SpanList spans = new SpanList();
 
         // Collect hidden shape spans
-        for (RMShape child : getChildren())
+        for (RMShape child : getChildren()) {
             if (!child.isVisible())
                 spans.addSpan(new Span(child.getFrameY(), getShapeBelowFrameY(this, child)));
+        }
 
         // Remove visible shape spans
-        if (spans.size() > 0)
-            for (RMShape child : getChildren())
-                if (child.isVisible())
+        if (spans.size() > 0) {
+            for (RMShape child : getChildren()) {
+                if (child.isVisible()) {
                     spans.removeSpan(new Span(child.getFrameY(), getShapeBelowFrameY(this, child)));
+                }
+            }
+        }
 
         // Sort spans and reverse
         Collections.sort(spans);
@@ -197,9 +204,10 @@ public class RMTableRowRPG extends RMSpringShape {
         for (Span span : spans) {
 
             // Iterate over children and shift them up
-            for (RMShape child : getChildren())
+            for (RMShape child : getChildren()) {
                 if (child.getFrameY() >= span.end)
                     child.setFrameY(child.getFrameY() - span.getLength());
+            }
 
             // Remove bottom of shape
             setHeight(getHeight() - span.getLength());
@@ -212,9 +220,11 @@ public class RMTableRowRPG extends RMSpringShape {
     public static double getShapeBelowFrameY(RMParentShape aParent, RMShape aChild)
     {
         double y = aParent.getHeight();
-        for (RMShape child : aParent.getChildren())
+        for (RMShape child : aParent.getChildren()) {
             if (child != aChild && child.getFrameY() > aChild.getFrameMaxY() && child.getFrameY() < y)
                 y = child.getFrameY();
+        }
+
         return y;
     }
 
@@ -225,8 +235,10 @@ public class RMTableRowRPG extends RMSpringShape {
     {
         // If no hidden shapes, just return
         boolean vsbl = true;
-        for (int i = 0, iMax = getChildCount(); i < iMax && vsbl; i++) vsbl = getChild(i).isVisible();
-        if (vsbl) return;
+        for (int i = 0, iMax = getChildCount(); i < iMax && vsbl; i++)
+            vsbl = getChild(i).isVisible();
+        if (vsbl)
+            return;
 
         // Get max FrameMaxY and shapes sorted by FrameY and FrameX
         double maxFrameY = RMShapeUtils.getMaxFrameMaxY(getChildren());
@@ -259,9 +271,9 @@ public class RMTableRowRPG extends RMSpringShape {
         belowRect.setHeight(getHeight() - belowRect.getY());
 
         // Iterate over shapes and get shape rects, minX/maxX/maxY and sort rects into static and floating lists
-        List<Rect> staticRects = new ArrayList();
-        List<Rect> floatingRects = new ArrayList();
-        List<RMShape> floatingRectShapes = new ArrayList();
+        List<Rect> staticRects = new ArrayList<>();
+        List<Rect> floatingRects = new ArrayList<>();
+        List<RMShape> floatingRectShapes = new ArrayList<>();
 
         // Iterate over shapes and get shape rects, minX/maxX/maxY and sort rects into static and floating lists
         for (RMShape shape : theShapes) {
@@ -285,7 +297,8 @@ public class RMTableRowRPG extends RMSpringShape {
 
         // Get max y of floating rects and height to shift rects
         double maxY = getHeight();
-        for (Rect rect : floatingRects) maxY = Math.min(maxY, rect.getY());
+        for (Rect rect : floatingRects)
+            maxY = Math.min(maxY, rect.getY());
         double height = maxY - aRect.getY();
 
         // Add height to floating rects
@@ -319,18 +332,12 @@ public class RMTableRowRPG extends RMSpringShape {
     /**
      * Override to make selectable.
      */
-    public boolean superSelectable()
-    {
-        return true;
-    }
+    public boolean superSelectable()  { return true; }
 
     /**
      * Override to paint stroke on top.
      */
-    public boolean isStrokeOnTop()
-    {
-        return true;
-    }
+    public boolean isStrokeOnTop()  { return true; }
 
     /**
      * Override to handle structured row.
@@ -357,21 +364,25 @@ public class RMTableRowRPG extends RMSpringShape {
     protected double getPrefHeightImpl(double aWidth)
     {
         // If not structured, just return normal version
-        if (!_row2.isStructured()) return super.getPrefHeightImpl(aWidth);
+        if (!_row2.isStructured())
+            return super.getPrefHeightImpl(aWidth);
 
         // Return max of current row height and max child best size
         double max = getHeight();
-        for (RMShape child : getChildren()) max = Math.max(max, child.getPrefHeight());
+        for (RMShape child : getChildren())
+            max = Math.max(max, child.getPrefHeight());
         return max;
     }
 
     /**
      * A class to represent an interval
      */
-    public static class Span implements Comparable {
+    public static class Span implements Comparable<Object> {
+
+        double start, end;
 
         /**
-         * Creates a new span.
+         * Constructor.
          */
         public Span(double aStart, double anEnd)
         {
@@ -379,15 +390,10 @@ public class RMTableRowRPG extends RMSpringShape {
             this.end = anEnd;
         }
 
-        double start, end;
-
         /**
          * Returns the span length.
          */
-        public double getLength()
-        {
-            return end - start;
-        }
+        public double getLength()  { return end - start; }
 
         /**
          * Returns whether given value is contained in the span (inclusive).
@@ -419,7 +425,8 @@ public class RMTableRowRPG extends RMSpringShape {
          */
         public int compareTo(Object aSpan)
         {
-            return new Double(start).compareTo(((Span) aSpan).start);
+            Double startDouble = start;
+            return startDouble.compareTo(((Span) aSpan).start);
         }
     }
 
@@ -434,7 +441,8 @@ public class RMTableRowRPG extends RMSpringShape {
         public void addSpan(Span aSpan)
         {
             // If empty span, just return
-            if (MathUtils.lte(aSpan.end, aSpan.start)) return;
+            if (MathUtils.lte(aSpan.end, aSpan.start))
+                return;
 
             // Iterate over spans and extends any overlapping span (and return)
             for (Span span : this) {
@@ -497,5 +505,4 @@ public class RMTableRowRPG extends RMSpringShape {
             }
         }
     }
-
 }

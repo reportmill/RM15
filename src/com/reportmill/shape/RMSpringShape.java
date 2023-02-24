@@ -18,22 +18,22 @@ public class RMSpringShape extends RMParentShape {
     protected boolean  _growHeight;
 
     // Whether springs resizing is disabled
-    boolean _springsDisabled;
+    private boolean  _springsDisabled;
 
     // The parent best height
-    double _bh;
+    private double  _bestHeight;
 
     // The children Boxes
-    Box _cboxes[];
+    private Box[]  _childBoxes;
 
     // The PropChangeListener to notify of changes in child
-    PropChangeListener _childLsnr;
+    private PropChangeListener  _childLsnr;
 
     // Default value for grow height
     private static boolean  _defaultGrowHeight = false;
 
     // Constants for positions above and below
-    enum Position {Above, Below}
+    private enum Position { Above, Below }
 
     /**
      * Constructor.
@@ -62,10 +62,7 @@ public class RMSpringShape extends RMParentShape {
     /**
      * Return whether springs have been disabled.
      */
-    public boolean isSpringsDisabled()
-    {
-        return _springsDisabled;
-    }
+    public boolean isSpringsDisabled()  { return _springsDisabled; }
 
     /**
      * Return whether springs have been disabled.
@@ -80,7 +77,7 @@ public class RMSpringShape extends RMParentShape {
      */
     protected void layoutImpl()
     {
-        Rect rects[] = getChildBounds();
+        Rect[] rects = getChildBounds();
         for (int i = 0, iMax = getChildCount(); i < iMax; i++) {
             RMShape child = getChild(i);
             Rect rect = rects[i];
@@ -95,9 +92,9 @@ public class RMSpringShape extends RMParentShape {
     {
         // If GrowHeight, calc pref height from children PrefHeights
         if (isGrowHeight()) {
-            if (_cboxes == null)
+            if (_childBoxes == null)
                 getChildBoxes();
-            return _bh;
+            return _bestHeight;
         }
 
         // Otherwise, just return current height
@@ -110,22 +107,25 @@ public class RMSpringShape extends RMParentShape {
     private Rect[] getChildBounds()
     {
         // If ChildBoxes is set, return them
-        if (_cboxes != null) return _cboxes;
+        if (_childBoxes != null) return _childBoxes;
 
         // Get original child rects
-        int ccount = getChildCount();
-        double newPW = getWidth(), newPH = getHeight();
+        int childCount = getChildCount();
+        double newPW = getWidth();
+        double newPH = getHeight();
 
         // Iterate over children and calculate new bounds rect for original child bounds and new parent width/height
-        Rect rects[] = new Rect[ccount];
-        for (int i = 0; i < ccount; i++) {
+        Rect[] rects = new Rect[childCount];
+        for (int i = 0; i < childCount; i++) {
             RMShape child = getChild(i);
             SpringInfo sinfo = getSpringInfo(child);
 
             // Create rect and update for new width/height
             Rect rect = rects[i] = new Rect(sinfo.x, sinfo.y, sinfo.width, sinfo.height);
-            double oldPW = sinfo.pwidth, oldPH = sinfo.pheight;
-            if (newPW == oldPW && newPH == oldPH) continue;
+            double oldPW = sinfo.pwidth;
+            double oldPH = sinfo.pheight;
+            if (newPW == oldPW && newPH == oldPH)
+                continue;
             String asize = child.getAutosizing();
 
             // Set new width/height
@@ -179,30 +179,30 @@ public class RMSpringShape extends RMParentShape {
     public Box[] getChildBoxes()
     {
         // If already calculated, just return
-        if (_cboxes != null) return _cboxes;
+        if (_childBoxes != null) return _childBoxes;
 
         // Get parent height
-        double pheight = _bh = getHeight();
+        double pheight = _bestHeight = getHeight();
 
         // Get boxes
-        _cboxes = new Box[getChildCount()];
+        _childBoxes = new Box[getChildCount()];
         for (int i = 0, iMax = getChildCount(); i < iMax; i++) {
             RMShape child = getChild(i);
-            _cboxes[i] = new Box(child, getSpringInfo(child));
+            _childBoxes[i] = new Box(child, getSpringInfo(child));
         }
 
         // Iterate over children to get list of those that need to grow
         List<Box> childrenToGrow = null;
-        for (Box box : _cboxes)
+        for (Box box : _childBoxes)
             if (box.needsToGrow()) {
-                if (childrenToGrow == null) childrenToGrow = new ArrayList();
+                if (childrenToGrow == null) childrenToGrow = new ArrayList<>();
                 childrenToGrow.add(box);
             }
 
         // If no children need to grow, just return
         if (childrenToGrow == null) {
-            _bh = pheight;
-            return _cboxes;
+            _bestHeight = pheight;
+            return _childBoxes;
         }
 
         // Iterate until we have grown all children in childrenToGrow list
@@ -219,7 +219,7 @@ public class RMSpringShape extends RMParentShape {
 
                 // Get child's height, best height and difference
                 double childHeight = child.getHeight();
-                double childBestHeight = Math.max(childHeight, child._bh);
+                double childBestHeight = Math.max(childHeight, child._bestHeight);
                 double heightGrowth = childBestHeight - childHeight;
 
                 // Get child's autosize string and reset child to only heightStretches
@@ -245,8 +245,7 @@ public class RMSpringShape extends RMParentShape {
             ListUtils.moveToFront(childrenToGrow, index);
 
             // For each child in childrenToGrow adjust springs for those children and those above and below them
-            for (int i = 0, iMax = childrenToGrow.size(); i < iMax; i++) {
-                Box child = childrenToGrow.get(i);
+            for (Box child : childrenToGrow) {
 
                 // If child heightStrches but not topMarginStrches, have shapes above setOnlyBottomAndRightMarginStrchs
                 String asize = child._asize;
@@ -265,8 +264,8 @@ public class RMSpringShape extends RMParentShape {
             }
 
             // Set height of boxes to smallest height to accommodate child with minimum BestHeight requirement
-            for (Box rect : _cboxes) setHeight(rect, rect._asize, pheight, newHeight);
-            pheight = _bh = newHeight;
+            for (Box rect : _childBoxes) setHeight(rect, rect._asize, pheight, newHeight);
+            pheight = _bestHeight = newHeight;
 
             // Trim all childrenToGrow that have met BestHeight
             for (int i = childrenToGrow.size() - 1; i >= 0; i--) {
@@ -276,11 +275,11 @@ public class RMSpringShape extends RMParentShape {
             }
 
             // Reset everyone's springs to their defaults
-            for (Box child : _cboxes) child._asize = child._asize0;
+            for (Box child : _childBoxes) child._asize = child._asize0;
         }
 
         // Return child boxes
-        return _cboxes;
+        return _childBoxes;
     }
 
     /**
@@ -288,38 +287,45 @@ public class RMSpringShape extends RMParentShape {
      */
     private List<Box> childrenWithPositionRelativeToChild(Position aPos, Box aChild)
     {
+        List<Box> hitChildren = null;
+
         // Iterate over child boxes and get those that hasPositionRelativeToPeer
-        List<Box> hits = null;
-        for (Box child : _cboxes) {
-            if (child == aChild) continue; // If given child, skip
-            if (hasPositionRelativeToPeer(child, aPos, aChild)) { // If child has relative position, add to list
-                if (hits == null) hits = new ArrayList();
-                hits.add(child);
+        for (Box child : _childBoxes) {
+
+            // If given child, skip
+            if (child == aChild)
+                continue;
+
+            // If child has relative position, add to list
+            if (hasPositionRelativeToPeer(child, aPos, aChild)) {
+                if (hitChildren == null) hitChildren = new ArrayList<>();
+                hitChildren.add(child);
             }
         }
 
         // If no children are found with relative position, return null
-        if (hits == null) return null;
+        if (hitChildren == null)
+            return null;
 
         // For each child that has position relative to aChild, find shapes that have same position relative to them
-        for (int i = 0, iMax = hits.size(); i < iMax; i++) {
-            Box hitChild = hits.get(i);
+        for (int i = 0, iMax = hitChildren.size(); i < iMax; i++) {
+            Box hitChild = hitChildren.get(i);
 
             // Get children who have position relative to aChild
-            for (int j = 0, jMax = _cboxes.length; j < jMax; j++) {
-                Box child = _cboxes[j];
+            for (Box child : _childBoxes) {
 
                 // If child is given child or hit child, skip
-                if (child == aChild || child == hitChild) continue;
+                if (child == aChild || child == hitChild)
+                    continue;
 
                 // If child isn't in hit list but has position relative to child in hit list, add child
-                if (ListUtils.indexOfId(hits, child) == -1 && hasPositionRelativeToPeer(child, aPos, hitChild))
-                    hits.add(child);
+                if (ListUtils.indexOfId(hitChildren, child) == -1 && hasPositionRelativeToPeer(child, aPos, hitChild))
+                    hitChildren.add(child);
             }
         }
 
-        // Return hit children
-        return hits;
+        // Return
+        return hitChildren;
     }
 
     /**
@@ -354,10 +360,12 @@ public class RMSpringShape extends RMParentShape {
     public void addChild(RMShape aChild, int anIndex)
     {
         super.addChild(aChild, anIndex);
-        if (_springsDisabled) return;
+        if (_springsDisabled)
+            return;
+
         aChild.addPropChangeListener(_childLsnr != null ? _childLsnr : (_childLsnr = pc -> childPropChanged(pc)));
         addSpringInfo(aChild);
-        _cboxes = null;
+        _childBoxes = null;
     }
 
     /**
@@ -366,10 +374,12 @@ public class RMSpringShape extends RMParentShape {
     public RMShape removeChild(int anIndex)
     {
         RMShape child = super.removeChild(anIndex);
-        if (_springsDisabled) return child;
+        if (_springsDisabled)
+            return child;
+
         child.removePropChangeListener(_childLsnr);
         removeSpringInfo(child);
-        _cboxes = null;
+        _childBoxes = null;
         return child;
     }
 
@@ -380,7 +390,8 @@ public class RMSpringShape extends RMParentShape {
     {
         // Do normal version
         super.paintShape(aPntr);
-        if (getClass() != RMSpringShape.class) return;
+        if (getClass() != RMSpringShape.class)
+            return;
 
         // Paint dashed box around bounds
         RMShapePaintProps props = RMShapePaintProps.get(aPntr);
@@ -420,7 +431,7 @@ public class RMSpringShape extends RMParentShape {
     public RMParentShape clone()
     {
         RMSpringShape clone = (RMSpringShape) super.clone();
-        clone._cboxes = null;
+        clone._childBoxes = null;
         clone._childLsnr = null;
         return clone;
     }
@@ -490,7 +501,7 @@ public class RMSpringShape extends RMParentShape {
         String _asize, _asize0;
 
         // The best size
-        double _bh;
+        double _bestHeight;
 
         /**
          * Creates a new box for a Node.
@@ -498,7 +509,7 @@ public class RMSpringShape extends RMParentShape {
         public Box(RMShape aShape, SpringInfo sinfo)
         {
             _asize = _asize0 = aShape.getAutosizing();
-            _bh = aShape.getBestHeight();
+            _bestHeight = aShape.getBestHeight();
             setRect(sinfo.x, sinfo.y, sinfo.width, sinfo.height);
         }
 
@@ -507,7 +518,8 @@ public class RMSpringShape extends RMParentShape {
          */
         boolean needsToGrow()
         {
-            return getHeight() + .005 < _bh && getHeight() > 0;
+            double boxH = getHeight();
+            return boxH + .005 < _bestHeight && boxH > 0;
         }
 
         /**
@@ -515,12 +527,19 @@ public class RMSpringShape extends RMParentShape {
          */
         public boolean widthsIntersect(Box r2)
         {
-            if (this.width <= 0f || r2.width <= 0f) return false;
+            if (this.width <= 0f || r2.width <= 0f)
+                return false;
+
             if (this.x < r2.x) {
-                if (this.x + this.width <= r2.x) return false;
-            } else {
-                if (r2.x + r2.width <= this.x) return false;
+                if (this.x + this.width <= r2.x)
+                    return false;
             }
+
+            else {
+                if (r2.x + r2.width <= this.x)
+                    return false;
+            }
+
             return true;
         }
     }
