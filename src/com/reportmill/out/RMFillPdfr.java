@@ -53,21 +53,21 @@ public class RMFillPdfr {
 
         // Create pdf functions that interpolate linearly between color stops
         int stopCount = aFill.getStopCount();
-        ArrayList fns = new ArrayList(stopCount);
-        Map function = null;
+        ArrayList<Map<String,Object>> functionsList = new ArrayList<>(stopCount);
+        Map<String,Object> functionDict = null;
         String outerBounds = "", outerDomain = "", encode = "";
         for (int i = 0; i < stopCount - 1; ++i) {
-            function = new Hashtable(5);
+            functionDict = new Hashtable<>(5);
             RMColor c0 = aFill.getStopColor(i);
             RMColor c1 = aFill.getStopColor(i + 1);
             double d0 = aFill.getStopOffset(i);
             double d1 = aFill.getStopOffset(i + 1);
-            function.put("FunctionType", "2");
-            function.put("Domain", "[0 1]");
-            function.put("N", "1");
-            function.put("C0", c0);
-            function.put("C1", c1);
-            fns.add(function);
+            functionDict.put("FunctionType", "2");
+            functionDict.put("Domain", "[0 1]");
+            functionDict.put("N", "1");
+            functionDict.put("C0", c0);
+            functionDict.put("C1", c1);
+            functionsList.add(functionDict);
 
             // add endpoints to Domain & Bounds arrays of stitching function
             if (i == 0)
@@ -82,22 +82,22 @@ public class RMFillPdfr {
 
         // If there are multiple stops, create a stitching function to combine all the functions
         if (stopCount > 2) {
-            function = new Hashtable(5);
-            function.put("FunctionType", "3");
-            function.put("Functions", fns);
-            function.put("Domain", "[" + outerDomain + "]");
-            function.put("Bounds", "[" + outerBounds + "]");
-            function.put("Encode", "[" + encode + "]");
+            functionDict = new Hashtable<>(5);
+            functionDict.put("FunctionType", "3");
+            functionDict.put("Functions", functionsList);
+            functionDict.put("Domain", "[" + outerDomain + "]");
+            functionDict.put("Bounds", "[" + outerBounds + "]");
+            functionDict.put("Encode", "[" + encode + "]");
         }
 
         // Create a shading dictionary for the gradient
-        Map shading = new Hashtable(4);
+        Map<String,Object> shadingDict = new Hashtable<>(4);
         boolean isRadial = aFill.isRadial();
 
-        shading.put("ShadingType", isRadial ? "3" : "2");  // radial or axial shading
-        shading.put("ColorSpace", "/DeviceRGB");  // rgb colorspace
-        shading.put("AntiAlias", "true");
-        shading.put("Function", xref.addObject(function));
+        shadingDict.put("ShadingType", isRadial ? "3" : "2");  // radial or axial shading
+        shadingDict.put("ColorSpace", "/DeviceRGB");  // rgb colorspace
+        shadingDict.put("AntiAlias", "true");
+        shadingDict.put("Function", xref.addObject(functionDict));
 
         // Get gradient paint and start/end
         GradientPaint gpnt = aFill.snap().copyForRect(aShape.getBoundsInside());
@@ -116,29 +116,30 @@ public class RMFillPdfr {
         endPt.y = page.getFrameMaxY() - endPt.y;
 
         // Add the newly calculated endpoints to the shading dictionary
-        List coords = new ArrayList(4);
-        coords.add(startPt.getX());
-        coords.add(startPt.getY());
+        List<Double> coordsList = new ArrayList<>(4);
+        coordsList.add(startPt.x);
+        coordsList.add(startPt.y);
         if (isRadial) {
-            coords.add(0d); // start radius = 0
-            coords.add(coords.get(0));
-            coords.add(coords.get(1)); // end point is same as start point
-            coords.add(endPt.getDistance(startPt)); // end radius is the distance between the start & end points
-            shading.put("Extend", "[false true]"); // set radial shading to extend beyond end circle
-        } else {
-            coords.add(new Double(endPt.getX()));
-            coords.add(new Double(endPt.getY()));
+            coordsList.add(0d); // start radius = 0
+            coordsList.add(coordsList.get(0));
+            coordsList.add(coordsList.get(1)); // end point is same as start point
+            coordsList.add(endPt.getDistance(startPt)); // end radius is the distance between the start & end points
+            shadingDict.put("Extend", "[false true]"); // set radial shading to extend beyond end circle
         }
-        shading.put("Coords", coords);
+        else {
+            coordsList.add(endPt.x);
+            coordsList.add(endPt.y);
+        }
+        shadingDict.put("Coords", coordsList);
 
         // Create a new pattern dictionary for the gradient
-        Map pat = new Hashtable(10);
-        pat.put("Type", "/Pattern");
-        pat.put("PatternType", "2");
-        pat.put("Shading", xref.addObject(shading)); // pat.put("Matrix", patternSpaceTransform);
+        Map<String,String> patternDict = new Hashtable<>(10);
+        patternDict.put("Type", "/Pattern");
+        patternDict.put("PatternType", "2");
+        patternDict.put("Shading", xref.addObject(shadingDict)); // pat.put("Matrix", patternSpaceTransform);
 
         // Set the pattern for fills
-        pdfPage.append('/').append(pdfPage.addPattern(pat)).appendln(" scn");
+        pdfPage.append('/').append(pdfPage.addPattern(patternDict)).appendln(" scn");
 
         // Write fill operator
         pdfPage.append('f');

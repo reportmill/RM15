@@ -103,7 +103,7 @@ tasks.register('buildInfo') {
             workingDir '.'
             executable "date"
             args "+%b-%d-%y %H:%M"
-            standardOutput new FileOutputStream('build/resources/main/com/reportmill/BuildInfo.txt')
+            standardOutput new FileOutputStream(buildDir.getAbsolutePath() + '/resources/main/com/reportmill/BuildInfo.txt')
         }
     }
 }

@@ -7,8 +7,6 @@ import java.lang.reflect.Method;
 import java.net.*;
 import java.text.*;
 import java.util.*;
-import java.util.jar.*;
-import java.util.zip.GZIPInputStream;
 import javax.swing.*;
 
 /**
@@ -19,14 +17,18 @@ public class AppLoader {
     // Constants
     static final String AppDirName = "ReportMill";
     static final String JarName = "RMStudio15.jar";
-    static final String JarURL = "http://reportmill.com/rm15/RMStudio15.jar"; // was .pack.gz
+    static final String JarURL = "https://reportmill.com/rm15/RMStudio15.jar";
     static final String LoaderJarName = "AppLoader.jar"; // 
     static final String MainClass = "com.reportmill.app.App";
+
+    // Whether Windows/Mac
+    private static final boolean isWindows = System.getProperty("os.name").contains("Windows");
+    private static final boolean isMac = System.getProperty("os.name").contains("Mac OS X");
 
     /**
      * Main method - reinvokes main1() on app event thread in exception handler.
      */
-    public static void main(String args[])
+    public static void main(String[] args)
     {
         // Re-invoke on Swing thread
         if (!SwingUtilities.isEventDispatchThread()) {
@@ -35,9 +37,8 @@ public class AppLoader {
         }
 
         // Invoke real main with exception handler
-        try {
-            main1(args);
-        } catch (Throwable e) {
+        try { main1(args); }
+        catch (Throwable e) {
             showMessage("Error in Main", e.toString());
             e.printStackTrace();
         }
@@ -50,12 +51,11 @@ public class AppLoader {
      * - Load main Jar into URLClassLoader, load main class and invoke main method
      * - Check for update from remove site in background
      */
-    public static void main1(String args[]) throws Exception
+    public static void main1(String[] args) throws Exception
     {
         // Make sure default jar is in place
-        try {
-            copyDefaultMainJar();
-        } catch (Exception e) {
+        try { copyDefaultMainJar(); }
+        catch (Exception e) {
             showMessage("Error Copying Main Jar", e.toString());
             e.printStackTrace();
         }
@@ -78,8 +78,8 @@ public class AppLoader {
 
         // Create URLClassLoader for main jar file, get App class and invoke main
         URLClassLoader ucl = new URLClassLoader(new URL[]{jar.toURI().toURL()});
-        Class cls = ucl.loadClass(MainClass); //ucl.close();
-        Method meth = cls.getMethod("main", new Class[]{String[].class});
+        Class<?> cls = ucl.loadClass(MainClass); //ucl.close();
+        Method meth = cls.getMethod("main", String[].class);
         meth.invoke(null, new Object[]{args});
         if (cls == Object.class) ucl.close(); // Getting rid of warning message for ucl
     }
@@ -97,7 +97,8 @@ public class AppLoader {
         BufferedReader br = new BufferedReader(new FileReader(path2));
         String text = br.readLine();
         br.close();
-        if (text == null || text.length() < 0) return;
+        if (text == null || text.length() == 0)
+            return;
         SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM d HH:mm:ss zzz yyyy", Locale.US);
         Date date = formatter.parse(text);
         long time = date.getTime();
@@ -108,7 +109,8 @@ public class AppLoader {
         File jar1 = new File(path1);
 
         // If app package main jar is newer, copy it into place and set time
-        if (jar0.exists() && jar0.lastModified() >= time) return;
+        if (jar0.exists() && jar0.lastModified() >= time)
+            return;
         copyFile(jar1, jar0);
         jar0.setLastModified(time);
     }
@@ -118,17 +120,14 @@ public class AppLoader {
      */
     private static void checkForUpdatesSilent()
     {
-        try {
-            checkForUpdates();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        try { checkForUpdates(); }
+        catch (Exception e) { e.printStackTrace(); }
     }
 
     /**
      * Check for updates.
      */
-    private static void checkForUpdates() throws IOException, MalformedURLException
+    private static void checkForUpdates() throws IOException
     {
         // Get URL connection and lastModified time
         File jarFile = getAppFile(JarName);
@@ -143,25 +142,13 @@ public class AppLoader {
 
         // Load Update bytes from URL connection
         System.out.println("Loading update from " + JarURL);
-        byte bytes[] = getBytes(connection);
+        byte[] bytes = getBytes(connection);
         System.out.println("Update loaded");
         File updateFile = getAppFile(JarName + ".update");
 
-        // If packed write to pack file and unpack
-        if (JarURL.endsWith(".pack.gz")) {
-            File updatePacked = getAppFile(JarName + ".pack.gz");
-            writeBytes(updatePacked, bytes);
-            System.out.println("Update saved: " + updatePacked);
-            unpack(updatePacked, updateFile);
-            System.out.println("Update unpacked: " + updateFile);
-            updatePacked.delete();
-        }
-
-        // If not packed just write to file
-        else {
-            writeBytes(updateFile, bytes);
-            System.out.println("Update saved: " + updateFile);
-        }
+        // Write to file
+        writeBytes(updateFile, bytes);
+        System.out.println("Update saved: " + updateFile);
 
         // Set modified time so it matches server
         updateFile.setLastModified(mod1);
@@ -222,7 +209,7 @@ public class AppLoader {
     /**
      * Writes the given bytes (within the specified range) to the given file.
      */
-    public static void writeBytes(File aFile, byte theBytes[]) throws IOException
+    public static void writeBytes(File aFile, byte[] theBytes) throws IOException
     {
         if (theBytes == null) {
             aFile.delete();
@@ -234,66 +221,23 @@ public class AppLoader {
     }
 
     /**
-     * Unpacks the given file into the destination file.
-     */
-    public static File unpack(File aFile, File aDestFile) throws IOException
-    {
-        // Get dest file - if already unpacked, return
-        File destFile = getUnpackDestination(aFile, aDestFile);
-        if (destFile.exists() && destFile.lastModified() > aFile.lastModified())
-            return destFile;
-
-        // Create streams: FileInputStream -> GZIPInputStream -> JarOutputStream -> FileOutputStream
-        FileInputStream fileInput = new FileInputStream(aFile);
-        GZIPInputStream gzipInput = new GZIPInputStream(fileInput);
-        FileOutputStream fileOut = new FileOutputStream(destFile);
-        JarOutputStream jarOut = new JarOutputStream(fileOut);
-
-        // Unpack file
-        Pack200.newUnpacker().unpack(gzipInput, jarOut);
-
-        // Close streams
-        fileInput.close();
-        gzipInput.close();
-        jarOut.close();
-        fileOut.close();
-
-        // Return destination file
-        return destFile;
-    }
-
-    /**
-     * Returns the file that given packed file would be saved to using the unpack method.
-     */
-    public static File getUnpackDestination(File aFile, File aDestFile)
-    {
-        // Get dest file - if null, create from packed file minus .pack.gz
-        File destFile = aDestFile;
-        if (destFile == null)
-            destFile = new File(aFile.getPath().replace(".pack.gz", ""));
-
-            // If dest file is directory, change to file inside with packed file minus .pack.gz
-        else if (destFile.isDirectory())
-            destFile = new File(destFile, aFile.getName().replace(".pack.gz", ""));
-
-        // Return destination file
-        return destFile;
-    }
-
-    /**
      * Returns the AppData or Application Support directory file.
      */
     public static File getAppDataDir(String aName, boolean doCreate)
     {
         // Get user home + AppDataDir (platform specific) + name (if provided)
         String dir = System.getProperty("user.home");
-        if (isWindows) dir += File.separator + "AppData" + File.separator + "Local";
-        else if (isMac) dir += File.separator + "Library" + File.separator + "Application Support";
-        if (aName != null) dir += File.separator + aName;
+        if (isWindows)
+            dir += File.separator + "AppData" + File.separator + "Local";
+        else if (isMac)
+            dir += File.separator + "Library" + File.separator + "Application Support";
+        if (aName != null)
+            dir += File.separator + aName;
 
         // Create file, actual directory (if requested) and return
         File dfile = new File(dir);
-        if (doCreate && aName != null) dfile.mkdirs();
+        if (doCreate && aName != null)
+            dfile.mkdirs();
         return dfile;
     }
 
@@ -303,7 +247,7 @@ public class AppLoader {
     public static byte[] getBytes(URLConnection aConnection) throws IOException
     {
         InputStream stream = aConnection.getInputStream(); // Get stream for connection
-        byte bytes[] = getBytes(stream); // Get bytes for stream
+        byte[] bytes = getBytes(stream); // Get bytes for stream
         stream.close();  // Close stream
         return bytes;  // Return bytes
     }
@@ -314,14 +258,9 @@ public class AppLoader {
     public static byte[] getBytes(InputStream aStream) throws IOException
     {
         ByteArrayOutputStream bs = new ByteArrayOutputStream();
-        byte chunk[] = new byte[8192];
+        byte[] chunk = new byte[8192];
         for (int len = aStream.read(chunk, 0, 8192); len > 0; len = aStream.read(chunk, 0, 8192))
             bs.write(chunk, 0, len);
         return bs.toByteArray();
     }
-
-    // Whether Windows/Mac
-    static boolean isWindows = (System.getProperty("os.name").indexOf("Windows") >= 0);
-    static boolean isMac = (System.getProperty("os.name").indexOf("Mac OS X") >= 0);
-
 }
