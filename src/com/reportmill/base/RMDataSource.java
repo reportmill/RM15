@@ -14,29 +14,27 @@ import snap.web.*;
 public class RMDataSource implements XMLArchiver.Archivable {
 
     // The source URL of the data
-    WebURL _url;
+    private WebURL  _url;
 
     // The datasource schema (a list of database entities)
-    Schema _schema;
+    private Schema  _schema;
 
     // A dataset represented by this datasource
-    Map _dataset;
+    private Map<String,Object>  _dataset;
 
     // Whether this datasource has a customized schema
-    boolean _customSchema;
+    private boolean  _customSchema;
 
     // The URL of the document this DataSource belongs to
-    WebURL _docURL;
+    private WebURL  _docURL;
 
     /**
-     * Creates a plain datasource.
+     * Constructor.
      */
-    public RMDataSource()
-    {
-    }
+    public RMDataSource()  { }
 
     /**
-     * Creates a datasource from a given source with a given name (can be null).
+     * Constructor for given source URL.
      */
     public RMDataSource(WebURL aURL)
     {
@@ -46,17 +44,15 @@ public class RMDataSource implements XMLArchiver.Archivable {
     /**
      * Returns the URL for this data source.
      */
-    public WebURL getURL()
-    {
-        return _url;
-    }
+    public WebURL getURL()  { return _url; }
 
     /**
      * Returns the name for this data source.
      */
     public String getName()
     {
-        return getURL() != null ? getURL().getPathNameSimple() : null;
+        WebURL datasetURL = getURL();
+        return datasetURL != null ? datasetURL.getPathNameSimple() : null;
     }
 
     /**
@@ -71,55 +67,95 @@ public class RMDataSource implements XMLArchiver.Archivable {
     /**
      * Returns a sample dataset of objects associated with the datasource.
      */
-    public Map getDataset()
+    public Map<String,Object> getDataset()
     {
         // If already set, just return
-        if (_dataset != null || getURL() == null) return _dataset;
+        if (_dataset != null) return _dataset;
 
-        // Get source file
-        WebURL url = getURL();
-        WebFile file = url.getFile();
-
-        // If file not found, see if it is in same directory as Document.SourceURL
-        if (file == null && _docURL != null) {
-            WebFile dfile = _docURL.getFile(), dir = dfile.getParent();
-            file = dir.getFileForName(url.getPathName());
-            if (file == null) file = dir.getFileForName("Dataset.xml");
-            if (file != null) _url = file.getURL();
+        // Get dataset file - if not found, return stub
+        WebFile datasetFile = getDatasetFile();
+        if (datasetFile == null) {
+            System.err.println("RMDataSource.getDataset: Dataset file not found for URL: " + getURL());
+            _schema = new Schema("root");
+            _schema.addEntity(new Entity("root"));
+            return _dataset = new HashMap<>();
         }
 
         // Get bytes (if null, set stuff and bail)
-        if (file != null) file.reload();
-        byte bytes[] = file != null ? file.getBytes() : null;
+        datasetFile.reload();
+        byte[] bytes = datasetFile.getBytes();
         if (bytes == null) {
             _schema = new Schema("root");
             _schema.addEntity(new Entity("root"));
-            return _dataset = new HashMap();
+            return _dataset = new HashMap<>();
         }
 
         // Create XML reader and read dataset
         RMXMLReader reader = new RMXMLReader();
-        try {
-            _dataset = reader.readObject(bytes, _customSchema ? _schema : null);
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
-        }
+        try { _dataset = reader.readObject(bytes, _customSchema ? _schema : null); }
+        catch (Throwable e) { throw new RuntimeException(e); }
 
         // If schema is null, set to reader schema
         if (!_customSchema)
             _schema = reader.getSchema();
 
-        // Return dataset
+        // Return
         return _dataset;
+    }
+
+    /**
+     * Returns the dataset file from source URL.
+     */
+    private WebFile getDatasetFile()
+    {
+        // Get dataset file URL (just return if null)
+        WebURL datasetURL = getURL();
+        if (datasetURL == null)
+            return null;
+
+        // Get file - just return if found
+        WebFile datasetFile = datasetURL.getFile();
+        if (datasetFile != null)
+            return datasetFile;
+
+        // If Document.SourceURL available, look for dataset file in doc directory
+        if (_docURL != null) {
+
+            // Get document directory
+            WebFile docFile = _docURL.getFile();
+            WebFile docDir = docFile.getParent();
+
+            // Look for same dataset filename in doc directory
+            String datasetFilename = datasetURL.getPathName();
+            datasetFile = docDir.getFileForName(datasetFilename);
+
+            // If still not found, look for generic "Dataset.xml" in doc directory
+            if (datasetFile == null) {
+                datasetFile = docDir.getFileForName("Dataset.xml");
+
+                // If still not found, look for xml file with Doc filename in doc directory
+                if (datasetFile == null) {
+                    String docFilename = _docURL.getPathName();
+                    if (StringUtils.endsWithIC(docFilename, ".rpt")) {
+                        String sisterName = StringUtils.replaceIC(docFilename, ".rpt", ".xml");
+                        datasetFile = docDir.getFileForName(sisterName);
+                    }
+                }
+            }
+
+            // If dataset file was found, reset URL
+            if (datasetFile != null)
+                _url = datasetFile.getURL();
+        }
+
+        // Return
+        return datasetFile;
     }
 
     /**
      * Returns a schema that may differ from the one stored in an XML file.
      */
-    public boolean getCustomSchema()
-    {
-        return _customSchema;
-    }
+    public boolean getCustomSchema()  { return _customSchema; }
 
     /**
      * Sets a schema that may differ from the one stored in an XML file.
@@ -182,5 +218,4 @@ public class RMDataSource implements XMLArchiver.Archivable {
     {
         return super.toString() + " " + getName();
     }
-
 }

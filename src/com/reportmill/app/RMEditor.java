@@ -24,43 +24,40 @@ import snap.view.*;
 public class RMEditor extends RMViewer implements DeepChangeListener {
 
     // Whether we're really editing
-    boolean _editing = true;
+    private boolean  _editing = true;
 
     // List of currently selected shapes
-    List<RMShape> _selShapes = new ArrayList();
+    protected List<RMShape>  _selShapes = new ArrayList<>();
 
     // List of super selected shapes (all ancestors of selected shapes)
-    List<RMShape> _superSelShapes = new ArrayList();
+    private List<RMShape>  _superSelShapes = new ArrayList<>();
 
     // The last shape that was copied to the clipboard (used for smart paste)
-    RMShape _lastCopyShape;
+    protected RMShape  _lastCopyShape;
 
     // The last shape that was pasted from the clipboard (used for smart paste)
-    RMShape _lastPasteShape;
+    protected RMShape  _lastPasteShape;
 
     // A helper class to handle drag and drop
-    RMEditorDnD _dragHelper = createDragHelper();
+    private RMEditorDnD  _dragHelper = createDragHelper();
 
     // A shape to be drawn if set to drag-over shape during drag and drop
-    Shape _dragShape;
+    protected Shape  _dragShape;
 
     // The select tool
-    RMSelectTool _selectTool;
+    private RMSelectTool  _selectTool;
 
     // Map of tool instances by shape class
-    Map<Class, RMTool> _tools = new HashMap();
+    private Map<Class<?>,RMTool<RMShape>>  _tools = new HashMap<>();
 
     // The current editor tool
-    RMTool _currentTool = getSelectTool();
-
-    // The time of last drop of XML file
-    long _dropTime;
+    private RMTool<?>  _currentTool = getSelectTool();
 
     // Icon for XML image
-    static Image _xmlImage = Image.get(RMEditor.class, "DS_XML.png");
+    private static Image _xmlImage = Image.get(RMEditor.class, "DS_XML.png");
 
     // XML Image offset for animation
-    static double _xmlDX, _xmlDY;
+    private static double _xmlDX, _xmlDY;
 
     // Constants for PropertyChanges
     public static final String CurrentTool_Prop = "CurrentTool";
@@ -147,16 +144,14 @@ public class RMEditor extends RMViewer implements DeepChangeListener {
      */
     public void setSelectedShape(RMShape aShape)
     {
-        setSelectedShapes(aShape == null ? null : Arrays.asList(aShape));
+        List<RMShape> selShapes = aShape == null ? null : Collections.singletonList(aShape);
+        setSelectedShapes(selShapes);
     }
 
     /**
      * Returns the number of selected shapes.
      */
-    public int getSelectedShapeCount()
-    {
-        return _selShapes.size();
-    }
+    public int getSelectedShapeCount()  { return _selShapes.size(); }
 
     /**
      * Returns the selected shape at the given index.
@@ -224,7 +219,7 @@ public class RMEditor extends RMViewer implements DeepChangeListener {
      */
     public void addSelectedShape(RMShape aShape)
     {
-        List list = new ArrayList(getSelectedShapes());
+        List<RMShape> list = new ArrayList<>(getSelectedShapes());
         list.add(aShape);
         setSelectedShapes(list);
     }
@@ -234,7 +229,7 @@ public class RMEditor extends RMViewer implements DeepChangeListener {
      */
     public void removeSelectedShape(RMShape aShape)
     {
-        List list = new ArrayList(getSelectedShapes());
+        List<RMShape> list = new ArrayList<>(getSelectedShapes());
         list.remove(aShape);
         setSelectedShapes(list);
     }
@@ -376,7 +371,7 @@ public class RMEditor extends RMViewer implements DeepChangeListener {
      */
     public List<RMShape> getSelectedOrSuperSelectedShapes()
     {
-        return getSelectedShapeCount() > 0 ? _selShapes : Arrays.asList(getSuperSelectedShape());
+        return getSelectedShapeCount() > 0 ? _selShapes : Collections.singletonList(getSuperSelectedShape());
     }
 
     /**
@@ -433,7 +428,7 @@ public class RMEditor extends RMViewer implements DeepChangeListener {
     {
         // Get super-selected shape and its tool and tell tool to flushChanges
         RMShape shape = getSuperSelectedShape();
-        RMTool tool = getTool(shape);
+        RMTool<?> tool = getTool(shape);
         tool.flushChanges(this, shape);
     }
 
@@ -636,7 +631,7 @@ public class RMEditor extends RMViewer implements DeepChangeListener {
         else if (superSelShape.getChildCount() > 0) {
 
             // Get list of all hittable children of super-selected shape
-            List shapes = new ArrayList();
+            List<RMShape> shapes = new ArrayList<>();
             for (RMShape shape : superSelShape.getChildren())
                 if (shape.isHittable())
                     shapes.add(shape);
@@ -652,7 +647,7 @@ public class RMEditor extends RMViewer implements DeepChangeListener {
     public void delete()
     {
         // Get copy of selected shapes (just beep and return if no selected shapes)
-        RMShape shapes[] = _selShapes.toArray(new RMShape[0]);
+        RMShape[] shapes = _selShapes.toArray(new RMShape[0]);
         if (shapes.length == 0) {
             if (getTextEditor() == null) beep();
             return;
@@ -701,8 +696,7 @@ public class RMEditor extends RMViewer implements DeepChangeListener {
         }
 
         // Get each individual shape and add it to the superSelectedShape
-        for (int i = 0, iMax = theShapes.size(); i < iMax; i++) {
-            RMShape shape = theShapes.get(i);
+        for (RMShape shape : theShapes) {
 
             // Add current loop shape to given parent shape
             aShape.addChild(shape);
@@ -795,39 +789,38 @@ public class RMEditor extends RMViewer implements DeepChangeListener {
     /**
      * Returns the specific tool for a list of shapes (if they have the same tool).
      */
-    public RMTool getTool(List aList)
+    public RMTool<?> getTool(List<?> aList)
     {
-        Class commonClass = ClassUtils.getCommonClass(aList); // Get class for first object
+        Class<?> commonClass = ClassUtils.getCommonClass(aList); // Get class for first object
         return getTool(commonClass); // Return tool for common class
     }
 
     /**
      * Returns the specific tool for a given shape.
      */
-    public RMTool getTool(Object anObj)
+    public RMTool<RMShape> getTool(Object anObj)
     {
         // Get the shape class and tool from tools map - if not there, find and set
-        Class sclass = ClassUtils.getClass(anObj);
-        RMTool tool = _tools.get(sclass);
+        Class<?> shapeClass = ClassUtils.getClass(anObj);
+        RMTool<RMShape> tool = _tools.get(shapeClass);
         if (tool == null) {
-            _tools.put(sclass, tool = RMTool.createTool(sclass));
+            _tools.put(shapeClass, tool = RMTool.createTool(shapeClass));
             tool.setEditor(this);
         }
+
+        // Return
         return tool;
     }
 
     /**
      * Tool method - returns the currently selected tool.
      */
-    public RMTool getCurrentTool()
-    {
-        return _currentTool;
-    }
+    public RMTool<?> getCurrentTool()  { return _currentTool; }
 
     /**
      * Tool method - sets the currently select tool to the given tool.
      */
-    public void setCurrentTool(RMTool aTool)
+    public void setCurrentTool(RMTool<?> aTool)
     {
         // If tool is already current tool, just reactivate and return
         if (aTool == _currentTool) {
@@ -928,7 +921,7 @@ public class RMEditor extends RMViewer implements DeepChangeListener {
         super.paintFront(aPntr);
 
         // Have current tool paintTool (paints selected shape handles by default)
-        RMTool tool = getCurrentTool();
+        RMTool<?> tool = getCurrentTool();
         tool.paintTool(aPntr);
 
         // Paint proximity guides
@@ -1007,12 +1000,14 @@ public class RMEditor extends RMViewer implements DeepChangeListener {
     public String getToolTip(ViewEvent anEvent)
     {
         // If not editing, do normal get tool tip text
-        if (!isEditing()) return super.getToolTip(anEvent);
+        if (!isEditing())
+            return super.getToolTip(anEvent);
 
         // Get deepest shape under point (just return if null), get tool and return tool's ToolTip for shape
         RMShape shape = getShapeAtPoint(anEvent.getX(), anEvent.getY(), true);
-        if (shape == null) return null;
-        RMTool tool = getTool(shape);
+        if (shape == null)
+            return null;
+        RMTool<RMShape> tool = getTool(shape);
         return tool.getToolTip(shape, anEvent);
     }
 
@@ -1021,8 +1016,8 @@ public class RMEditor extends RMViewer implements DeepChangeListener {
      */
     public RMDataSource getDataSource()
     {
-        RMDocument d = getDoc();
-        return d != null ? d.getDataSource() : null;
+        RMDocument doc = getDoc();
+        return doc != null ? doc.getDataSource() : null;
     }
 
     /**
@@ -1061,8 +1056,8 @@ public class RMEditor extends RMViewer implements DeepChangeListener {
      */
     public Object getDataSourceDataset()
     {
-        RMDataSource ds = getDataSource();
-        return ds != null ? ds.getDataset() : null;
+        RMDataSource dataSource = getDataSource();
+        return dataSource != null ? dataSource.getDataset() : null;
     }
 
     /**
@@ -1070,8 +1065,8 @@ public class RMEditor extends RMViewer implements DeepChangeListener {
      */
     public void resetEditorPaneLater()
     {
-        RMEditorPane ep = getEditorPane();
-        ep.resetLater();
+        RMEditorPane editorPane = getEditorPane();
+        editorPane.resetLater();
     }
 
     /**
@@ -1079,8 +1074,8 @@ public class RMEditor extends RMViewer implements DeepChangeListener {
      */
     public void resetEditorPaneOnMouseUp()
     {
-        RMEditorPane ep = getEditorPane();
-        ViewUtils.runOnMouseUp(() -> ep.resetLater());
+        RMEditorPane editorPane = getEditorPane();
+        ViewUtils.runOnMouseUp(() -> editorPane.resetLater());
     }
 
     /**
@@ -1121,8 +1116,8 @@ public class RMEditor extends RMViewer implements DeepChangeListener {
     protected void setUndoSelection(Object aSelection)
     {
         // Handle List <RMShape>
-        if (aSelection instanceof List)
-            setSelectedShapes((List) aSelection);
+        if (aSelection instanceof List<?>)
+            setSelectedShapes((List<RMShape>) aSelection);
     }
 
     /**
@@ -1166,7 +1161,7 @@ public class RMEditor extends RMViewer implements DeepChangeListener {
 
         // If no changes yet, set selected objects
         if (undoer.getActiveUndoSet().getChangeCount() == 0)
-            undoer.setUndoSelection(new ArrayList(getSelectedOrSuperSelectedShapes()));
+            undoer.setUndoSelection(new ArrayList<>(getSelectedOrSuperSelectedShapes()));
 
         // Add property change
         undoer.addPropChange(aPC);
@@ -1185,9 +1180,9 @@ public class RMEditor extends RMViewer implements DeepChangeListener {
         if (undoer == null || !undoer.isEnabled()) return;
 
         // Set undo selected-shapes
-        List shapes = getSelectedShapeCount() > 0 ? getSelectedShapes() : getSuperSelectedShapes();
+        List<RMShape> shapes = getSelectedShapeCount() > 0 ? getSelectedShapes() : getSuperSelectedShapes();
         if (undoer.getRedoSelection() == null)
-            undoer.setRedoSelection(new ArrayList(shapes));
+            undoer.setRedoSelection(new ArrayList<>(shapes));
 
         // Save undo changes
         undoer.saveChanges();
@@ -1224,26 +1219,17 @@ public class RMEditor extends RMViewer implements DeepChangeListener {
         /**
          * Returns whether painting is for editor.
          */
-        public boolean isEditing()
-        {
-            return RMEditor.this.isEditing();
-        }
+        public boolean isEditing()  { return RMEditor.this.isEditing(); }
 
         /**
          * Returns whether given shape is selected.
          */
-        public boolean isSelected(RMShape aShape)
-        {
-            return RMEditor.this.isSelected(aShape);
-        }
+        public boolean isSelected(RMShape aShape)  { return RMEditor.this.isSelected(aShape); }
 
         /**
          * Returns whether given shape is super selected.
          */
-        public boolean isSuperSelected(RMShape aShape)
-        {
-            return RMEditor.this.isSuperSelected(aShape);
-        }
+        public boolean isSuperSelected(RMShape aShape)  { return RMEditor.this.isSuperSelected(aShape); }
 
         /**
          * Returns whether given shape is THE super selected shape.
@@ -1257,9 +1243,5 @@ public class RMEditor extends RMViewer implements DeepChangeListener {
     /**
      * Play beep.
      */
-    public void beep()
-    {
-        ViewUtils.beep();
-    }
-
+    public void beep()  { ViewUtils.beep(); }
 }

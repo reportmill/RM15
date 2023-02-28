@@ -4,7 +4,6 @@
 package com.reportmill.app;
 import com.reportmill.base.*;
 import com.reportmill.shape.*;
-import java.util.*;
 import snap.geom.Rect;
 import snap.gfx.*;
 import snap.props.PropChange;
@@ -19,74 +18,61 @@ import snap.util.*;
 public class RMEditorPane extends RMViewerPane {
 
     // The menu bar owner
-    RMEditorPaneMenuBar _menuBar;
+    private RMEditorPaneMenuBar  _menuBar;
 
     // The original editor, if in preview mode
-    RMEditor _realEditor;
+    private RMEditor  _realEditor;
 
     // The shared editor inspector
-    InspectorPanel _inspPanel = createInspectorPanel();
+    private InspectorPanel  _inspPanel = createInspectorPanel();
 
     // The shared attributes inspector (go ahead and create to get RMColorPanel created)
-    AttributesPanel _attrsPanel = createAttributesPanel();
+    private AttributesPanel  _attrsPanel = createAttributesPanel();
 
     // The image for a window frame icon
     private static Image _frameImg;
 
     /**
-     * Creates a new EditorPane.
+     * Constructor.
      */
     public RMEditorPane()
     {
+        super();
     }
 
     /**
      * Returns the viewer as an editor.
      */
-    public RMEditor getEditor()
-    {
-        return (RMEditor) getViewer();
-    }
+    public RMEditor getEditor()  { return (RMEditor) getViewer(); }
 
     /**
      * Overridden to return an RMEditor.
      */
-    protected RMViewer createViewer()
-    {
-        return new RMEditor();
-    }
+    protected RMViewer createViewer()  { return new RMEditor(); }
 
     /**
      * Override to return as RMEditorPaneToolBar.
      */
-    public RMEditorPaneToolBar getTopToolBar()
-    {
-        return (RMEditorPaneToolBar) super.getTopToolBar();
-    }
+    public RMEditorPaneToolBar getTopToolBar()  { return (RMEditorPaneToolBar) super.getTopToolBar(); }
 
     /**
      * Creates the top tool bar.
      */
-    protected ViewOwner createTopToolBar()
-    {
-        return new RMEditorPaneToolBar(this);
-    }
+    protected ViewOwner createTopToolBar()  { return new RMEditorPaneToolBar(this); }
 
     /**
      * Returns the SwingOwner for the menu bar.
      */
     public RMEditorPaneMenuBar getMenuBar()
     {
-        return _menuBar != null ? _menuBar : (_menuBar = createMenuBar());
+        if (_menuBar != null) return _menuBar;
+        return _menuBar = createMenuBar();
     }
 
     /**
      * Creates the RMEditorPaneMenuBar for the menu bar.
      */
-    protected RMEditorPaneMenuBar createMenuBar()
-    {
-        return new RMEditorPaneMenuBar(this);
-    }
+    protected RMEditorPaneMenuBar createMenuBar()  { return new RMEditorPaneMenuBar(this); }
 
     /**
      * Returns the datasource associated with the editor's document.
@@ -124,29 +110,34 @@ public class RMEditorPane extends RMViewerPane {
     public void setDataSource(WebURL aURL, double aX, double aY)
     {
         // Create DataSource and load dataset
-        RMDataSource dsource = new RMDataSource(aURL);
+        RMDataSource dataSource = new RMDataSource(aURL);
         try {
-            dsource.getDataset();
+            dataSource.getDataset();
         }
 
         // If failed, get error message and run error panel
         catch (Throwable t) {
-            while (t.getCause() != null) t = t.getCause(); // Get root cause
-            String e1 = StringUtils.wrap(t.toString(), 40);
-            Object line = RMKey.getValue(t, "LineNumber"), column = RMKey.getValue(t, "ColumnNumber");
-            if (line != null || column != null) e1 += "\nLine: " + line + ", Column: " + column;
-            else t.printStackTrace();
-            String error = e1;
+
+            // Get cause
+            Throwable rootCause = t;
+            while (rootCause.getCause() != null)
+                rootCause = t.getCause();
+
+            // Get error message
+            String error = StringUtils.wrap(rootCause.toString(), 40);
+            rootCause.printStackTrace();
+
+            // Run dialog box
             runLater(() -> {
-                DialogBox dbox = new DialogBox("Error Parsing XML");
-                dbox.setErrorMessage(error);
-                dbox.showMessageDialog(getUI());
+                DialogBox dialogBox = new DialogBox("Error Parsing XML");
+                dialogBox.setErrorMessage(error);
+                dialogBox.showMessageDialog(getUI());
             });
             return;
         }
 
         // Set DataSource in editor, show DataSource inspector, KeysBrowser and refocus window
-        setDataSource(dsource, aX, aY);
+        setDataSource(dataSource, aX, aY);
     }
 
     /**
@@ -175,8 +166,10 @@ public class RMEditorPane extends RMViewerPane {
             _realEditor = getEditor();
             _realEditor.flushEditingChanges();
 
-            // Generate report and restore filename
-            RMDocument report = getDoc().generateReport(getEditor().getDataSourceDataset());
+            // Get doc/dataset and generate report
+            RMDocument doc = getDoc();
+            Object dataset = _realEditor.getDataSourceDataset();
+            RMDocument report = doc.generateReport(dataset);
 
             // Create new editor, set editing to false and set report document
             RMEditor editor = new RMEditor();
@@ -433,10 +426,10 @@ public class RMEditorPane extends RMViewerPane {
 
         // If source is already opened, return editor pane
         if (!SnapUtils.equals(url, getSourceURL())) {
-            RMEditorPane epanes[] = WindowView.getOpenWindowOwners(RMEditorPane.class);
-            for (RMEditorPane epane : epanes)
-                if (SnapUtils.equals(url, epane.getSourceURL()))
-                    return epane;
+            RMEditorPane[] editorPanes = WindowView.getOpenWindowOwners(RMEditorPane.class);
+            for (RMEditorPane editorPane : editorPanes)
+                if (SnapUtils.equals(url, editorPane.getSourceURL()))
+                    return editorPane;
         }
 
         // Load document
@@ -450,31 +443,33 @@ public class RMEditorPane extends RMViewerPane {
             e.printStackTrace();
             String msg = StringUtils.wrap("Error reading file:\n" + e.getMessage(), 40);
             runLater(() -> {
-                DialogBox dbox = new DialogBox("Error Reading File");
-                dbox.setErrorMessage(msg);
-                dbox.showMessageDialog(getUI());
+                DialogBox dialogBox = new DialogBox("Error Reading File");
+                dialogBox.setErrorMessage(msg);
+                dialogBox.showMessageDialog(getUI());
             });
         }
 
         // If no document, just return null
-        if (doc == null) return null;
+        if (doc == null)
+            return null;
 
         // If old version, warn user that saving document will make it unreadable by RM7
         if (doc.getVersion() < 7.0) {
             String msg = "This document has been upgraded from an older version.\n" +
                     "If saved, it will not open in earlier versions.";
-            DialogBox dbox = new DialogBox("Warning: Document Upgrade");
-            dbox.setWarningMessage(msg);
-            dbox.showMessageDialog(getUI());
+            DialogBox dialogBox = new DialogBox("Warning: Document Upgrade");
+            dialogBox.setWarningMessage(msg);
+            dialogBox.showMessageDialog(getUI());
         }
 
         // Set document
         getViewer().setDoc(doc);
 
         // If source is string, add to recent files menu
-        if (url != null) RecentFiles.addPath("RecentDocuments", url.getPath(), 10);
+        if (url != null)
+            RecentFiles.addPath("RecentDocuments", url.getPath(), 10);
 
-        // Return the editor
+        // Return
         return this;
     }
 
@@ -486,18 +481,17 @@ public class RMEditorPane extends RMViewerPane {
         // Make sure editor isn't previewing
         setEditing(true);
 
-        // Get extensions - if there is an existing extension, make sure it's first in the exts array
-        String exts[] = getFileExtensions();
-        if (getSourceURL() != null && FilePathUtils.getExtension(getSourceURL().getPath()) != null) {
-            List ex = new ArrayList(Arrays.asList(exts));
-            ex.add(0, FilePathUtils.getExtension(getSourceURL().getPath()));
-            exts = (String[]) ex.toArray(new String[ex.size()]);
-        }
-
         // Run save panel, set Document.Source to path and re-save (or just return if cancelled)
-        String path = FilePanel.showSavePanel(getUI(), getFileDescription(), exts);
-        if (path == null) return;
-        getDoc().setSourceURL(WebURL.getURL(path));
+        String fileDescription = getFileDescription();
+        String[] fileExtensions = getFileExtensions();
+        String path = FilePanel.showSavePanel(getUI(), fileDescription, fileExtensions);
+        if (path == null)
+            return;
+
+        // Set URL and save
+        RMDocument doc = getDoc();
+        WebURL docURL = WebURL.getURL(path);
+        doc.setSourceURL(docURL);
         save();
     }
 
@@ -518,14 +512,13 @@ public class RMEditorPane extends RMViewerPane {
         getEditor().requestFocus();
 
         // Do actual save - if exception, print stack trace and set error string
-        try {
-            saveImpl();
-        } catch (Throwable e) {
+        try { saveImpl(); }
+        catch (Throwable e) {
             e.printStackTrace();
             String msg = "The file " + url.getPath() + " could not be saved (" + e + ").";
-            DialogBox dbox = new DialogBox("Error on Save");
-            dbox.setErrorMessage(msg);
-            dbox.showMessageDialog(getUI());
+            DialogBox dialogBox = new DialogBox("Error on Save");
+            dialogBox.setErrorMessage(msg);
+            dialogBox.showMessageDialog(getUI());
             return;
         }
 
@@ -538,13 +531,21 @@ public class RMEditorPane extends RMViewerPane {
     /**
      * The real save method.
      */
-    protected void saveImpl() throws Exception
+    protected void saveImpl()
     {
-        WebURL url = getSourceURL();
-        WebFile file = url.getFile();
-        if (file == null) file = url.createFile(false);
-        file.setBytes(getDoc().getBytes());
-        file.save();
+        // Get doc file
+        WebURL docURL = getSourceURL();
+        WebFile docFile = docURL.getFile();
+        if (docFile == null)
+            docFile = docURL.createFile(false);
+
+        // Get/set doc bytes
+        RMDocument doc = getDoc();
+        byte[] docBytes = doc.getBytes();
+        docFile.setBytes(docBytes);
+
+        // Save doc file
+        docFile.save();
     }
 
     /**
@@ -578,17 +579,15 @@ public class RMEditorPane extends RMViewerPane {
         // If unsaved changes, run panel to request save
         if (getEditor().undoerHasUndos()) {
             String fname = getSourceURL() == null ? "untitled document" : getSourceURL().getPathName();
-            String msg = "Save changes to " + fname + "?", options[] = {"Save", "Don't Save", "Cancel"};
-            DialogBox dbox = new DialogBox("Unsaved Changes");
-            dbox.setWarningMessage(msg);
-            dbox.setOptions(options);
-            switch (dbox.showOptionDialog(getUI(), "Save")) {
-                case 0:
-                    save();
-                case 1:
-                    break;
-                default:
-                    return false;
+            String msg = "Save changes to " + fname + "?";
+            String[] options = { "Save", "Don't Save", "Cancel" };
+            DialogBox dialogBox = new DialogBox("Unsaved Changes");
+            dialogBox.setWarningMessage(msg);
+            dialogBox.setOptions(options);
+            switch (dialogBox.showOptionDialog(getUI(), "Save")) {
+                case 0: save();
+                case 1: break;
+                default: return false;
             }
         }
 
@@ -606,9 +605,9 @@ public class RMEditorPane extends RMViewerPane {
         getWindow().hide();
 
         // If another open editor is available focus on it, otherwise run WelcomePanel
-        RMEditorPane epane = WindowView.getOpenWindowOwner(RMEditorPane.class);
-        if (epane != null)
-            epane.getEditor().requestFocus();
+        RMEditorPane editorPane = WindowView.getOpenWindowOwner(RMEditorPane.class);
+        if (editorPane != null)
+            editorPane.getEditor().requestFocus();
         else if (Welcome.getShared().isEnabled())
             Welcome.getShared().runWelcome();
     }
@@ -627,41 +626,39 @@ public class RMEditorPane extends RMViewerPane {
     public void runPopupMenu(ViewEvent anEvent)
     {
         // Get selected shape (just return if page is selected)
-        Menu pmenu = new Menu();
-        RMShape shape = getEditor().getSelectedOrSuperSelectedShape();
-        if (shape instanceof RMPage) return;
+        Menu popupMenu = new Menu();
+        RMShape selShape = getEditor().getSelectedOrSuperSelectedShape();
+        if (selShape instanceof RMPage)
+            return;
 
         // If RMTextShape, get copy of Format menu
-        if (shape instanceof RMTextShape) {
-            RMTextShape text = (RMTextShape) shape;
+        if (selShape instanceof RMTextShape) {
+            RMTextShape text = (RMTextShape) selShape;
 
             // Get editor pane format menu and add menu items to popup
             Menu formatMenu = getMenuBar().getView("FormatMenu", Menu.class);
             Menu formatMenuCopy = (Menu) formatMenu.clone();
-            for (MenuItem m : formatMenuCopy.getItems()) pmenu.addItem(m);
+            for (MenuItem m : formatMenuCopy.getItems())
+                popupMenu.addItem(m);
 
             // If structured tablerow, add AddColumnMenuItem and SplitColumnMenuItem
             if (text.isStructured()) {
-                MenuItem mi;
-                mi = new MenuItem();
-                mi.setText("Add Column");
-                mi.setName("AddColumnMenuItem");
-                pmenu.addItem(mi);
-                mi = new MenuItem();
-                mi.setText("Split Column");
-                mi.setName("SplitColumnMenuItem");
-                pmenu.addItem(mi);
+                MenuItem mi = new MenuItem(); mi.setText("Add Column"); mi.setName("AddColumnMenuItem");
+                popupMenu.addItem(mi);
+                mi = new MenuItem(); mi.setText("Split Column"); mi.setName("SplitColumnMenuItem");
+                popupMenu.addItem(mi);
             }
         }
 
         // Get copy of shapes menu and add menu items to popup
         Menu shapesMenu = getMenuBar().getView("ShapesMenu", Menu.class);
         Menu shapesMenuCopy = (Menu) shapesMenu.clone();
-        for (MenuItem m : shapesMenuCopy.getItems()) pmenu.addItem(m);
+        for (MenuItem m : shapesMenuCopy.getItems())
+            popupMenu.addItem(m);
 
         // Initialize popup menu items to send Events to menu bar
-        pmenu.setOwner(getMenuBar());
-        pmenu.show(getEditor(), anEvent.getX(), anEvent.getY());
+        popupMenu.setOwner(getMenuBar());
+        popupMenu.show(getEditor(), anEvent.getX(), anEvent.getY());
         anEvent.consume();
     }
 
@@ -670,14 +667,10 @@ public class RMEditorPane extends RMViewerPane {
      */
     private void editorDidPropChange(PropChange aPC)
     {
-        String pname = aPC.getPropName();
-        switch (pname) {
-            case RMEditor.SelShapes_Prop:
-                resetLater();
-                break;
-            case RMEditor.SuperSelShape_Prop:
-                resetLater();
-                break;
+        String propName = aPC.getPropName();
+        switch (propName) {
+            case RMEditor.SelShapes_Prop: resetLater(); break;
+            case RMEditor.SuperSelShape_Prop: resetLater(); break;
         }
     }
 
@@ -686,7 +679,8 @@ public class RMEditorPane extends RMViewerPane {
      */
     private static Image getFrameIcon()
     {
-        return _frameImg != null ? _frameImg : (_frameImg = Image.get(RMEditorPane.class, "ReportMill16x16.png"));
+        if (_frameImg != null) return _frameImg;
+        return _frameImg = Image.get(RMEditorPane.class, "ReportMill16x16.png");
     }
 
     /**
@@ -708,34 +702,21 @@ public class RMEditorPane extends RMViewerPane {
         /**
          * Returns the EditorPane.
          */
-        public RMEditorPane getEditorPane()
-        {
-            return _editorPane;
-        }
+        public RMEditorPane getEditorPane()  { return _editorPane; }
 
         /**
          * Sets the EditorPane.
          */
-        public void setEditorPane(RMEditorPane anEP)
-        {
-            _editorPane = anEP;
-        }
+        public void setEditorPane(RMEditorPane anEP)  { _editorPane = anEP; }
 
         /**
          * Returns the editor.
          */
-        public RMEditor getEditor()
-        {
-            return _editorPane.getEditor();
-        }
+        public RMEditor getEditor()  { return _editorPane.getEditor(); }
 
         /**
          * Returns the title.
          */
-        public String getWindowTitle()
-        {
-            return "Inspector";
-        }
+        public String getWindowTitle()  { return "Inspector"; }
     }
-
 }
