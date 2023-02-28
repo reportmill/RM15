@@ -221,7 +221,7 @@ public class RMTextShape extends RMRectShape {
     {
         if (isTextEditorSet())
             return getTextEditor().getFormat();
-        return getXString().getRunAt(0).getFormat();
+        return getXString().getRunForCharIndex(0).getFormat();
     }
 
     /**
@@ -239,7 +239,7 @@ public class RMTextShape extends RMRectShape {
      */
     public RMColor getTextColor()
     {
-        return getXString().getRunAt(0).getColor();
+        return getXString().getRunForCharIndex(0).getColor();
     }
 
     /**
@@ -311,20 +311,9 @@ public class RMTextShape extends RMRectShape {
     }
 
     /**
-     * Returns the alignment as a string, one of: "left", "center" or "right".
-     */
-    public String getAlignString()
-    {
-        return getAlignmentX().toString().toLowerCase();
-    }
-
-    /**
      * Returns the vertical alignment.
      */
-    public AlignY getAlignmentY()
-    {
-        return _alignY;
-    }
+    public AlignY getAlignmentY()  { return _alignY; }
 
     /**
      * Sets the vertical alignment.
@@ -339,74 +328,47 @@ public class RMTextShape extends RMRectShape {
     /**
      * Returns the wrapping behavior for over-filled rpgCloned text (NONE, WRAP, SHRINK).
      */
-    public byte getWraps()
-    {
-        return _wraps;
-    }
+    public byte getWraps()  { return _wraps; }
 
     /**
      * Sets the wrapping behavior for over-filled rpgCloned text (NONE, WRAP, SHRINK).
      */
-    public void setWraps(byte aValue)
-    {
-        _wraps = aValue;
-    }
+    public void setWraps(byte aValue)  { _wraps = aValue; }
 
     /**
      * Returns whether text should wrap around other shapes that cause wrap.
      */
-    public boolean getPerformsWrap()
-    {
-        return _performsWrap;
-    }
+    public boolean getPerformsWrap()  { return _performsWrap; }
 
     /**
      * Sets whether text should wrap around other shapes that cause wrap.
      */
-    public void setPerformsWrap(boolean aFlag)
-    {
-        _performsWrap = aFlag;
-    }
+    public void setPerformsWrap(boolean aFlag)  { _performsWrap = aFlag; }
 
     /**
      * Returns whether text should coalesce consecutive newlines in rpgClone.
      */
-    public boolean getCoalesceNewlines()
-    {
-        return _coalesceNewlines;
-    }
+    public boolean getCoalesceNewlines()  { return _coalesceNewlines; }
 
     /**
      * Sets whether text should coalesce consecutive newlines in rpgClone.
      */
-    public void setCoalesceNewlines(boolean aFlag)
-    {
-        _coalesceNewlines = aFlag;
-    }
+    public void setCoalesceNewlines(boolean aFlag)  { _coalesceNewlines = aFlag; }
 
     /**
      * Returns whether text should always draw at least a light gray border (useful when editing).
      */
-    public boolean getDrawsSelectionRect()
-    {
-        return _drawsSelectionRect;
-    }
+    public boolean getDrawsSelectionRect()  { return _drawsSelectionRect; }
 
     /**
      * Sets whether text should always draw at least a light-gray border (useful when editing).
      */
-    public void setDrawsSelectionRect(boolean aValue)
-    {
-        _drawsSelectionRect = aValue;
-    }
+    public void setDrawsSelectionRect(boolean aValue)  { _drawsSelectionRect = aValue; }
 
     /**
      * Returns whether text box is editable in PDF.
      */
-    public boolean isEditable()
-    {
-        return _editable;
-    }
+    public boolean isEditable()  { return _editable; }
 
     /**
      * Sets whether text box is editable in PDF.
@@ -591,7 +553,7 @@ public class RMTextShape extends RMRectShape {
         }
 
         // Split the string by commas or spaces and get the parts
-        String parts[] = aString.indexOf(",") > 0 ? aString.split(",") : aString.split(" ");
+        String[] parts = aString.indexOf(",") > 0 ? aString.split(",") : aString.split(" ");
         String p1 = parts[0];
         String p2 = parts[Math.min(1, parts.length - 1)];
         String p3 = parts[Math.min(2, parts.length - 1)];
@@ -661,7 +623,7 @@ public class RMTextShape extends RMRectShape {
             return getPathShape() != null ? getPathShape().getPath().copyFor(getBoundsInside()) : super.getPath();
 
         // Get peers who cause wrap (if none, just return super path in bounds)
-        List peersWhoCauseWrap = getPeersWhoCauseWrap();
+        List<RMShape> peersWhoCauseWrap = getPeersWhoCauseWrap();
         if (peersWhoCauseWrap == null)
             return getPathShape() != null ? getPathShape().getPath().copyFor(getBoundsInside()) : super.getPath();
 
@@ -682,15 +644,18 @@ public class RMTextShape extends RMRectShape {
      */
     private List<RMShape> getPeersWhoCauseWrap()
     {
+        List<RMShape> list = null;
+
         // Iterate over children and add any that intersect frame
-        List list = null;
         for (int i = 0, iMax = getParent().getChildCount(); i < iMax; i++) {
             RMShape child = getParent().getChild(i);
             if (child != this && child.getFrame().intersects(getFrame())) {
-                if (list == null) list = new ArrayList();
+                if (list == null) list = new ArrayList<>();
                 list.add(child);
             }
         }
+
+        // Return
         return list;
     }
 
@@ -896,7 +861,7 @@ public class RMTextShape extends RMRectShape {
     protected List<RMTextShape> paginate()
     {
         // Create pages list with this text in it
-        List<RMTextShape> pages = new ArrayList();
+        List<RMTextShape> pages = new ArrayList<>();
         pages.add(this);
 
         // Cache vertical alignment and set to Top
@@ -939,10 +904,7 @@ public class RMTextShape extends RMRectShape {
     /**
      * Editor method - indicates that this shape can be super selected.
      */
-    public boolean superSelectable()
-    {
-        return true;
-    }
+    public boolean superSelectable()  { return true; }
 
     /**
      * Editor method.

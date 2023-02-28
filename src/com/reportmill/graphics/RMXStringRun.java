@@ -15,52 +15,43 @@ import snap.text.TextStyle;
 public class RMXStringRun implements CharSequence {
 
     // The xstring that this run is a part of
-    RMXString _xstr;
+    private RMXString _xstr;
 
-    // The rich text line
-    TextLine _rline;
+    // The text line
+    private TextLine _textLine;
 
     // The start/end char index of this run in string
-    int _start, _end;
+    private int _start, _end;
 
     // The attributes of the Run (Font, Color, etc.)
-    TextStyle _style;
+    private TextStyle _style;
 
     /**
      * Creates a new run.
      */
-    protected RMXStringRun(RMXString anXStr, TextLine aLine, TextRun aRun)
+    protected RMXStringRun(RMXString anXStr, TextRun aRun)
     {
         _xstr = anXStr;
-        _rline = aLine;
-        _start = aLine.getStartCharIndex() + aRun.getStartCharIndex();
-        _end = aLine.getStartCharIndex() + aRun.getEndCharIndex();
+        _textLine = aRun.getLine();
+        _start = _textLine.getStartCharIndex() + aRun.getStartCharIndex();
+        _end = _textLine.getStartCharIndex() + aRun.getEndCharIndex();
         _style = aRun.getStyle();
     }
 
     /**
      * Returns the start character index for this run.
      */
-    public int start()
-    {
-        return _start;
-    }
+    public int start()  { return _start; }
 
     /**
      * Returns the end character index for this run.
      */
-    public int end()
-    {
-        return _end;
-    }
+    public int end()  { return _end; }
 
     /**
      * Returns the length in characters for this run.
      */
-    public int length()
-    {
-        return _end - _start;
-    }
+    public int length()  { return _end - _start; }
 
     /**
      * CharSequence method returning character at given index.
@@ -115,7 +106,7 @@ public class RMXStringRun implements CharSequence {
      */
     public RMParagraph getParagraph()
     {
-        return new RMParagraph(_rline.getLineStyle());
+        return new RMParagraph(_textLine.getLineStyle());
     }
 
     /**
@@ -140,7 +131,7 @@ public class RMXStringRun implements CharSequence {
     public RMXStringRun getNext()
     {
         if (_end == _xstr.length()) return null;
-        return _xstr.getRunAt(_end);
+        return _xstr.getRunForCharIndex(_end);
     }
 
     /**
@@ -150,5 +141,4 @@ public class RMXStringRun implements CharSequence {
     {
         return _xstr.subSequence(_start, _end).toString();
     }
-
 }

@@ -23,14 +23,14 @@ import snap.util.*;
 public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.Archivable {
 
     // The RichText
-    RichText _rtext;
+    private RichText  _richText;
 
     /**
      * Creates an empty RMXString.
      */
     public RMXString()
     {
-        _rtext = new RichText();
+        _richText = new RichText();
     }
 
     /**
@@ -38,7 +38,7 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
      */
     public RMXString(RichText aRT)
     {
-        _rtext = aRT;
+        _richText = aRT;
     }
 
     /**
@@ -62,10 +62,7 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
     /**
      * Returns the RichText.
      */
-    public RichText getRichText()
-    {
-        return _rtext;
-    }
+    public RichText getRichText()  { return _richText; }
 
     /**
      * Returns the simple String represented by this RMXString.
@@ -78,26 +75,17 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
     /**
      * The length.
      */
-    public int length()
-    {
-        return _rtext.length();
-    }
+    public int length()  { return _richText.length(); }
 
     /**
      * Returns the char at given index.
      */
-    public char charAt(int anIndex)
-    {
-        return _rtext.charAt(anIndex);
-    }
+    public char charAt(int anIndex)  { return _richText.charAt(anIndex); }
 
     /**
      * Returns a subsequence.
      */
-    public CharSequence subSequence(int aStart, int anEnd)
-    {
-        return _rtext.subSequence(aStart, anEnd);
-    }
+    public CharSequence subSequence(int aStart, int anEnd)  { return _richText.subSequence(aStart, anEnd); }
 
     /**
      * Sets the simple String represented by this RMXString.
@@ -145,7 +133,7 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
     public void addChars(CharSequence theChars, TextStyle aStyle, int anIndex)
     {
         if (theChars.length() == 0) return;
-        _rtext.addChars(theChars, aStyle, anIndex);
+        _richText.addChars(theChars, aStyle, anIndex);
     }
 
     /**
@@ -153,7 +141,7 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
      */
     public void addChars(CharSequence theChars, Object... theAttrs)
     {
-        TextStyle style = _rtext.getStyleForCharIndex(length());
+        TextStyle style = _richText.getStyleForCharIndex(length());
         Object attr0 = theAttrs != null && theAttrs.length > 0 ? theAttrs[0] : null;
         if (attr0 instanceof TextStyle) style = (TextStyle) attr0;
         else if (attr0 instanceof RMTextStyle) style = ((RMTextStyle) attr0)._style;
@@ -167,7 +155,7 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
     public void addChars(CharSequence theChars, Map theAttrs)
     {
         int index = length();
-        TextStyle style = _rtext.getStyleForCharIndex(index);
+        TextStyle style = _richText.getStyleForCharIndex(index);
         if (theAttrs != null) style = style.copyFor(theAttrs);
         addChars(theChars, style, index);
     }
@@ -177,7 +165,7 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
      */
     public void removeChars(int aStart, int anEnd)
     {
-        _rtext.removeChars(aStart, anEnd);
+        _richText.removeChars(aStart, anEnd);
     }
 
     /**
@@ -195,7 +183,7 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
     {
         TextStyle style = null;
         if (aStyle != null) style = aStyle._style;
-        _rtext.replaceChars(theChars, style, aStart, anEnd);
+        _richText.replaceChars(theChars, style, aStart, anEnd);
     }
 
     /**
@@ -203,7 +191,7 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
      */
     public void addString(RMXString xStr, int anIndex)
     {
-        _rtext.addTextDoc(xStr._rtext, anIndex);
+        _richText.addTextDoc(xStr._richText, anIndex);
     }
 
     /**
@@ -211,8 +199,8 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
      */
     public void replaceString(RMXString xStr, int aStart, int aEnd)
     {
-        _rtext.removeChars(aStart, aEnd);
-        _rtext.addTextDoc(xStr._rtext, aStart);
+        _richText.removeChars(aStart, aEnd);
+        _richText.addTextDoc(xStr._richText, aStart);
     }
 
     /**
@@ -228,10 +216,11 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
      */
     public int getRunCount()
     {
-        int rc = 0;
-        for (TextLine ln : _rtext.getLines())
-            rc += ln.getRunCount();
-        return rc;
+        List<TextLine> richTextLines = _richText.getLines();
+        int runCount = 0;
+        for (TextLine textLine : richTextLines)
+            runCount += textLine.getRunCount();
+        return runCount;
     }
 
     /**
@@ -239,15 +228,22 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
      */
     public RMXStringRun getRun(int anIndex)
     {
+        List<TextLine> richTextLines = _richText.getLines();
         int index = anIndex;
         RMXStringRun run = null;
-        for (TextLine line : _rtext.getLines()) {
-            int rc = line.getRunCount();
-            if (index < rc) {
-                run = new RMXStringRun(this, line, line.getRun(index));
+
+        // Iterate over lines
+        for (TextLine line : richTextLines) {
+            int runCount = line.getRunCount();
+            if (index < runCount) {
+                TextRun textRun = line.getRun(index);
+                run = new RMXStringRun(this, textRun);
                 break;
-            } else index -= rc;
+            }
+            else index -= runCount;
         }
+
+        // Return
         return run;
     }
 
@@ -256,17 +252,17 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
      */
     public RMXStringRun getRunLast()
     {
-        int rc = getRunCount();
-        return getRun(rc - 1);
+        int runCount = getRunCount();
+        return getRun(runCount - 1);
     }
 
     /**
      * Returns the XString run that contains or ends at given index.
      */
-    public RMXStringRun getRunAt(int anIndex)
+    public RMXStringRun getRunForCharIndex(int anIndex)
     {
-        TextRun run = _rtext.getRunForCharIndex(anIndex);
-        return new RMXStringRun(this, run.getLine(), run);
+        TextRun run = _richText.getRunForCharIndex(anIndex);
+        return new RMXStringRun(this, run);
     }
 
     /**
@@ -274,16 +270,17 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
      */
     public RMXStringRun getRunForCharRange(int startIndex, int endIndex)
     {
-        TextRun run = _rtext.getRunForCharRange(startIndex, endIndex);
-        return new RMXStringRun(this, run.getLine(), run);
+        TextRun run = _richText.getRunForCharRange(startIndex, endIndex);
+        return new RMXStringRun(this, run);
     }
 
     /**
      * Returns the text style for the run at the given character index.
      */
-    public RMTextStyle getStyleAt(int anIndex)
+    public RMTextStyle getStyleForCharIndex(int anIndex)
     {
-        return getRunAt(anIndex).getStyle();
+        RMXStringRun textStyle = getRunForCharIndex(anIndex);
+        return textStyle.getStyle();
     }
 
     /**
@@ -300,7 +297,7 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
      */
     public void setStyle(RMTextStyle aStyle, int aStart, int anEnd)
     {
-        _rtext.setStyle(aStyle._style, aStart, anEnd);
+        _richText.setStyle(aStyle._style, aStart, anEnd);
     }
 
     /**
@@ -333,7 +330,7 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
      */
     public void setAttribute(String aKey, Object aVal, int aStart, int aEnd)
     {
-        _rtext.setStyleValue(aKey, aVal, aStart, aEnd);
+        _richText.setStyleValue(aKey, aVal, aStart, aEnd);
     }
 
     /**
@@ -341,7 +338,7 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
      */
     public RMFont getFontAt(int anIndex)
     {
-        return getRunAt(anIndex).getFont();
+        return getRunForCharIndex(anIndex).getFont();
     }
 
     /**
@@ -349,7 +346,7 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
      */
     public RMParagraph getParagraphAt(int anIndex)
     {
-        TextLine line = _rtext.getLineForCharIndex(anIndex);
+        TextLine line = _richText.getLineForCharIndex(anIndex);
         return new RMParagraph(line.getLineStyle());
     }
 
@@ -358,7 +355,7 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
      */
     public void setParagraph(RMParagraph aPG, int aStart, int anEnd)
     {
-        _rtext.setLineStyle(aPG._lstyle, aStart, anEnd);
+        _richText.setLineStyle(aPG._lstyle, aStart, anEnd);
     }
 
     /**
@@ -382,8 +379,8 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
      */
     public void setAlignX(AlignX anAlignX)
     {
-        if (anAlignX == AlignX.Full) _rtext.setLineStyleValue(TextLineStyle.JUSTIFY_KEY, true, 0, length());
-        else _rtext.setLineStyleValue(TextLineStyle.ALIGN_KEY, anAlignX.hpos(), 0, length());
+        if (anAlignX == AlignX.Full) _richText.setLineStyleValue(TextLineStyle.JUSTIFY_KEY, true, 0, length());
+        else _richText.setLineStyleValue(TextLineStyle.ALIGN_KEY, anAlignX.hpos(), 0, length());
     }
 
     /**
@@ -391,7 +388,7 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
      */
     public RMXString substring(int aStart, int aEnd)
     {
-        return new RMXString(_rtext.copyForRange(aStart, aEnd));
+        return new RMXString(_richText.copyForRange(aStart, aEnd));
     }
 
     /**
@@ -418,7 +415,7 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
      */
     public XMLElement toXML(XMLArchiver anArchiver)
     {
-        return _rtext.toXML(anArchiver);
+        return _richText.toXML(anArchiver);
     }
 
     /**
@@ -426,7 +423,7 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
      */
     public RMXString fromXML(XMLArchiver anArch, XMLElement anElmt)
     {
-        _rtext.fromXML(anArch, anElmt);
+        _richText.fromXML(anArch, anElmt);
         return this;
     }
 
@@ -438,7 +435,7 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
         if (anObj == this) return true;
         RMXString other = anObj instanceof RMXString ? (RMXString) anObj : null;
         if (other == null) return false;
-        return other._rtext.equals(_rtext);
+        return other._richText.equals(_richText);
     }
 
     /**
@@ -447,12 +444,9 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
     public RMXString clone()
     {
         RMXString clone;
-        try {
-            clone = (RMXString) super.clone();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        clone._rtext = _rtext.clone();
+        try { clone = (RMXString) super.clone(); }
+        catch (Exception e) { throw new RuntimeException(e); }
+        clone._richText = _richText.clone();
         return clone;
     }
 
@@ -461,7 +455,7 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
      */
     public String toString()
     {
-        return _rtext.getString();
+        return _richText.getString();
     }
 
     /**
@@ -512,7 +506,7 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
 
                 // If val is list, replace with first value (or null)
                 if (val instanceof List) {
-                    List list = (List) val;
+                    List<?> list = (List<?>) val;
                     val = list.size() > 0 ? list.get(0) : null;
                 }
 
@@ -531,7 +525,7 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
                         if (index > 0 && keyString.charAt(index - 1) == '"' && keyString.charAt(index + string.length()) == '"') {
                             int start = index + keyStart;
                             valString = outString.substring(start, start + string.length());
-                            redo = redo || string.indexOf("@") >= 0;
+                            redo = redo || string.contains("@");
                         }
                     }
                 }
@@ -542,7 +536,7 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
 
                     // If we found a keyChain, add @ signs and redo (this feature lets developers return an RMKeyChain)
                 else if (val instanceof RMKeyChain) {
-                    valString = "@" + val.toString() + "@";
+                    valString = "@" + val + "@";
                     redo = true;
                 }
 
@@ -656,7 +650,8 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
     {
         // Get length of string (return bogus range if null)
         int length = length();
-        if (length < 2) return aRange.set(-1, -1);
+        if (length < 2)
+            return aRange.set(-1, -1);
 
         // Get start of key (return if it is the last char)
         int startIndex = indexOf("@", anIndex);
@@ -682,17 +677,18 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
      * A range class.
      */
     private static class Range {
+
+        // Start/end
         int start, end;
 
-        public int length()
-        {
-            return end - start;
-        }
+        /** Constructor. */
+        public Range()  { }
 
-        public void setLength(int aLength)
-        {
-            end = start + aLength;
-        }
+        /** Returns the range length */
+        public int length()  { return end - start; }
+
+        /** Sets the range length. */
+        public void setLength(int aLength)  { end = start + aLength; }
 
         public Range set(int aStart, int anEnd)
         {
@@ -701,5 +697,4 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
             return this;
         }
     }
-
 }

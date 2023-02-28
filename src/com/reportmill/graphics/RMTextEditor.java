@@ -18,26 +18,26 @@ import snap.view.*;
  */
 public class RMTextEditor {
 
-    // The text box
-    TextBox _tbox;
+    // The TextDoc
+    private TextDoc  _textDoc;
 
-    // The RichText
-    RichText _text;
+    // The text box
+    private TextBox  _textBox;
 
     // The XString being edited
-    RMXString _xstr;
+    private RMXString  _xstr;
 
     // The text selection
-    TextSel _sel;
+    private TextSel  _sel;
 
     // The current text style for the cursor or selection
-    RMTextStyle _selStyle;
+    private RMTextStyle  _selStyle;
 
     // Whether the editor is word selecting (double click), paragraph selecting (triple click)
-    boolean _wordSel, _pgraphSel;
+    private boolean  _wordSel, _pgraphSel;
 
     // The mouse down point
-    double _downX, _downY;
+    private double  _downX, _downY;
 
     // Whether RM should be spell checking
     public static boolean isSpellChecking = Prefs.getDefaultPrefs().getBoolean("SpellChecking", false);
@@ -49,11 +49,25 @@ public class RMTextEditor {
     public static final String RM_XSTRING_TYPE = "reportmill/xstring";
 
     /**
+     * Constructor.
+     */
+    public RMTextEditor()
+    {
+        super();
+    }
+
+    /**
+     * Returns the TextDoc.
+     */
+    public TextDoc getTextDoc()  { return _textDoc; }
+
+    /**
      * Returns the text box used to layout text.
      */
     public TextBox getTextBox()
     {
-        return _tbox != null ? _tbox : (_tbox = new TextBox());
+        if (_textBox != null) return _textBox;
+        return _textBox = new TextBox();
     }
 
     /**
@@ -61,24 +75,13 @@ public class RMTextEditor {
      */
     public void setTextBox(TextBox aTextBox)
     {
-        _tbox = aTextBox;
-    }
-
-    /**
-     * Returns the rich text.
-     */
-    public RichText getText()
-    {
-        return _text;
+        _textBox = aTextBox;
     }
 
     /**
      * Returns the xstring that is being edited.
      */
-    public RMXString getXString()
-    {
-        return _xstr;
-    }
+    public RMXString getXString()  { return _xstr; }
 
     /**
      * Sets the xstring that is to be edited.
@@ -87,7 +90,7 @@ public class RMTextEditor {
     {
         if (aString == _xstr) return;
         _xstr = aString;
-        _text = _xstr.getRichText();
+        _textDoc = _xstr.getRichText();
         setSel(0);
     }
 
@@ -96,7 +99,7 @@ public class RMTextEditor {
      */
     public Rect getBounds()
     {
-        return _tbox.getBounds();
+        return _textBox.getBounds();
     }
 
     /**
@@ -104,24 +107,18 @@ public class RMTextEditor {
      */
     public void setBounds(double aX, double aY, double aW, double aH)
     {
-        _tbox.setBounds(aX, aY, aW, aH);
+        _textBox.setBounds(aX, aY, aW, aH);
     }
 
     /**
      * Returns the number of characters in the text string.
      */
-    public int length()
-    {
-        return _text.length();
-    }
+    public int length()  { return _textDoc.length(); }
 
     /**
      * Returns whether editor is doing check-as-you-type spelling.
      */
-    public boolean isSpellChecking()
-    {
-        return isSpellChecking;
-    }
+    public boolean isSpellChecking()  { return isSpellChecking; }
 
     /**
      * Returns whether the selection is empty.
@@ -134,10 +131,7 @@ public class RMTextEditor {
     /**
      * Returns the text editor selection.
      */
-    public TextSel getSel()
-    {
-        return _sel;
-    }
+    public TextSel getSel()  { return _sel; }
 
     /**
      * Sets the character index of the text cursor.
@@ -159,26 +153,17 @@ public class RMTextEditor {
     /**
      * Returns the character index of the start of the text selection.
      */
-    public int getSelStart()
-    {
-        return _sel.getStart();
-    }
+    public int getSelStart()  { return _sel.getStart(); }
 
     /**
      * Returns the character index of the end of the text selection.
      */
-    public int getSelEnd()
-    {
-        return _sel.getEnd();
-    }
+    public int getSelEnd()  { return _sel.getEnd(); }
 
     /**
      * Returns the character index of the last explicitly selected char (confined to the bounds of the selection).
      */
-    public int getSelIndex()
-    {
-        return _sel.getAnchor();
-    }
+    public int getSelIndex()  { return _sel.getAnchor(); }
 
     /**
      * Selects all the characters in the text editor.
@@ -215,19 +200,10 @@ public class RMTextEditor {
     /**
      * Returns the line index for the given character index.
      */
-    public TextBoxLine getLineAt(int anIndex)
+    public TextBoxLine getLineForCharIndex(int anIndex)
     {
         TextBox tbox = getTextBox();
         return tbox.getLineForCharIndex(anIndex - tbox.getStartCharIndex());
-    }
-
-    /**
-     * Returns the line at selection start.
-     */
-    public TextBoxLine getSelStartLine()
-    {
-        TextBox tbox = getTextBox();
-        return tbox.getLineForCharIndex(getSelStart() - tbox.getStartCharIndex());
     }
 
     /**
@@ -285,7 +261,7 @@ public class RMTextEditor {
      */
     public String getString()
     {
-        return _text.getString();
+        return _textDoc.getString();
     }
 
     /**
@@ -508,8 +484,8 @@ public class RMTextEditor {
         if (start == end) {
             start--;
             if (start < 0) return;
-            if (_text.isAfterLineEnd(start + 1))
-                start = _text.lastIndexOfNewline(start + 1);
+            if (_textDoc.isAfterLineEnd(start + 1))
+                start = _textDoc.lastIndexOfNewline(start + 1);
         }
 
         // Do delete for range
@@ -525,7 +501,7 @@ public class RMTextEditor {
         if (anEnd <= aStart) return;
 
         // Delete chars from string
-        _text.removeChars(aStart, anEnd);
+        _textDoc.removeChars(aStart, anEnd);
 
         // If update selection requested, update selection to start of deleted range
         if (doUpdateSel)
@@ -555,7 +531,7 @@ public class RMTextEditor {
     {
         // Do replace in xstring with given string and given SelStyle
         TextStyle style = aStyle != null ? aStyle : getSelStyle()._style;
-        getText().replaceChars(aString, style, aStart, anEnd);
+        _textDoc.replaceChars(aString, style, aStart, anEnd);
 
         // Update selection to be at end of new string
         if (doUpdateSel)
@@ -624,16 +600,16 @@ public class RMTextEditor {
     public void paste()
     {
         // If Clipboard has RMXString, paste it
-        Clipboard cboard = Clipboard.get();
-        if (cboard.hasData(RM_XSTRING_TYPE)) {
-            byte bytes[] = cboard.getDataBytes(RM_XSTRING_TYPE);
+        Clipboard clipboard = Clipboard.get();
+        if (clipboard.hasData(RM_XSTRING_TYPE)) {
+            byte[] bytes = clipboard.getDataBytes(RM_XSTRING_TYPE);
             RMXString xStr = (RMXString) new RMArchiver().readFromXMLBytes(bytes);
             replace(xStr.getRichText());
         }
 
         // If Clipboard has String, paste it
-        else if (cboard.hasString()) {
-            String str = cboard.getString();
+        else if (clipboard.hasString()) {
+            String str = clipboard.getString();
             if (str != null && str.length() > 0)
                 replace(str);
         }
@@ -720,7 +696,7 @@ public class RMTextEditor {
     {
         if (isSelEmpty() && getSelEnd() < length()) {
             int end = getSelEnd() + 1;
-            if (_text.isLineEnd(end - 1)) end = _text.indexAfterNewline(end - 1);
+            if (_textDoc.isLineEnd(end - 1)) end = _textDoc.indexAfterNewline(end - 1);
             delete(getSelStart(), end, true);
         } else if (!isSelEmpty())
             delete();
@@ -736,12 +712,12 @@ public class RMTextEditor {
             delete();
 
             // Otherwise, if at line end, delete line end
-        else if (_text.isLineEnd(getSelEnd()))
-            delete(getSelStart(), _text.indexAfterNewline(getSelStart()), true);
+        else if (_textDoc.isLineEnd(getSelEnd()))
+            delete(getSelStart(), _textDoc.indexAfterNewline(getSelStart()), true);
 
             // Otherwise delete up to next newline or line end
         else {
-            int index = _text.indexOfNewline(getSelStart());
+            int index = _textDoc.indexOfNewline(getSelStart());
             delete(getSelStart(), index >= 0 ? index : length(), true);
         }
     }
@@ -769,25 +745,11 @@ public class RMTextEditor {
     {
         // Handle KeyEvents
         switch (anEvent.getType()) {
-            case KeyPress:
-                keyPressed(anEvent);
-                return;
-            case KeyType:
-                keyTyped(anEvent);
-                return;
-            case KeyRelease:
-                return;
-            case MousePress:
-                mousePressed(anEvent);
-                return;
-            case MouseDrag:
-                mouseDragged(anEvent);
-                return;
-            case MouseRelease:
-                mouseReleased(anEvent);
-                return;
-            default:
-                return;
+            case KeyPress: keyPressed(anEvent); return;
+            case KeyType: keyTyped(anEvent); return;
+            case MousePress: mousePressed(anEvent); return;
+            case MouseDrag: mouseDragged(anEvent); return;
+            case MouseRelease: mouseReleased(anEvent);
         }
     }
 
@@ -810,20 +772,11 @@ public class RMTextEditor {
 
             // Handle common command keys
             switch (keyCode) {
-                case KeyCode.X:
-                    cut();
-                    break; // Handle command-x cut
-                case KeyCode.C:
-                    copy();
-                    break; // Handle command-c copy
-                case KeyCode.V:
-                    paste();
-                    break; // Handle command-v paste
-                case KeyCode.A:
-                    selectAll();
-                    break; // Handle command-a select all
-                default:
-                    return; // Any other command keys just return
+                case KeyCode.X: cut(); break; // Handle command-x cut
+                case KeyCode.C: copy(); break; // Handle command-c copy
+                case KeyCode.V: paste(); break; // Handle command-v paste
+                case KeyCode.A: selectAll(); break; // Handle command-a select all
+                default: return; // Any other command keys just return
             }
         }
 
@@ -835,69 +788,31 @@ public class RMTextEditor {
 
             // Handle common emacs key bindings
             switch (keyCode) {
-                case KeyCode.F:
-                    keyForward(false);
-                    break; // Handle control-f key forward
-                case KeyCode.B:
-                    keyBackward(false);
-                    break; // Handle control-b key backward
-                case KeyCode.P:
-                    keyUp();
-                    break; // Handle control-p key up
-                case KeyCode.N:
-                    keyDown();
-                    break; // Handle control-n key down
-                case KeyCode.A:
-                    selectLineStart();
-                    break; // Handle control-a line start
-                case KeyCode.E:
-                    selectLineEnd();
-                    break; // Handle control-e line end
-                case KeyCode.D:
-                    deleteForward();
-                    break; // Handle control-d delete forward
-                case KeyCode.K:
-                    deleteToLineEnd();
-                    break; // Handle control-k delete line to end
-                default:
-                    return; // Any other control keys, just return
+                case KeyCode.F: keyForward(false); break; // Handle control-f key forward
+                case KeyCode.B: keyBackward(false); break; // Handle control-b key backward
+                case KeyCode.P: keyUp(); break; // Handle control-p key up
+                case KeyCode.N: keyDown(); break; // Handle control-n key down
+                case KeyCode.A: selectLineStart(); break; // Handle control-a line start
+                case KeyCode.E: selectLineEnd(); break; // Handle control-e line end
+                case KeyCode.D: deleteForward(); break; // Handle control-d delete forward
+                case KeyCode.K: deleteToLineEnd(); break; // Handle control-k delete line to end
+                default: return; // Any other control keys, just return
             }
         }
 
         // Handle supported non-character keys
         else switch (keyCode) {
-                case KeyCode.TAB:
-                    replace("\t");
-                    break;
-                case KeyCode.ENTER:
-                    replace("\n");
-                    break;
-                case KeyCode.LEFT:
-                    keyBackward(isShiftDown);
-                    break;
-                case KeyCode.RIGHT:
-                    keyForward(isShiftDown);
-                    break;
-                case KeyCode.UP:
-                    keyUp();
-                    break;
-                case KeyCode.DOWN:
-                    keyDown();
-                    break;
-                case KeyCode.HOME:
-                    selectLineStart();
-                    break;
-                case KeyCode.END:
-                    selectLineEnd();
-                    break;
-                case KeyCode.BACK_SPACE:
-                    delete();
-                    break;
-                case KeyCode.DELETE:
-                    deleteForward();
-                    break;
-                case KeyCode.ESCAPE:
-                    return; // Suppress consume so editor gets it
+                case KeyCode.TAB: replace("\t"); break;
+                case KeyCode.ENTER: replace("\n"); break;
+                case KeyCode.LEFT: keyBackward(isShiftDown); break;
+                case KeyCode.RIGHT: keyForward(isShiftDown); break;
+                case KeyCode.UP: keyUp(); break;
+                case KeyCode.DOWN: keyDown(); break;
+                case KeyCode.HOME: selectLineStart(); break;
+                case KeyCode.END: selectLineEnd(); break;
+                case KeyCode.BACK_SPACE: delete(); break;
+                case KeyCode.DELETE: deleteForward(); break;
+                case KeyCode.ESCAPE: return; // Suppress consume so editor gets it
                 //default: return; // Any other non-character key, just return
             }
 
@@ -971,9 +886,7 @@ public class RMTextEditor {
     /**
      * Handles mouse released.
      */
-    public void mouseReleased(ViewEvent anEvent)
-    {
-    }
+    public void mouseReleased(ViewEvent anEvent)  { }
 
     /**
      * Returns the path for the current selection.
@@ -1008,8 +921,8 @@ public class RMTextEditor {
                 continue;
 
             // Get the selection's start line index and end line index
-            int startLineIndex = getLineAt(start).getIndex();
-            int endLineIndex = getLineAt(end).getIndex();
+            int startLineIndex = getLineForCharIndex(start).getIndex();
+            int endLineIndex = getLineForCharIndex(end).getIndex();
 
             // Iterate over selected lines
             for (int i = startLineIndex; i <= endLineIndex; i++) {
@@ -1073,7 +986,7 @@ public class RMTextEditor {
         if (prevAtSignIndex >= 0 && nextAtSignIndex >= 0 && prevAtSignIndex != nextAtSignIndex) {
             int start = Math.min(prevAtSignIndex, nextAtSignIndex);
             int end = Math.max(prevAtSignIndex, nextAtSignIndex);
-            return new TextSel(_tbox, start, end + 1);
+            return new TextSel(_textBox, start, end + 1);
         }
 
         // Return null since range not found
@@ -1083,7 +996,7 @@ public class RMTextEditor {
     /**
      * Returns whether layout tries to hyphenate wrapped words.
      */
-    public static final boolean isHyphenating()
+    public static boolean isHyphenating()
     {
         return _hyphenating;
     }
@@ -1091,9 +1004,8 @@ public class RMTextEditor {
     /**
      * Sets whether layout tries to hyphenate wrapped words.
      */
-    public static final void setHyphenating(boolean aValue)
+    public static void setHyphenating(boolean aValue)
     {
         Prefs.getDefaultPrefs().setValue("Hyphenating", _hyphenating = aValue);
     }
-
 }
