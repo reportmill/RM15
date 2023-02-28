@@ -11,19 +11,19 @@ import snap.web.WebURL;
 public class ImageRef {
 
     // The object that provided image bytes
-    Object _source;
+    private Object  _source;
 
     // The image
-    Image _image;
+    private Image  _image;
 
     // The original file bytes
-    byte _bytes[];
+    private byte[]  _bytes;
 
     // The time the source was last modified (in milliseconds since 1970)
-    long _modTime;
+    private long  _modTime;
 
     // The cache used to hold application instances
-    static List<WeakReference<ImageRef>> _cache = new ArrayList();
+    private static List<WeakReference<ImageRef>>  _cache = new ArrayList<>();
 
     /**
      * Creates an ImageRef for aSource.
@@ -31,7 +31,7 @@ public class ImageRef {
     private ImageRef(Object aSource)
     {
         setSource(aSource);
-        _cache.add(new WeakReference(this));
+        _cache.add(new WeakReference<>(this));
     }
 
     /**
@@ -39,18 +39,15 @@ public class ImageRef {
      */
     public String getName()
     {
-        Image img = getImage();
-        String iname = img.getName();
-        return iname != null ? iname : String.valueOf(System.identityHashCode(img));
+        Image image = getImage();
+        String imageName = image.getName();
+        return imageName != null ? imageName : String.valueOf(System.identityHashCode(image));
     }
 
     /**
      * Returns the original source for the image (byte[], File, InputStream or whatever).
      */
-    public Object getSource()
-    {
-        return _source;
-    }
+    public Object getSource()  { return _source; }
 
     /**
      * Sets the source (either a WebURL or bytes).
@@ -81,7 +78,8 @@ public class ImageRef {
     public Image getImage()
     {
         if (_image != null) return _image;
-        return _image = Image.get(getSource());
+        Object source = getSource();
+        return _image = Image.get(source);
     }
 
     /**
@@ -93,7 +91,8 @@ public class ImageRef {
         if (_bytes != null) return _bytes;
 
         // If image set, get bytes from image
-        if (_image != null) return _image.getBytes();
+        if (_image != null)
+            return _image.getBytes();
 
         // If Source URL available get from it
         WebURL url = getSourceURL();
@@ -110,7 +109,8 @@ public class ImageRef {
     protected void refresh()
     {
         WebURL url = getSourceURL();
-        if (url == null) return;
+        if (url == null)
+            return;
         long modTime = url.getLastModTime();
         if (modTime > _modTime) {
             setSource(url);
@@ -124,16 +124,19 @@ public class ImageRef {
     public static synchronized ImageRef getImageRef(Object aSource)
     {
         // If source is null, return null, if ImageRef, return it
-        if (aSource == null) return null;
-        if (aSource instanceof ImageRef) return (ImageRef) aSource;
+        if (aSource == null)
+            return null;
+        if (aSource instanceof ImageRef)
+            return (ImageRef) aSource;
 
         // Handle Image
         if (aSource instanceof Image) {
-            Image img = (Image) aSource;
-            Object src = img.getSource();
-            ImageRef iref = src != null ? getImageRef(src) : new ImageRef(null);
-            if (iref._image == null) iref._image = img;
-            return iref;
+            Image image = (Image) aSource;
+            Object imageSource = image.getSource();
+            ImageRef imageRef = imageSource != null ? getImageRef(imageSource) : new ImageRef(null);
+            if (imageRef._image == null)
+                imageRef._image = image;
+            return imageRef;
         }
 
         // Get url for source - if found, return ImageRef for URL
@@ -142,7 +145,7 @@ public class ImageRef {
             return getImageRef(url);
 
         // Get bytes for source - if found, return Image for bytes
-        byte bytes[] = SnapUtils.getBytes(aSource);
+        byte[] bytes = SnapUtils.getBytes(aSource);
         if (bytes != null)
             return getImageRef(bytes);
 
@@ -158,18 +161,18 @@ public class ImageRef {
     {
         // Iterate over ImageRefs and see if any match URL
         for (int i = _cache.size() - 1; i >= 0; i--) {
-            ImageRef iref = _cache.get(i).get();
+            ImageRef imageRef = _cache.get(i).get();
 
             // If null, remove weak reference and continue)
-            if (iref == null) {
+            if (imageRef == null) {
                 _cache.remove(i);
                 continue;
             }
 
             // If URL matches ImageRef URL, return
-            if (aURL.equals(iref.getSourceURL())) {
-                iref.refresh();
-                return iref;
+            if (aURL.equals(imageRef.getSourceURL())) {
+                imageRef.refresh();
+                return imageRef;
             }
         }
 
@@ -180,25 +183,24 @@ public class ImageRef {
     /**
      * Returns a unique ImageRef for bytes.
      */
-    private static ImageRef getImageRef(byte theBytes[])
+    private static ImageRef getImageRef(byte[] theBytes)
     {
         // Iterate over ImageRefs and see if any match bytes
         for (int i = _cache.size() - 1; i >= 0; i--) {
-            ImageRef iref = _cache.get(i).get();
+            ImageRef imageRef = _cache.get(i).get();
 
             // If null, remove weak reference and continue)
-            if (iref == null) {
+            if (imageRef == null) {
                 _cache.remove(i);
                 continue;
             }
 
             // If bytes match ImageRef bytes, return
-            if (ArrayUtils.equals(theBytes, iref.getBytes()))
-                return iref;
+            if (ArrayUtils.equals(theBytes, imageRef.getBytes()))
+                return imageRef;
         }
 
         // Create new ImageRef and return
         return new ImageRef(theBytes);
     }
-
 }
