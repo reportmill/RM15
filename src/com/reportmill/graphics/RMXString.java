@@ -265,9 +265,17 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
      */
     public RMXStringRun getRunAt(int anIndex)
     {
-        TextLine line = _rtext.getLineForCharIndex(anIndex);
-        TextRun run = line.getRunForCharIndex(anIndex - line.getStartCharIndex());
-        return new RMXStringRun(this, line, run);
+        TextRun run = _rtext.getRunForCharIndex(anIndex);
+        return new RMXStringRun(this, run.getLine(), run);
+    }
+
+    /**
+     * Returns the XString run that contains or ends at given index.
+     */
+    public RMXStringRun getRunForCharRange(int startIndex, int endIndex)
+    {
+        TextRun run = _rtext.getRunForCharRange(startIndex, endIndex);
+        return new RMXStringRun(this, run.getLine(), run);
     }
 
     /**
@@ -276,6 +284,15 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
     public RMTextStyle getStyleAt(int anIndex)
     {
         return getRunAt(anIndex).getStyle();
+    }
+
+    /**
+     * Returns the text style for the run at the given character index.
+     */
+    public RMTextStyle getStyleForCharRange(int startIndex, int endIndex)
+    {
+        RMXStringRun run = getRunForCharRange(startIndex, endIndex);
+        return run.getStyle();
     }
 
     /**
@@ -467,18 +484,18 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
         while (totalKeyRange.length() > 0) {
 
             // Get key start location (after @-sign) and length
-            int keyLocation = totalKeyRange.start + 1;
-            int keyLength = totalKeyRange.length() - 2;
+            int keyStart = totalKeyRange.start + 1;
+            int keyEnd = totalKeyRange.end - 1;
             Object valString = null;
 
             // Get the run at the given location
-            RMXStringRun keyRun = outString.getRunAt(keyLocation);
+            RMXStringRun keyRun = outString.getRunForCharRange(keyStart, keyEnd);
 
             // If there is a key between the @-signs, evaluate it for substitution string
-            if (keyLength > 0) {
+            if (keyEnd > keyStart) {
 
                 // Get actual key string
-                String keyString = outString.subSequence(keyLocation, keyLocation + keyLength).toString();
+                String keyString = outString.subSequence(keyStart, keyEnd).toString();
 
                 // Get key string as key chain
                 RMKeyChain keyChain = RMKeyChain.getKeyChain(keyString);
@@ -512,7 +529,7 @@ public class RMXString implements Cloneable, CharSequence, RMTypes, XMLArchiver.
 
                         // If val is that string literal, get original xstring substring (with attributes)
                         if (index > 0 && keyString.charAt(index - 1) == '"' && keyString.charAt(index + string.length()) == '"') {
-                            int start = index + keyLocation;
+                            int start = index + keyStart;
                             valString = outString.substring(start, start + string.length());
                             redo = redo || string.indexOf("@") >= 0;
                         }

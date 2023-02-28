@@ -235,7 +235,17 @@ public class RMTextEditor {
      */
     public RMTextStyle getSelStyle()
     {
-        return _selStyle != null ? _selStyle : (_selStyle = getXString().getStyleAt(getSelStart()));
+        // If already set, just return
+        if (_selStyle != null) return _selStyle;
+
+        // Get style for selection
+        RMXString xString = getXString();
+        int selStart = getSelStart();
+        int selEnd = getSelEnd();
+        RMTextStyle textStyle = xString.getStyleForCharRange(selStart, selEnd);
+
+        // Set/return
+        return _selStyle = textStyle;
     }
 
     /**
