@@ -7,6 +7,7 @@ import com.reportmill.graphics.*;
 import com.reportmill.graphics.ImageRef;
 import snap.geom.Pos;
 import snap.geom.Rect;
+import snap.geom.Shape;
 import snap.geom.Transform;
 import snap.gfx.*;
 import snap.util.*;
@@ -18,35 +19,43 @@ import snap.web.WebURL;
 public class RMImageShape extends RMRectShape {
 
     // The key used to get image during RPG
-    String _key;
+    private String  _key;
 
     // An ImageRef reference to uniqued image
-    ImageRef _imgRef;
+    private ImageRef  _imgRef;
 
     // The padding
-    int _padding;
+    private int  _padding;
+
+    // X alignment
+    private AlignX  _alignX = AlignX.Center;
+
+    // Y alignment
+    private AlignY  _alignY = AlignY.Middle;
 
     // Whether to grow image to fit available area if shape larger than image.
-    boolean _growToFit = true;
+    private boolean  _growToFit = true;
 
     // Whether to preserve the natural width to height ratio of image
-    boolean _preserveRatio = true;
+    private boolean  _preserveRatio = true;
 
     // The image name, if image read from external file
-    String _iname;
+    private String  _imageName;
 
     /**
-     * Creates an RMImageShape.
+     * Constructor.
      */
     public RMImageShape()
     {
+        super();
     }
 
     /**
-     * Creates an RMImageShape from the image source provided.
+     * Constructor with given image source.
      */
     public RMImageShape(Object aSource)
     {
+        super();
         setImageForSource(aSource);
         setBestSize();
     }
@@ -54,10 +63,7 @@ public class RMImageShape extends RMRectShape {
     /**
      * Returns the report key used to load an image if none is provided.
      */
-    public String getKey()
-    {
-        return _key;
-    }
+    public String getKey()  { return _key; }
 
     /**
      * Sets the report key used to load an image if none is provided.
@@ -70,19 +76,22 @@ public class RMImageShape extends RMRectShape {
     /**
      * Returns the ImageRef reference to uniqued image.
      */
-    public ImageRef getImageRef()
-    {
-        return _imgRef;
-    }
+    public ImageRef getImageRef()  { return _imgRef; }
 
     /**
      * Sets the ImageRef reference to uniqued image.
      */
     protected void setImageRef(ImageRef anImageRef)
     {
+        // If already set, just return
         if (anImageRef == getImageRef()) return;
+
+        // Set image
         _imgRef = anImageRef;
-        if (getParent() != null) getParent().relayout();
+
+        // Relayout/repaint
+        if (getParent() != null)
+            getParent().relayout();
         repaint();
     }
 
@@ -91,7 +100,9 @@ public class RMImageShape extends RMRectShape {
      */
     public Image getImage()
     {
-        return _imgRef != null ? _imgRef.getImage() : null;
+        if (_imgRef != null)
+            return _imgRef.getImage();
+        return null;
     }
 
     /**
@@ -99,17 +110,14 @@ public class RMImageShape extends RMRectShape {
      */
     public void setImageForSource(Object aSource)
     {
-        ImageRef iref = ImageRef.getImageRef(aSource);
-        setImageRef(iref);
+        ImageRef imageRef = ImageRef.getImageRef(aSource);
+        setImageRef(imageRef);
     }
 
     /**
      * Returns the padding.
      */
-    public int getPadding()
-    {
-        return _padding;
-    }
+    public int getPadding()  { return _padding; }
 
     /**
      * Sets the padding.
@@ -123,12 +131,8 @@ public class RMImageShape extends RMRectShape {
     /**
      * Returns the horizontal alignment.
      */
-    public AlignX getAlignmentX()
-    {
-        return _alignX;
-    }
+    public AlignX getAlignmentX()  { return _alignX; }
 
-    AlignX _alignX = AlignX.Center;
 
     /**
      * Sets the horizontal alignment.
@@ -141,12 +145,7 @@ public class RMImageShape extends RMRectShape {
     /**
      * Returns the vertical alignment.
      */
-    public AlignY getAlignmentY()
-    {
-        return _alignY;
-    }
-
-    AlignY _alignY = AlignY.Middle;
+    public AlignY getAlignmentY()  { return _alignY; }
 
     /**
      * Sets the vertical alignment.
@@ -159,10 +158,7 @@ public class RMImageShape extends RMRectShape {
     /**
      * Returns whether to grow image to fit available area if shape larger than image.
      */
-    public boolean isGrowToFit()
-    {
-        return _growToFit;
-    }
+    public boolean isGrowToFit()  { return _growToFit; }
 
     /**
      * Sets whether to grow image to fit available area if shape larger than image.
@@ -176,10 +172,7 @@ public class RMImageShape extends RMRectShape {
     /**
      * Returns whether to preserve the natural width to height ratio of image.
      */
-    public boolean getPreserveRatio()
-    {
-        return _preserveRatio;
-    }
+    public boolean getPreserveRatio()  { return _preserveRatio; }
 
     /**
      * Sets whether to preserve the natural width to height ratio of image.
@@ -195,11 +188,14 @@ public class RMImageShape extends RMRectShape {
      */
     protected double getPrefWidthImpl(double aHeight)
     {
-        Image img = getImage();
-        if (img == null) return 0;
-        double pw = img.getWidth(), ph = img.getHeight();
-        if (aHeight > 0 && getPreserveRatio() && ph > aHeight) pw = aHeight * pw / ph;
-        return pw;
+        Image image = getImage();
+        if (image == null)
+            return 0;
+        double prefW = image.getWidth();
+        double prefH = image.getHeight();
+        if (aHeight > 0 && getPreserveRatio() && prefH > aHeight)
+            prefW = aHeight * prefW / prefH;
+        return prefW;
     }
 
     /**
@@ -207,11 +203,14 @@ public class RMImageShape extends RMRectShape {
      */
     protected double getPrefHeightImpl(double aWidth)
     {
-        Image img = getImage();
-        if (img == null) return 0;
-        double pw = img.getWidth(), ph = img.getHeight();
-        if (aWidth > 0 && getPreserveRatio() && pw > aWidth) ph = aWidth * ph / pw;
-        return ph;
+        Image image = getImage();
+        if (image == null)
+            return 0;
+        double prefW = image.getWidth();
+        double prefH = image.getHeight();
+        if (aWidth > 0 && getPreserveRatio() && prefW > aWidth)
+            prefH = aWidth * prefH / prefW;
+        return prefH;
     }
 
     /**
@@ -227,14 +226,17 @@ public class RMImageShape extends RMRectShape {
         if (key != null && key.length() > 0) {
 
             // Get key value
-            Object value = RMKeyChain.getValue(aRptOwner, getKey());
-            if (value instanceof RMKeyChain) value = ((RMKeyChain) value).getValue();
+            Object value = RMKeyChain.getValue(aRptOwner, key);
+            if (value instanceof RMKeyChain)
+                value = ((RMKeyChain) value).getValue();
             WebURL url = WebURL.getURL(value);
-            if (url != null) value = url;
+            if (url != null)
+                value = url;
 
             // If PDF data, return PDFShape
-            if (url != null && url.getPath().toLowerCase().endsWith("pdf") ||
-                    value instanceof byte[] && RMPDFData.canRead((byte[]) value))
+            boolean isPdfUrl = url != null && url.getPath().toLowerCase().endsWith("pdf");
+            boolean isPdfBytes = value instanceof byte[] && RMPDFData.canRead((byte[]) value);
+            if (isPdfUrl || isPdfBytes)
                 return RMPDFShape.rpgShape(aRptOwner, aParent, this, value);
 
             // Otherwise set new image
@@ -260,16 +262,22 @@ public class RMImageShape extends RMRectShape {
         // Get image (use empty placeholder image if null and editing)
         Image img = getImage();
         if (img == null) {
-            if (!RMShapePaintProps.isEditing(aPntr)) return;
+            if (!RMShapePaintProps.isEditing(aPntr))
+                return;
             img = RMImageFill.getEmptyImage();
-            if (img == null) return;
+            if (img == null)
+                return;
         }
 
+        // Clip to bounds
+        Shape clipPath = getPath();
+        aPntr.clip(clipPath);
+
         // Draw image transformed to bounds
-        aPntr.clip(getPath());
-        Rect ibnds = getImageBounds();
-        double sx = ibnds.width / img.getPixWidth(), sy = ibnds.height / img.getPixHeight();
-        Transform transform = new Transform(sx, 0, 0, sy, ibnds.x, ibnds.y);
+        Rect imageBounds = getImageBounds();
+        double scaleX = imageBounds.width / img.getPixWidth();
+        double scaleY = imageBounds.height / img.getPixHeight();
+        Transform transform = new Transform(scaleX, 0, 0, scaleY, imageBounds.x, imageBounds.y);
         aPntr.drawImage(img, transform);
     }
 
@@ -279,38 +287,45 @@ public class RMImageShape extends RMRectShape {
     public Rect getImageBounds()
     {
         // Get image and padding
-        Image img = getImage();
-        if (img == null) img = RMImageFill.getEmptyImage();
-        int pd = getPadding();
+        Image image = getImage();
+        if (image == null)
+            image = RMImageFill.getEmptyImage();
+        int padding = getPadding();
 
         // Get width/height for shape, image and padded area
-        double sw = getWidth(), sh = getHeight();
-        double iw = img.getWidth(), ih = img.getHeight();
-        double pw = sw - pd * 2, ph = sh - pd * 2;
-        if (pw < 0) pw = 0;
-        if (ph < 0) ph = 0;
+        double shapeW = getWidth();
+        double shapeH = getHeight();
+        double imageW = image.getWidth();
+        double imageH = image.getHeight();
+        double areaW = shapeW - padding * 2;
+        double areaH = shapeH - padding * 2;
+        if (areaW < 0) areaW = 0;
+        if (areaH < 0) areaH = 0;
 
         // Get image bounds width/height, ShrinkToFit if greater than available space (with PreserveRatio, if set)
-        double w = iw, h = ih;
+        double boundsW = imageW;
+        double boundsH = imageH;
         if (isGrowToFit()) {
-            w = pw + 1;
-            h = ph + 1;
+            boundsW = areaW + 1;
+            boundsH = areaH + 1;
         }
-        if (w > pw) {
-            w = pw;
-            if (getPreserveRatio()) h = ih * w / iw;
+        if (boundsW > areaW) {
+            boundsW = areaW;
+            if (getPreserveRatio())
+                boundsH = imageH * boundsW / imageW;
         }
-        if (h > ph) {
-            h = ph;
-            if (getPreserveRatio()) w = iw * h / ih;
+        if (boundsH > areaH) {
+            boundsH = areaH;
+            if (getPreserveRatio())
+                boundsW = imageW * boundsH / imageH;
         }
 
         // Get image bounds x/y for width/height and return rect
-        AlignX ax = getAlignmentX();
-        AlignY ay = getAlignmentY();
-        double x = ax == AlignX.Center ? (sw - w) / 2 : ax == AlignX.Left ? pd : (sw - w);
-        double y = ay == AlignY.Middle ? (sh - h) / 2 : ay == AlignY.Top ? pd : (sh - h);
-        return new Rect(x, y, w, h);
+        AlignX alignX = getAlignmentX();
+        AlignY alignY = getAlignmentY();
+        double boundsX = alignX == AlignX.Center ? (shapeW - boundsW) / 2 : alignX == AlignX.Left ? padding : (shapeW - boundsW);
+        double boundsY = alignY == AlignY.Middle ? (shapeH - boundsH) / 2 : alignY == AlignY.Top ? padding : (shapeH - boundsH);
+        return new Rect(boundsX, boundsY, boundsW, boundsH);
     }
 
     /**
@@ -323,7 +338,7 @@ public class RMImageShape extends RMRectShape {
         e.setName("image-shape");
 
         // Archive ImageName, if image read from external file
-        if (_iname != null) e.add("ImageName", _iname);
+        if (_imageName != null) e.add("ImageName", _imageName);
 
             // Archive Image
         else if (getImage() != null) {
@@ -353,16 +368,16 @@ public class RMImageShape extends RMRectShape {
         // Unarchive Image resource: get resource bytes and set Image (if PDF - swap out RMPDFShape)
         String rname = anElement.getAttributeValue("resource");
         if (rname != null) {
-            byte bytes[] = anArchiver.getResource(rname);
+            byte[] bytes = anArchiver.getResource(rname);
             if (RMPDFData.canRead(bytes))
                 return new RMPDFShape().fromXML(anArchiver, anElement);
             _imgRef = ImageRef.getImageRef(bytes);
         }
 
         // Unarchive ImageName
-        _iname = anElement.getAttributeValue("ImageName");
-        if (_iname != null) {
-            Image img = Image.get(anArchiver.getSourceURL(), _iname);
+        _imageName = anElement.getAttributeValue("ImageName");
+        if (_imageName != null) {
+            Image img = Image.get(anArchiver.getSourceURL(), _imageName);
             if (img != null)
                 _imgRef = ImageRef.getImageRef(img.getSource());
         }
@@ -377,7 +392,7 @@ public class RMImageShape extends RMRectShape {
         // Legacy alignment (RM14)
         if (anElement.hasAttribute("Alignment")) {
             String as = anElement.getAttributeValue("Alignment");
-            String s[] = {"TopLeft", "TopCenter", "TopRight", "CenterLeft", "Center", "CenterRight",
+            String[] s = {"TopLeft", "TopCenter", "TopRight", "CenterLeft", "Center", "CenterRight",
                     "BottomLeft", "BottomCenter", "BottomRight"};
             int i = ArrayUtils.indexOf(s, as);
             if (i >= 0) setAlignment(Pos.values()[i]);
@@ -426,5 +441,4 @@ public class RMImageShape extends RMRectShape {
         // Return
         return this;
     }
-
 }

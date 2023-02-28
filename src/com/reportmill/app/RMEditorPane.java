@@ -121,7 +121,7 @@ public class RMEditorPane extends RMViewerPane {
             // Get cause
             Throwable rootCause = t;
             while (rootCause.getCause() != null)
-                rootCause = t.getCause();
+                rootCause = rootCause.getCause();
 
             // Get error message
             String error = StringUtils.wrap(rootCause.toString(), 40);
