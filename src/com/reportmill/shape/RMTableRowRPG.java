@@ -71,6 +71,8 @@ public class RMTableRowRPG extends RMSpringShape {
 
         // Do bindings RPG
         row.rpgBindings(anRptOwner, this);
+        if (!isVisible())
+            setHeight(0);
 
         // Remove Group from RptOwner.DataStack
         anRptOwner.popDataStack();
