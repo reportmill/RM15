@@ -44,7 +44,7 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     double _height = 0;
 
     // An array to hold optional roll/scale/skew values
-    double _rss[];
+    double[] _rss;
 
     // The stroke for this shape
     RMStroke _stroke = null;
@@ -100,36 +100,32 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     public static final String PrefHeight_Prop = "PrefHeight";
 
     /**
+     * Constructor.
+     */
+    public RMShape()
+    {
+        super();
+    }
+
+    /**
      * Returns raw x location of shape. Developers should use the more common getX, which presents positive x.
      */
-    public double x()
-    {
-        return _x;
-    }
+    public double x()  { return _x; }
 
     /**
      * Returns raw y location of shape. Developers should use the more common getY, which presents positive y.
      */
-    public double y()
-    {
-        return _y;
-    }
+    public double y()  { return _y; }
 
     /**
      * Returns raw width of shape. Developers should use the more common getWidth, which presents positive width.
      */
-    public double width()
-    {
-        return _width;
-    }
+    public double width()  { return _width; }
 
     /**
      * Returns raw height of shape. Developers should use the more common getHeight, which presents positive height.
      */
-    public double height()
-    {
-        return _height;
-    }
+    public double height()  { return _height; }
 
     /**
      * Returns raw x, y, width and height of shape as rect (preserves possible negative sizes).
@@ -142,10 +138,7 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     /**
      * Returns the X location of the shape.
      */
-    public double getX()
-    {
-        return _width < 0 ? _x + _width : _x;
-    }
+    public double getX()  { return _width < 0 ? _x + _width : _x; }
 
     /**
      * Sets the X location of the shape.
@@ -161,10 +154,7 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     /**
      * Returns the Y location of the shape.
      */
-    public double getY()
-    {
-        return _height < 0 ? _y + _height : _y;
-    }
+    public double getY()  { return _height < 0 ? _y + _height : _y; }
 
     /**
      * Sets the Y location of the shape.
@@ -180,10 +170,7 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     /**
      * Returns the width of the shape.
      */
-    public double getWidth()
-    {
-        return _width < 0 ? -_width : _width;
-    }
+    public double getWidth()  { return _width < 0 ? -_width : _width; }
 
     /**
      * Sets the width of the shape.
@@ -200,10 +187,7 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     /**
      * Returns the height of the shape.
      */
-    public double getHeight()
-    {
-        return _height < 0 ? -_height : _height;
-    }
+    public double getHeight()  { return _height < 0 ? -_height : _height; }
 
     /**
      * Sets the height of the shape.
@@ -220,18 +204,12 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     /**
      * Returns the max X of the shape (assumes not rotated, scaled or skewed).
      */
-    public double getMaxX()
-    {
-        return getX() + getWidth();
-    }
+    public double getMaxX()  { return getX() + getWidth(); }
 
     /**
      * Returns the max Y of the shape (assumes not rotated, scaled or skewed).
      */
-    public double getMaxY()
-    {
-        return getY() + getHeight();
-    }
+    public double getMaxY()  { return getY() + getHeight(); }
 
     /**
      * Returns the XY location of the shape as a point.
@@ -595,10 +573,7 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     /**
      * Returns the roll of the shape.
      */
-    public double getRoll()
-    {
-        return _rss == null ? 0 : _rss[0];
-    }
+    public double getRoll()  { return _rss == null ? 0 : _rss[0]; }
 
     /**
      * Sets the roll of the shape.
@@ -615,10 +590,7 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     /**
      * Returns the scale of the X axis of the shape.
      */
-    public double getScaleX()
-    {
-        return _rss == null ? 1 : _rss[1];
-    }
+    public double getScaleX()  { return _rss == null ? 1 : _rss[1]; }
 
     /**
      * Sets the scale of the X axis of the shape.
@@ -636,10 +608,7 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     /**
      * Returns the scale of the Y axis of the shape.
      */
-    public double getScaleY()
-    {
-        return _rss == null ? 1 : _rss[2];
-    }
+    public double getScaleY()  { return _rss == null ? 1 : _rss[2]; }
 
     /**
      * Sets the scale of the Y axis of the shape.
@@ -666,10 +635,7 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     /**
      * Returns the skew of the X axis of the shape.
      */
-    public double getSkewX()
-    {
-        return _rss == null ? 0 : _rss[3];
-    }
+    public double getSkewX()  { return _rss == null ? 0 : _rss[3]; }
 
     /**
      * Sets the skew of the X axis of the shape.
@@ -686,10 +652,7 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     /**
      * Returns the skew of the Y axis of the shape.
      */
-    public double getSkewY()
-    {
-        return _rss == null ? 0 : _rss[4];
-    }
+    public double getSkewY()  { return _rss == null ? 0 : _rss[4]; }
 
     /**
      * Sets the skew of the Y axis of the shape.
@@ -715,10 +678,7 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     /**
      * Returns whether the shape has been rotated, scaled or skewed (for efficiency).
      */
-    public boolean isRSS()
-    {
-        return _rss != null;
-    }
+    public boolean isRSS()  { return _rss != null; }
 
     /**
      * Returns the roll scale skew array: [ Roll, ScaleX, ScaleY, SkewX, SkewY ].
@@ -731,17 +691,14 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     /**
      * Returns the stroke for this shape.
      */
-    public RMStroke getStroke()
-    {
-        return _stroke;
-    }
+    public RMStroke getStroke()  { return _stroke; }
 
     /**
      * Sets the stroke for this shape, with an option to turn on drawsStroke.
      */
     public void setStroke(RMStroke aStroke)
     {
-        if (SnapUtils.equals(getStroke(), aStroke)) return;
+        if (Objects.equals(getStroke(), aStroke)) return;
         repaint();
         firePropChange(Stroke_Prop, _stroke, _stroke = aStroke);
     }
@@ -757,17 +714,14 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     /**
      * Returns the fill for this shape.
      */
-    public RMFill getFill()
-    {
-        return _fill;
-    }
+    public RMFill getFill()  { return _fill; }
 
     /**
      * Sets the fill for this shape.
      */
     public void setFill(RMFill aFill)
     {
-        if (SnapUtils.equals(getFill(), aFill)) return;
+        if (Objects.equals(getFill(), aFill)) return;
         repaint();
         firePropChange(Fill_Prop, _fill, _fill = aFill);
     }
@@ -775,17 +729,14 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     /**
      * Returns the effect for this shape.
      */
-    public Effect getEffect()
-    {
-        return _effect;
-    }
+    public Effect getEffect()  { return _effect; }
 
     /**
      * Sets the effect for this shape.
      */
     public void setEffect(Effect anEffect)
     {
-        if (SnapUtils.equals(getEffect(), anEffect)) return;
+        if (Objects.equals(getEffect(), anEffect)) return;
         repaint();
         firePropChange(Effect_Prop, _effect, _effect = anEffect);
         _pdvr1 = _pdvr2 = null;
@@ -848,10 +799,7 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     /**
      * Returns the opacity of the shape (1 for opaque, 0 for transparent).
      */
-    public double getOpacity()
-    {
-        return _opacity;
-    }
+    public double getOpacity()  { return _opacity; }
 
     /**
      * Sets the opacity of the shape (1 for opaque, 0 for transparent).
@@ -876,10 +824,7 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     /**
      * Returns whether this shape is visible.
      */
-    public boolean isVisible()
-    {
-        return _visible;
-    }
+    public boolean isVisible()  { return _visible; }
 
     /**
      * Sets whether this shape is visible.
@@ -907,7 +852,7 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
             System.err.println("RMShape.setAutosizing: Invalid string: " + aValue);
             return;
         }
-        if (SnapUtils.equals(aValue, _asize)) return;
+        if (Objects.equals(aValue, _asize)) return;
         firePropChange("Autosizing", _asize, _asize = aValue);
     }
 
@@ -930,25 +875,17 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     /**
      * Returns the text color for the shape.
      */
-    public RMColor getTextColor()
-    {
-        return RMColor.black;
-    }
+    public RMColor getTextColor()  { return RMColor.black; }
 
     /**
      * Sets the text color for the shape.
      */
-    public void setTextColor(RMColor aColor)
-    {
-    }
+    public void setTextColor(RMColor aColor)  { }
 
     /**
      * Returns whether font has been set.
      */
-    public boolean isFontSet()
-    {
-        return false;
-    }
+    public boolean isFontSet()  { return false; }
 
     /**
      * Returns the font for the shape (defaults to parent font).
@@ -961,24 +898,17 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     /**
      * Sets the font for the shape.
      */
-    public void setFont(RMFont aFont)
-    {
-    }
+    public void setFont(RMFont aFont)  { }
 
     /**
      * Returns whether the shape is underlined.
      */
-    public boolean isUnderlined()
-    {
-        return false;
-    }
+    public boolean isUnderlined()  { return false; }
 
     /**
      * Sets the shape to underline.
      */
-    public void setUnderlined(boolean aFlag)
-    {
-    }
+    public void setUnderlined(boolean aFlag)  { }
 
     /**
      * Returns the alignment.
@@ -1004,66 +934,41 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     public void setAlignment(Pos aPos)
     {
         switch (aPos.getHPos()) {
-            case LEFT:
-                setAlignmentX(AlignX.Left);
-                break;
-            case CENTER:
-                setAlignmentX(AlignX.Center);
-                break;
-            case RIGHT:
-                setAlignmentX(AlignX.Right);
-                break;
+            case LEFT: setAlignmentX(AlignX.Left); break;
+            case CENTER: setAlignmentX(AlignX.Center); break;
+            case RIGHT: setAlignmentX(AlignX.Right); break;
         }
         switch (aPos.getVPos()) {
-            case TOP:
-                setAlignmentY(AlignY.Top);
-                break;
-            case CENTER:
-                setAlignmentY(AlignY.Middle);
-                break;
-            case BOTTOM:
-                setAlignmentY(AlignY.Bottom);
-                break;
+            case TOP: setAlignmentY(AlignY.Top); break;
+            case CENTER: setAlignmentY(AlignY.Middle); break;
+            case BOTTOM: setAlignmentY(AlignY.Bottom); break;
         }
     }
 
     /**
      * Returns the horizontal alignment.
      */
-    public AlignX getAlignmentX()
-    {
-        return AlignX.Left;
-    }
+    public AlignX getAlignmentX()  { return AlignX.Left; }
 
     /**
      * Sets the horizontal alignment.
      */
-    public void setAlignmentX(AlignX anAlignX)
-    {
-    }
+    public void setAlignmentX(AlignX anAlignX)  { }
 
     /**
      * Returns the vertical alignment.
      */
-    public AlignY getAlignmentY()
-    {
-        return AlignY.Top;
-    }
+    public AlignY getAlignmentY()  { return AlignY.Top; }
 
     /**
      * Sets the vertical alignment.
      */
-    public void setAlignmentY(AlignY anAlignX)
-    {
-    }
+    public void setAlignmentY(AlignY anAlignX)  { }
 
     /**
      * Returns the format for the shape.
      */
-    public RMFormat getFormat()
-    {
-        return null;
-    } //if(getBindingCount()>0) return (RMFormat)getBinding(0).getFormat();
+    public RMFormat getFormat()  { return null; }
 
     /**
      * Sets the format for the shape.
@@ -1081,17 +986,14 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     /**
      * Returns the name for the shape.
      */
-    public String getName()
-    {
-        return (String) get("Name");
-    }
+    public String getName()  { return (String) get("Name"); }
 
     /**
      * Sets the name for the shape.
      */
     public void setName(String aName)
     {
-        if (SnapUtils.equals(aName, getName())) return;
+        if (Objects.equals(aName, getName())) return;
         Object oldVal = put("Name", StringUtils.min(aName));
         firePropChange("Name", oldVal, StringUtils.min(aName));
     }
@@ -1099,17 +1001,14 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     /**
      * Sets the URL for the shape.
      */
-    public String getURL()
-    {
-        return (String) get("RMShapeURL");
-    }
+    public String getURL()  { return (String) get("RMShapeURL"); }
 
     /**
      * Returns the URL for the shape.
      */
     public void setURL(String aURL)
     {
-        if (SnapUtils.equals(aURL, getURL())) return;
+        if (Objects.equals(aURL, getURL())) return;
         Object oldVal = put("RMShapeURL", StringUtils.min(aURL));
         firePropChange("RMShapeURL", oldVal, aURL);
     }
@@ -1117,10 +1016,7 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     /**
      * Returns the locked state of the shape (really just to prevent location/size changes in the editor).
      */
-    public boolean isLocked()
-    {
-        return SnapUtils.boolValue(get("Locked"));
-    }
+    public boolean isLocked()  { return Convert.boolValue(get("Locked")); }
 
     /**
      * Sets the locked state of the shape (really just to prevent location/size changes in the editor).
@@ -1216,26 +1112,17 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     /**
      * Returns the child count.
      */
-    public int getChildCount()
-    {
-        return 0;
-    }
+    public int getChildCount()  { return 0; }
 
     /**
      * Returns the child at given index.
      */
-    public RMShape getChild(int anIndex)
-    {
-        return null;
-    }
+    public RMShape getChild(int anIndex)  { return null; }
 
     /**
      * Returns the children list.
      */
-    public List<RMShape> getChildren()
-    {
-        return Collections.emptyList();
-    }
+    public List<RMShape> getChildren()  { return Collections.emptyList(); }
 
     /**
      * Returns the top level shape (usually an RMDocument).
@@ -1748,9 +1635,7 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     /**
      * Handle shape events.
      */
-    public void processEvent(ViewEvent anEvent)
-    {
-    }
+    public void processEvent(ViewEvent anEvent)  { }
 
     /**
      * Returns whether this shape is hit by the point, given in this shape's parent's coords.
@@ -1837,7 +1722,7 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
      */
     public int getBindingCount()
     {
-        List bindings = getBindings(false);
+        List<Binding> bindings = getBindings(false);
         return bindings != null ? bindings.size() : 0;
     }
 
@@ -1854,8 +1739,9 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
      */
     protected List<Binding> getBindings(boolean doCreate)
     {
-        List<Binding> bindings = (List) get("RMBindings");
-        if (bindings == null && doCreate) put("RMBindings", bindings = new ArrayList());
+        List<Binding> bindings = (List<Binding>) get("RMBindings");
+        if (bindings == null && doCreate)
+            put("RMBindings", bindings = new ArrayList<>());
         return bindings;
     }
 
@@ -1864,7 +1750,7 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
      */
     public void addBinding(Binding aBinding)
     {
-        removeBinding(aBinding.getPropertyName()); // Remove current binding for property name (if it exists)
+        removeBinding(aBinding.getPropName()); // Remove current binding for property name (if it exists)
         List<Binding> bindings = getBindings(true); // Add binding
         bindings.add(aBinding);
         aBinding.setView(this); // Set binding width to this shape
@@ -1873,9 +1759,9 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     /**
      * Removes the binding at the given index from shape's bindings list.
      */
-    public Binding removeBinding(int anIndex)
+    public void removeBinding(int anIndex)
     {
-        return getBindings(true).remove(anIndex);
+        getBindings(true).remove(anIndex);
     }
 
     /**
@@ -1885,7 +1771,7 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     {
         // Iterate over bindings and return the first that matches given property name
         for (int i = 0, iMax = getBindingCount(); i < iMax; i++)
-            if (getBinding(i).getPropertyName().equals(aPropertyName))
+            if (getBinding(i).getPropName().equals(aPropertyName))
                 return getBinding(i);
         return null; // Return null since binding not found
     }
@@ -1893,15 +1779,15 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     /**
      * Removes the binding with given property name.
      */
-    public boolean removeBinding(String aPropertyName)
+    public void removeBinding(String aPropertyName)
     {
         // Iterate over binding and remove given binding
-        for (int i = 0, iMax = getBindingCount(); i < iMax; i++)
-            if (getBinding(i).getPropertyName().equals(aPropertyName)) {
+        for (int i = 0, iMax = getBindingCount(); i < iMax; i++) {
+            if (getBinding(i).getPropName().equals(aPropertyName)) {
                 removeBinding(i);
-                return true;
+                return;
             }
-        return false; // Return false since binding not found
+        }
     }
 
     /**
@@ -1918,12 +1804,9 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     public RMShape clone()
     {
         // Do normal version
-        RMShape clone = null;
-        try {
-            clone = (RMShape) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e);
-        }
+        RMShape clone;
+        try { clone = (RMShape) super.clone(); }
+        catch (CloneNotSupportedException e) { throw new RuntimeException(e); }
 
         // Clear Parent and PropChangeSupport
         clone._parent = null;
@@ -2022,38 +1905,45 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
             Binding binding = getBinding(i);
 
             // Get PropertyName, Key and Value (just continue if empty key)
-            String pname = binding.getPropertyName();
-            if (pname == null) continue;
+            String propName = binding.getPropName();
+            if (propName == null)
+                continue;
             String key = binding.getKey();
-            if (key == null || key.length() == 0) continue;
+            if (key == null || key.length() == 0)
+                continue;
             Object value = RMKeyChain.getValue(anRptOwner, key);
 
             // Handle Font
-            if (pname.equals("Font")) {
+            if (propName.equals("Font")) {
 
                 // Get value as string (if zero length, just continue)
-                String fs = value instanceof String ? (String) value : null;
-                if (fs == null || fs.length() == 0) continue;
+                String fontStr = value instanceof String ? (String) value : null;
+                if (fontStr == null || fontStr.length() == 0)
+                    continue;
 
                 // If string has underline in it, underline and delete
-                if (StringUtils.indexOfIC(fs, "Underline") >= 0) {
+                if (StringUtils.indexOfIC(fontStr, "Underline") >= 0) {
                     aShapeRPG.setUnderlined(true);
-                    fs = StringUtils.deleteIC(fs, "Underline").trim();
+                    fontStr = StringUtils.deleteIC(fontStr, "Underline").trim();
                 }
 
                 // Get size from string (if found, strip size from string)
-                int sizeIndex = fs.lastIndexOf(" ");
-                double size = sizeIndex < 0 ? 0 : SnapUtils.floatValue(fs.substring(sizeIndex + 1));
-                if (size > 0) fs = fs.substring(0, Math.max(sizeIndex, 0)).trim();
+                int sizeIndex = fontStr.lastIndexOf(" ");
+                double size = sizeIndex < 0 ? 0 : Convert.floatValue(fontStr.substring(sizeIndex + 1));
+                if (size > 0)
+                    fontStr = fontStr.substring(0, sizeIndex).trim();
                 else size = getFont() == null ? 12 : getFont().getSize();
 
                 // Get root font (use default font if not found), and modified font
                 RMFont font = getFont();
-                if (font == null) font = RMFont.getDefaultFont();
-                if (fs.equalsIgnoreCase("Bold")) font = font.getBold();
-                else if (fs.equalsIgnoreCase("Italic")) font = font.getItalic();
-                else if (fs.length() > 0) // If there is anything in string, try to parse font name
-                    font = new RMFont(fs, size);
+                if (font == null)
+                    font = RMFont.getDefaultFont();
+                if (fontStr.equalsIgnoreCase("Bold"))
+                    font = font.getBold();
+                else if (fontStr.equalsIgnoreCase("Italic"))
+                    font = font.getItalic();
+                else if (fontStr.length() > 0) // If there is anything in string, try to parse font name
+                    font = new RMFont(fontStr, size);
 
                 // Get font at right size and apply it
                 font = font.deriveFont(size);
@@ -2061,19 +1951,24 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
             }
 
             // Handle FillColor, StrokeColor, TextColor
-            else if (pname.equals("FillColor")) {
+            else if (propName.equals("FillColor")) {
                 RMColor color = RMColor.get(value);
-                if (color != null) aShapeRPG.setColor(color);
-            } else if (pname.equals("StrokeColor")) {
+                if (color != null)
+                    aShapeRPG.setColor(color);
+            }
+            else if (propName.equals("StrokeColor")) {
                 RMColor color = RMColor.get(value);
-                if (color != null) aShapeRPG.setStrokeColor(color);
-            } else if (pname.equals("TextColor")) {
+                if (color != null)
+                    aShapeRPG.setStrokeColor(color);
+            }
+            else if (propName.equals("TextColor")) {
                 RMColor color = RMColor.get(value);
-                if (color != null) aShapeRPG.setTextColor(color);
+                if (color != null)
+                    aShapeRPG.setTextColor(color);
             }
 
             // Handle others: X, Y, Width, Height, Visible, URL
-            else RMKey.setValueSafe(aShapeRPG, pname, value);
+            else RMKey.setValueSafe(aShapeRPG, propName, value);
         }
     }
 
@@ -2092,9 +1987,7 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     /**
      * Called to relayout.
      */
-    public void relayout()
-    {
-    }
+    public void relayout()  { }
 
     /**
      * Called to notify parents to relayout because preferred sizes have potentially changed.
@@ -2102,7 +1995,8 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     public void relayoutParent()
     {
         RMParentShape par = getParent();
-        if (par == null) return;
+        if (par == null)
+            return;
         par.relayout();
         par.relayoutParent();
     }
@@ -2113,16 +2007,15 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     public void repaint()
     {
         RMShape root = getRootShape();
-        if (root == null) return;
+        if (root == null)
+            return;
         root.repaint(this);
     }
 
     /**
      * Called to register view for repaint.
      */
-    protected void repaint(RMShape aShape)
-    {
-    }
+    protected void repaint(RMShape aShape)  { }
 
     /**
      * Editor method - indicates whether this shape can be super selected.
@@ -2411,48 +2304,27 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     {
         // Handle properties
         switch (aPropName) {
-            case X_Prop:
-                return getX();
-            case Y_Prop:
-                return getY();
-            case Width_Prop:
-                return getWidth();
-            case Height_Prop:
-                return getHeight();
-            case Roll_Prop:
-                return getRoll();
-            case ScaleX_Prop:
-                return getScaleX();
-            case ScaleY_Prop:
-                return getScaleY();
-            case SkewX_Prop:
-                return getSkewX();
-            case SkewY_Prop:
-                return getSkewY();
-            case Stroke_Prop:
-                return getStroke();
-            case Fill_Prop:
-                return getFill();
-            case Effect_Prop:
-                return getEffect();
-            case Opacity_Prop:
-                return getOpacity();
-            case Name_Prop:
-                return getName();
-            case Visible_Prop:
-                return isVisible();
-            case Locked_Prop:
-                return isLocked();
-            case MinWidth_Prop:
-                return getMinWidth();
-            case MinHeight_Prop:
-                return getMinHeight();
-            case PrefWidth_Prop:
-                return getPrefWidth();
-            case PrefHeight_Prop:
-                return getPrefHeight();
-            default:
-                return Key.getValueImpl(this, aPropName);
+            case X_Prop: return getX();
+            case Y_Prop: return getY();
+            case Width_Prop: return getWidth();
+            case Height_Prop: return getHeight();
+            case Roll_Prop: return getRoll();
+            case ScaleX_Prop: return getScaleX();
+            case ScaleY_Prop: return getScaleY();
+            case SkewX_Prop: return getSkewX();
+            case SkewY_Prop: return getSkewY();
+            case Stroke_Prop: return getStroke();
+            case Fill_Prop: return getFill();
+            case Effect_Prop: return getEffect();
+            case Opacity_Prop: return getOpacity();
+            case Name_Prop: return getName();
+            case Visible_Prop: return isVisible();
+            case Locked_Prop: return isLocked();
+            case MinWidth_Prop: return getMinWidth();
+            case MinHeight_Prop: return getMinHeight();
+            case PrefWidth_Prop: return getPrefWidth();
+            case PrefHeight_Prop: return getPrefHeight();
+            default: return Key.getValueImpl(this, aPropName);
         }
     }
 
@@ -2463,68 +2335,27 @@ public class RMShape implements Cloneable, RMTypes, Archivable, Key.GetSet {
     {
         // Handle properties
         switch (aPropName) {
-            case X_Prop:
-                setX(SnapUtils.doubleValue(aValue));
-                break;
-            case Y_Prop:
-                setY(SnapUtils.doubleValue(aValue));
-                break;
-            case Width_Prop:
-                setWidth(SnapUtils.doubleValue(aValue));
-                break;
-            case Height_Prop:
-                setHeight(SnapUtils.doubleValue(aValue));
-                break;
-            case Roll_Prop:
-                setRoll(SnapUtils.doubleValue(aValue));
-                break;
-            case ScaleX_Prop:
-                setScaleX(SnapUtils.doubleValue(aValue));
-                break;
-            case ScaleY_Prop:
-                setScaleY(SnapUtils.doubleValue(aValue));
-                break;
-            case SkewX_Prop:
-                setSkewX(SnapUtils.doubleValue(aValue));
-                break;
-            case SkewY_Prop:
-                setSkewY(SnapUtils.doubleValue(aValue));
-                break;
-            case Stroke_Prop:
-                setStroke(aValue instanceof RMStroke ? (RMStroke) aValue : null);
-                break;
-            case Fill_Prop:
-                setFill(aValue instanceof RMFill ? (RMFill) aValue : null);
-                break;
-            case Effect_Prop:
-                setEffect(aValue instanceof Effect ? (Effect) aValue : null);
-                break;
-            case Opacity_Prop:
-                setOpacity(SnapUtils.doubleValue(aValue));
-                break;
-            case Name_Prop:
-                setName(SnapUtils.stringValue(aValue));
-                break;
-            case Visible_Prop:
-                setVisible(SnapUtils.boolValue(aValue));
-                break;
-            case Locked_Prop:
-                setLocked(SnapUtils.boolValue(aValue));
-                break;
-            case MinWidth_Prop:
-                setMinWidth(SnapUtils.doubleValue(aValue));
-                break;
-            case MinHeight_Prop:
-                setMinHeight(SnapUtils.doubleValue(aValue));
-                break;
-            case PrefWidth_Prop:
-                setPrefWidth(SnapUtils.doubleValue(aValue));
-                break;
-            case PrefHeight_Prop:
-                setPrefHeight(SnapUtils.doubleValue(aValue));
-                break;
-            default:
-                Key.setValueReflectSafe(this, aPropName, aValue);
+            case X_Prop: setX(Convert.doubleValue(aValue)); break;
+            case Y_Prop: setY(Convert.doubleValue(aValue)); break;
+            case Width_Prop: setWidth(Convert.doubleValue(aValue)); break;
+            case Height_Prop: setHeight(Convert.doubleValue(aValue)); break;
+            case Roll_Prop: setRoll(Convert.doubleValue(aValue)); break;
+            case ScaleX_Prop: setScaleX(Convert.doubleValue(aValue)); break;
+            case ScaleY_Prop: setScaleY(Convert.doubleValue(aValue)); break;
+            case SkewX_Prop: setSkewX(Convert.doubleValue(aValue)); break;
+            case SkewY_Prop: setSkewY(Convert.doubleValue(aValue)); break;
+            case Stroke_Prop: setStroke(aValue instanceof RMStroke ? (RMStroke) aValue : null); break;
+            case Fill_Prop: setFill(aValue instanceof RMFill ? (RMFill) aValue : null); break;
+            case Effect_Prop: setEffect(aValue instanceof Effect ? (Effect) aValue : null); break;
+            case Opacity_Prop: setOpacity(Convert.doubleValue(aValue)); break;
+            case Name_Prop: setName(Convert.stringValue(aValue)); break;
+            case Visible_Prop: setVisible(Convert.boolValue(aValue)); break;
+            case Locked_Prop: setLocked(Convert.boolValue(aValue)); break;
+            case MinWidth_Prop: setMinWidth(Convert.doubleValue(aValue)); break;
+            case MinHeight_Prop: setMinHeight(Convert.doubleValue(aValue)); break;
+            case PrefWidth_Prop: setPrefWidth(Convert.doubleValue(aValue)); break;
+            case PrefHeight_Prop: setPrefHeight(Convert.doubleValue(aValue)); break;
+            default: Key.setValueReflectSafe(this, aPropName, aValue);
         }
     }
 
