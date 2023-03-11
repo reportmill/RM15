@@ -7,7 +7,7 @@ import com.reportmill.graphics.*;
 import snap.props.Undoer;
 import snap.util.*;
 import snap.view.*;
-import snap.viewx.RecentFiles;
+import snap.web.RecentFiles;
 
 /**
  * Menu bar for RMEditor pane.

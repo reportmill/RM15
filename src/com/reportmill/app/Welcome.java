@@ -6,6 +6,7 @@ import com.reportmill.base.ReportMill;
 import snap.util.SnapUtils;
 import snap.view.*;
 import snap.viewx.*;
+import snap.web.RecentFiles;
 import snap.web.WebURL;
 
 /**
