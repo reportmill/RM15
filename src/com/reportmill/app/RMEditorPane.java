@@ -465,9 +465,9 @@ public class RMEditorPane extends RMViewerPane {
         // Set document
         getViewer().setDoc(doc);
 
-        // If source is string, add to recent files menu
+        // If source is URL, add to recent files
         if (url != null)
-            RecentFiles.addPath(url.getPath());
+            RecentFiles.addURL(url);
 
         // Return
         return this;
@@ -522,8 +522,8 @@ public class RMEditorPane extends RMViewerPane {
             return;
         }
 
-        // Add URL.String to RecentFilesMenu, clear undoer and reset UI
-        RecentFiles.addPath(url.getPath());
+        // Add URL to RecentFiles, clear undoer and reset UI
+        RecentFiles.addURL(url);
         getDoc().getUndoer().reset();
         resetLater();
     }
