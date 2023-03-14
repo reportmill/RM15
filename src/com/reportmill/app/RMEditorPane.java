@@ -467,7 +467,7 @@ public class RMEditorPane extends RMViewerPane {
 
         // If source is string, add to recent files menu
         if (url != null)
-            RecentFiles.addPath("RecentDocuments", url.getPath(), 10);
+            RecentFiles.addPath(url.getPath());
 
         // Return
         return this;
@@ -523,7 +523,7 @@ public class RMEditorPane extends RMViewerPane {
         }
 
         // Add URL.String to RecentFilesMenu, clear undoer and reset UI
-        RecentFiles.addPath("RecentDocuments", url.getPath(), 10);
+        RecentFiles.addPath(url.getPath());
         getDoc().getUndoer().reset();
         resetLater();
     }

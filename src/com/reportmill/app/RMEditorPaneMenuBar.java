@@ -86,7 +86,7 @@ public class RMEditorPaneMenuBar extends RMEditorPane.SupportPane {
 
         // Handle OpenRecentMenuItem
         if (anEvent.equals("OpenRecentMenuItem")) {
-            String path = RecentFiles.showPathsPanel(epane.getUI(), "RecentDocuments");
+            String path = RecentFiles.showPathsPanel(epane.getUI());
             if (path == null) return;
             com.reportmill.app.Welcome.getShared().open(path); //file.getAbsolutePath());
         }

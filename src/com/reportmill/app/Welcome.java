@@ -144,7 +144,7 @@ public class Welcome extends ViewOwner {
 
         // Handle RecentFilesButton
         if (anEvent.equals("RecentFilesButton"))
-            RecentFiles.showPathsMenu(anEvent.getView(), "RecentDocuments", str -> open(str));
+            RecentFiles.showPathsMenu(anEvent.getView(), str -> open(str));
 
         // Handle FinishButton
         if (anEvent.equals("QuitButton") || anEvent.isWinClose())
