@@ -81,18 +81,12 @@ public class RMTableRowRPG extends RMSpringShape {
     /**
      * Returns the template.
      */
-    public RMTableRow getTemplate()
-    {
-        return _row;
-    }
+    public RMTableRow getTemplate()  { return _row; }
 
     /**
      * Returns the group.
      */
-    public RMGroup getGroup()
-    {
-        return _group;
-    }
+    public RMGroup getGroup()  { return _group; }
 
     /**
      * Returns whether this row is header.
@@ -140,17 +134,20 @@ public class RMTableRowRPG extends RMSpringShape {
         }
 
         // If VersionKey is set and evaluates to a present version, return it
-        if (aRow.getVersionKey() != null) {
-            String version = RMKeyChain.getStringValue(anRptOwner, aRow.getVersionKey());
+        String versionKey = aRow.getVersionKey();
+        if (versionKey != null) {
+            String version = RMKeyChain.getStringValue(anRptOwner, versionKey);
             if (version != null && aRow.hasVersion(version))
                 return version;
         }
 
-        // Try for FirstOnly and Alternate
-        int index = aGroup.getParent() != null ? aGroup.index() : 0;
-        if (index == 0 && aRow.hasVersion(RMTableRow.VersionFirstOnly))
+        // If first row and available use VersionFirstOnly (doesn't make sense for top level header, but do for legacy)
+        int rowIndex = aGroup.getParent() != null ? aGroup.index() : 0;
+        if (rowIndex <= 0 && aRow.hasVersion(RMTableRow.VersionFirstOnly))
             return RMTableRow.VersionFirstOnly;
-        if (index % 2 == 1 && aRow.hasVersion(RMTableRow.VersionAlternate))
+
+        // If alternate row and available, use VersionAlternate
+        if (rowIndex % 2 == 1 && aRow.hasVersion(RMTableRow.VersionAlternate))
             return RMTableRow.VersionAlternate;
 
         // Return Standard version
@@ -406,21 +403,9 @@ public class RMTableRowRPG extends RMSpringShape {
         }
 
         /**
-         * Returns whether given span intersects this span.
-         */
-        public boolean intersects(Span aSpan)
-        {
-            return MathUtils.equals(start, aSpan.start) || MathUtils.equals(end, aSpan.end) ||
-                    MathUtils.lt(aSpan.start, end) && MathUtils.gt(aSpan.end, start);
-        }
-
-        /**
          * Returns string representation of span.
          */
-        public String toString()
-        {
-            return "Span { start: " + start + ", end: " + end + " }";
-        }
+        public String toString()  { return "Span { start: " + start + ", end: " + end + " }"; }
 
         /**
          * Comparable implementation.
