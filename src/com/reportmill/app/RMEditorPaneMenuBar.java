@@ -7,7 +7,8 @@ import com.reportmill.graphics.*;
 import snap.props.Undoer;
 import snap.util.*;
 import snap.view.*;
-import snap.web.RecentFiles;
+import snap.web.RecentFilesPane;
+import snap.web.WebFile;
 
 /**
  * Menu bar for RMEditor pane.
@@ -86,9 +87,9 @@ public class RMEditorPaneMenuBar extends RMEditorPane.SupportPane {
 
         // Handle OpenRecentMenuItem
         if (anEvent.equals("OpenRecentMenuItem")) {
-            String path = RecentFiles.showPathsPanel(epane.getUI());
-            if (path == null) return;
-            com.reportmill.app.Welcome.getShared().open(path); //file.getAbsolutePath());
+            WebFile openFile = new RecentFilesPane().showPanel(epane.getUI());
+            if (openFile != null)
+                com.reportmill.app.WelcomePanel.getShared().openFile(openFile);
         }
 
         // Handle CloseMenuItem

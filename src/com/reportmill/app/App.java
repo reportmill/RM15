@@ -2,9 +2,8 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.app;
-//import com.apple.eawt.*;
-//import com.apple.eawt.AppEvent.*;
 import com.reportmill.base.ReportMill;
+import snap.gfx.GFXEnv;
 import snap.util.*;
 import snap.view.WindowView;
 import snap.viewx.DialogBox;
@@ -13,9 +12,7 @@ import snap.viewx.ExceptionReporter;
 /************************************* - All files should be 120 chars wide - *****************************************/
 
 /**
- * This is the main class for the ReportMill app. You can run it from the command line like this:
- * <p>
- * prompt> java -cp ReportMill.jar com.reportmill.App
+ * This is the main class for the ReportMill app.
  */
 public class App {
 
@@ -25,7 +22,7 @@ public class App {
     /**
      * This is the static main method, called by Java when launching with com.reportmill.App.
      */
-    public static void main(String args[])
+    public static void main(String[] args)
     {
         new App(args);
     }
@@ -33,7 +30,7 @@ public class App {
     /**
      * Creates a new app instance.
      */
-    public App(String args[])
+    public App(String[] args)
     {
         // Set app is true
         ReportMill.isApp = true;
@@ -52,7 +49,7 @@ public class App {
         Thread.setDefaultUncaughtExceptionHandler(er);
 
         // Run welcome panel
-        Welcome.getShared().runWelcome();
+        WelcomePanel.getShared().showPanel();
     }
 
     /**
@@ -63,22 +60,22 @@ public class App {
         // Get open editor panes
         if (_quiting) return;
         _quiting = true;
-        RMEditorPane epanes[] = WindowView.getOpenWindowOwners(RMEditorPane.class);
+        RMEditorPane[] editorPanes = WindowView.getOpenWindowOwners(RMEditorPane.class);
 
         // Iterate over open Editors to see if any have unsaved changes
         int answer = 0;
-        for (int i = 0, iMax = epanes.length; i < iMax && iMax > 1; i++) {
-            RMEditorPane epane = epanes[i];
+        for (int i = 0, iMax = editorPanes.length; i < iMax && iMax > 1; i++) {
+            RMEditorPane editorPane = editorPanes[i];
 
             // Turn off editor preview
-            epane.setEditing(true);
+            editorPane.setEditing(true);
 
             // If editor has undos, run Review Unsaved panel and break
-            if (epane.getEditor().undoerHasUndos()) {
-                DialogBox dbox = new DialogBox("Review Unsaved Documents");
-                dbox.setWarningMessage("There are unsaved documents");
-                dbox.setOptions("Review Unsaved", "Quit Anyway", "Cancel");
-                answer = dbox.showOptionDialog(epane.getEditor(), "Review Unsaved");
+            if (editorPane.getEditor().undoerHasUndos()) {
+                DialogBox dialogBox = new DialogBox("Review Unsaved Documents");
+                dialogBox.setWarningMessage("There are unsaved documents");
+                dialogBox.setOptions("Review Unsaved", "Quit Anyway", "Cancel");
+                answer = dialogBox.showOptionDialog(editorPane.getEditor(), "Review Unsaved");
                 break;
             }
         }
@@ -90,25 +87,23 @@ public class App {
         }
 
         // Disable welcome panel
-        boolean old = Welcome.getShared().isEnabled();
-        Welcome.getShared().setEnabled(false);
+        boolean old = WelcomePanel.getShared().isEnabled();
+        WelcomePanel.getShared().setEnabled(false);
 
         // If Review Unsaved, iterate through _editors to see if they should be saved or if user wants to cancel instead
-        if (answer == 0)
-            for (RMEditorPane epane : epanes)
-                if (!epane.close()) {
-                    Welcome.getShared().setEnabled(old);
+        if (answer == 0) {
+            for (RMEditorPane editorPane : editorPanes)
+                if (!editorPane.close()) {
+                    WelcomePanel.getShared().setEnabled(old);
                     _quiting = false;
                     return;
                 }
+        }
 
         // Flush Properties to registry and exit
-        try {
-            Prefs.getDefaultPrefs().flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.exit(0);
+        try { Prefs.getDefaultPrefs().flush(); }
+        catch (Exception e) { e.printStackTrace(); }
+        GFXEnv.getEnv().exit(0);
     }
 
 //    /**
@@ -116,9 +111,6 @@ public class App {
 //     */
 //    private static class AppleAppHandler implements PreferencesHandler, QuitHandler, OpenFilesHandler {
 //
-//        /**
-//         * Initializes Apple Application handling.
-//         */
 //        public void init()
 //        {
 //            System.setProperty("apple.laf.useScreenMenuBar", "true"); // 1.4
@@ -129,31 +121,15 @@ public class App {
 //            app.setOpenFileHandler(this);
 //        }
 //
-//        /**
-//         * Handle Preferences.
-//         */
-//        public void handlePreferences(PreferencesEvent arg0)
-//        {
-//            new PreferencesPanel().showPanel(null);
-//        }
-//
-//        /**
-//         * Handle Preferences.
-//         */
+//        public void handlePreferences(PreferencesEvent arg0) { new PreferencesPanel().showPanel(null); }
 //        public void openFiles(OpenFilesEvent anEvent)
 //        {
 //            java.io.File file = anEvent.getFiles().size() > 0 ? anEvent.getFiles().get(0) : null;
-//            if (file == null) return;
-//            SwingUtilities.invokeLater(() -> Welcome.getShared().open(file.getPath()));
+//            if (file != null) SwingUtilities.invokeLater(() -> Welcome.getShared().open(file.getPath()));
 //        }
-//
-//        /**
-//         * Handle QuitRequest.
-//         */
 //        public void handleQuitRequestWith(QuitEvent arg0, QuitResponse arg1)
 //        {
-//            App.quitApp();
-//            if (_quiting) arg1.cancelQuit();
+//            App.quitApp(); if (_quiting) arg1.cancelQuit();
 //        }
 //    }
 }

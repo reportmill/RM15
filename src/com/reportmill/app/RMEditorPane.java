@@ -608,8 +608,8 @@ public class RMEditorPane extends RMViewerPane {
         RMEditorPane editorPane = WindowView.getOpenWindowOwner(RMEditorPane.class);
         if (editorPane != null)
             editorPane.getEditor().requestFocus();
-        else if (Welcome.getShared().isEnabled())
-            Welcome.getShared().runWelcome();
+        else if (WelcomePanel.getShared().isEnabled())
+            WelcomePanel.getShared().showPanel();
     }
 
     /**
