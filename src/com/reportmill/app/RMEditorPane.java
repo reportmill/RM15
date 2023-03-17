@@ -244,9 +244,11 @@ public class RMEditorPane extends RMViewerPane {
         getEditor().addPropChangeListener(pc -> editorDidPropChange(pc));
 
         // Configure Window ClassName, Image and enable window events
-        WindowView win = getWindow();
-        win.setImage(getFrameIcon());
-        enableEvents(win, WinClose);
+        WindowView window = getWindow();
+        window.setImage(getFrameIcon());
+        enableEvents(window, WinClose);
+        if (SnapUtils.isTeaVM)
+            window.setMaximized(true);
     }
 
     /**

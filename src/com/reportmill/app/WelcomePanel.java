@@ -15,7 +15,7 @@ import snap.web.*;
 public class WelcomePanel extends ViewOwner {
 
     // Whether welcome panel is enabled
-    private boolean  _enabled;
+    private boolean  _enabled = true;
 
     // The FilePanel
     private FilePanel  _filePanel;
@@ -24,7 +24,8 @@ public class WelcomePanel extends ViewOwner {
     private static WelcomePanel _shared;
 
     // Constants
-    public static final String JAVA_FILE_EXT = "rpt";
+    public static final String RM_FILE_EXT = "rpt";
+    public static final String PDF_FILE_EXT = "pdf";
 
     /**
      * Constructor.
@@ -140,16 +141,16 @@ public class WelcomePanel extends ViewOwner {
     protected void newFile(boolean showSamples)
     {
         // Get new editor pane
-        RMEditorPane epane = newEditorPane().newDocument();
+        RMEditorPane editorPane = new RMEditorPane().newDocument();
 
         // If alt is down, replace with movies sample
         if (showSamples)
-            epane = RMEditorPaneUtils.openSample("Movies");
+            editorPane = RMEditorPaneUtils.openSample("Movies");
 
         // Make editor window visible, show doc inspector, and order front after delay to get focus back from inspector
-        epane.setWindowVisible(true);
-        epane.getInspectorPanel().showDocumentInspector();
-        RMEditorPane ep = epane;
+        editorPane.setWindowVisible(true);
+        editorPane.getInspectorPanel().showDocumentInspector();
+        RMEditorPane ep = editorPane;
         runLater(() -> ep.getWindow().toFront());
         runLater(() -> ep.getTopToolBar().startSamplesButtonAnim());
 
@@ -163,16 +164,16 @@ public class WelcomePanel extends ViewOwner {
     public void openFile(WebFile aFile)
     {
         // Get the new editor pane that will open the document
-        RMEditorPane epane = newEditorPane();
-        epane = epane.open(aFile);
+        RMEditorPane editorPane = new RMEditorPane();
+        editorPane = editorPane.open(aFile);
 
         // If no document opened, just return
-        if (epane == null) return;
+        if (editorPane == null) return;
 
         // Make editor window visible, show doc inspector, and order front after delay to get focus back from inspector
-        epane.setWindowVisible(true);
-        epane.getInspectorPanel().showDocumentInspector();
-        RMEditorPane ep = epane;
+        editorPane.setWindowVisible(true);
+        editorPane.getInspectorPanel().showDocumentInspector();
+        RMEditorPane ep = editorPane;
         runLater(() -> ep.getWindow().toFront());
 
         // Hide WelcomePanel
@@ -188,13 +189,8 @@ public class WelcomePanel extends ViewOwner {
         WebSite recentFilesSite = RecentFilesSite.getShared();
         FilePanel.addDefaultSite(recentFilesSite);
 
-        // Add DropBox
-        String dropBoxEmail = DropBoxSite.getDefaultEmail();
-        WebSite dropBoxSite = DropBoxSite.getSiteForEmail(dropBoxEmail);
-        FilePanel.addDefaultSite(dropBoxSite);
-
         // Get path from open panel for supported file extensions
-        String[] extensions = { JAVA_FILE_EXT };
+        String[] extensions = { RM_FILE_EXT, PDF_FILE_EXT };
         FilePanel filePanel = new FilePanel() {
             @Override
             protected void fireActionEvent(ViewEvent anEvent)
@@ -209,19 +205,6 @@ public class WelcomePanel extends ViewOwner {
 
         // Return
         return filePanel;
-    }
-
-
-    /**
-     * Creates a new editor for new or opened documents.
-     */
-    public RMEditorPane newEditorPane()
-    {
-        // Otherwise, return new pane with UI loaded
-        RMEditorPane ep = new RMEditorPane();
-        if (SnapUtils.isTeaVM)
-            ep.getUI().getWindow().setMaximized(true);
-        return ep;
     }
 
     /**
