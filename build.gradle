@@ -43,6 +43,8 @@ dependencies {
     implementation files('lib/spell.jar')
 }
 
+mainClassName = 'com.reportmill.app.App'
+
 /**
  * Modify jar task to include all dependencies. (Could also have defined new: task jarAll(type: Jar) { ... }
  */
