@@ -81,8 +81,9 @@ public class KeysPanel extends RMEditorPane.SupportPane {
      */
     public String getKeyPath()
     {
-        String key = _keysBrowser.getPath(); // Get normal path
-        if (key.equals("Page of PageMax")) return "@Page@ of @PageMax@";  // Special case for Page of PageMax
+        String key = getKeysBrowserPath(); // Get normal path
+        if (key.equals("Page of PageMax"))
+            return "@Page@ of @PageMax@";  // Special case for Page of PageMax
         return "@" + key + "@"; // Return path with @ signs
     }
 
@@ -106,7 +107,8 @@ public class KeysPanel extends RMEditorPane.SupportPane {
     {
         // Get full list key from selected shape and browser
         RMShape selShape = getSelectedShape();
-        String kprfx = selShape.getDatasetKey(), ksfx = _keysBrowser.getPath();
+        String kprfx = selShape.getDatasetKey();
+        String ksfx = getKeysBrowserPath();
         String key = kprfx != null ? (kprfx + '.' + ksfx) : ksfx;
 
         // Get Editor.Datasource dataset (just return if null)
@@ -118,6 +120,14 @@ public class KeysPanel extends RMEditorPane.SupportPane {
         // Get List
         List items = RMKeyChain.getListValue(dset, key);
         return items;
+    }
+
+    /**
+     * Returns the KeysBrowser path.
+     */
+    private String getKeysBrowserPath()
+    {
+        return _keysBrowser.getSelPathForSeparator(".");
     }
 
     /**
@@ -190,7 +200,7 @@ public class KeysPanel extends RMEditorPane.SupportPane {
             RMEditor editor = getEditor();
             if (getSelectedShape() instanceof RMTable) {
                 RMTableTool tool = (RMTableTool) editor.getTool(getSelectedShape());
-                tool.addGroupingKey(_keysBrowser.getPath());
+                tool.addGroupingKey(getKeysBrowserPath());
             }
 
             // If leaf click for RMText, add key
@@ -207,7 +217,7 @@ public class KeysPanel extends RMEditorPane.SupportPane {
 
             // Set the drag key and get drag key with @-signs
             _active = this;
-            _dragKey = _keysBrowser.getPath();
+            _dragKey = getKeysBrowserPath();
             String dragKeyFull = getKeyPath();
 
             // Get event Clipboard and start drag
