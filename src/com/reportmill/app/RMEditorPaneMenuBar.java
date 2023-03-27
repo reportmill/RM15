@@ -85,13 +85,6 @@ public class RMEditorPaneMenuBar extends RMEditorPane.SupportPane {
                 editorPane.setWindowVisible(true);
         }
 
-        // Handle OpenRecentMenuItem
-        if (anEvent.equals("OpenRecentMenuItem")) {
-            WebFile openFile = new RecentFilesPane().showPanel(epane.getUI());
-            if (openFile != null)
-                com.reportmill.app.WelcomePanel.getShared().openFile(openFile);
-        }
-
         // Handle CloseMenuItem
         if (anEvent.equals("CloseMenuItem")) epane.close();
 
