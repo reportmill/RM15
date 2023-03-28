@@ -164,7 +164,7 @@ public class WelcomePanel extends ViewOwner {
     {
         // Get the new editor pane that will open the document
         RMEditorPane editorPane = new RMEditorPane();
-        editorPane = editorPane.open(aFile);
+        editorPane = editorPane.openSource(aFile);
 
         // If no document opened, just return
         if (editorPane == null) return;

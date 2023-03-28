@@ -19,8 +19,8 @@ public class RMEditorPaneUtils {
      */
     public static void connectToDataSource(RMEditorPane anEP)
     {
-        RMDataSource ds = new RMDataSource(RMExtras.getHollywoodURL());
-        if (ds != null) anEP.setDataSource(ds, 350, 0);
+        RMDataSource dataSource = new RMDataSource(RMExtras.getHollywoodURL());
+        anEP.setDataSource(dataSource, 350, 0);
     }
 
     /**
@@ -31,7 +31,7 @@ public class RMEditorPaneUtils {
         // If file is xml resource, get temp file, get XML bytes, write to file, open file and return null
         if (aTitle.endsWith(".xml")) {
             File file = FileUtils.getTempFile(FilePathUtils.getFileName(aTitle));
-            byte bytes[] = SnapUtils.getBytes(aTitle);
+            byte[] bytes = SnapUtils.getBytes(aTitle);
             SnapUtils.writeBytes(bytes, file);
             FileUtils.openFile(file);
             return null;
@@ -42,7 +42,7 @@ public class RMEditorPaneUtils {
 
         // Create new editor pane, open document and window, and return editor pane
         RMEditorPane editorPane = new RMEditorPane();
-        editorPane.open(aTitle);
+        editorPane.openSource(aTitle);
         editorPane.setWindowVisible(true);
         return editorPane;
     }

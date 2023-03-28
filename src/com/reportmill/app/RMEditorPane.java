@@ -402,7 +402,7 @@ public class RMEditorPane extends RMViewerPane {
      */
     public RMEditorPane newDocument()
     {
-        return open(new RMDocument(612, 792));
+        return openSource(new RMDocument(612, 792));
     }
 
     /**
@@ -412,25 +412,25 @@ public class RMEditorPane extends RMViewerPane {
     {
         // Get path from open panel for supported file extensions
         String path = FilePanel.showOpenPanel(aView, getFileDescription(), getFileExtensions());
-        return open(path);
+        return openSource(path);
     }
 
     /**
      * Creates a new editor window by opening the document from the given source.
      */
-    public RMEditorPane open(Object aSource)
+    public RMEditorPane openSource(Object aSource)
     {
         // If document source is null, just return null
         if (aSource == null) return null;
 
         // Get Source URL
-        WebURL url = WebURL.getURL(aSource);
+        WebURL sourceURL = WebURL.getURL(aSource);
 
         // If source is already opened, return editor pane
-        if (!SnapUtils.equals(url, getSourceURL())) {
+        if (!SnapUtils.equals(sourceURL, getSourceURL())) {
             RMEditorPane[] editorPanes = WindowView.getOpenWindowOwners(RMEditorPane.class);
             for (RMEditorPane editorPane : editorPanes)
-                if (SnapUtils.equals(url, editorPane.getSourceURL()))
+                if (SnapUtils.equals(sourceURL, editorPane.getSourceURL()))
                     return editorPane;
         }
 
@@ -468,8 +468,8 @@ public class RMEditorPane extends RMViewerPane {
         getViewer().setDoc(doc);
 
         // If source is URL, add to recent files
-        if (url != null)
-            RecentFiles.addURL(url);
+        if (sourceURL != null)
+            RecentFiles.addURL(sourceURL);
 
         // Return
         return this;
@@ -556,18 +556,20 @@ public class RMEditorPane extends RMViewerPane {
     public void revert()
     {
         // Get filename (just return if null)
-        WebURL surl = getSourceURL();
-        if (surl == null) return;
+        WebURL sourceURL = getSourceURL();
+        if (sourceURL == null)
+            return;
 
         // Run option panel for revert confirmation (just return if denied)
-        String msg = "Revert to saved version of " + surl.getPathName() + "?";
-        DialogBox dbox = new DialogBox("Revert to Saved");
-        dbox.setQuestionMessage(msg);
-        if (!dbox.showConfirmDialog(getUI())) return;
+        String msg = "Revert to saved version of " + sourceURL.getPathName() + "?";
+        DialogBox dialogBox = new DialogBox("Revert to Saved");
+        dialogBox.setQuestionMessage(msg);
+        if (!dialogBox.showConfirmDialog(getUI()))
+            return;
 
         // Re-open filename
-        getSourceURL().getFile().reload();
-        open(getSourceURL());
+        sourceURL.getFile().reload();
+        openSource(sourceURL);
     }
 
     /**
@@ -575,9 +577,27 @@ public class RMEditorPane extends RMViewerPane {
      */
     public void showSamples()
     {
+        setEditing(true);
         getTopToolBar().stopSamplesButtonAnim();
         hideAttributesDrawer();
-        new SamplesPane().showSamples(this);
+        new SamplesPane().showSamples(this, url -> showSamplesDidReturnURL(url));
+    }
+
+    /**
+     * Called when SamplesPane returns a URL.
+     */
+    private void showSamplesDidReturnURL(WebURL aURL)
+    {
+        // Hack support for "Add Movies Dataset" DatasetButton
+        if (aURL == null) {
+            RMEditorPaneUtils.connectToDataSource(this);
+            return;
+        }
+
+        // Open URL
+        openSource(aURL);
+        getEditor().requestFocus();
+        RecentFiles.addURL(aURL);
     }
 
     /**

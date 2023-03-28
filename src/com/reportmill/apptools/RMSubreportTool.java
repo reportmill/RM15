@@ -55,7 +55,7 @@ public class RMSubreportTool<T extends RMSubreport> extends RMTool<T> {
         if (anEvent.equals("OpenInEditorButton") && shape.getSubreportName() != null) {
             RMDocument doc = shape.getDocument().getSubreport(shape.getSubreportName());
             if (doc != null) {
-                RMEditorPane epane = ClassUtils.newInstance(getEditorPane().getClass()).open(doc);
+                RMEditorPane epane = ClassUtils.newInstance(getEditorPane().getClass()).openSource(doc);
                 epane.setWindowVisible(true);
             }
         }

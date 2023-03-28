@@ -1,6 +1,8 @@
 package com.reportmill.app;
 import com.reportmill.shape.*;
 import java.util.*;
+import java.util.function.Consumer;
+
 import snap.geom.*;
 import snap.gfx.*;
 import snap.util.*;
@@ -15,20 +17,20 @@ import snap.web.WebURL;
  */
 public class SamplesPane extends ViewOwner {
 
-    // The editor pane
-    RMEditorPane _epane;
-
-    // The shared document names
-    private static String _docNames[];
-
-    // The shared document images
-    private static Image _docImages[];
+    // A consumer for resulting URL
+    private Consumer<WebURL>  _handler;
 
     // The selected index
-    int _selIndex;
+    private int  _selIndex;
 
     // The dialog box
-    DialogSheet _dbox;
+    DialogSheet  _dialogSheet;
+
+    // The shared document names
+    private static String[] _docNames;
+
+    // The shared document images
+    private static Image[] _docImages;
 
     // Constants
     private static final String SAMPLES_ROOT = "https://reportmill.com/rmsamples/";
@@ -38,16 +40,15 @@ public class SamplesPane extends ViewOwner {
     /**
      * Shows the samples pane.
      */
-    public void showSamples(RMEditorPane anEP)
+    public void showSamples(ViewOwner anOwner, Consumer<WebURL> aHandler)
     {
-        anEP.setEditing(true);
-        _epane = anEP;
-        ChildView aView = (ChildView) anEP.getUI();
+        View view = anOwner.getUI();
+        _handler = aHandler;
 
-        _dbox = new DialogSheet();
-        _dbox.setContent(getUI());
-        _dbox.showConfirmDialog(aView);
-        _dbox.addPropChangeListener(pc -> dialogBoxClosed(), DialogBox.Showing_Prop);
+        _dialogSheet = new DialogSheet();
+        _dialogSheet.setContent(getUI());
+        _dialogSheet.showConfirmDialog(view);
+        _dialogSheet.addPropChangeListener(pc -> dialogBoxClosed(), DialogBox.Showing_Prop);
     }
 
     /**
@@ -55,9 +56,12 @@ public class SamplesPane extends ViewOwner {
      */
     void dialogBoxClosed()
     {
-        if (_dbox.isCancelled()) return;
-        _epane.getEditor().setDoc(getDoc(_selIndex));
-        _epane.getEditor().requestFocus();
+        // If cancelled, just return
+        if (_dialogSheet.isCancelled()) return;
+
+        // Get selected URL and send to handler
+        WebURL url = getDocURL(_selIndex);
+        runLater(() -> _handler.accept(url));
     }
 
     /**
@@ -145,10 +149,10 @@ public class SamplesPane extends ViewOwner {
 
         // Get text and break into lines
         String text = aResp.getText();
-        String lines[] = text.split("\\s*\n\\s*");
+        String[] lines = text.split("\\s*\n\\s*");
 
         // Get names list from lines
-        List<String> docNamesList = new ArrayList();
+        List<String> docNamesList = new ArrayList<>();
         for (String line : lines) {
             line = line.trim();
             if (line.length() > 0)
@@ -156,7 +160,7 @@ public class SamplesPane extends ViewOwner {
         }
 
         // Get DocNames from list
-        _docNames = docNamesList.toArray(new String[docNamesList.size()]);
+        _docNames = docNamesList.toArray(new String[0]);
         _docImages = new Image[_docNames.length];
 
         // Rebuild UI
@@ -203,9 +207,9 @@ public class SamplesPane extends ViewOwner {
 
             // Create ImageViewX for sample
             ImageView iview = new ImageView();
-            iview.setPrefSize(getDocSize(i));
+            iview.setPrefSize(getDocSize());
             iview.setFill(Color.WHITE);
-            iview.setName("ImageView" + String.valueOf(i));
+            iview.setName("ImageView" + i);
             iview.setEffect(i == 0 ? SHADOW_SEL : SHADOW);
 
             // Create label for sample
@@ -263,7 +267,7 @@ public class SamplesPane extends ViewOwner {
         _selIndex = index;
 
         // If double-click, confirm dialog box
-        if (anEvent.getClickCount() > 1) _dbox.confirm();
+        if (anEvent.getClickCount() > 1) _dialogSheet.confirm();
     }
 
     /**
@@ -271,8 +275,8 @@ public class SamplesPane extends ViewOwner {
      */
     private void datasetButtonClicked()
     {
-        RMEditorPaneUtils.connectToDataSource(_epane);
-        _dbox.cancel();
+        _handler.accept(null);
+        _dialogSheet.cancel();
     }
 
     /**
@@ -281,14 +285,6 @@ public class SamplesPane extends ViewOwner {
     private static int getDocCount()
     {
         return _docNames.length;
-    }
-
-    /**
-     * Returns the doc names.
-     */
-    private static String[] getDocNames()
-    {
-        return _docNames;
     }
 
     /**
@@ -302,15 +298,23 @@ public class SamplesPane extends ViewOwner {
     /**
      * Returns the doc at given index.
      */
-    private static RMDocument getDoc(int anIndex)
+    private static WebURL getDocURL(int anIndex)
     {
-        // Get document name, URL string and URL
         String name = getDocName(anIndex);
         String urls = SAMPLES_ROOT + name + '/' + name + ".rpt";
-        WebURL url = WebURL.getURL(urls);
+        return WebURL.getURL(urls);
+    }
+
+    /**
+     * Returns the doc at given index.
+     */
+    private static RMDocument getDoc(int anIndex)
+    {
+        // Get document URL
+        WebURL url = getDocURL(anIndex);
 
         // Get bytes (complain if not found)
-        byte bytes[] = url.getBytes();
+        byte[] bytes = url.getBytes();
         if (bytes == null) {
             System.err.println("SamplesPane.getDoc: Couldn't load " + url);
             return null;
@@ -344,10 +348,7 @@ public class SamplesPane extends ViewOwner {
     /**
      * Returns size of doc at given index.
      */
-    private static Size getDocSize(int anIndex)
-    {
-        return new Size(102, 132);
-    }
+    private static Size getDocSize()  { return new Size(102, 132); }
 
     /**
      * Loads the thumbnail image for each sample in background thread.
@@ -390,10 +391,9 @@ public class SamplesPane extends ViewOwner {
             if (doc == null) continue;
             doc = doc.generateReport();
             doc.getPage(0).setPaintBackground(false);
-            Size size = getDocSize(i);
-            int index = i;
+            Size size = getDocSize();
             Image img = createImage(doc.getPage(0), size.width, size.height);
-            byte bytes[] = img.getBytesPNG();
+            byte[] bytes = img.getBytesPNG();
             new java.io.File("/tmp/gallery").mkdir();
             String fname = "/tmp/gallery/" + getDocName(i) + ".png";
             SnapUtils.writeBytes(bytes, fname);
