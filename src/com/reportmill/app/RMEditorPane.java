@@ -571,6 +571,16 @@ public class RMEditorPane extends RMViewerPane {
     }
 
     /**
+     * Show samples.
+     */
+    public void showSamples()
+    {
+        getTopToolBar().stopSamplesButtonAnim();
+        hideAttributesDrawer();
+        new SamplesPane().showSamples(this);
+    }
+
+    /**
      * Closes this editor pane
      */
     public boolean close()

@@ -143,16 +143,15 @@ public class WelcomePanel extends ViewOwner {
         // Get new editor pane
         RMEditorPane editorPane = new RMEditorPane().newDocument();
 
-        // If alt is down, replace with movies sample
-        if (showSamples)
-            editorPane = RMEditorPaneUtils.openSample("Movies");
-
         // Make editor window visible, show doc inspector, and order front after delay to get focus back from inspector
         editorPane.setWindowVisible(true);
         editorPane.getInspectorPanel().showDocumentInspector();
-        RMEditorPane ep = editorPane;
-        runLater(() -> ep.getWindow().toFront());
-        runLater(() -> ep.getTopToolBar().startSamplesButtonAnim());
+        runLater(() -> editorPane.getWindow().toFront());
+
+        // Show Samples or start SamplesButtonAnim
+        if (showSamples) //editorPane = RMEditorPaneUtils.openSample("Movies");
+            runLaterDelayed(300, () -> editorPane.showSamples());
+        else runLater(() -> editorPane.getTopToolBar().startSamplesButtonAnim());
 
         // Hide WelcomePanel
         hide();

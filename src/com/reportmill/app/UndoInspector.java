@@ -105,7 +105,7 @@ public class UndoInspector extends RMEditorPane.SupportPane {
             PropChange e = (PropChange) getViewSelItem("ChangesList");
             int index = e.getIndex();
             setViewValue("ChangeText", e.getSource().getClass().getSimpleName() + "(" + getId(e.getSource()) + ") " +
-                    e.getPropertyName() + " " + e.getOldValue() + " " + e.getNewValue() + " " +
+                    e.getPropName() + " " + e.getOldValue() + " " + e.getNewValue() + " " +
                     (index >= 0 ? index : "") + "\n\n" + e.getSource());
         }
     }

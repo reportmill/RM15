@@ -213,11 +213,8 @@ public class RMEditorPaneToolBar extends RMEditorPane.SupportPane {
         }
 
         // Handle SamplesButton
-        if (anEvent.equals("SamplesButton")) {
-            stopSamplesButtonAnim();
-            epane.hideAttributesDrawer();
-            new SamplesPane().showSamples(epane);
-        }
+        if (anEvent.equals("SamplesButton"))
+            epane.showSamples();
 
         // Handle Preview/Edit button and PreviewMenuItem
         if (anEvent.equals("PreviewEditButton") || anEvent.equals("PreviewMenuItem")) {

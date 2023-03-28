@@ -544,12 +544,12 @@ public class RMViewer extends ParentView {
     protected void docDidPropChange(PropChange anEvent)
     {
         // Handle SelectedPageIndex, PageSize, PageLayout
-        String pname = anEvent.getPropertyName();
-        if (pname.equals(RMDocument.SelPageIndex_Prop) || pname.equals("PageSize") || pname.equals("PageLayout")) {
+        String propName = anEvent.getPropName();
+        if (propName.equals(RMDocument.SelPageIndex_Prop) || propName.equals("PageSize") || propName.equals("PageLayout")) {
             relayout();
             setZoomToFitFactor();
             repaint();
-            firePropChange("ContentChange" + pname, anEvent.getOldValue(), anEvent.getNewValue());
+            firePropChange("ContentChange" + propName, anEvent.getOldValue(), anEvent.getNewValue());
         }
     }
 
