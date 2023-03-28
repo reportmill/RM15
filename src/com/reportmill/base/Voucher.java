@@ -95,7 +95,7 @@ public class Voucher {
     public static void lc(RMDocument aDoc)
     {
         // If licenced, just return
-        if (isLicensed()) return;
+        if (isLicensed() || SnapUtils.isTeaVM) return;
 
         // Add watermark/unlicensed message to each report page
         for (int i = 0; i < aDoc.getPages().size(); i++) addWatermark(aDoc.getPage(i));

@@ -802,7 +802,7 @@ public class RMDocument extends RMParentShape {
      */
     public byte[] getBytesExcel()
     {
-        return new RMExcelWriter().getBytes(this);
+        return RMEnv.getEnv().getBytesExcel(this);
     }
 
     /**

@@ -51,7 +51,7 @@ public class RMKeyChainFuncs {
             Arrays.fill(argTypes, Object.class);
 
             // Look for method with given args
-            method = MethodUtils.getMethodBest(cls, name, argTypes);
+            method = RMEnv.getEnv().getMethodBest(cls, name, argTypes);
 
             // If object doesn't implement the method, see if we have a Category implementation.
             // A category takes the target object as the first argument.
@@ -233,7 +233,7 @@ public class RMKeyChainFuncs {
         RMParagraph pgraph = xstr != null ? xstr.getParagraphAt(0) : RMParagraph.DEFAULT;
 
         // Return result of parsing html from val string
-        return RMHTMLParser.parse(str, font, pgraph);
+        return RMEnv.getEnv().parseHTML(str, font, pgraph);
     }
 
     /**
@@ -247,7 +247,7 @@ public class RMKeyChainFuncs {
             font = ((RMXString) aValue).getFontAt(0);
 
         // Return result of parsing rtf from val string
-        return RMRTFParser.parse(aValue.toString(), font);
+        return RMEnv.getEnv().parseRTF(aValue.toString(), font);
     }
 
     /**

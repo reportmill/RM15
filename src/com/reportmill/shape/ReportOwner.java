@@ -108,10 +108,13 @@ public class ReportOwner implements RMKeyChain.Get {
     {
         // Convert object to standard type
         Object obj = convertToStandardType(anObj);
-        if (obj == null) return;
+        if (obj == null)
+            return;
 
         // if object is ResultSet, convert to List of Maps
-        if (obj instanceof java.sql.ResultSet) obj = RMSQLUtils.getMaps((java.sql.ResultSet) obj, 0);
+        String className = obj.getClass().getSimpleName();
+        if (className.equals("ResultSet"))
+            obj = RMEnv.getEnv().getResultSetAsMaps(obj, 0);
 
         // If object is List, make it DefaultList
         if (obj instanceof List) //_model.put("RMDefaultObjectList", obj);
