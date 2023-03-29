@@ -46,9 +46,9 @@ dependencies {
 mainClassName = 'com.reportmill.app.App'
 
 /**
- * Modify jar task to include all dependencies. (Could also have defined new: task jarAll(type: Jar) { ... }
+ * Custom task to build jar that includes all dependencies.
  */
-jar {
+task buildMasterJar(type: Jar) {
     archiveBaseName = 'ReportMill15'
     manifest {
         attributes(
@@ -64,6 +64,8 @@ jar {
     processResources {
         finalizedBy ('buildInfo')
     }
+    with jar
+    dependsOn build
 }
 
 /**
@@ -77,7 +79,7 @@ publishing {
         // Standard maven package
         gpr (MavenPublication) {
             artifactId 'ReportMill15'
-            from(components.java)
+            artifact buildMasterJar // from(components.java)
             pom.withXml {
                 asNode().dependencies.dependency.each { dep -> dep.parent().remove(dep) }
             }
