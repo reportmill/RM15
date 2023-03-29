@@ -26,44 +26,49 @@ public class RMBorderStroke extends RMStroke {
     boolean _showBottom = true;
 
     /**
+     * Constructor.
+     */
+    public RMBorderStroke()
+    {
+        super();
+    }
+
+    /**
+     * Constructor for sides.
+     */
+    public RMBorderStroke(boolean showTop, boolean showRight, boolean showBottom, boolean showLeft)
+    {
+        this();
+        _showLeft = showLeft;
+        _showRight = showRight;
+        _showTop = showTop;
+        _showBottom = showBottom;
+    }
+
+    /**
      * Returns whether to show left border.
      */
-    public boolean isShowLeft()
-    {
-        return _showLeft;
-    }
+    public boolean isShowLeft()  { return _showLeft; }
 
     /**
      * Returns whether to show right border.
      */
-    public boolean isShowRight()
-    {
-        return _showRight;
-    }
+    public boolean isShowRight()  { return _showRight; }
 
     /**
      * Returns whether to show top border.
      */
-    public boolean isShowTop()
-    {
-        return _showTop;
-    }
+    public boolean isShowTop()  { return _showTop; }
 
     /**
      * Returns whether to show bottom border.
      */
-    public boolean isShowBottom()
-    {
-        return _showBottom;
-    }
+    public boolean isShowBottom()  { return _showBottom; }
 
     /**
      * Returns whether to show all borders.
      */
-    public boolean isShowAll()
-    {
-        return _showLeft && _showRight && _showTop && _showBottom;
-    }
+    public boolean isShowAll()  { return _showLeft && _showRight && _showTop && _showBottom; }
 
     /**
      * Returns the path to be stroked, transformed from the input path.
@@ -72,28 +77,35 @@ public class RMBorderStroke extends RMStroke {
     {
         // If showing all borders, just return bounds
         Rect rect = aShape.getBounds();
-        if (isShowAll()) return rect;
-        boolean st = isShowTop(), sr = isShowRight(), sb = isShowBottom(), sl = isShowLeft();
-        double w = rect.width, h = rect.height;
+        if (isShowAll())
+            return rect;
+        boolean showTop = isShowTop();
+        boolean showRight = isShowRight();
+        boolean showBottom = isShowBottom();
+        boolean showLeft = isShowLeft();
+        double shapeW = rect.width;
+        double shapeH = rect.height;
 
         // Otherwise, build path based on sides showing and return
         Path path = new Path();
-        if (st) {
+        if (showTop) {
             path.moveTo(0, 0);
-            path.lineTo(w, 0);
+            path.lineTo(shapeW, 0);
         }
-        if (sr) {
-            if (!st) path.moveTo(w, 0);
-            path.lineTo(w, h);
+        if (showRight) {
+            if (!showTop) path.moveTo(shapeW, 0);
+            path.lineTo(shapeW, shapeH);
         }
-        if (sb) {
-            if (!sr) path.moveTo(w, h);
-            path.lineTo(0, h);
+        if (showBottom) {
+            if (!showRight) path.moveTo(shapeW, shapeH);
+            path.lineTo(0, shapeH);
         }
-        if (sl) {
-            if (!sb) path.moveTo(0, h);
+        if (showLeft) {
+            if (!showBottom) path.moveTo(0, shapeH);
             path.lineTo(0, 0);
         }
+
+        // Return
         return path;
     }
 
@@ -102,9 +114,9 @@ public class RMBorderStroke extends RMStroke {
      */
     public RMBorderStroke deriveTop(boolean aValue)
     {
-        RMBorderStroke s = clone();
-        s._showTop = aValue;
-        return s;
+        RMBorderStroke newStroke = clone();
+        newStroke._showTop = aValue;
+        return newStroke;
     }
 
     /**
@@ -112,9 +124,9 @@ public class RMBorderStroke extends RMStroke {
      */
     public RMBorderStroke deriveRight(boolean aValue)
     {
-        RMBorderStroke s = clone();
-        s._showRight = aValue;
-        return s;
+        RMBorderStroke newStroke = clone();
+        newStroke._showRight = aValue;
+        return newStroke;
     }
 
     /**
@@ -122,9 +134,9 @@ public class RMBorderStroke extends RMStroke {
      */
     public RMBorderStroke deriveBottom(boolean aValue)
     {
-        RMBorderStroke s = clone();
-        s._showBottom = aValue;
-        return s;
+        RMBorderStroke newStroke = clone();
+        newStroke._showBottom = aValue;
+        return newStroke;
     }
 
     /**
@@ -132,9 +144,9 @@ public class RMBorderStroke extends RMStroke {
      */
     public RMBorderStroke deriveLeft(boolean aValue)
     {
-        RMBorderStroke s = clone();
-        s._showLeft = aValue;
-        return s;
+        RMBorderStroke newStroke = clone();
+        newStroke._showLeft = aValue;
+        return newStroke;
     }
 
     /**
@@ -153,7 +165,9 @@ public class RMBorderStroke extends RMStroke {
         if (other._showRight != _showRight) return false;
         if (other._showTop != _showTop) return false;
         if (other._showBottom != _showBottom) return false;
-        return true; // Return true since all checks passed
+
+        // Return true since all checks passed
+        return true;
     }
 
     /**
@@ -196,5 +210,4 @@ public class RMBorderStroke extends RMStroke {
         if (anElement.hasAttribute("show-bottom")) _showBottom = anElement.getAttributeBoolValue("show-bottom");
         return this;
     }
-
 }

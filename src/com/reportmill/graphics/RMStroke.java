@@ -7,27 +7,30 @@ import snap.gfx.*;
 import snap.util.*;
 
 /**
- * An RMFill subclass specifically designed to describe strokes.
+ * This class describes a shape stroke.
  */
 public class RMStroke implements Cloneable, XMLArchiver.Archivable {
 
     // The color
-    RMColor _color = RMColor.black;
+    private RMColor _color;
 
     // The stroke width
-    float _width = 1;
+    private float _width;
 
     // The dash array
-    float _dashArray[];
+    private float[] _dashArray;
 
     // The dash phase
-    float _dashPhase = 0;
+    private float _dashPhase = 0;
 
     /**
-     * Creates a plain, black stroke.
+     * Constructor.
      */
     public RMStroke()
     {
+        super();
+        _color = RMColor.black;
+        _width = 1;
     }
 
     /**
@@ -35,33 +38,39 @@ public class RMStroke implements Cloneable, XMLArchiver.Archivable {
      */
     public RMStroke(Color aColor, double aStrokeWidth)
     {
+        this();
         _color = RMColor.get(aColor);
         _width = (float) aStrokeWidth;
     }
 
     /**
+     * Creates a stroke with the given color and line width.
+     */
+    public RMStroke(Color aColor, Stroke aStroke)
+    {
+        this();
+        _color = RMColor.get(aColor);
+        _width = (float) aStroke.getWidth();
+        if (aStroke.getDashArray() != null)
+            _dashArray = Convert.doubleArrayToFloat(aStroke.getDashArray());
+        if (aStroke.getDashOffset() != 0)
+            _dashPhase = (float) aStroke.getDashOffset();
+    }
+
+    /**
      * Returns the color associated with this fill.
      */
-    public RMColor getColor()
-    {
-        return _color;
-    }
+    public RMColor getColor()  { return _color; }
 
     /**
      * Returns the line width of this stroke.
      */
-    public float getWidth()
-    {
-        return _width;
-    }
+    public float getWidth()  { return _width; }
 
     /**
      * Returns the dash array for this stroke.
      */
-    public float[] getDashArray()
-    {
-        return _dashArray;
-    }
+    public float[] getDashArray()  { return _dashArray; }
 
     /**
      * Returns the dash array for this stroke as a string.
@@ -79,21 +88,23 @@ public class RMStroke implements Cloneable, XMLArchiver.Archivable {
         // Just return null if empty
         if (aString == null || aString.length() == 0) return null;
 
-        String dashStrings[] = aString.split(",");
-        float dashArray[] = new float[dashStrings.length];
-        for (int i = 0; i < dashStrings.length; i++) dashArray[i] = SnapUtils.floatValue(dashStrings[i]);
+        String[] dashStrings = aString.split(",");
+        float[] dashArray = new float[dashStrings.length];
+        for (int i = 0; i < dashStrings.length; i++)
+            dashArray[i] = Convert.floatValue(dashStrings[i]);
         return dashArray;
     }
 
     /**
      * Returns the dash array for this stroke as a string.
      */
-    public static String getDashArrayString(float dashArray[], String aDelimiter)
+    public static String getDashArrayString(float[] dashArray, String aDelimiter)
     {
         if (dashArray == null || dashArray.length == 0) return null;
-        String dstring = SnapUtils.stringValue(dashArray[0]);
-        for (int i = 1; i < dashArray.length; i++) dstring += aDelimiter + SnapUtils.stringValue(dashArray[i]);
-        return dstring;
+        String dashString = Convert.stringValue(dashArray[0]);
+        for (int i = 1; i < dashArray.length; i++)
+            dashString += aDelimiter + Convert.stringValue(dashArray[i]);
+        return dashString;
     }
 
     /**
