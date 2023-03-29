@@ -52,7 +52,7 @@ public class RMDataSource implements XMLArchiver.Archivable {
     public String getName()
     {
         WebURL datasetURL = getURL();
-        return datasetURL != null ? datasetURL.getPathNameSimple() : null;
+        return datasetURL != null ? datasetURL.getFilenameSimple() : null;
     }
 
     /**
@@ -126,7 +126,7 @@ public class RMDataSource implements XMLArchiver.Archivable {
             WebFile docDir = docFile.getParent();
 
             // Look for same dataset filename in doc directory
-            String datasetFilename = datasetURL.getPathName();
+            String datasetFilename = datasetURL.getFilename();
             datasetFile = docDir.getFileForName(datasetFilename);
 
             // If still not found, look for generic "Dataset.xml" in doc directory
@@ -135,7 +135,7 @@ public class RMDataSource implements XMLArchiver.Archivable {
 
                 // If still not found, look for xml file with Doc filename in doc directory
                 if (datasetFile == null) {
-                    String docFilename = _docURL.getPathName();
+                    String docFilename = _docURL.getFilename();
                     if (StringUtils.endsWithIC(docFilename, ".rpt")) {
                         String sisterName = StringUtils.replaceIC(docFilename, ".rpt", ".xml");
                         datasetFile = docDir.getFileForName(sisterName);

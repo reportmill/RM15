@@ -379,21 +379,30 @@ public class RMEditorPane extends RMViewerPane {
     }
 
     /**
-     * Returns the window title.
+     * Returns the window title: filename + path + optional "Doc edited asterisk + optional "Doc Scaled"
      */
     public String getWindowTitle()
     {
-        // Get window title: Basic filename + optional "Doc edited asterisk + optional "Doc Scaled"
-        String title = getSourceURL() != null ? getSourceURL().getPath() : null;
-        if (title == null) title = "Untitled";
+        // Get window title: "Filename - path"
+        String title = "Untitled";
+        WebURL sourceURL = getSourceURL();
+        if (sourceURL != null) {
+            String filename = sourceURL.getFilename();
+            String filePath = PathUtils.getParent(sourceURL.getPath());
+            title = filename + " - " + filePath;
+        }
 
         // If has undos, add asterisk. If zoomed, add ZoomFactor
-        if (getEditor().getUndoer() != null && getEditor().getUndoer().hasUndos()) title = "* " + title;
+        if (getEditor().getUndoer() != null && getEditor().getUndoer().hasUndos())
+            title = "* " + title;
         if (!MathUtils.equals(getEditor().getZoomFactor(), 1f))
             title += " @ " + Math.round(getEditor().getZoomFactor() * 100) + "%";
 
         // If previewing, add "(Previewing)" and return
-        if (getEditor().isPreview()) title += " (Previewing)";
+        if (getEditor().isPreview())
+            title += " (Previewing)";
+
+        // Return
         return title;
     }
 
@@ -561,7 +570,7 @@ public class RMEditorPane extends RMViewerPane {
             return;
 
         // Run option panel for revert confirmation (just return if denied)
-        String msg = "Revert to saved version of " + sourceURL.getPathName() + "?";
+        String msg = "Revert to saved version of " + sourceURL.getFilename() + "?";
         DialogBox dialogBox = new DialogBox("Revert to Saved");
         dialogBox.setQuestionMessage(msg);
         if (!dialogBox.showConfirmDialog(getUI()))
@@ -610,7 +619,7 @@ public class RMEditorPane extends RMViewerPane {
 
         // If unsaved changes, run panel to request save
         if (getEditor().undoerHasUndos()) {
-            String fname = getSourceURL() == null ? "untitled document" : getSourceURL().getPathName();
+            String fname = getSourceURL() == null ? "untitled document" : getSourceURL().getFilename();
             String msg = "Save changes to " + fname + "?";
             String[] options = { "Save", "Don't Save", "Cancel" };
             DialogBox dialogBox = new DialogBox("Unsaved Changes");
