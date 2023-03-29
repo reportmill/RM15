@@ -188,19 +188,12 @@ public class WelcomePanel extends ViewOwner {
         WebSite recentFilesSite = RecentFilesSite.getShared();
         FilePanel.addDefaultSite(recentFilesSite);
 
-        // Get path from open panel for supported file extensions
-        String[] extensions = { RM_FILE_EXT, PDF_FILE_EXT };
-        FilePanel filePanel = new FilePanel() {
-            @Override
-            protected void fireActionEvent(ViewEvent anEvent)
-            {
-                WelcomePanel.this.fireActionEventForObject("OpenButton", anEvent);
-            }
-        };
-
-        // Config
-        filePanel.setTypes(extensions);
+        // Create/config FilePanel
+        FilePanel filePanel = new FilePanel();
+        String[] EXTENSIONS = { RM_FILE_EXT, PDF_FILE_EXT };
+        filePanel.setTypes(EXTENSIONS);
         filePanel.setSelSite(recentFilesSite);
+        filePanel.setActionHandler(e -> WelcomePanel.this.fireActionEventForObject("OpenButton", e));
 
         // Return
         return filePanel;
