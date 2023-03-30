@@ -103,6 +103,23 @@ public class RMEditorStyler extends Styler {
     }
 
     /**
+     * Returns whether there is a text outline.
+     */
+    public boolean isTextOutlined()  { return getTextBorder() != null; }
+
+    /**
+     * Sets the currently selected shapes to be outlined.
+     */
+    public void setTextOutlined(boolean aValue)
+    {
+        // Get new text border and color and set
+        Border newTextBorder = aValue ? Border.blackBorder() : null;
+        Color newTextColor = aValue ? Color.WHITE : Color.BLACK;
+        setTextBorder(newTextBorder);
+        setTextColor(newTextColor);
+    }
+
+    /**
      * Returns the font of editor's selected shape.
      */
     public Font getFont()

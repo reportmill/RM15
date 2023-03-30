@@ -125,7 +125,8 @@ public class RMEditorPaneToolBar extends RMEditorPane.SupportPane {
         //setViewValue("AlignFullButton", alignX==RMTypes.AlignX.Full);
 
         // Update ColorWell
-        Color color = RMEditorUtils.getSelectedColor(editor);
+        RMEditorStyler editorStyler = editor.getStyler();
+        Color color = editorStyler.getFillColor();
         _colorWell.setColor(color);
     }
 
@@ -137,6 +138,7 @@ public class RMEditorPaneToolBar extends RMEditorPane.SupportPane {
         // Get the editor
         RMEditorPane epane = getEditorPane();
         RMEditor editor = getEditor();
+        RMEditorStyler editorStyler = editor.getStyler();
 
         // Handle File NewButton, OpenButton, SaveButton, PreviewPDFButton, PreviewHTMLButton, PrintButton
         if (anEvent.equals("NewButton")) epane.respondUI(anEvent);
@@ -157,12 +159,18 @@ public class RMEditorPaneToolBar extends RMEditorPane.SupportPane {
         if (anEvent.equals("RedoButton")) epane.respondUI(anEvent);
 
         // Handle FillColorButton, StrokeColorButton, TextColorButton
-        if (anEvent.equals("FillColorButton"))
-            RMEditorUtils.setColor(editor, RMColor.get(anEvent.getView(ColorButton.class).getColor()));
-        if (anEvent.equals("StrokeColorButton"))
-            RMEditorUtils.setStrokeColor(editor, RMColor.get(anEvent.getView(ColorButton.class).getColor()));
-        if (anEvent.equals("TextColorButton"))
-            RMEditorUtils.setTextColor(editor, RMColor.get(anEvent.getView(ColorButton.class).getColor()));
+        if (anEvent.equals("FillColorButton")) {
+            Color color = anEvent.getView(ColorButton.class).getColor();
+            editorStyler.setFillColor(color);
+        }
+        if (anEvent.equals("StrokeColorButton")) {
+            Color color = anEvent.getView(ColorButton.class).getColor();
+            editorStyler.setBorderStrokeColor(color);
+        }
+        if (anEvent.equals("TextColorButton")) {
+            Color color = anEvent.getView(ColorButton.class).getColor();
+            editorStyler.setTextColor(color);
+        }
 
         // Handle MoneyButton: If currently selected format is number format, add or remove dollars
         RMFormat fmt = RMEditorUtils.getFormat(editor);
@@ -294,8 +302,9 @@ public class RMEditorPaneToolBar extends RMEditorPane.SupportPane {
             RMEditorPaneUtils.connectToDataSource(getEditorPane());
 
         // Handle ColorWell
-        if (anEvent.equals("ColorWell"))
-            RMEditorUtils.setSelectedColor(editor, _colorWell.getColor());
+        if (anEvent.equals("ColorWell")) {
+            editorStyler.setFillColor(_colorWell.getColor());
+        }
     }
 
     /**

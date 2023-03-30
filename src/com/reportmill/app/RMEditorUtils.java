@@ -11,15 +11,11 @@ import snap.geom.Point;
 import snap.geom.Size;
 import snap.gfx.*;
 import snap.util.ListUtils;
-import snap.view.ViewUtils;
 
 /**
  * Handles useful methods to help editor.
  */
 public class RMEditorUtils {
-
-    // The last color set by or returned to the color panel
-    static Color _lastColor = Color.BLACK;
 
     /**
      * Groups the given shape list to the given group shape.
@@ -97,7 +93,7 @@ public class RMEditorUtils {
     public static void ungroupShapes(RMEditor anEditor)
     {
         // Get currently super selected shape and create list to hold ungrouped shapes
-        List<RMShape> ungroupedShapes = new Vector();
+        List<RMShape> ungroupedShapes = new ArrayList<>();
 
         // Register undo title for ungrouping
         anEditor.undoerSetUndoTitle("Ungroup");
@@ -461,8 +457,7 @@ public class RMEditorUtils {
         anEditor.undoerSetUndoTitle("Group in Scene3D");
 
         // Iterate over children and add to group shape
-        for (int i = 0, iMax = selectedShapes.size(); i < iMax; i++) {
-            RMShape shape = selectedShapes.get(i);
+        for (RMShape shape : selectedShapes) {
             groupShape.addShapeRM(shape);
             shape.removeFromParent();
             shape.setXY(shape.x() - groupShape.x(), shape.y() - groupShape.y());
@@ -536,7 +531,7 @@ public class RMEditorUtils {
 
         // Get image for shape, get PNG bytes for image and create new RMImageShape for bytes
         Image image = RMShapeUtils.createImage(shape, null);
-        byte imageBytes[] = image.getBytesPNG();
+        byte[] imageBytes = image.getBytesPNG();
         RMImageShape imageShape = new RMImageShape(imageBytes);
 
         // Set ImageShape XY and add to parent
@@ -610,106 +605,6 @@ public class RMEditorUtils {
     }
 
     /**
-     * Returns the specified type of color (text, stroke or fill) of editor's selected shape.
-     */
-    public static Color getSelectedColor(RMEditor anEditor)
-    {
-        // Get selected or super selected shape
-        RMShape shape = anEditor.getSelectedOrSuperSelectedShape();
-
-        // If selected or super selected shape is page that doesn't draw color, return "last color" (otherwise, reset it)
-        if ((shape instanceof RMPage || shape instanceof RMDocument) && shape.getFill() == null)
-            return _lastColor;
-        else _lastColor = Color.BLACK;
-
-        // If text color and text editing, return color of text editor
-        if (anEditor.getTextEditor() != null)
-            return anEditor.getTextEditor().getColor();
-
-        // Return selected shape's color
-        return anEditor.getSelectedOrSuperSelectedShape().getColor();
-    }
-
-    /**
-     * Sets the specified type of color (text, stroke or fill) of editor's selected shape.
-     */
-    public static void setSelectedColor(RMEditor anEditor, Color aColor)
-    {
-        // Get selected or super selected shape
-        RMColor color = RMColor.get(aColor);
-        RMShape shape = anEditor.getSelectedOrSuperSelectedShape();
-
-        // If editor selected or super selected shape is document or page, set "last color" and return
-        if (shape instanceof RMPage || shape instanceof RMDocument) {
-            _lastColor = aColor;
-            return;
-        }
-
-        // If text color and text editing, return color of text editor
-        if (anEditor.getTextEditor() != null) {
-
-            // Get text editor
-            RMTextEditor ted = anEditor.getTextEditor();
-
-            // If command down, and text is outlined, set color of outline instead
-            if (ViewUtils.isMetaDown() && ted.getTextBorder() != null) {
-                Border lbrdr = ted.getTextBorder();
-                ted.setTextBorder(Border.createLineBorder(aColor, lbrdr.getWidth()));
-            }
-
-            // If no command down, set color of text editor
-            else ted.setColor(color);
-        }
-
-        // If fill color, set selected shapes' fill color
-        else {
-
-            // If command-click, set gradient fill
-            if (ViewUtils.isMetaDown()) {
-                RMColor c1 = shape.getFill() != null ? shape.getColor() : RMColor.clearWhite;
-                shape.setFill(new RMGradientFill(c1, color, 0));
-            }
-
-            // If not command click, just set the color of all the selected shapes
-            else setColor(anEditor, color);
-        }
-    }
-
-    /**
-     * Sets the fill color of the editor's selected shapes.
-     */
-    public static void setColor(RMEditor anEditor, RMColor aColor)
-    {
-        // Iterate over editor selected shapes or super selected shape
-        for (RMShape shape : anEditor.getSelectedOrSuperSelectedShapes())
-            shape.setColor(aColor);
-    }
-
-    /**
-     * Sets the stroke color of the editor's selected shapes.
-     */
-    public static void setStrokeColor(RMEditor anEditor, RMColor aColor)
-    {
-        // Iterate over editor selected shapes or super selected shape
-        for (RMShape shape : anEditor.getSelectedOrSuperSelectedShapes())
-            shape.setStrokeColor(aColor);
-    }
-
-    /**
-     * Sets the text color of the editor's selected shapes.
-     */
-    public static void setTextColor(RMEditor anEditor, RMColor aColor)
-    {
-        // If text editing, forward on to text editor
-        if (anEditor.getTextEditor() != null)
-            anEditor.getTextEditor().setColor(aColor);
-
-            // Otherwise, iterate over editor selected shapes or super selected shape
-        else for (RMShape shape : anEditor.getSelectedOrSuperSelectedShapes())
-            shape.setTextColor(aColor);
-    }
-
-    /**
      * Returns the font of editor's selected shape.
      */
     public static RMFont getFont(RMEditor anEditor)
@@ -717,12 +612,12 @@ public class RMEditorUtils {
         RMFont font = null;
         for (int i = 0, iMax = anEditor.getSelectedOrSuperSelectedShapeCount(); i < iMax && font == null; i++) {
             RMShape shape = anEditor.getSelectedOrSuperSelectedShape(i);
-            RMTool tool = anEditor.getTool(shape);
+            RMTool<?> tool = anEditor.getTool(shape);
             font = tool.getFont(anEditor, shape);
         }
         for (int i = 0, iMax = anEditor.getSelectedOrSuperSelectedShapeCount(); i < iMax && font == null; i++) {
             RMShape shape = anEditor.getSelectedOrSuperSelectedShape(i);
-            RMTool tool = anEditor.getTool(shape);
+            RMTool<?> tool = anEditor.getTool(shape);
             font = tool.getFontDeep(anEditor, shape);
         }
         return font != null ? font : RMFont.getDefaultFont();
@@ -736,7 +631,7 @@ public class RMEditorUtils {
         RMFont font = RMFont.get(aFont);
         for (int i = 0, iMax = anEditor.getSelectedOrSuperSelectedShapeCount(); i < iMax; i++) {
             RMShape shape = anEditor.getSelectedOrSuperSelectedShape(i);
-            RMTool tool = anEditor.getTool(shape);
+            RMTool<?> tool = anEditor.getTool(shape);
             tool.setFontKeyDeep(anEditor, shape, RMTool.FontFamily_Key, font);
         }
     }
@@ -749,7 +644,7 @@ public class RMEditorUtils {
         RMFont font = RMFont.get(aFont);
         for (int i = 0, iMax = anEditor.getSelectedOrSuperSelectedShapeCount(); i < iMax; i++) {
             RMShape shape = anEditor.getSelectedOrSuperSelectedShape(i);
-            RMTool tool = anEditor.getTool(shape);
+            RMTool<?> tool = anEditor.getTool(shape);
             tool.setFontKeyDeep(anEditor, shape, RMTool.FontName_Key, font);
         }
     }
@@ -761,7 +656,7 @@ public class RMEditorUtils {
     {
         for (int i = 0, iMax = anEditor.getSelectedOrSuperSelectedShapeCount(); i < iMax; i++) {
             RMShape shape = anEditor.getSelectedOrSuperSelectedShape(i);
-            RMTool tool = anEditor.getTool(shape);
+            RMTool<?> tool = anEditor.getTool(shape);
             String key = isRelative ? RMTool.FontSizeDelta_Key : RMTool.FontSize_Key;
             tool.setFontKeyDeep(anEditor, shape, key, aSize);
         }
@@ -775,7 +670,7 @@ public class RMEditorUtils {
         anEditor.undoerSetUndoTitle("Make Bold");
         for (int i = 0, iMax = anEditor.getSelectedOrSuperSelectedShapeCount(); i < iMax; i++) {
             RMShape shape = anEditor.getSelectedOrSuperSelectedShape(i);
-            RMTool tool = anEditor.getTool(shape);
+            RMTool<?> tool = anEditor.getTool(shape);
             tool.setFontKeyDeep(anEditor, shape, RMTool.FontBold_Key, aFlag);
         }
     }
@@ -788,7 +683,7 @@ public class RMEditorUtils {
         anEditor.undoerSetUndoTitle("Make Italic");
         for (int i = 0, iMax = anEditor.getSelectedOrSuperSelectedShapeCount(); i < iMax; i++) {
             RMShape shape = anEditor.getSelectedOrSuperSelectedShape(i);
-            RMTool tool = anEditor.getTool(shape);
+            RMTool<?> tool = anEditor.getTool(shape);
             tool.setFontKeyDeep(anEditor, shape, RMTool.FontItalic_Key, aFlag);
         }
     }
@@ -809,43 +704,6 @@ public class RMEditorUtils {
         anEditor.undoerSetUndoTitle("Make Underlined");
         for (RMShape shape : anEditor.getSelectedOrSuperSelectedShapes())
             shape.setUnderlined(!shape.isUnderlined());
-    }
-
-    /**
-     * Returns the outline state of the currently selected shape (null if none).
-     */
-    public static Border getTextBorder(RMEditor anEditor)
-    {
-        RMShape shp = anEditor.getSelectedOrSuperSelectedShape();
-        RMTextShape tshp = shp instanceof RMTextShape ? (RMTextShape) shp : null;
-        if (tshp == null) return null;
-        return tshp.getTextBorder();
-    }
-
-    /**
-     * Sets the currently selected shapes to be outlined.
-     */
-    public static void setTextBorder(RMEditor anEditor)
-    {
-        if (getTextBorder(anEditor) == null) {
-            setTextBorder(anEditor, Border.createLineBorder(Color.BLACK, 1));
-            setTextColor(anEditor, RMColor.white);
-        } else {
-            setTextBorder(anEditor, null);
-            setTextColor(anEditor, RMColor.black);
-        }
-    }
-
-    /**
-     * Sets the outline state of the currently selected shapes.
-     */
-    public static void setTextBorder(RMEditor anEditor, Border aBorder)
-    {
-        anEditor.undoerSetUndoTitle("Make Outlined");
-        for (RMShape shp : anEditor.getSelectedOrSuperSelectedShapes()) {
-            if (shp instanceof RMTextShape)
-                ((RMTextShape) shp).setTextBorder(aBorder);
-        }
     }
 
     /**

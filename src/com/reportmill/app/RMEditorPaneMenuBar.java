@@ -7,8 +7,6 @@ import com.reportmill.graphics.*;
 import snap.props.Undoer;
 import snap.util.*;
 import snap.view.*;
-import snap.web.RecentFilesPane;
-import snap.web.WebFile;
 
 /**
  * Menu bar for RMEditor pane.
@@ -71,6 +69,7 @@ public class RMEditorPaneMenuBar extends RMEditorPane.SupportPane {
         // Get editor pane
         RMEditorPane epane = getEditorPane();
         RMEditor editor = getEditor();
+        RMEditorStyler editorStyler = editor.getStyler();
 
         // Handle NewMenuItem, NewButton: Get new editor pane and make visible
         if (anEvent.equals("NewMenuItem") || anEvent.equals("NewButton")) {
@@ -147,7 +146,9 @@ public class RMEditorPaneMenuBar extends RMEditorPane.SupportPane {
             RMEditorUtils.setFontItalic(editor, !RMEditorUtils.getFont(editor).isItalic());
         if (anEvent.equals("UnderlineMenuItem") || anEvent.equals("UnderlineButton"))
             RMEditorUtils.setUnderlined(editor);
-        if (anEvent.equals("OutlineMenuItem")) RMEditorUtils.setTextBorder(editor);
+        if (anEvent.equals("OutlineMenuItem"))
+            editorStyler.setTextOutlined(!editorStyler.isTextOutlined());
+
         if (anEvent.equals("AlignLeftMenuItem") || anEvent.equals("AlignLeftButton"))
             RMEditorUtils.setAlignmentX(editor, RMTypes.AlignX.Left);
         if (anEvent.equals("AlignCenterMenuItem") || anEvent.equals("AlignCenterButton"))

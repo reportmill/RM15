@@ -3,8 +3,6 @@
  */
 package com.reportmill.app;
 import com.reportmill.graphics.*;
-import java.util.ArrayList;
-import java.util.List;
 import snap.gfx.*;
 import snap.util.*;
 import snap.view.*;
@@ -18,16 +16,16 @@ import snap.view.*;
 public class FontPanel extends ViewOwner {
 
     // The EditorPane
-    RMEditorPane _editorPane;
+    private RMEditorPane _editorPane;
 
     // Whether to show all fonts (or PDF only)
-    boolean _showAll = true;
+    private boolean _showAll = true;
 
     // The PDF Family names
-    String _pdfFonts[];
+    private String[] _pdfFonts;
 
     // All PDF built in font family names.
-    static String _pdfBuiltIns[] = {"Arial", "Helvetica", "Times", "Courier", "Symbol", "ZapfDingbats"};
+    private static String[] _pdfBuiltIns = {"Arial", "Helvetica", "Times", "Courier", "Symbol", "ZapfDingbats"};
 
     /**
      * Creates a new FontPanel for EditorPane.
@@ -67,12 +65,10 @@ public class FontPanel extends ViewOwner {
     public String[] getPDFFamilyNames()
     {
         if (_pdfFonts != null) return _pdfFonts;
-        List pdfs = new ArrayList();
-        for (String name : _pdfBuiltIns) {
-            Font font = Font.getFont(name, 12);
-            if (font != null) pdfs.add(font.getFamily());
-        }
-        return _pdfFonts = (String[]) pdfs.toArray(new String[0]);
+
+        Font[] pdfFonts = ArrayUtils.mapNonNull(_pdfBuiltIns, fontName -> Font.getFont(fontName, 12), Font.class);
+        String[] familyNames = ArrayUtils.map(pdfFonts, font -> font.getFamily(), String.class);
+        return _pdfFonts = familyNames;
     }
 
     /**
@@ -85,7 +81,7 @@ public class FontPanel extends ViewOwner {
         familyList.setItems(getFamilyNames());
 
         // Get/configure FamilyComboBox
-        ComboBox familyComboBox = getView("FamilyComboBox", ComboBox.class);
+        ComboBox<String> familyComboBox = getView("FamilyComboBox", ComboBox.class);
         familyComboBox.setListView(familyList);
 
         // Configure SizesList
@@ -121,10 +117,13 @@ public class FontPanel extends ViewOwner {
         setViewValue("ItalicButton", font.isItalic());
         setViewEnabled("ItalicButton", font.getItalic() != null);
         setViewValue("UnderlineButton", RMEditorUtils.isUnderlined(editor));
-        setViewValue("OutlineButton", RMEditorUtils.getTextBorder(editor) != null);
+
+        // Update OutlineButton
+        RMEditorStyler editorStyler = editor.getStyler();
+        setViewValue("OutlineButton", editorStyler.isTextOutlined());
 
         // Get font names in currently selected font's family
-        String familyNames[] = RMFont.getFontNames(font.getFamily());
+        String[] familyNames = RMFont.getFontNames(font.getFamily());
 
         // Reset FontNameComboBox Items, SelItem and Enabled
         setViewItems("FontNameComboBox", familyNames);
@@ -140,6 +139,7 @@ public class FontPanel extends ViewOwner {
     {
         // Get current editor
         RMEditor editor = getEditor();
+        RMEditorStyler editorStyler = editor.getStyler();
 
         // Handle FontSizeUpButton, FontSizeDownButton
         if (anEvent.equals("FontSizeUpButton")) {
@@ -155,7 +155,8 @@ public class FontPanel extends ViewOwner {
         if (anEvent.equals("BoldButton")) RMEditorUtils.setFontBold(editor, anEvent.getBoolValue());
         if (anEvent.equals("ItalicButton")) RMEditorUtils.setFontItalic(editor, anEvent.getBoolValue());
         if (anEvent.equals("UnderlineButton")) RMEditorUtils.setUnderlined(editor);
-        if (anEvent.equals("OutlineButton")) RMEditorUtils.setTextBorder(editor);
+        if (anEvent.equals("OutlineButton"))
+            editorStyler.setTextOutlined(anEvent.getBoolValue());
 
         // Handle FontPickerButton
         if (anEvent.equals("FontPickerButton")) {
@@ -178,8 +179,9 @@ public class FontPanel extends ViewOwner {
         // Handle FamilyList, FamilyComboBox
         if (anEvent.equals("FamilyList") || (anEvent.equals("FamilyComboBox") && anEvent.isActionEvent())) {
             String familyName = getViewStringValue("FamilyList");
-            String fontNames[] = RMFont.getFontNames(familyName);
-            if (fontNames.length == 0) return;
+            String[] fontNames = RMFont.getFontNames(familyName);
+            if (fontNames.length == 0)
+                return;
             String fontName = fontNames[0];
             RMFont font = RMFont.getFont(fontName, 12);
             RMEditorUtils.setFontFamily(editor, font);
@@ -199,9 +201,5 @@ public class FontPanel extends ViewOwner {
     /**
      * Returns the name for the inspector window.
      */
-    public String getWindowTitle()
-    {
-        return "Font Panel";
-    }
-
+    public String getWindowTitle()  { return "Font Panel"; }
 }
