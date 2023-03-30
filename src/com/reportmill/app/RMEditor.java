@@ -23,8 +23,14 @@ import snap.view.*;
  */
 public class RMEditor extends RMViewer implements DeepChangeListener {
 
+    // The EditorPane (if set)
+    private RMEditorPane _editorPane;
+
     // Whether we're really editing
     private boolean  _editing = true;
+
+    // The Styler
+    private RMEditorStyler  _styler;
 
     // List of currently selected shapes
     protected List<RMShape>  _selShapes = new ArrayList<>();
@@ -78,6 +84,9 @@ public class RMEditor extends RMViewer implements DeepChangeListener {
         // Enable ToolTips so getToolTip gets called and disable FocusKeys so tab doesn't leave editor
         setToolTipEnabled(true);
         setFocusKeysEnabled(false);
+
+        // Create/set Styler
+        _styler = new RMEditorStyler(this);
     }
 
     /**
@@ -85,18 +94,19 @@ public class RMEditor extends RMViewer implements DeepChangeListener {
      */
     public RMEditorPane getEditorPane()
     {
-        return _ep != null ? _ep : (_ep = getOwner(RMEditorPane.class));
+        if (_editorPane != null) return _editorPane;
+        return _editorPane = getOwner(RMEditorPane.class);
     }
 
-    private RMEditorPane _ep;
+    /**
+     * Returns the styler.
+     */
+    public RMEditorStyler getStyler()  { return _styler; }
 
     /**
      * Returns whether viewer is really doing editing.
      */
-    public boolean isEditing()
-    {
-        return _editing;
-    }
+    public boolean isEditing()  { return _editing; }
 
     /**
      * Sets whether viewer is really doing editing.

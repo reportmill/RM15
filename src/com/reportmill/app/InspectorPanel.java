@@ -6,6 +6,7 @@ import com.reportmill.apptools.*;
 import com.reportmill.shape.*;
 import snap.geom.Polygon;
 import snap.gfx.*;
+import snap.styler.StylerPane;
 import snap.util.SnapUtils;
 import snap.view.*;
 
@@ -15,43 +16,43 @@ import snap.view.*;
 public class InspectorPanel extends RMEditorPane.SupportPane {
 
     // The selection path view
-    ChildView _selPathView;
+    private ChildView _selPathView;
 
     // The Title label
-    Label _titleLabel;
+    private Label _titleLabel;
 
     // The ShapeButton
-    ToggleButton _shapeBtn;
+    private ToggleButton _shapeBtn;
 
     // The ScrollView that holds UI for child inspectors
-    ScrollView _inspBox;
+    private ScrollView _inspBox;
 
     // The child inspector current installed in inspector panel
-    ViewOwner _childInspector;
+    private ViewOwner _childInspector;
 
     // The inspector for paint/fill shape attributes
-    ShapeFills _shapeFills = new ShapeFills(getEditorPane());
+    private ViewOwner _shapeFills;
 
     // The inspector for shape placement attributes (location, size, roll, scale, skew, autosizing)
-    ShapePlacement _shapePlacement = new ShapePlacement(getEditorPane());
+    private ShapePlacement _shapePlacement;
 
     // The inspector for shape general attributes (name, url, text wrap around)
-    ShapeGeneral _shapeGeneral = new ShapeGeneral(getEditorPane());
+    private ShapeGeneral _shapeGeneral;
 
     // The inspector for shape animation
-    ShapeTree _shapeTree = new ShapeTree(getEditorPane());
+    private ShapeTree _shapeTree;
 
     // The inspector for Undo
-    UndoInspector _undoInspector;
+    private UndoInspector _undoInspector;
 
     // The inspector for XML datasource
-    DataSourcePanel _dataSource;
+    private DataSourcePanel _dataSource;
 
     // Used for managing selection path
-    RMShape _deepestShape;
+    private RMShape _deepestShape;
 
     // Used for managing selection path
-    RMShape _selectedShape;
+    private RMShape _selectedShape;
 
     /**
      * Creates a new InspectorPanel for EditorPane.
@@ -59,6 +60,12 @@ public class InspectorPanel extends RMEditorPane.SupportPane {
     public InspectorPanel(RMEditorPane anEP)
     {
         super(anEP);
+
+        // Create inspectors
+        _shapeFills = new ShapeFills(getEditorPane());
+        _shapePlacement = new ShapePlacement(getEditorPane());
+        _shapeGeneral = new ShapeGeneral(getEditorPane());
+        _shapeTree = new ShapeTree(getEditorPane());
     }
 
     /**
@@ -83,6 +90,20 @@ public class InspectorPanel extends RMEditorPane.SupportPane {
 
         // Create the Action that redispatches the event and add the action to the action map
         addKeyActionHandler("UndoAction", "meta Z");
+    }
+
+    /**
+     * Called when inspector is showing.
+     */
+    @Override
+    protected void initShowing()
+    {
+        // Create StylerPane
+//        RMEditor editor = getEditor();
+//        RMEditorStyler editorStyler = editor.getStyler();
+//        StylerPane stylerPane = new StylerPane(editorStyler);
+//        stylerPane.setShowFontTool(false);
+//        _shapeFills = stylerPane;
     }
 
     /**

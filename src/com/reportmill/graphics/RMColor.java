@@ -131,14 +131,6 @@ public class RMColor extends Color {
     }
 
     /**
-     * Returns a random color.
-     */
-    public static RMColor getRandom()
-    {
-        return get(Color.getRandom());
-    }
-
-    /**
      * Returns a color value for a given object.
      */
     public static RMColor get(Object anObj)
@@ -155,4 +147,9 @@ public class RMColor extends Color {
         return new RMColor(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
     }
 
+    /**
+     * Returns the name for paint.
+     */
+    @Override
+    public String getName()  { return "Color"; }
 }

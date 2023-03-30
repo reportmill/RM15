@@ -25,6 +25,14 @@ public class RMGradientFill extends RMFill {
     }
 
     /**
+     * Creates an uninitialized gradient fill.
+     */
+    public RMGradientFill(GradientPaint aGradientPaint)
+    {
+        _snap = aGradientPaint;
+    }
+
+    /**
      * Creates a gradient fill from the given start color to the given end color with the given roll.
      */
     public RMGradientFill(RMColor aColor1, RMColor aColor2, float aRotation)

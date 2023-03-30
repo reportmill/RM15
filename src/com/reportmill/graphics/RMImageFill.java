@@ -29,6 +29,16 @@ public class RMImageFill extends RMFill {
     }
 
     /**
+     * Creates a plain image fill.
+     */
+    public RMImageFill(ImagePaint imagePaint)
+    {
+        _snap = imagePaint;
+        Image image = imagePaint.getImage();
+        _iref = ImageRef.getImageRef(image);
+    }
+
+    /**
      * Creates an image fill from an image source.
      */
     public RMImageFill(Object aSource)

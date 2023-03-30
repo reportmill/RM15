@@ -53,8 +53,9 @@ public class RMEditorStyler extends Styler {
     public Paint getFill()
     {
         RMShape shape = _editor.getSelectedOrSuperSelectedShape();
-        RMFill fill = shape.getFill();
-        return fill.snap();
+        RMFill shapeFill = shape.getFill();
+        Paint fill = shapeFill != null ? shapeFill.snap() : null;
+        return fill;
     }
 
     /**
@@ -64,6 +65,12 @@ public class RMEditorStyler extends Styler {
     {
         // Get fill for paint
         RMFill fill = null;
+        if (aPaint instanceof Color)
+            fill = new RMFill(RMColor.get((Color) aPaint));
+        else if (aPaint instanceof GradientPaint)
+            fill = new RMGradientFill((GradientPaint) aPaint);
+        else if (aPaint instanceof ImagePaint)
+            fill = new RMImageFill((ImagePaint) aPaint);
 
         // Set in shapes
         List<RMShape> shapes = _editor.getSelectedOrSuperSelectedShapes();
