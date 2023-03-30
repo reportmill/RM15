@@ -99,11 +99,11 @@ public class InspectorPanel extends RMEditorPane.SupportPane {
     protected void initShowing()
     {
         // Create StylerPane
-//        RMEditor editor = getEditor();
-//        RMEditorStyler editorStyler = editor.getStyler();
-//        StylerPane stylerPane = new StylerPane(editorStyler);
-//        stylerPane.setShowFontTool(false);
-//        _shapeFills = stylerPane;
+        RMEditor editor = getEditor();
+        RMEditorStyler editorStyler = editor.getStyler();
+        StylerPane stylerPane = new StylerPane(editorStyler);
+        stylerPane.setShowFontTool(false);
+        _shapeFills = stylerPane;
     }
 
     /**

@@ -1,6 +1,9 @@
 package com.reportmill.app;
 import com.reportmill.graphics.*;
+import com.reportmill.shape.RMDocument;
+import com.reportmill.shape.RMPage;
 import com.reportmill.shape.RMShape;
+import com.reportmill.shape.RMTextShape;
 import snap.gfx.*;
 import snap.styler.Styler;
 import snap.util.Convert;
@@ -29,8 +32,7 @@ public class RMEditorStyler extends Styler {
     public Border getBorder()
     {
         RMShape shape = _editor.getSelectedOrSuperSelectedShape();
-        RMStroke stroke = shape.getStroke();
-        return convertStrokeToBorder(stroke);
+        return getBorderForShape(shape);
     }
 
     /**
@@ -38,13 +40,9 @@ public class RMEditorStyler extends Styler {
      */
     public void setBorder(Border aBorder)
     {
-        // Get stroke for border
-        RMStroke stroke = convertBorderToStroke(aBorder);
-
-        // Set in shapes
         List<RMShape> shapes = _editor.getSelectedOrSuperSelectedShapes();
         for (RMShape shape : shapes)
-            shape.setStroke(stroke);
+            setBorderForShape(shape, aBorder);
     }
 
     /**
@@ -53,9 +51,7 @@ public class RMEditorStyler extends Styler {
     public Paint getFill()
     {
         RMShape shape = _editor.getSelectedOrSuperSelectedShape();
-        RMFill shapeFill = shape.getFill();
-        Paint fill = shapeFill != null ? shapeFill.snap() : null;
-        return fill;
+        return getFillForShape(shape);
     }
 
     /**
@@ -63,19 +59,9 @@ public class RMEditorStyler extends Styler {
      */
     public void setFill(Paint aPaint)
     {
-        // Get fill for paint
-        RMFill fill = null;
-        if (aPaint instanceof Color)
-            fill = new RMFill(RMColor.get((Color) aPaint));
-        else if (aPaint instanceof GradientPaint)
-            fill = new RMGradientFill((GradientPaint) aPaint);
-        else if (aPaint instanceof ImagePaint)
-            fill = new RMImageFill((ImagePaint) aPaint);
-
-        // Set in shapes
         List<RMShape> shapes = _editor.getSelectedOrSuperSelectedShapes();
         for (RMShape shape : shapes)
-            shape.setFill(fill);
+            setFillForShape(shape, aPaint);
     }
 
     /**
@@ -84,7 +70,7 @@ public class RMEditorStyler extends Styler {
     public Color getTextColor()
     {
         RMShape shape = _editor.getSelectedOrSuperSelectedShape();
-        return shape.getTextColor();
+        return getTextColorForShape(shape);
     }
 
     /**
@@ -92,13 +78,28 @@ public class RMEditorStyler extends Styler {
      */
     public void setTextColor(Color aColor)
     {
-        // Get text color
-        RMColor textColor = RMColor.get(aColor);
-
-        // Set in shapes
         List<RMShape> shapes = _editor.getSelectedOrSuperSelectedShapes();
         for (RMShape shape : shapes)
-            shape.setTextColor(textColor);
+            setTextColorForShape(shape, aColor);
+    }
+
+    /**
+     * Returns the outline state of the currently selected shape (null if none).
+     */
+    public Border getTextBorder()
+    {
+        RMShape shape = _editor.getSelectedOrSuperSelectedShape();
+        return getTextBorderForShape(shape);
+    }
+
+    /**
+     * Sets the outline state of the currently selected shapes.
+     */
+    public void setTextBorder(Border aBorder)
+    {
+        List<RMShape> shapes = _editor.getSelectedOrSuperSelectedShapes();
+        for (RMShape shape : shapes)
+            setTextBorderForShape(shape, aBorder);
     }
 
     /**
@@ -107,7 +108,7 @@ public class RMEditorStyler extends Styler {
     public Font getFont()
     {
         RMShape shape = _editor.getSelectedOrSuperSelectedShape();
-        return shape.getFont();
+        return getFontForShape(shape);
     }
 
     /**
@@ -115,29 +116,9 @@ public class RMEditorStyler extends Styler {
      */
     public void setFont(Font aFont)
     {
-        // Get font
-        RMFont font = RMFont.get(aFont);
-
-        // Set in shapes
         List<RMShape> shapes = _editor.getSelectedOrSuperSelectedShapes();
         for (RMShape shape : shapes)
-            shape.setFont(font);
-    }
-
-    /**
-     * Returns the outline state of the currently selected shape (null if none).
-     */
-    public Border getTextBorder()
-    {
-        return null;
-    }
-
-    /**
-     * Sets the outline state of the currently selected shapes.
-     */
-    public void setTextBorder(Border aBorder)
-    {
-        setUndoTitle("Make Outlined");
+            setFontForShape(shape, aFont);
     }
 
     /**
@@ -190,6 +171,208 @@ public class RMEditorStyler extends Styler {
     public void setUndoTitle(String aTitle)
     {
         _editor.undoerSetUndoTitle(aTitle);
+    }
+
+    /**
+     * Returns the currently selected border.
+     */
+    public Border getBorderForShape(RMShape aShape)
+    {
+        // Handle RMTextShape + TextEditorSet
+        RMTextEditor textEditor = getTextEditorForShape(aShape);
+        if (textEditor != null)
+            return textEditor.getTextBorder();
+
+        // Convert stroke
+        RMStroke stroke = aShape.getStroke();
+        return convertStrokeToBorder(stroke);
+    }
+
+    /**
+     * Sets the currently selected border.
+     */
+    public void setBorderForShape(RMShape aShape, Border aBorder)
+    {
+        // Handle RMTextShape + TextEditorSet
+        RMTextEditor textEditor = getTextEditorForShape(aShape);
+        if (textEditor != null) {
+            textEditor.setTextBorder(aBorder);
+            return;
+        }
+
+        // Get stroke for border and set
+        RMStroke stroke = convertBorderToStroke(aBorder);
+        aShape.setStroke(stroke);
+    }
+
+    /**
+     * Returns the fill of currently selected view.
+     */
+    public Paint getFillForShape(RMShape aShape)
+    {
+        // If shape is doc/page, return default color
+        if ((aShape instanceof RMPage || aShape instanceof RMDocument) && aShape.getFill() == null)
+            return Color.WHITE;
+
+        // Handle RMTextShape + TextEditorSet
+        RMTextEditor textEditor = getTextEditorForShape(aShape);
+        if (textEditor != null)
+            return textEditor.getColor();
+
+        // Get shape fill, convert and return
+        RMFill shapeFill = aShape.getFill();
+        Paint fill = shapeFill != null ? shapeFill.snap() : null;
+        return fill;
+    }
+
+    /**
+     * Sets the fill of currently selected views.
+     */
+    public void setFillForShape(RMShape aShape, Paint aPaint)
+    {
+        // If shape is doc/page, suppress
+        if ((aShape instanceof RMPage || aShape instanceof RMDocument) && aShape.getFill() == null)
+            return;
+
+        // Handle RMTextShape + TextEditorSet
+        RMTextEditor textEditor = getTextEditorForShape(aShape);
+        if (textEditor != null) {
+            Color color = aPaint != null ? aPaint.getColor() : null;
+            RMColor rmcolor = color != null ? RMColor.get(color) : null;
+            textEditor.setColor(rmcolor);
+            return;
+        }
+
+        // Get fill for paint
+        RMFill fill = null;
+        if (aPaint instanceof Color)
+            fill = new RMFill(RMColor.get((Color) aPaint));
+        else if (aPaint instanceof GradientPaint)
+            fill = new RMGradientFill((GradientPaint) aPaint);
+        else if (aPaint instanceof ImagePaint)
+            fill = new RMImageFill((ImagePaint) aPaint);
+
+        // Set in shape
+        aShape.setFill(fill);
+    }
+
+    /**
+     * Returns the text color current text.
+     */
+    public Color getTextColorForShape(RMShape aShape)
+    {
+        // Handle RMTextShape + TextEditorSet
+        RMTextEditor textEditor = getTextEditorForShape(aShape);
+        if (textEditor != null)
+            return textEditor.getColor();
+
+        // Return
+        return aShape.getTextColor();
+    }
+
+    /**
+     * Sets the text color current text.
+     */
+    public void setTextColorForShape(RMShape aShape, Color aColor)
+    {
+        // Get text color
+        RMColor textColor = RMColor.get(aColor);
+
+        // Handle RMTextShape + TextEditorSet
+        RMTextEditor textEditor = getTextEditorForShape(aShape);
+        if (textEditor != null) {
+            textEditor.setColor(textColor);
+            return;
+        }
+
+        // Set in shape
+        aShape.setTextColor(textColor);
+    }
+
+    /**
+     * Returns the outline state of the currently selected shape (null if none).
+     */
+    public Border getTextBorderForShape(RMShape aShape)
+    {
+        // Handle RMTextShape + TextEditorSet
+        RMTextEditor textEditor = getTextEditorForShape(aShape);
+        if (textEditor != null)
+            return textEditor.getTextBorder();
+
+        // Handle RMTextShape
+        if (aShape instanceof RMTextShape)
+            return ((RMTextShape) aShape).getTextBorder();
+
+        // Return not found
+        return null;
+    }
+
+    /**
+     * Sets the outline state of the currently selected shapes.
+     */
+    public void setTextBorderForShape(RMShape aShape, Border aBorder)
+    {
+        // Handle RMTextShape + TextEditorSet
+        RMTextEditor textEditor = getTextEditorForShape(aShape);
+        if (textEditor != null) {
+            setUndoTitle("Make Outlined");
+            textEditor.setTextBorder(aBorder);
+            return;
+        }
+
+        // Handle RMTextShape
+        if (aShape instanceof RMTextShape) {
+            setUndoTitle("Make Outlined");
+            ((RMTextShape) aShape).setTextBorder(aBorder);
+        }
+    }
+
+    /**
+     * Returns the font of editor's selected shape.
+     */
+    public Font getFontForShape(RMShape aShape)
+    {
+        // Handle RMTextShape + TextEditorSet
+        RMTextEditor textEditor = getTextEditorForShape(aShape);
+        if (textEditor != null)
+            return textEditor.getFont();
+
+        // Return shape font
+        return aShape.getFont();
+    }
+
+    /**
+     * Sets the current font.
+     */
+    public void setFontForShape(RMShape aShape, Font aFont)
+    {
+        RMFont font = RMFont.get(aFont);
+
+        // Handle RMTextShape + TextEditorSet
+        RMTextEditor textEditor = getTextEditorForShape(aShape);
+        if (textEditor != null) {
+            textEditor.setFont(font);
+            return;
+        }
+
+        // Set in shape
+        aShape.setFont(font);
+    }
+
+    /**
+     * Returns the TextEditor if shape is RMTextShape with TextEditorSet.
+     */
+    private static RMTextEditor getTextEditorForShape(RMShape aShape)
+    {
+        // Handle RMTextShape with TextEditorSet
+        if (aShape instanceof RMTextShape) {
+            RMTextShape textShape = (RMTextShape) aShape;
+            if (textShape.isTextEditorSet())
+                return textShape.getTextEditor();
+        }
+
+        // Return not found
+        return null;
     }
 
     /**
