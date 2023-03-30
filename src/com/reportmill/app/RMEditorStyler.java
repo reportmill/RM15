@@ -8,6 +8,8 @@ import snap.gfx.*;
 import snap.styler.Styler;
 import snap.util.Convert;
 import snap.view.View;
+import snap.view.ViewUtils;
+
 import java.util.List;
 
 /**
@@ -59,6 +61,12 @@ public class RMEditorStyler extends Styler {
      */
     public void setFill(Paint aPaint)
     {
+        // If meta key down, convert color to gradient (Might be a duplication & hack - but this can get called directly)
+        if (aPaint instanceof Color && ViewUtils.isMetaDown()) {
+            Color color1 = getFill() != null ? getFillColor() : Color.CLEARWHITE;
+            aPaint = new GradientPaint(color1, (Color) aPaint, 0);
+        }
+
         List<RMShape> shapes = _editor.getSelectedOrSuperSelectedShapes();
         for (RMShape shape : shapes)
             setFillForShape(shape, aPaint);

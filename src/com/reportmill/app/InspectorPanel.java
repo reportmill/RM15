@@ -30,8 +30,8 @@ public class InspectorPanel extends RMEditorPane.SupportPane {
     // The child inspector current installed in inspector panel
     private ViewOwner _childInspector;
 
-    // The inspector for paint/fill shape attributes
-    private ViewOwner _shapeFills;
+    // The inspector for paint/border (fill/stroke), and effects
+    private StylerPane _stylerPane;
 
     // The inspector for shape placement attributes (location, size, roll, scale, skew, autosizing)
     private ShapePlacement _shapePlacement;
@@ -62,7 +62,6 @@ public class InspectorPanel extends RMEditorPane.SupportPane {
         super(anEP);
 
         // Create inspectors
-        _shapeFills = new ShapeFills(getEditorPane());
         _shapePlacement = new ShapePlacement(getEditorPane());
         _shapeGeneral = new ShapeGeneral(getEditorPane());
         _shapeTree = new ShapeTree(getEditorPane());
@@ -101,9 +100,8 @@ public class InspectorPanel extends RMEditorPane.SupportPane {
         // Create StylerPane
         RMEditor editor = getEditor();
         RMEditorStyler editorStyler = editor.getStyler();
-        StylerPane stylerPane = new StylerPane(editorStyler);
-        stylerPane.setShowFontTool(false);
-        _shapeFills = stylerPane;
+        _stylerPane = new StylerPane(editorStyler);
+        _stylerPane.setShowFontTool(false);
     }
 
     /**
@@ -112,9 +110,8 @@ public class InspectorPanel extends RMEditorPane.SupportPane {
     public void resetUI()
     {
         // Get editor (and just return if null) and tool for selected shapes
-        RMEditor editor = getEditor();
-        if (editor == null) return;
-        RMTool tool = editor.getTool(editor.getSelectedOrSuperSelectedShapes());
+        RMEditor editor = getEditor(); if (editor == null) return;
+        RMTool<?> tool = editor.getTool(editor.getSelectedOrSuperSelectedShapes());
 
         // If ShapeSpecificButton is selected, instal inspector for current selection
         if (getViewBoolValue("ShapeSpecificButton"))
@@ -122,14 +119,15 @@ public class InspectorPanel extends RMEditorPane.SupportPane {
 
         // If ShapeFillsButton is selected, install fill inspector
         if (getViewBoolValue("ShapeFillsButton"))
-            setInspector(_shapeFills);
+            setInspector(_stylerPane);
 
         // Get the inspector (owner)
         ViewOwner owner = getInspector();
 
         // Get inspector title from owner and set
         String title = "Inspector";
-        if (owner instanceof RMTool) title = ((RMTool) owner).getWindowTitle();
+        if (owner instanceof RMTool)
+            title = ((RMTool<?>) owner).getWindowTitle();
         else if (owner instanceof RMEditorPane.SupportPane) {
             title = ((RMEditorPane.SupportPane) owner).getWindowTitle();
             String shpName = tool.getShapeClass().getSimpleName().replace("RM", "").replace("Shape", "");
