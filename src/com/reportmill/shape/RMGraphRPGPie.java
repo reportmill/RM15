@@ -3,6 +3,7 @@
  */
 package com.reportmill.shape;
 import com.reportmill.base.*;
+import com.reportmill.gfx3d.Scene3D;
 import com.reportmill.graphics.*;
 import java.util.*;
 import snap.geom.Rect;
@@ -446,8 +447,9 @@ class RMGraphRPGPie extends RMGraphRPG {
          */
         protected void layoutImpl()
         {
-            // Remove Shape3Ds
-            removeShapes();
+            // Remove Scene children
+            Scene3D scene = getScene();
+            scene.removeShapes();
 
             // Iterate over wedges and add them as 3D
             for (int i = 0, iMax = _wedges.size(); i < iMax; i++) {
@@ -469,5 +471,4 @@ class RMGraphRPGPie extends RMGraphRPG {
             super.layoutImpl();
         }
     }
-
 }

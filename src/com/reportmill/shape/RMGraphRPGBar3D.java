@@ -8,6 +8,7 @@ import java.util.*;
 import snap.geom.Path;
 import snap.geom.Rect;
 import snap.gfx.*;
+import snap.gfx3d.Bounds3D;
 
 /**
  * This class renders a bar graph in 3D.
@@ -186,7 +187,10 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
     {
         // Remove all existing children
         removeChildren();
-        removeShapes();
+
+        // Remove all scene children
+        Scene3D scene = getScene();
+        scene.removeShapes();
 
         // Get standard width, height, depth
         double width = getWidth(), height = getHeight(), depth = getDepth();
@@ -211,7 +215,6 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
 
         // Calculate whether back plane should be shifted to the front. Back normal = { 0, 0,-1 }.
         Camera camera = getCamera();
-        Scene3D scene = getScene();
         Vector3D backNormal = scene.localToCameraForVector(0, 0, -1);
         boolean shiftBack = camera.isFacingAway(backNormal);
         double backZ = shiftBack ? 0 : depth;
@@ -228,7 +231,7 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         back.close();
         if (!shiftBack)
             back.reverse();
-        addShape(back);
+        scene.addShape(back);
 
         // Add Grid to back
         Path3D grid = new Path3D(_grid, backZ);
@@ -262,7 +265,7 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         boolean sideFacingAway = camera.isFacingAway(sideNormalInCameraCoords);
         if (sideFacingAway)
             side.reverse();
-        addShape(side);
+        scene.addShape(side);
 
         // Create floor path shape
         Path3D floor = new Path3D();
@@ -281,7 +284,7 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         boolean floorFacingAway = camera.isFacingAway(floorNormalInCameraCoords);
         if (floorFacingAway)
             floor.reverse();
-        addShape(floor);
+        scene.addShape(floor);
 
         // Determine whether side grid should be added to graph side or floor
         Path3D sideGridBuddy = _vertical ? side : floor;

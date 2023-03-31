@@ -8,6 +8,7 @@ import java.util.*;
 import snap.geom.Path;
 import snap.geom.Rect;
 import snap.gfx.*;
+import snap.gfx3d.Bounds3D;
 import snap.props.PropChange;
 import snap.util.*;
 import snap.view.ViewEvent;
@@ -22,6 +23,9 @@ public class RMScene3D extends RMParentShape {
 
     // A Camera to do camera work
     Camera _camera;
+
+    // The default depth
+    private double  _depth = 40;
 
     // List of real child shapes
     List<RMShape> _rmshapes = new ArrayList<>();
@@ -48,12 +52,18 @@ public class RMScene3D extends RMParentShape {
     /**
      * Returns the depth of the scene.
      */
-    public double getDepth()  { return _camera.getDepth(); }
+    public double getDepth()  { return _depth; }
 
     /**
      * Sets the depth of the scene.
      */
-    public void setDepth(double aValue)  { _camera.setDepth(aValue); }
+    public void setDepth(double aValue)
+    {
+        if (aValue == _depth) return;
+        double oldDepth = _depth;
+        _depth = aValue;
+        _camera.fireDepthPropChange(oldDepth, _depth);
+    }
 
     /**
      * Returns the rotation about the Y axis in degrees.
@@ -106,32 +116,20 @@ public class RMScene3D extends RMParentShape {
     public void setOffsetZ(double aValue)  { _camera.setOffsetZ(aValue); }
 
     /**
-     * Adds a shape to the end of the shape list.
-     */
-    public void addShape(Shape3D aShape)
-    {
-        _scene.addShape(aShape);
-    }
-
-    /**
-     * Removes the shape at the given index from the shape list.
-     */
-    public void removeShapes()
-    {
-        _scene.removeShapes();
-    }
-
-    /**
      * Rebuilds display list of Path3Ds from Shapes.
      */
     protected void layoutImpl()
     {
         // If RMShapes, recreate Shape list from RMShapes
         if (getShapeRMCount() > 0) {
-            removeShapes();
+            _scene.removeShapes();
             for (RMShape shp : _rmshapes)
                 addShapesForRMShape(shp, 0, getDepth(), false);
         }
+
+        // Set bounds
+        Bounds3D bounds3D = new Bounds3D(0, 0, 0, getWidth(), getHeight(), getDepth());
+        _scene.setBounds3D(bounds3D);
     }
 
     /**
@@ -160,7 +158,7 @@ public class RMScene3D extends RMParentShape {
     public void setWidth(double aValue)
     {
         super.setWidth(aValue);
-        _camera.setWidth(aValue);
+        _camera.setViewWidth(aValue);
     }
 
     /**
@@ -169,7 +167,7 @@ public class RMScene3D extends RMParentShape {
     public void setHeight(double aValue)
     {
         super.setHeight(aValue);
-        _camera.setHeight(aValue);
+        _camera.setViewHeight(aValue);
     }
 
     /**
@@ -248,11 +246,13 @@ public class RMScene3D extends RMParentShape {
 
         // Create 3D shape from path, set fill/stroke/opacity and add
         RMFill fill = aShape.getFill();
-        if (fill != null) pathBox.setColor(fill.getColor());
+        if (fill != null)
+            pathBox.setColor(fill.getColor());
         RMStroke stroke = aShape.getStroke();
-        if (stroke != null) pathBox.setStroke(stroke.getColor(), stroke.getWidth());
+        if (stroke != null)
+            pathBox.setStroke(stroke.getColor(), stroke.getWidth());
         pathBox.setOpacity(aShape.getOpacity());
-        addShape(pathBox);
+        _scene.addShape(pathBox);
     }
 
     /**
@@ -271,6 +271,7 @@ public class RMScene3D extends RMParentShape {
     public void copy3D(RMScene3D aScene3D)
     {
         getCamera().copy3D(aScene3D.getCamera());
+        setDepth(aScene3D.getDepth());
     }
 
     /**
@@ -316,8 +317,8 @@ public class RMScene3D extends RMParentShape {
         super.fromXMLShape(anArchiver, anElement);
 
         // Fix scene width/height
-        _camera.setWidth(getWidth());
-        _camera.setHeight(getHeight());
+        _camera.setViewWidth(getWidth());
+        _camera.setViewHeight(getHeight());
 
         // Unarchive Depth, Yaw, Pitch, Roll, FocalLength, OffsetZ
         setDepth(anElement.getAttributeFloatValue("depth"));

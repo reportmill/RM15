@@ -2,6 +2,8 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.gfx3d;
+import snap.gfx3d.Bounds3D;
+
 import java.util.*;
 
 /**
@@ -20,6 +22,9 @@ public class Scene3D {
 
     // List of Shape3ds - the model
     List<Shape3D> _shapes = new ArrayList();
+
+    // The path bounding box
+    private Bounds3D _bounds3D = new Bounds3D(0, 0, 0, 0, 0, 0);
 
     /**
      * Creates a Scene.
@@ -130,4 +135,13 @@ public class Scene3D {
         return v2;
     }
 
+    /**
+     * Returns the bounds.
+     */
+    public Bounds3D getBounds3D()  { return _bounds3D; }
+
+    /**
+     * Sets the bounds.
+     */
+    public void setBounds3D(Bounds3D bounds3D)  { _bounds3D = bounds3D; }
 }

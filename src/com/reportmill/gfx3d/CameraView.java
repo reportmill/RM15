@@ -1,7 +1,6 @@
 package com.reportmill.gfx3d;
 import snap.geom.Rect;
 import snap.gfx.*;
-import snap.props.PropChange;
 import snap.util.SnapUtils;
 import snap.view.*;
 
@@ -29,29 +28,9 @@ public class CameraView extends ParentView {
     {
         _scene = new Scene3D();
         _camera = _scene.getCamera();
-        _camera.addPropChangeListener(pce -> cameraChanged(pce));
+        _camera.addPropChangeListener(pc -> cameraChanged());
         enableEvents(MousePress, MouseDrag, MouseRelease);
     }
-
-    /**
-     * Returns the camera as a vector.
-     */
-    public Camera getCamera()  { return _camera; }
-
-    /**
-     * Returns the Scene3D.
-     */
-    public Scene3D getScene()  { return _scene; }
-
-    /**
-     * Returns the depth of the scene.
-     */
-    public double getDepth()  { return _camera.getDepth(); }
-
-    /**
-     * Sets the depth of the scene.
-     */
-    public void setDepth(double aValue)  { _camera.setDepth(aValue); }
 
     /**
      * Returns the rotation about the Y axis in degrees.
@@ -119,7 +98,7 @@ public class CameraView extends ParentView {
     public void setWidth(double aValue)
     {
         super.setWidth(aValue);
-        _camera.setWidth(aValue);
+        _camera.setViewWidth(aValue);
     }
 
     /**
@@ -128,7 +107,7 @@ public class CameraView extends ParentView {
     public void setHeight(double aValue)
     {
         super.setHeight(aValue);
-        _camera.setHeight(aValue);
+        _camera.setViewHeight(aValue);
     }
 
     /**
@@ -158,9 +137,8 @@ public class CameraView extends ParentView {
     /**
      * Called when scene changes.
      */
-    protected void cameraChanged(PropChange aPC)
+    private void cameraChanged()
     {
-        //_pcs.fireDeepChange(this, aPC);
         relayout();
         repaint();
     }

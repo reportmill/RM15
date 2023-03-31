@@ -7,6 +7,7 @@ import snap.geom.Point;
 import snap.geom.Rect;
 import snap.geom.Shape;
 import snap.gfx.*;
+import snap.gfx3d.Bounds3D;
 import snap.props.PropChange;
 import snap.props.PropChangeListener;
 import snap.props.PropChangeSupport;
@@ -31,7 +32,7 @@ public class Camera {
     Scene3D _scene;
 
     // Width, height, depth
-    double _width, _height, _depth = 40;
+    double _viewWidth, _viewHeight;
 
     // Rotation around y axis
     double _yaw = 0;
@@ -90,15 +91,15 @@ public class Camera {
     /**
      * Returns the width of the camera viewing plane.
      */
-    public double getWidth()  { return _width; }
+    public double getViewWidth()  { return _viewWidth; }
 
     /**
      * Sets the width of the camera viewing plane.
      */
-    public void setWidth(double aValue)
+    public void setViewWidth(double aValue)
     {
-        if (aValue == _width) return;
-        firePropChange("Width", _width, _width = aValue);
+        if (aValue == _viewWidth) return;
+        firePropChange("Width", _viewWidth, _viewWidth = aValue);
         rebuildPaths();
         _xform3D = null;
     }
@@ -106,31 +107,25 @@ public class Camera {
     /**
      * Returns the height of the camera viewing plane.
      */
-    public double getHeight()  { return _height; }
+    public double getViewHeight()  { return _viewHeight; }
 
     /**
      * Sets the height of the camera viewing plane.
      */
-    public void setHeight(double aValue)
+    public void setViewHeight(double aValue)
     {
-        if (aValue == _height) return;
-        firePropChange("Height", _height, _height = aValue);
+        if (aValue == _viewHeight) return;
+        firePropChange("Height", _viewHeight, _viewHeight = aValue);
         rebuildPaths();
         _xform3D = null;
     }
 
     /**
-     * Returns the depth of the scene.
-     */
-    public double getDepth()  { return _depth; }
-
-    /**
      * Sets the depth of the scene.
      */
-    public void setDepth(double aValue)
+    public void fireDepthPropChange(double aValue, double aValue2)
     {
-        if (aValue == _depth) return;
-        firePropChange("Depth", _depth, _depth = aValue);
+        firePropChange("Depth", aValue, aValue2);
         rebuildPaths();
         _xform3D = null;
     }
@@ -246,12 +241,21 @@ public class Camera {
         if (_xform3D != null) return _xform3D;
 
         // Normal transform: translate about center, rotate X & Y, translate by Z, perspective, translate back
-        double midx = getWidth() / 2, midy = getHeight() / 2, midz = getDepth() / 2;
+        Scene3D scene = getScene();
+        Bounds3D sceneBounds = scene.getBounds3D();
+        double midx = sceneBounds.getMidX();
+        double midy = sceneBounds.getMidY();
+        double midz = sceneBounds.getMidZ();
         Transform3D t = new Transform3D(-midx, -midy, -midz);
+
+        // Rotate
         t.rotate(_pitch, _yaw, _roll);
         t.translate(0, 0, getOffsetZ() - _offsetZ2);
-        if (_focalLen > 0) t.perspective(getFocalLength());
+        if (_focalLen > 0)
+            t.perspective(getFocalLength());
         t.translate(midx, midy, midz);
+
+        // Set/return
         return _xform3D = t;
     }
 
@@ -267,9 +271,11 @@ public class Camera {
         _xform3D = null;
 
         // Get bounding box in camera coords with no Z offset
-        double w = getWidth();
-        double h = getHeight();
-        double d = getDepth();
+        Scene3D scene = getScene();
+        Bounds3D sceneBounds = scene.getBounds3D();
+        double w = sceneBounds.getWidth();
+        double h = sceneBounds.getHeight();
+        double d = sceneBounds.getDepth();
         Path3D bbox = new Path3D();
         bbox.moveTo(0, 0, 0);
         bbox.lineTo(0, 0, d);
@@ -542,7 +548,6 @@ public class Camera {
      */
     public void copy3D(Camera aCam)
     {
-        setDepth(aCam.getDepth());
         setYaw(aCam.getYaw());
         setPitch(aCam.getPitch());
         setRoll(aCam.getRoll());
