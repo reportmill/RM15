@@ -414,7 +414,7 @@ public class Camera {
     /**
      * Paints shape children.
      */
-    public void paintPaths(Painter aPntr)
+    public void paintScene(Painter aPntr)
     {
         // Iterate over Path3Ds and paint
         List<Path3D> paths = getPaths();

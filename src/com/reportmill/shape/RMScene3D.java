@@ -106,16 +106,6 @@ public class RMScene3D extends RMParentShape {
     public void setFocalLength(double aValue)  { _camera.setFocalLength(aValue); }
 
     /**
-     * Returns the Z offset of the scene (for zooming).
-     */
-    public double getOffsetZ()  { return _camera.getOffsetZ(); }
-
-    /**
-     * Sets the Z offset of the scene (for zooming).
-     */
-    public void setOffsetZ(double aValue)  { _camera.setOffsetZ(aValue); }
-
-    /**
      * Rebuilds display list of Path3Ds from Shapes.
      */
     protected void layoutImpl()
@@ -138,7 +128,7 @@ public class RMScene3D extends RMParentShape {
     protected void paintShapeChildren(Painter aPntr)
     {
         // Paint Scene paths
-        _camera.paintPaths(aPntr);
+        _camera.paintScene(aPntr);
 
         // Do normal version
         super.paintShapeChildren(aPntr);
@@ -293,13 +283,12 @@ public class RMScene3D extends RMParentShape {
             e.add(shapesXML);
         }
 
-        // Archive Depth, Yaw, Pitch, Roll, FocalLength, Offset3D
+        // Archive Depth, Yaw, Pitch, Roll, FocalLength
         if (getDepth() != 0) e.add("depth", getDepth());
         if (getYaw() != 0) e.add("yaw", getYaw());
         if (getPitch() != 0) e.add("pitch", getPitch());
         if (getRoll3D() != 0) e.add("zroll", getRoll3D());
         if (getFocalLength() != 60 * 72) e.add("focal-length", getFocalLength());
-        if (getOffsetZ() != 0) e.add("offset-z", getOffsetZ());
 
         // Return xml element
         return e;
@@ -328,7 +317,6 @@ public class RMScene3D extends RMParentShape {
         setPitch(anElement.getAttributeFloatValue("pitch"));
         setRoll3D(anElement.getAttributeFloatValue("zroll"));
         setFocalLength(anElement.getAttributeFloatValue("focal-length", 60 * 72));
-        setOffsetZ(anElement.getAttributeFloatValue("offset-z"));
 
         // Unarchive the 2d children
         XMLElement shapesXML = anElement.get("shapes");
