@@ -3,7 +3,6 @@
  */
 package com.reportmill.gfx3d;
 import snap.gfx3d.Bounds3D;
-
 import java.util.*;
 
 /**
@@ -52,25 +51,9 @@ public class Scene3D {
     }
 
     /**
-     * Returns the number of shapes in the shape list.
-     */
-    public int getShapeCount()
-    {
-        return _shapes.size();
-    }
-
-    /**
-     * Returns the specific shape at the given index from the shape list.
-     */
-    public Shape3D getShape(int anIndex)
-    {
-        return _shapes.get(anIndex);
-    }
-
-    /**
      * Adds a shape to the end of the shape list.
      */
-    public void addShape(Shape3D aShape)
+    public void addChild(Shape3D aShape)
     {
         _shapes.add(aShape);
         _camera.rebuildPaths();
@@ -79,7 +62,7 @@ public class Scene3D {
     /**
      * Removes the shape at the given index from the shape list.
      */
-    public void removeShapes()
+    public void removeChildren()
     {
         _shapes.clear();
         _camera.rebuildPaths();

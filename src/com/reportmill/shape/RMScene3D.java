@@ -122,7 +122,7 @@ public class RMScene3D extends RMParentShape {
     {
         // If RMShapes, recreate Shape list from RMShapes
         if (getShapeRMCount() > 0) {
-            _scene.removeShapes();
+            _scene.removeChildren();
             for (RMShape shp : _rmshapes)
                 addShapesForRMShape(shp, 0, getDepth(), false);
         }
@@ -254,7 +254,7 @@ public class RMScene3D extends RMParentShape {
         if (stroke != null)
             pathBox.setStroke(stroke.getColor(), stroke.getWidth());
         pathBox.setOpacity(aShape.getOpacity());
-        _scene.addShape(pathBox);
+        _scene.addChild(pathBox);
     }
 
     /**

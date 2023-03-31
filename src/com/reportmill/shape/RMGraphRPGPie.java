@@ -449,7 +449,7 @@ class RMGraphRPGPie extends RMGraphRPG {
         {
             // Remove Scene children
             Scene3D scene = getScene();
-            scene.removeShapes();
+            scene.removeChildren();
 
             // Iterate over wedges and add them as 3D
             for (int i = 0, iMax = _wedges.size(); i < iMax; i++) {
