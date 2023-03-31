@@ -2,8 +2,11 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.apptools;
-import com.reportmill.gfx3d.*;
+import com.reportmill.gfx3d.Camera;
+import snap.gfx3d.Trackball;
 import com.reportmill.shape.*;
+import snap.view.ColView;
+import snap.view.RowView;
 import snap.view.ViewEvent;
 
 /**
@@ -20,7 +23,11 @@ public class RMScene3DTool<T extends RMScene3D> extends RMTool<T> {
     protected void initUI()
     {
         // Get Trackball
-        _trackball = getView("Trackball", Trackball.class);
+        _trackball = new Trackball();
+        _trackball.setPrefSize(118, 118);
+        ColView colView = (ColView) getUI();
+        RowView rowView = (RowView) colView.getChild(0);
+        rowView.addChild(_trackball, 0);
     }
 
     /**
@@ -38,7 +45,10 @@ public class RMScene3DTool<T extends RMScene3D> extends RMTool<T> {
         setViewValue("RollSpinner", Math.round(scene.getRoll3D()));
 
         // Reset scene control
-        _trackball.syncFrom(scene.getCamera());
+        Camera camera = scene.getCamera();
+        _trackball.setYaw(-camera.getYaw());
+        _trackball.setPitch(camera.getPitch());
+        _trackball.setRoll(camera.getRoll());
 
         // Reset Depth slider/text
         setViewValue("DepthSlider", scene.getDepth());
@@ -67,8 +77,12 @@ public class RMScene3DTool<T extends RMScene3D> extends RMTool<T> {
             scene.setRoll3D(anEvent.getFloatValue());
 
         // Handle Trackball
-        if (anEvent.equals("Trackball"))
-            _trackball.syncTo(scene.getCamera());
+        if (anEvent.getView() == _trackball) {
+            Camera camera = scene.getCamera();
+            camera.setYaw(-_trackball.getYaw());
+            camera.setPitch(_trackball.getPitch());
+            camera.setRoll(_trackball.getRoll());
+        }
 
         // Handle DepthSlider and DepthText
         if (anEvent.equals("DepthSlider") || anEvent.equals("DepthText"))
@@ -82,34 +96,22 @@ public class RMScene3DTool<T extends RMScene3D> extends RMTool<T> {
     /**
      * Returns the class that this tool is responsible for.
      */
-    public Class getShapeClass()
-    {
-        return RMScene3D.class;
-    }
+    public Class getShapeClass()  { return RMScene3D.class; }
 
     /**
      * Returns the name of this tool for the inspector window.
      */
-    public String getWindowTitle()
-    {
-        return "Scene3D Inspector";
-    }
+    public String getWindowTitle()  { return "Scene3D Inspector"; }
 
     /**
      * Overridden to make scene3d super-selectable.
      */
-    public boolean isSuperSelectable(RMShape aShape)
-    {
-        return true;
-    }
+    public boolean isSuperSelectable(RMShape aShape)  { return true; }
 
     /**
      * Overridden to make scene3d not ungroupable.
      */
-    public boolean isUngroupable(RMShape aShape)
-    {
-        return false;
-    }
+    public boolean isUngroupable(RMShape aShape)  { return false; }
 
     /**
      * Event handler for editing.

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ColView Padding="10,4,4,4" Spacing="8" FillWidth="true">
   <RowView Align="CENTER">
-    <View Name="Trackball" PrefWidth="118" PrefHeight="118" Class="com.reportmill.gfx3d.Trackball" />
     <ColView Spacing="8">
       <RowView Spacing="5">
         <Label PrefWidth="32" text="Yaw:" />
