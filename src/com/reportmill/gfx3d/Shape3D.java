@@ -21,8 +21,8 @@ public abstract class Shape3D {
     // Shape opacity
     double _opacity = 1;
 
-    // Whether to fix stroke color
-    boolean _fixEdges;
+    // Whether to try to render sides smoothly (for paths with curves)
+    protected boolean _smoothSides;
 
     /**
      * Returns the color of shape.
@@ -38,6 +38,8 @@ public abstract class Shape3D {
     public void setColor(Color aColor)
     {
         _color = aColor;
+        if (_smoothSides)
+            _strokeColor = _color;
     }
 
     /**
@@ -70,7 +72,7 @@ public abstract class Shape3D {
      */
     public Color getStrokeColor()
     {
-        return _fixEdges ? _color : _strokeColor;
+        return _strokeColor;
     }
 
     /**
@@ -95,6 +97,14 @@ public abstract class Shape3D {
     public void setOpacity(double aValue)
     {
         _opacity = aValue;
+    }
+
+    /**
+     * Called to make sides smooth.
+     */
+    public void setSmoothSides(boolean aValue)
+    {
+        _smoothSides = aValue;
     }
 
     /**

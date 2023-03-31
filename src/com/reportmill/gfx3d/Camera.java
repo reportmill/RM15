@@ -462,7 +462,7 @@ public class Camera {
     /**
      * Returns the bounding rect for camera paths.
      */
-    public Rect getSceneBounds()
+    public Rect getSceneBounds2D()
     {
         // If already set, just return
         if (_sceneBounds != null) return _sceneBounds;

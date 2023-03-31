@@ -176,7 +176,7 @@ public class RMScene3D extends RMParentShape {
     public Rect getBoundsMarked()
     {
         Rect bounds = super.getBoundsMarked();
-        Rect camBnds = _camera.getSceneBounds();
+        Rect camBnds = _camera.getSceneBounds2D();
         if (camBnds.x < bounds.x) bounds.x = camBnds.x;
         if (camBnds.y < bounds.y) bounds.y = camBnds.y;
         if (camBnds.getMaxX() > bounds.getMaxX()) bounds.width = camBnds.getMaxX() - bounds.x;
@@ -215,9 +215,9 @@ public class RMScene3D extends RMParentShape {
 
     /**
      * Adds Shape3D objects for given RMShape.
-     * FixEdges flag indicates wheter to stroke polygons created during extrusion, to try to make them mesh better.
+     * SmoothSides flag indicates whether to stroke polygons created during extrusion, to try to make them mesh better.
      */
-    protected void addShapesForRMShape(RMShape aShape, double z1, double z2, boolean fixEdges)
+    protected void addShapesForRMShape(RMShape aShape, double z1, double z2, boolean smoothSides)
     {
         // If aShape is text, add shape3d for background and add shape3d for char path shape
         if (aShape instanceof RMTextShape) {
@@ -227,12 +227,12 @@ public class RMScene3D extends RMParentShape {
             if (text.getFill() != null || text.getStroke() != null) {
                 RMShape background = new RMPolygonShape(aShape.getPath()); // Create background shape from text
                 background.copyShape(aShape);
-                addShapesForRMShape(background, z1 + .1f, z2, fixEdges); // Add background shape
+                addShapesForRMShape(background, z1 + .1f, z2, smoothSides); // Add background shape
             }
 
             // Get shape for char paths and add shape3d for char path shape
             RMShape charsShape = RMTextShapeUtils.getTextPathShape(text);
-            addShapesForRMShape(charsShape, z1, z1, fixEdges);
+            addShapesForRMShape(charsShape, z1, z1, smoothSides);
             return;
         }
 
@@ -242,7 +242,9 @@ public class RMScene3D extends RMParentShape {
         shapePath.transformBy(aShape.getTransform());
 
         // Get path3d for shape path
-        PathBox3D pathBox = new PathBox3D(shapePath, z1, z2, fixEdges);
+        PathBox3D pathBox = new PathBox3D(shapePath, z1, z2);
+        if (smoothSides)
+            pathBox.setSmoothSides(true);
 
         // Create 3D shape from path, set fill/stroke/opacity and add
         RMFill fill = aShape.getFill();

@@ -19,21 +19,17 @@ public class PathBox3D extends Shape3D {
     // The min/max depth
     double _z1, _z2;
 
-    // Indicates whether to stroke polygons created during extrusion, to try to make them mesh better
-    boolean _fixEdges;
-
     // The path3ds
-    Path3D _path3ds[];
+    Path3D[] _path3ds;
 
     /**
      * Creates a PathBox3D from the given Path3D.
      */
-    public PathBox3D(Path aPath, double z1, double z2, boolean fixEdges)
+    public PathBox3D(Path aPath, double z1, double z2)
     {
         _path = aPath;
         _z1 = z1;
         _z2 = z2;
-        _fixEdges = fixEdges;
     }
 
     /**
@@ -45,7 +41,7 @@ public class PathBox3D extends Shape3D {
         if (_path3ds != null) return _path3ds;
 
         // Create paths for Z1 & Z2
-        Path3D paths[] = getPaths(_path, _z1, _z2, _fixEdges ? .001 : 0);
+        Path3D[] paths = getPaths(_path, _z1, _z2, _smoothSides ? .001 : 0);
 
         // Set Color, Stroke, Opacity
         Color color = getColor(), strokeColor = getStrokeColor();
@@ -55,13 +51,10 @@ public class PathBox3D extends Shape3D {
             Path3D p = paths[i];
             p.setColor(color);
             p.setOpacity(op);
-            if (_fixEdges && i != 0 && i != iMax - 1) {
-                p.setStroke(color, 1.5);
-                p._fixEdges = true;
-            } else {
-                p.setStrokeColor(strokeColor);
-                p.setStroke(stroke);
-            }
+            p.setStrokeColor(strokeColor);
+            p.setStroke(stroke);
+            if (_smoothSides && i != 0 && i != iMax - 1)
+                p.setSmoothSides(true);
         }
 
         // Return paths
@@ -75,7 +68,7 @@ public class PathBox3D extends Shape3D {
     public static Path3D[] getPaths(Path aPath, double z1, double z2, double strokeWidth)
     {
         // Create list to hold paths
-        List<Path3D> paths = new ArrayList();
+        List<Path3D> paths = new ArrayList<>();
         Path3D back = null;
 
         // If path is closed, create path3d for front from aPath and z1
@@ -105,7 +98,11 @@ public class PathBox3D extends Shape3D {
 
         // Iterate over path elements
         PathIter piter = aPath.getPathIter(null);
-        double pts[] = new double[6], lastX = 0, lastY = 0, lastMoveX = 0, lastMoveY = 0;
+        double[] pts = new double[6];
+        double lastX = 0;
+        double lastY = 0;
+        double lastMoveX = 0;
+        double lastMoveY = 0;
         while (piter.hasNext()) switch (piter.getNext(pts)) {
 
             // MoveTo
@@ -175,7 +172,7 @@ public class PathBox3D extends Shape3D {
             paths.add(back);
 
         // Return paths
-        return paths.toArray(new Path3D[paths.size()]);
+        return paths.toArray(new Path3D[0]);
     }
 
 }
