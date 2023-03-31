@@ -21,9 +21,6 @@ public class RMScene3DTool<T extends RMScene3D> extends RMTool<T> {
     {
         // Get Trackball
         _trackball = getView("Trackball", Trackball.class);
-
-        // Initialize RenderingComboBox
-        setViewItems("RenderingComboBox", new String[]{"Real 3D", "Pseudo 3D"});
     }
 
     /**
@@ -34,9 +31,6 @@ public class RMScene3DTool<T extends RMScene3D> extends RMTool<T> {
         // Get the selected scene
         RMScene3D scene = getSelectedShape();
         if (scene == null) return;
-
-        // Reset Rendering radio buttons
-        setViewSelIndex("RenderingComboBox", scene.isPseudo3D() ? 1 : 0);
 
         // Reset YawSpinner, PitchSpinner, RollSpinner
         setViewValue("YawSpinner", Math.round(scene.getYaw()));
@@ -63,10 +57,6 @@ public class RMScene3DTool<T extends RMScene3D> extends RMTool<T> {
         // Get the currently selected scene3d
         RMScene3D scene = getSelectedShape();
         if (scene == null) return;
-
-        // Handle RenderingComboBox
-        if (anEvent.equals("RenderingComboBox"))
-            setPseudo3D(scene.getCamera(), anEvent.getSelIndex() == 1);
 
         // Handle YawSpinner, PitchSpinner, RollSpinner
         if (anEvent.equals("YawSpinner"))
@@ -153,28 +143,4 @@ public class RMScene3DTool<T extends RMScene3D> extends RMTool<T> {
         aScene3D.processEvent(createShapeEvent(aScene3D, anEvent));
         anEvent.consume();
     }
-
-    /**
-     * Sets Psuedo3D with some good settings.
-     */
-    private void setPseudo3D(Camera aCam, boolean isPseudo3D)
-    {
-        // Set defaults for pseudo 3d
-        aCam.setPseudo3D(isPseudo3D);
-        if (isPseudo3D) {
-            aCam.setPseudoSkewX(.3f);
-            aCam.setPseudoSkewY(-.25f);
-            aCam.setDepth(20);
-            aCam.setFocalLength(60 * 72);
-        }
-
-        // Set defaults for true 3d
-        else {
-            aCam.setYaw(23);
-            aCam.setPitch(12);
-            aCam.setDepth(100);
-            aCam.setFocalLength(8 * 72);
-        }
-    }
-
 }

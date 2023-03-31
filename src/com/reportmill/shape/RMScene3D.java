@@ -24,7 +24,7 @@ public class RMScene3D extends RMParentShape {
     Camera _camera;
 
     // List of real child shapes
-    List<RMShape> _rmshapes = new ArrayList();
+    List<RMShape> _rmshapes = new ArrayList<>();
 
     /**
      * Creates an RMScene3D.
@@ -145,86 +145,6 @@ public class RMScene3D extends RMParentShape {
     public void setOffsetZ(double aValue)
     {
         _camera.setOffsetZ(aValue);
-    }
-
-    /**
-     * Returns whether scene is rendered in pseudo 3d.
-     */
-    public boolean isPseudo3D()
-    {
-        return _camera.isPseudo3D();
-    }
-
-    /**
-     * Sets whether scene is rendered in pseudo 3d.
-     */
-    public void setPseudo3D(boolean aFlag)
-    {
-        _camera.setPseudo3D(aFlag);
-    }
-
-    /**
-     * Returns the skew angle for X by Z.
-     */
-    public double getPseudoSkewX()
-    {
-        return _camera.getPseudoSkewX();
-    }
-
-    /**
-     * Sets the skew angle for X by Z.
-     */
-    public void setPseudoSkewX(double anAngle)
-    {
-        _camera.setPseudoSkewX(anAngle);
-    }
-
-    /**
-     * Returns the skew angle for Y by Z.
-     */
-    public double getPseudoSkewY()
-    {
-        return _camera.getPseudoSkewY();
-    }
-
-    /**
-     * Sets the skew angle for Y by Z.
-     */
-    public void setPseudoSkewY(double anAngle)
-    {
-        _camera.setPseudoSkewY(anAngle);
-    }
-
-    /**
-     * Returns the field of view of the camera (derived from focalLength).
-     */
-    public double getFieldOfView()
-    {
-        return _camera.getFieldOfView();
-    }
-
-    /**
-     * Sets the field of view of the camera.
-     */
-    public void setFieldOfView(double aValue)
-    {
-        _camera.setFieldOfView(aValue);
-    }
-
-    /**
-     * Returns the number of shapes in the shape list.
-     */
-    public int getShapeCount()
-    {
-        return _scene.getShapeCount();
-    }
-
-    /**
-     * Returns the specific shape at the given index from the shape list.
-     */
-    public Shape3D getShape(int anIndex)
-    {
-        return _scene.getShape(anIndex);
     }
 
     /**
@@ -480,13 +400,6 @@ public class RMScene3D extends RMParentShape {
         if (getFocalLength() != 60 * 72) e.add("focal-length", getFocalLength());
         if (getOffsetZ() != 0) e.add("offset-z", getOffsetZ());
 
-        // Archive Pseudo3D
-        if (isPseudo3D()) {
-            e.add("pseudo", true);
-            e.add("pseudo-skew-x", getPseudoSkewX());
-            e.add("pseudo-skew-y", getPseudoSkewY());
-        }
-
         // Return xml element
         return e;
     }
@@ -518,16 +431,10 @@ public class RMScene3D extends RMParentShape {
         setFocalLength(anElement.getAttributeFloatValue("focal-length", 60 * 72));
         setOffsetZ(anElement.getAttributeFloatValue("offset-z"));
 
-        // Unarchive Pseudo3D
-        setPseudo3D(anElement.getAttributeBoolValue("pseudo", false));
-        setPseudoSkewX(anElement.getAttributeFloatValue("pseudo-skew-x"));
-        setPseudoSkewY(anElement.getAttributeFloatValue("pseudo-skew-y"));
-
         // Unarchive the 2d children
         XMLElement shapesXML = anElement.get("shapes");
         if (shapesXML != null)
             for (int i = 0, iMax = shapesXML.size(); i < iMax; i++)
                 addShapeRM((RMShape) anArchiver.fromXML(shapesXML.get(i), this));
     }
-
 }

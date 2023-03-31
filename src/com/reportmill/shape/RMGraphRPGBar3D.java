@@ -210,10 +210,6 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         // Constrain bar depth to bar width
         barDepth = Math.min(barDepth, _barWidth);
 
-        // If pseudo3d, depth should be layer depth
-        if (isPseudo3D())
-            barDepth = layerDepth;
-
         // Calcuate bar min/max
         double barMin = (layerDepth - barDepth) / 2;
         double barMax = layerDepth - barMin;
@@ -252,7 +248,7 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         back.addLayer(gridMinor);
 
         // Calculate whether side plane should be shifted to the right. Side normal = { 1, 0, 0 }.
-        boolean shiftSide = _vertical && !isPseudo3D() && isFacingAway(localToCameraForVector(1, 0, 0));
+        boolean shiftSide = _vertical && isFacingAway(localToCameraForVector(1, 0, 0));
         double sideX = shiftSide ? width : 0;
 
         // Create side path shape
@@ -311,43 +307,26 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         if (_backFill != null) sideGridBuddy.setColor(_backFill.getColor());
         if (_backStroke != null) sideGridBuddy.setStroke(_backStroke.getColor(), _backStroke.getWidth());
 
-        // If no pseudo 3d, add axis and bar labels as 3d shapes
-        if (!isPseudo3D()) {
+        // Create axis label shapes
+        for (int i = 0, iMax = _axisLabels.size(); i < iMax && fullRender; i++)
+            addShapesForRMShape(_axisLabels.get(i), -.1f, -.1f, false);
 
-            // Create axis label shapes
-            for (int i = 0, iMax = _axisLabels.size(); i < iMax && fullRender; i++)
-                addShapesForRMShape(_axisLabels.get(i), -.1f, -.1f, false);
+        // Create bar label shapes
+        for (int i = 0, iMax = _barLabels.size(); i < iMax && fullRender; i++) {
 
-            // Create bar label shapes
-            for (int i = 0, iMax = _barLabels.size(); i < iMax && fullRender; i++) {
+            // Get current loop bar label and bar label type
+            RMShape barLabel = _barLabels.get(i);
 
-                // Get current loop bar label and bar label type
-                RMShape barLabel = _barLabels.get(i);
+            // Handle outside labels
+            if (_barLabelPositions.get(i) == RMGraphPartSeries.LabelPos.Above ||
+                    _barLabelPositions.get(i) == RMGraphPartSeries.LabelPos.Below)
+                addShapesForRMShape(barLabel, depth / 2, depth / 2, false);
 
-                // Handle outside labels
-                if (_barLabelPositions.get(i) == RMGraphPartSeries.LabelPos.Above ||
-                        _barLabelPositions.get(i) == RMGraphPartSeries.LabelPos.Below)
-                    addShapesForRMShape(barLabel, depth / 2, depth / 2, false);
-
-                    // Handle inside
-                else addShapesForRMShape(barLabel, (depth - _barWidth) / 2 - 5, (depth - _barWidth) / 2 - 5, false);
-            }
+                // Handle inside
+            else addShapesForRMShape(barLabel, (depth - _barWidth) / 2 - 5, (depth - _barWidth) / 2 - 5, false);
         }
 
         // Do normal version
         super.layoutImpl();
-
-        // If Pseudo3d, add bar labels
-        if (isPseudo3D()) {
-
-            // Create axis label shapes
-            for (int i = 0, iMax = _axisLabels.size(); i < iMax && fullRender; i++)
-                addChild(_axisLabels.get(i));
-
-            // Create bar label shapes
-            for (int i = 0, iMax = _barLabels.size(); i < iMax && fullRender; i++)
-                addChild(_barLabels.get(i));
-        }
     }
-
 }
