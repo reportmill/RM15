@@ -38,114 +38,72 @@ public class RMScene3D extends RMParentShape {
     /**
      * Returns the camera as a vector.
      */
-    public Camera getCamera()
-    {
-        return _camera;
-    }
+    public Camera getCamera()  { return _camera; }
 
     /**
      * Returns the Scene3D.
      */
-    public Scene3D getScene()
-    {
-        return _scene;
-    }
+    public Scene3D getScene()  { return _scene; }
 
     /**
      * Returns the depth of the scene.
      */
-    public double getDepth()
-    {
-        return _camera.getDepth();
-    }
+    public double getDepth()  { return _camera.getDepth(); }
 
     /**
      * Sets the depth of the scene.
      */
-    public void setDepth(double aValue)
-    {
-        _camera.setDepth(aValue);
-    }
+    public void setDepth(double aValue)  { _camera.setDepth(aValue); }
 
     /**
      * Returns the rotation about the Y axis in degrees.
      */
-    public double getYaw()
-    {
-        return _camera.getYaw();
-    }
+    public double getYaw()  { return _camera.getYaw(); }
 
     /**
      * Sets the rotation about the Y axis in degrees.
      */
-    public void setYaw(double aValue)
-    {
-        _camera.setYaw(aValue);
-    }
+    public void setYaw(double aValue)  { _camera.setYaw(aValue); }
 
     /**
      * Returns the rotation about the X axis in degrees.
      */
-    public double getPitch()
-    {
-        return _camera.getPitch();
-    }
+    public double getPitch()  { return _camera.getPitch(); }
 
     /**
      * Sets the rotation about the X axis in degrees.
      */
-    public void setPitch(double aValue)
-    {
-        _camera.setPitch(aValue);
-    }
+    public void setPitch(double aValue)  { _camera.setPitch(aValue); }
 
     /**
      * Returns the rotation about the Z axis in degrees.
      */
-    public double getRoll3D()
-    {
-        return _camera.getRoll();
-    }
+    public double getRoll3D()  { return _camera.getRoll(); }
 
     /**
      * Sets the rotation about the Z axis in degrees.
      */
-    public void setRoll3D(double aValue)
-    {
-        _camera.setRoll(aValue);
-    }
+    public void setRoll3D(double aValue)  { _camera.setRoll(aValue); }
 
     /**
      * Returns the focal length of the camera (derived from the field of view and with view size).
      */
-    public double getFocalLength()
-    {
-        return _camera.getFocalLength();
-    }
+    public double getFocalLength()  { return _camera.getFocalLength(); }
 
     /**
      * Sets the focal length of the camera. Two feet is normal (1728 points).
      */
-    public void setFocalLength(double aValue)
-    {
-        _camera.setFocalLength(aValue);
-    }
+    public void setFocalLength(double aValue)  { _camera.setFocalLength(aValue); }
 
     /**
      * Returns the Z offset of the scene (for zooming).
      */
-    public double getOffsetZ()
-    {
-        return _camera.getOffsetZ();
-    }
+    public double getOffsetZ()  { return _camera.getOffsetZ(); }
 
     /**
      * Sets the Z offset of the scene (for zooming).
      */
-    public void setOffsetZ(double aValue)
-    {
-        _camera.setOffsetZ(aValue);
-    }
+    public void setOffsetZ(double aValue)  { _camera.setOffsetZ(aValue); }
 
     /**
      * Adds a shape to the end of the shape list.
@@ -161,54 +119,6 @@ public class RMScene3D extends RMParentShape {
     public void removeShapes()
     {
         _scene.removeShapes();
-    }
-
-    /**
-     * Returns a path in camera coords for given path in local coords.
-     */
-    public Path3D localToCamera(Path3D aPath)
-    {
-        return _scene.localToCamera(aPath);
-    }
-
-    /**
-     * Returns the given vector in camera coords.
-     */
-    public Vector3D localToCameraForVector(double x, double y, double z)
-    {
-        return _scene.localToCameraForVector(x, y, z);
-    }
-
-    /**
-     * Returns whether a vector is facing camera.
-     */
-    public boolean isFacing(Vector3D aV3D)
-    {
-        return _camera.isFacing(aV3D);
-    }
-
-    /**
-     * Returns whether a vector is facing away from camera.
-     */
-    public boolean isFacingAway(Vector3D aV3D)
-    {
-        return _camera.isFacingAway(aV3D);
-    }
-
-    /**
-     * Returns whether a Path3d is facing camera.
-     */
-    public boolean isFacing(Path3D aPath)
-    {
-        return _camera.isFacing(aPath);
-    }
-
-    /**
-     * Returns whether a Path3d is facing away from camera.
-     */
-    public boolean isFacingAway(Path3D aPath)
-    {
-        return _camera.isFacingAway(aPath);
     }
 
     /**
@@ -289,18 +199,12 @@ public class RMScene3D extends RMParentShape {
     /**
      * Returns the number of shapes in the shape list.
      */
-    public int getShapeRMCount()
-    {
-        return _rmshapes.size();
-    }
+    public int getShapeRMCount()  { return _rmshapes.size(); }
 
     /**
      * Returns the specific shape at the given index from the shape list.
      */
-    public RMShape getShapeRM(int anIndex)
-    {
-        return _rmshapes.get(anIndex);
-    }
+    public RMShape getShapeRM(int anIndex)  { return _rmshapes.get(anIndex); }
 
     /**
      * Adds a shape to the end of the shape list.
@@ -354,18 +258,12 @@ public class RMScene3D extends RMParentShape {
     /**
      * Override to indicate that scene children are unhittable.
      */
-    public boolean isHittable(RMShape aChild)
-    {
-        return false;
-    }
+    public boolean isHittable(RMShape aChild)  { return false; }
 
     /**
      * Viewer method.
      */
-    public boolean acceptsMouse()
-    {
-        return true;
-    }
+    public boolean acceptsMouse()  { return true; }
 
     /**
      * Copy 3D attributes only.
@@ -405,11 +303,9 @@ public class RMScene3D extends RMParentShape {
     }
 
     /**
-     * XML archival of children - overrides shape implementation to suppress archival of generated 3D shapes.
+     * Override to suppress.
      */
-    protected void toXMLChildren(XMLArchiver anArchiver, XMLElement anElement)
-    {
-    }
+    protected void toXMLChildren(XMLArchiver anArchiver, XMLElement anElement)  { }
 
     /**
      * XML unarchival.

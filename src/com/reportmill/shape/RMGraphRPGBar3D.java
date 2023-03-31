@@ -39,16 +39,16 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
     double _barWidth = 0;
 
     // The list of bars
-    List<Bar> _bars = new ArrayList();
+    List<Bar> _bars = new ArrayList<>();
 
     // The list of bar labels
-    List<RMShape> _barLabels = new ArrayList();
+    List<RMShape> _barLabels = new ArrayList<>();
 
     // The list of bar label types (synced with list above)
-    List<RMGraphPartSeries.LabelPos> _barLabelPositions = new ArrayList();
+    List<RMGraphPartSeries.LabelPos> _barLabelPositions = new ArrayList<>();
 
     // Axis label shapes
-    List<RMShape> _axisLabels = new ArrayList();
+    List<RMShape> _axisLabels = new ArrayList<>();
 
     // The number of layers
     int _layerCount;
@@ -156,11 +156,9 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
     }
 
     /**
-     * Adds the axis to the graph view.
+     * Adds the axis to the graph view. Handled in layoutImp
      */
-    public void addAxis(RMShape aShape)
-    {
-    } // Handled in layoutImp
+    public void addAxis(RMShape aShape)  { }
 
     /**
      * Adds the value axis label to the graph view.
@@ -178,22 +176,14 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         _axisLabels.add(anAxisLabel);
     }
 
-    /**
-     * Returns the width of the bars.
-     */
-    public double getBarWidth()
-    {
-        return _barWidth;
-    }
+    /** Returns the width of the bars. */
+    //public double getBarWidth()  { return _barWidth; }
 
     /**
      * Rebuilds 3D representation of shapes from shapes list (called by layout manager).
      */
     protected void layoutImpl()
     {
-        // Get whether to draw fast
-        boolean fullRender = true; // !isValueAdjusting()
-
         // Remove all existing children
         removeChildren();
         removeShapes();
@@ -215,13 +205,15 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         double barMax = layerDepth - barMin;
 
         // Iterate over bars and add each bar shape at bar layer
-        for (int i = 0, iMax = _bars.size(); i < iMax; i++) {
-            Bar bar = _bars.get(i);
+        for (Bar bar : _bars) {
             addShapesForRMShape(bar.barShape, barMin + bar.layer * layerDepth, barMax + bar.layer * layerDepth, false);
         }
 
         // Calculate whether back plane should be shifted to the front. Back normal = { 0, 0,-1 }.
-        boolean shiftBack = isFacingAway(localToCameraForVector(0, 0, -1));
+        Camera camera = getCamera();
+        Scene3D scene = getScene();
+        Vector3D backNormal = scene.localToCameraForVector(0, 0, -1);
+        boolean shiftBack = camera.isFacingAway(backNormal);
         double backZ = shiftBack ? 0 : depth;
 
         // Create back plane shape
@@ -234,7 +226,8 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         back.lineTo(width, height, backZ);
         back.lineTo(width, 0, backZ);
         back.close();
-        if (!shiftBack) back.reverse();
+        if (!shiftBack)
+            back.reverse();
         addShape(back);
 
         // Add Grid to back
@@ -248,7 +241,8 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         back.addLayer(gridMinor);
 
         // Calculate whether side plane should be shifted to the right. Side normal = { 1, 0, 0 }.
-        boolean shiftSide = _vertical && isFacingAway(localToCameraForVector(1, 0, 0));
+        Vector3D sideNormal = scene.localToCameraForVector(1, 0, 0);
+        boolean shiftSide = _vertical && camera.isFacingAway(sideNormal);
         double sideX = shiftSide ? width : 0;
 
         // Create side path shape
@@ -262,9 +256,12 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         side.lineTo(sideX, 0, depth);
         side.close();
 
-        // For horizonatal bar charts, make sure the side panel always points towards the camera
-        boolean sideFacingAway = isFacingAway(localToCamera(side));
-        if (sideFacingAway) side.reverse();
+        // Make sure the side panel always points towards the camera
+        Path3D sideInCameraCoords = scene.localToCamera(side);
+        Vector3D sideNormalInCameraCoords = sideInCameraCoords.getNormal();
+        boolean sideFacingAway = camera.isFacingAway(sideNormalInCameraCoords);
+        if (sideFacingAway)
+            side.reverse();
         addShape(side);
 
         // Create floor path shape
@@ -277,8 +274,13 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         floor.lineTo(width, height + .5, depth);
         floor.lineTo(0, height + .5, depth);
         floor.close();
-        boolean floorFacingAway = isFacingAway(localToCamera(floor));
-        if (floorFacingAway) floor.reverse();
+
+        // Make sure the floor always points towards the camera
+        Path3D floorInCameraCoords = scene.localToCamera(floor);
+        Vector3D floorNormalInCameraCoords = floorInCameraCoords.getNormal();
+        boolean floorFacingAway = camera.isFacingAway(floorNormalInCameraCoords);
+        if (floorFacingAway)
+            floor.reverse();
         addShape(floor);
 
         // Determine whether side grid should be added to graph side or floor
@@ -304,15 +306,17 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         sideGridMinor.transform(gridTrans);
         sideGridMinor.setStroke(Color.LIGHTGRAY, 1);
         sideGridBuddy.addLayer(sideGridMinor);
-        if (_backFill != null) sideGridBuddy.setColor(_backFill.getColor());
-        if (_backStroke != null) sideGridBuddy.setStroke(_backStroke.getColor(), _backStroke.getWidth());
+        if (_backFill != null)
+            sideGridBuddy.setColor(_backFill.getColor());
+        if (_backStroke != null)
+            sideGridBuddy.setStroke(_backStroke.getColor(), _backStroke.getWidth());
 
         // Create axis label shapes
-        for (int i = 0, iMax = _axisLabels.size(); i < iMax && fullRender; i++)
-            addShapesForRMShape(_axisLabels.get(i), -.1f, -.1f, false);
+        for (RMShape axisLabel : _axisLabels)
+            addShapesForRMShape(axisLabel, -.1f, -.1f, false);
 
         // Create bar label shapes
-        for (int i = 0, iMax = _barLabels.size(); i < iMax && fullRender; i++) {
+        for (int i = 0, iMax = _barLabels.size(); i < iMax; i++) {
 
             // Get current loop bar label and bar label type
             RMShape barLabel = _barLabels.get(i);

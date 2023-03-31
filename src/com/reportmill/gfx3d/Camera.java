@@ -51,12 +51,6 @@ public class Camera {
     // Perspective
     double _focalLen = 60 * 72;
 
-    // Whether to do simple 3d rendering effect by skewing geometry a little bit
-    boolean _pseudo3D;
-
-    // The skew in radians along x/y axis when doing pseudo 3d
-    double _pseudoSkewX, _pseudoSkewY;
-
     // Camera normal
     Vector3D _normal = new Vector3D(0, 0, 1);
 
@@ -64,7 +58,7 @@ public class Camera {
     Transform3D _xform3D;
 
     // List of Path3Ds - for rendering
-    List<Path3D> _paths = new ArrayList();
+    List<Path3D> _paths = new ArrayList<>();
 
     // Whether paths list needs to be rebuilt
     boolean _rebuildPaths;
@@ -86,26 +80,17 @@ public class Camera {
     /**
      * Returns the scene this camera is associated with.
      */
-    public Scene3D getScene()
-    {
-        return _scene;
-    }
+    public Scene3D getScene()  { return _scene; }
 
     /**
      * Sets the scene this camera is associated with.
      */
-    public void setScene(Scene3D aScene)
-    {
-        _scene = aScene;
-    }
+    public void setScene(Scene3D aScene)  { _scene = aScene; }
 
     /**
      * Returns the width of the camera viewing plane.
      */
-    public double getWidth()
-    {
-        return _width;
-    }
+    public double getWidth()  { return _width; }
 
     /**
      * Sets the width of the camera viewing plane.
@@ -121,10 +106,7 @@ public class Camera {
     /**
      * Returns the height of the camera viewing plane.
      */
-    public double getHeight()
-    {
-        return _height;
-    }
+    public double getHeight()  { return _height; }
 
     /**
      * Sets the height of the camera viewing plane.
@@ -140,10 +122,7 @@ public class Camera {
     /**
      * Returns the depth of the scene.
      */
-    public double getDepth()
-    {
-        return _depth;
-    }
+    public double getDepth()  { return _depth; }
 
     /**
      * Sets the depth of the scene.
@@ -159,10 +138,7 @@ public class Camera {
     /**
      * Returns the rotation about the Y axis in degrees.
      */
-    public double getYaw()
-    {
-        return _yaw;
-    }
+    public double getYaw()  { return _yaw; }
 
     /**
      * Sets the rotation about the Y axis in degrees.
@@ -178,10 +154,7 @@ public class Camera {
     /**
      * Returns the rotation about the X axis in degrees.
      */
-    public double getPitch()
-    {
-        return _pitch;
-    }
+    public double getPitch()  { return _pitch; }
 
     /**
      * Sets the rotation about the X axis in degrees.
@@ -197,10 +170,7 @@ public class Camera {
     /**
      * Returns the rotation about the Z axis in degrees.
      */
-    public double getRoll()
-    {
-        return _roll;
-    }
+    public double getRoll()  { return _roll; }
 
     /**
      * Sets the rotation about the Z axis in degrees.
@@ -216,10 +186,7 @@ public class Camera {
     /**
      * Returns the focal length of the camera (derived from the field of view and with view size).
      */
-    public double getFocalLength()
-    {
-        return _focalLen;
-    }
+    public double getFocalLength()  { return _focalLen; }
 
     /**
      * Sets the focal length of the camera. Two feet is normal (1728 points).
@@ -235,10 +202,7 @@ public class Camera {
     /**
      * Returns the Z offset of the scene (for zooming).
      */
-    public double getOffsetZ()
-    {
-        return _offsetZ;
-    }
+    public double getOffsetZ()  { return _offsetZ; }
 
     /**
      * Sets the Z offset of the scene (for zooming).
@@ -269,90 +233,9 @@ public class Camera {
     }
 
     /**
-     * Returns whether scene is rendered in pseudo 3d.
-     */
-    public boolean isPseudo3D()
-    {
-        return _pseudo3D;
-    }
-
-    /**
-     * Sets whether scene is rendered in pseudo 3d.
-     */
-    public void setPseudo3D(boolean aFlag)
-    {
-        if (_pseudo3D == aFlag) return;
-        firePropChange("Pseudo3D", _pseudo3D, _pseudo3D = aFlag);
-        rebuildPaths();
-        _xform3D = null;
-    }
-
-    /**
-     * Returns the skew angle for X by Z.
-     */
-    public double getPseudoSkewX()
-    {
-        return _pseudoSkewX;
-    }
-
-    /**
-     * Sets the skew angle for X by Z.
-     */
-    public void setPseudoSkewX(double anAngle)
-    {
-        if (anAngle == _pseudoSkewX) return;
-        firePropChange("PseudoSkewX", _pseudoSkewX, _pseudoSkewX = anAngle);
-        rebuildPaths();
-        _xform3D = null;
-    }
-
-    /**
-     * Returns the skew angle for Y by Z.
-     */
-    public double getPseudoSkewY()
-    {
-        return _pseudoSkewY;
-    }
-
-    /**
-     * Sets the skew angle for Y by Z.
-     */
-    public void setPseudoSkewY(double anAngle)
-    {
-        if (anAngle == _pseudoSkewY) return;
-        firePropChange("PseudoSkewY", _pseudoSkewY, _pseudoSkewY = anAngle);
-        rebuildPaths();
-        _xform3D = null;
-    }
-
-    /**
-     * Returns the field of view of the camera (derived from focalLength).
-     */
-    public double getFieldOfView()
-    {
-        double height = Math.max(getWidth(), getHeight());
-        double fieldOfView = Math.toDegrees(Math.atan(height / (2 * _focalLen)));
-        return fieldOfView * 2;
-    }
-
-    /**
-     * Sets the field of view of the camera.
-     */
-    public void setFieldOfView(double aValue)
-    {
-        double height = Math.max(getWidth(), getHeight());
-        double tanTheta = Math.tan(Math.toRadians(aValue / 2));
-        double focalLength = height / (2 * tanTheta);
-        setFocalLength(focalLength);
-    }
-
-    /**
      * Returns the camera normal as a vector.
      */
-    public Vector3D getNormal()
-    {
-        return _normal;
-    }
+    public Vector3D getNormal()  { return _normal; }
 
     /**
      * Returns the transform from scene coords to camera coords.
@@ -361,17 +244,6 @@ public class Camera {
     {
         // If already set, just return
         if (_xform3D != null) return _xform3D;
-
-        // If pseudo 3d, just return skewed transform
-        if (isPseudo3D()) {
-            Transform3D t = new Transform3D();
-            t.skew(_pseudoSkewX, _pseudoSkewY);
-            t.perspective(getFocalLength());
-            return t;
-        }
-
-        // Bar chart used to do this rotation to "make pitch always relative to camera" instead of rotate below
-        //t.rotateY(_yaw); t.rotate(new Vector3D(1,0,0), _pitch); t.rotate(new Vector3D(0,0,1), _roll);
 
         // Normal transform: translate about center, rotate X & Y, translate by Z, perspective, translate back
         double midx = getWidth() / 2, midy = getHeight() / 2, midz = getDepth() / 2;
@@ -389,11 +261,15 @@ public class Camera {
     protected void adjustZ()
     {
         // Cache and clear Z offset and second Z offset
-        double offZ = getOffsetZ(), _offsetZ = _offsetZ2 = 0;
+        double offZ = getOffsetZ();
+        double _offsetZ = 0;
+        _offsetZ2 = 0;
         _xform3D = null;
 
         // Get bounding box in camera coords with no Z offset
-        double w = getWidth(), h = getHeight(), d = getDepth();
+        double w = getWidth();
+        double h = getHeight();
+        double d = getDepth();
         Path3D bbox = new Path3D();
         bbox.moveTo(0, 0, 0);
         bbox.lineTo(0, 0, d);
@@ -406,43 +282,24 @@ public class Camera {
         bbox.transform(getTransform());
 
         // Get second offset Z from bounding box and restore original Z offset
-        _offsetZ2 = bbox.getZMin();
         _offsetZ = offZ;
+        _offsetZ2 = bbox.getZMin();
         _xform3D = null;
-        if (Math.abs(_offsetZ2) > w) _offsetZ2 = w * MathUtils.sign(_offsetZ2); // Something is brokey
+        if (Math.abs(_offsetZ2) > w)
+            _offsetZ2 = w * MathUtils.sign(_offsetZ2); // Something is brokey
     }
 
-    /**
-     * Returns a point in camera coords for given point in scene coords.
-     */
-    public Point3D sceneToCamera(Point3D aPoint)
-    {
-        return sceneToCamera(aPoint.x, aPoint.y, aPoint.z);
-    }
+    /** Returns a point in camera coords for given point in scene coords. */
+    //public Point3D sceneToCamera(Point3D aPoint)  { return sceneToCamera(aPoint.x, aPoint.y, aPoint.z); }
 
-    /**
-     * Returns a point in camera coords for given point in scene coords.
-     */
-    public Point3D sceneToCamera(double aX, double aY, double aZ)
-    {
-        return getTransform().transformPoint(aX, aY, aZ);
-    }
+    /** Returns a point in camera coords for given point in scene coords. */
+    //public Point3D sceneToCamera(double aX, double aY, double aZ)  { return getTransform().transformPoint(aX, aY, aZ); }
 
-    /**
-     * Returns a path in camera coords for given path in scene coords.
-     */
-    public Path3D sceneToCamera(Path3D aPath)
-    {
-        return aPath.copyFor(getTransform());
-    }
+    /** Returns a path in camera coords for given path in scene coords. */
+    //public Path3D sceneToCamera(Path3D aPath)  { return aPath.copyFor(getTransform()); }
 
-    /**
-     * Returns whether a vector is facing camera.
-     */
-    public boolean isFacing(Vector3D aV3D)
-    {
-        return aV3D.isAway(getNormal(), true);
-    }
+    /** Returns whether a vector is facing camera. */
+    //public boolean isFacing(Vector3D aV3D)  { return aV3D.isAway(getNormal(), true); }
 
     /**
      * Returns whether a vector is facing away from camera.
@@ -453,45 +310,24 @@ public class Camera {
     }
 
     /**
-     * Returns whether a Path3d is facing camera.
-     */
-    public boolean isFacing(Path3D aPath)
-    {
-        return isFacing(aPath.getNormal());
-    }
-
-    /**
-     * Returns whether a Path3d is facing away from camera.
-     */
-    public boolean isFacingAway(Path3D aPath)
-    {
-        return isFacingAway(aPath.getNormal());
-    }
-
-    /**
      * Returns the specific Path3D at the given index from the display list.
      */
     public List<Path3D> getPaths()
     {
-        if (_rebuildPaths) rebuildPathsNow();
+        if (_rebuildPaths)
+            rebuildPathsNow();
         return _paths;
     }
 
     /**
      * Returns the number of Path3Ds in the display list.
      */
-    public int getPathCount()
-    {
-        return getPaths().size();
-    }
+    public int getPathCount()  { return getPaths().size(); }
 
     /**
      * Returns the specific Path3D at the given index from the display list.
      */
-    public Path3D getPath(int anIndex)
-    {
-        return getPaths().get(anIndex);
-    }
+    public Path3D getPath(int anIndex)  { return getPaths().get(anIndex); }
 
     /**
      * Adds a path to the end of the display list.
@@ -617,14 +453,6 @@ public class Camera {
         if (op < 1) aPntr.setOpacity(oldOP);
     }
 
-/** Paints a Path3D with labels on sides. */
-/*private void paintPath3DDebug(Painter aPntr, Path3D aPath3D, String aStr) {
-    aPntr.setOpacity(.8); paintPath3D(aPntr, aPath3D); aPntr.setOpacity(1);
-    Font font = Font.Arial14.getBold(); double asc = font.getAscent(); aPntr.setFont(font);
-    Rect r = font.getStringBounds(aStr), r2 = aPath3D.getPath().getBounds();
-    aPntr.drawString(aStr, r2.x + (r2.width - r.width)/2, r2.y + (r2.height - r.height)/2 + asc);
-}*/
-
     /**
      * Returns the bounding rect for camera paths.
      */
@@ -665,9 +493,6 @@ public class Camera {
         // Handle MouseDragged
         else if (anEvent.isMouseDrag())
             mouseDragged(anEvent);
-
-        // Handle MouseReleased
-        //else if(anEvent.isMouseRelease()) { _valueAdjusting = false; repaint(); relayout(); }
     }
 
     /**
@@ -678,14 +503,8 @@ public class Camera {
         // Get event location in this scene shape coords
         Point point = anEvent.getPoint();
 
-        // If pseudo3d, set skew using event offset
-        if (isPseudo3D()) {
-            setPseudoSkewX(getPseudoSkewX() + (point.x - _pointLast.x) / 100);
-            setPseudoSkewY(getPseudoSkewY() + (point.y - _pointLast.y) / 100);
-        }
-
         // If right-mouse, muck with perspective
-        else if (anEvent.isShortcutDown())
+        if (anEvent.isShortcutDown())
             setOffsetZ(getOffsetZ() + _pointLast.y - point.y);
 
             // Otherwise, just do pitch and roll
@@ -729,9 +548,6 @@ public class Camera {
         setRoll(aCam.getRoll());
         setFocalLength(aCam.getFocalLength());
         setOffsetZ(aCam.getOffsetZ());
-        setPseudo3D(aCam.isPseudo3D());
-        setPseudoSkewX(aCam.getPseudoSkewX());
-        setPseudoSkewY(aCam.getPseudoSkewY());
     }
 
     /**
@@ -741,14 +557,6 @@ public class Camera {
     {
         if (_pcs == PropChangeSupport.EMPTY) _pcs = new PropChangeSupport(this);
         _pcs.addPropChangeListener(aLsnr);
-    }
-
-    /**
-     * Remove listener.
-     */
-    public void removePropChangeListener(PropChangeListener aLsnr)
-    {
-        _pcs.removePropChangeListener(aLsnr);
     }
 
     /**
@@ -767,5 +575,4 @@ public class Camera {
     {
         _pcs.firePropChange(aPCE);
     }
-
 }
