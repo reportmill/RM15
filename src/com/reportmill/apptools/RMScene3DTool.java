@@ -2,7 +2,7 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.apptools;
-import com.reportmill.gfx3d.Camera;
+import snap.gfx3d.Camera;
 import snap.gfx3d.Trackball;
 import com.reportmill.shape.*;
 import snap.view.ColView;
@@ -46,7 +46,7 @@ public class RMScene3DTool<T extends RMScene3D> extends RMTool<T> {
 
         // Reset scene control
         Camera camera = scene.getCamera();
-        _trackball.setYaw(-camera.getYaw());
+        _trackball.setYaw(camera.getYaw());
         _trackball.setPitch(camera.getPitch());
         _trackball.setRoll(camera.getRoll());
 
@@ -79,7 +79,7 @@ public class RMScene3DTool<T extends RMScene3D> extends RMTool<T> {
         // Handle Trackball
         if (anEvent.getView() == _trackball) {
             Camera camera = scene.getCamera();
-            camera.setYaw(-_trackball.getYaw());
+            camera.setYaw(_trackball.getYaw());
             camera.setPitch(_trackball.getPitch());
             camera.setRoll(_trackball.getRoll());
         }

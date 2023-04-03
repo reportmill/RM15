@@ -2,7 +2,7 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.shape;
-import com.reportmill.gfx3d.*;
+import snap.gfx3d.*;
 import com.reportmill.graphics.*;
 import java.util.*;
 import snap.geom.Path;
@@ -66,7 +66,7 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         setBounds(_graph.getBounds());
         setOpacity(_graph.getOpacity());
         copy3D(_graph.get3D());
-        getCamera().setAdjustZ(true);
+        //getCamera().setAdjustZ(true);
     }
 
     /**
@@ -214,7 +214,8 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
 
         // Calculate whether back plane should be shifted to the front. Back normal = { 0, 0,-1 }.
         Camera camera = getCamera();
-        Vector3D backNormal = scene.localToCameraForVector(0, 0, -1);
+        Matrix3D sceneToCamera = camera.getSceneToCamera();
+        Vector3D backNormal = sceneToCamera.transformVector(new Vector3D(0, 0, -1));
         boolean shiftBack = camera.isFacingAway(backNormal);
         double backZ = shiftBack ? 0 : depth;
 
@@ -228,23 +229,24 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         back.lineTo(width, height, backZ);
         back.lineTo(width, 0, backZ);
         back.close();
-        if (!shiftBack)
+        if (shiftBack)
             back.reverse();
         scene.addChild(back);
 
         // Add Grid to back
         Path3D grid = new Path3D(_grid, backZ);
         grid.setStroke(Color.BLACK, 1);
-        back.addLayer(grid);
+        //back.addLayer(grid);
 
         // Add GridMinor to back
         Path3D gridMinor = new Path3D(_gridMinor, backZ);
         gridMinor.setStrokeColor(Color.LIGHTGRAY);
-        back.addLayer(gridMinor);
+        //back.addLayer(gridMinor);
 
         // Calculate whether side plane should be shifted to the right. Side normal = { 1, 0, 0 }.
-        Vector3D sideNormal = scene.localToCameraForVector(1, 0, 0);
-        boolean shiftSide = _vertical && camera.isFacingAway(sideNormal);
+        Vector3D sideNormalInCameraCoords = sceneToCamera.transformVector(new Vector3D(1, 0, 0));
+        boolean sideFacingCamera = !camera.isFacingAway(sideNormalInCameraCoords);
+        boolean shiftSide = _vertical && !sideFacingCamera;
         double sideX = shiftSide ? width : 0;
 
         // Create side path shape
@@ -253,16 +255,13 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         side.setStroke(Color.BLACK, 1);
         side.setOpacity(.8f);
         side.moveTo(sideX, 0, 0);
-        side.lineTo(sideX, height, 0);
-        side.lineTo(sideX, height, depth);
         side.lineTo(sideX, 0, depth);
+        side.lineTo(sideX, height, depth);
+        side.lineTo(sideX, height, 0);
         side.close();
 
         // Make sure the side panel always points towards the camera
-        Path3D sideInCameraCoords = scene.localToCamera(side);
-        Vector3D sideNormalInCameraCoords = sideInCameraCoords.getNormal();
-        boolean sideFacingAway = camera.isFacingAway(sideNormalInCameraCoords);
-        if (sideFacingAway)
+        if (sideFacingCamera)
             side.reverse();
         scene.addChild(side);
 
@@ -271,17 +270,17 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         floor.setColor(Color.LIGHTGRAY);
         floor.setStroke(Color.BLACK, 1);
         floor.setOpacity(.8f);
-        floor.moveTo(0, height + .5, 0);
-        floor.lineTo(width, height + .5, 0);
-        floor.lineTo(width, height + .5, depth);
-        floor.lineTo(0, height + .5, depth);
+        floor.moveTo(0, -1, 0);
+        floor.lineTo(width, -1, 0);
+        floor.lineTo(width, -1, depth);
+        floor.lineTo(0, -1, depth);
         floor.close();
+        floor.setDoubleSided(true);
 
         // Make sure the floor always points towards the camera
-        Path3D floorInCameraCoords = scene.localToCamera(floor);
-        Vector3D floorNormalInCameraCoords = floorInCameraCoords.getNormal();
+        Vector3D floorNormalInCameraCoords = sceneToCamera.transformVector(new Vector3D(0, 1, 0));
         boolean floorFacingAway = camera.isFacingAway(floorNormalInCameraCoords);
-        if (floorFacingAway)
+        if (!floorFacingAway)
             floor.reverse();
         scene.addChild(floor);
 
@@ -292,22 +291,22 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
                 new Rect(gridWithoutSepBnds.x, 0, gridWithoutSepBnds.width, depth);
         Rect gridMinorRect = _vertical ? new Rect(0, gridMinorBnds.y, depth, gridMinorBnds.height) :
                 new Rect(gridMinorBnds.x, 0, gridMinorBnds.width, depth);
-        Transform3D gridTrans = _vertical ? new Transform3D().rotateY(-90).translate(sideX, 0, 0) :
-                new Transform3D().rotateX(90).translate(0, height, 0);
+        //Transform3D gridTrans = _vertical ? new Transform3D().rotateY(-90).translate(sideX, 0, 0) :
+        //        new Transform3D().rotateX(90).translate(0, height, 0);
 
         // Configure grid
         Path sideGridPath = _gridWithoutSep.copyFor(gridRect);
         Path3D sideGrid = new Path3D(sideGridPath, 0);
-        sideGrid.transform(gridTrans);
+        //sideGrid.transform(gridTrans);
         sideGrid.setStroke(Color.BLACK, 1);
-        sideGridBuddy.addLayer(sideGrid);
+        //sideGridBuddy.addLayer(sideGrid);
 
         // Add GridMinor to side3d
         Path sideGridPathMinor = _gridMinor.copyFor(gridMinorRect);
         Path3D sideGridMinor = new Path3D(sideGridPathMinor, 0);
-        sideGridMinor.transform(gridTrans);
+        //sideGridMinor.transform(gridTrans);
         sideGridMinor.setStroke(Color.LIGHTGRAY, 1);
-        sideGridBuddy.addLayer(sideGridMinor);
+        //sideGridBuddy.addLayer(sideGridMinor);
         if (_backFill != null)
             sideGridBuddy.setColor(_backFill.getColor());
         if (_backStroke != null)
@@ -315,7 +314,7 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
 
         // Create axis label shapes
         for (RMShape axisLabel : _axisLabels)
-            addShapesForRMShape(axisLabel, -.1f, -.1f, false);
+            addShapesForRMShape(axisLabel, depth + 1, depth + 1, false);
 
         // Create bar label shapes
         for (int i = 0, iMax = _barLabels.size(); i < iMax; i++) {

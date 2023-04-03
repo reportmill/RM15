@@ -2,7 +2,7 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.out;
-import com.reportmill.gfx3d.*;
+import snap.gfx3d.*;
 import com.reportmill.graphics.*;
 import com.reportmill.shape.*;
 import java.util.*;
@@ -237,14 +237,14 @@ public class RMShapePdfrs {
             super.writeShape(aScene3D, aWriter);
 
             // Write Path3Ds
-            Camera camera = aScene3D.getCamera();
-            List<Path3D> paths = camera.getPaths();
-            for (Path3D path : paths) {
-                writePath(aScene3D, path, aWriter);
-                if (path.getLayers().size() > 0)
-                    for (Path3D layer : path.getLayers())
-                        writePath(aScene3D, layer, aWriter);
-            }
+//            Camera camera = aScene3D.getCamera();
+//            List<Path3D> paths = camera.getPaths();
+//            for (Path3D path : paths) {
+//                writePath(aScene3D, path, aWriter);
+//                if (path.getLayers().size() > 0)
+//                    for (Path3D layer : path.getLayers())
+//                        writePath(aScene3D, layer, aWriter);
+//            }
         }
 
         /**
@@ -253,7 +253,7 @@ public class RMShapePdfrs {
         protected void writePath(RMScene3D aScene3D, Path3D aPath, PDFWriter aWriter)
         {
             // Get path, fill and stroke
-            Shape path = aPath.getPath();
+            Shape path = null;//aPath.getPath();
             Color fillColor = aPath.getColor();
             Color strokeColor = aPath.getStrokeColor();
             PDFPageWriter pdfPage = aWriter.getPageWriter();

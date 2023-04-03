@@ -2,7 +2,9 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.shape;
-import com.reportmill.gfx3d.*;
+import snap.geom.Point;
+import snap.geom.Transform;
+import snap.gfx3d.*;
 import com.reportmill.graphics.*;
 import java.util.*;
 import snap.geom.Path;
@@ -62,7 +64,7 @@ public class RMScene3D extends RMParentShape {
         if (aValue == _depth) return;
         double oldDepth = _depth;
         _depth = aValue;
-        _camera.fireDepthPropChange(oldDepth, _depth);
+        //_camera.fireDepthPropChange(oldDepth, _depth);
     }
 
     /**
@@ -231,20 +233,41 @@ public class RMScene3D extends RMParentShape {
         shapePath = shapePath.getPathFlattened();
         shapePath.transformBy(aShape.getTransform());
 
-        // Get path3d for shape path
-        PathBox3D pathBox = new PathBox3D(shapePath, z1, z2);
-        if (smoothSides)
-            pathBox.setSmoothSides(true);
+        // Flip path
+        flipPath(shapePath, getHeight());
+
+        // Handle no depth: Create Path3D double-sided
+        Shape3D shape3D;
+        if (MathUtils.equals(z1, z2)) {
+            shape3D = new Path3D(shapePath, z1);
+            shape3D.setDoubleSided(true);
+        }
+
+        // Handle Extruded shapes: Create PathBox3D for z1/z3
+        else {
+            shape3D = new PathBox3D(shapePath, z1, z2);
+            if (smoothSides)
+                shape3D.setSmoothSides(true);
+        }
 
         // Create 3D shape from path, set fill/stroke/opacity and add
         RMFill fill = aShape.getFill();
         if (fill != null)
-            pathBox.setColor(fill.getColor());
+            shape3D.setColor(fill.getColor());
         RMStroke stroke = aShape.getStroke();
         if (stroke != null)
-            pathBox.setStroke(stroke.getColor(), stroke.getWidth());
-        pathBox.setOpacity(aShape.getOpacity());
-        _scene.addChild(pathBox);
+            shape3D.setStroke(stroke.getColor(), stroke.getWidth());
+        shape3D.setOpacity(aShape.getOpacity());
+        _scene.addChild(shape3D);
+    }
+
+    void flipPath(Path aPath, double aHeight)
+    {
+        for (int i = 0, iMax = aPath.getPointCount(); i < iMax; i++) {
+            Point p = aPath.getPoint(i);
+            double newY = aHeight - p.y;
+            aPath.setPoint(i, p.x, newY);
+        }
     }
 
     /**

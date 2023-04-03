@@ -3,7 +3,7 @@
  */
 package com.reportmill.shape;
 import com.reportmill.base.*;
-import com.reportmill.gfx3d.Scene3D;
+import snap.gfx3d.Scene3D;
 import com.reportmill.graphics.*;
 import java.util.*;
 import snap.geom.Rect;
@@ -450,22 +450,20 @@ class RMGraphRPGPie extends RMGraphRPG {
             // Remove Scene children
             Scene3D scene = getScene();
             scene.removeChildren();
+            double wedgeDepth = getDepth();
 
             // Iterate over wedges and add them as 3D
-            for (int i = 0, iMax = _wedges.size(); i < iMax; i++) {
-                RMShape wedge = _wedges.get(i);
-                addShapesForRMShape(wedge, 0, getDepth(), true);
+            for (RMShape wedge : _wedges) {
+                addShapesForRMShape(wedge, 0, wedgeDepth, true);
             }
 
             // Iterate over lines and add them as 3D
             //for(int i=0, iMax=_lines.size(); i<iMax; i++) addChild3D(_lines.get(i), getDepth()/3-5, getDepth()/3-5);
 
             // Create label shapes
-            boolean fullRender = true; // !isValueAdjusting()
-            for (int i = 0, iMax = _labels.size(); i < iMax && fullRender; i++) {
-                RMShape label = _labels.get(i);
-                addShapesForRMShape(label, -5, -5, false);
-            }
+            double labelZ = wedgeDepth + 1;
+            for (RMShape label : _labels)
+                addShapesForRMShape(label, labelZ, labelZ, false);
 
             // Do normal version
             super.layoutImpl();
