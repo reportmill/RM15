@@ -8,7 +8,6 @@ import com.reportmill.graphics.*;
 import java.util.*;
 import java.util.List;
 import snap.gfx.*;
-import snap.props.PropChange;
 import snap.util.*;
 
 /**
@@ -27,88 +26,83 @@ import snap.util.*;
 public class RMGraph extends RMParentShape {
 
     // The dataset key used to get graph objects
-    String _datasetKey;
+    private String _datasetKey;
 
     // An optional key expression used to limit the table list derived from dataset key
-    String _filterKey;
+    private String _filterKey;
 
     // The list of keys to be graphed
-    List<String> _keys = new ArrayList();
+    private List<String> _keys = new ArrayList<>();
 
     // The type of graph
-    Type _type = Type.Bar;
+    private Type _type = Type.Bar;
 
     // The graph object grouper
-    RMGrouping _grouping = new RMGrouping("Objects");
+    private RMGrouping _grouping = new RMGrouping("Objects");
 
     // The the layout of section values
-    SectionLayout _sectionLayout = SectionLayout.Merge;
+    private SectionLayout _sectionLayout = SectionLayout.Merge;
 
     // The layout of the section items values
-    ItemLayout _itemsLayout = ItemLayout.Abreast;
+    private ItemLayout _itemsLayout = ItemLayout.Abreast;
 
     // The graph area bar shape
-    RMGraphPartBars _bars = new RMGraphPartBars();
+    private RMGraphPartBars _bars = new RMGraphPartBars();
 
     // The graph area pie shape
-    RMGraphPartPie _pie = new RMGraphPartPie();
+    private RMGraphPartPie _pie = new RMGraphPartPie();
 
     // The graph area value axis
-    RMGraphPartValueAxis _valueAxis = new RMGraphPartValueAxis();
+    private RMGraphPartValueAxis _valueAxis = new RMGraphPartValueAxis();
 
     // The graph area label axis
-    RMGraphPartLabelAxis _labelAxis = new RMGraphPartLabelAxis();
+    private RMGraphPartLabelAxis _labelAxis = new RMGraphPartLabelAxis();
 
     // The graph area series shape
-    List<RMGraphPartSeries> _series = new ArrayList();
+    private List<RMGraphPartSeries> _series = new ArrayList<>();
 
     // The graph area 3D shape
-    RMScene3D _3d;
+    private RMScene3D _3d;
 
     // Whether to draw graph in 3D
-    boolean _draw3D = true;
+    private boolean _draw3D = true;
 
     // Whether graph should color individual items
-    boolean _colorItems;
+    private boolean _colorItems;
 
     // A key that can be evaluated on graph data item to return color string
-    String _colorKey;
+    private String _colorKey;
 
     // This list of colors this graph uses
-    List _colors;
+    private List<RMColor> _colors;
 
     // A standin shape for editor to allow setting fill, stroke, font of component shapes
-    RMShape _proxyShape;
+    private RMShape _proxyShape;
 
     // Whether to ignore proxy
-    boolean _proxyDisable;
+    private boolean _proxyDisable;
 
     // The shared default list of colors all graphs use
-    static List<RMColor> _defaultColors;
+    private static List<RMColor> _defaultColors;
 
     // Constants for Graph type
     public enum Type {Bar, BarH, Area, Line, Scatter, Pie}
 
-    ;
-
     // Constants for section layouts
     public enum SectionLayout {Merge, Separate}
 
-    ;
-
     // Constants for item layouts
     public enum ItemLayout {Abreast, Stacked, Layered}
-
-    ;
 
     // Constants for properties
     public static final String ProxyShape_Prop = "ProxyShape";
 
     /**
-     * Creates an RMGraph.
+     * Constructor.
      */
     public RMGraph()
     {
+        super();
         _bars._parent = this;
         _pie._parent = this;
         _valueAxis._parent = this;
@@ -118,10 +112,7 @@ public class RMGraph extends RMParentShape {
     /**
      * Returns the dataset key associated with the graph.
      */
-    public String getDatasetKey()
-    {
-        return _datasetKey;
-    }
+    public String getDatasetKey()  { return _datasetKey; }
 
     /**
      * Sets the dataset key associated with the graph.
@@ -214,12 +205,10 @@ public class RMGraph extends RMParentShape {
      */
     public String getGraphTypeString()
     {
-        if (_type == Type.Bar) return "bar";
-        if (_type == Type.BarH) return "hbar";
-        if (_type == Type.Area) return "area";
-        if (_type == Type.Line) return "line";
-        if (_type == Type.Scatter) return "scatter";
-        if (_type == Type.Pie) return "pie";
+        if (_type == Type.BarH)
+            return "hbar";
+        if (_type != null)
+            return _type.toString().toLowerCase();
         return null;
     }
 
@@ -228,29 +217,37 @@ public class RMGraph extends RMParentShape {
      */
     public void setGraphTypeString(String aString)
     {
-        if (aString.equals("bar")) setType(Type.Bar);
-        else if (aString.equals("hbar")) setType(Type.BarH);
-        else if (aString.equals("area")) setType(Type.Area);
-        else if (aString.equals("line")) setType(Type.Line);
-        else if (aString.equals("scatter")) setType(Type.Scatter);
-        else if (aString.equals("pie")) setType(Type.Pie);
+        Type graphType = getGraphTypeForString(aString);
+        setType(graphType);
+    }
+
+    /**
+     * Sets the graph type as a simple string: bar, pie or hbar.
+     */
+    private Type getGraphTypeForString(String aString)
+    {
+        switch (aString) {
+            case "bar": return Type.Bar;
+            case "hbar": return Type.BarH;
+            case "area": return Type.Area;
+            case "line": return Type.Line;
+            case "scatter": return Type.Scatter;
+            case "pie": return Type.Pie;
+            default:
+                System.err.println("RMGraph.getGraphTypeForString: Unknown type string: " + aString);
+                return Type.Bar;
+        }
     }
 
     /**
      * Returns the graph grouping.
      */
-    public RMGrouping getGrouping()
-    {
-        return _grouping;
-    }
+    public RMGrouping getGrouping()  { return _grouping; }
 
     /**
      * Returns the layout of series values.
      */
-    public SectionLayout getSectionLayout()
-    {
-        return _sectionLayout;
-    }
+    public SectionLayout getSectionLayout()  { return _sectionLayout; }
 
     /**
      * Sets the layout of series values.
@@ -266,10 +263,7 @@ public class RMGraph extends RMParentShape {
     /**
      * Returns the layout of section items.
      */
-    public ItemLayout getItemsLayout()
-    {
-        return _itemsLayout;
-    }
+    public ItemLayout getItemsLayout()  { return _itemsLayout; }
 
     /**
      * Sets the layout of section items.
@@ -285,43 +279,22 @@ public class RMGraph extends RMParentShape {
     /**
      * Returns whether graph area is considered vertical.
      */
-    public boolean isVertical()
-    {
-        return getType() != RMGraph.Type.BarH;
-    }
+    public boolean isVertical()  { return getType() != RMGraph.Type.BarH; }
 
     /**
      * Returns whether section items layout is abreast.
      */
-    public boolean isAbreast()
-    {
-        return getItemsLayout() == ItemLayout.Abreast;
-    }
+    public boolean isAbreast()  { return getItemsLayout() == ItemLayout.Abreast; }
 
     /**
      * Returns whether section items layout is stacked.
      */
-    public boolean isStacked()
-    {
-        return getItemsLayout() == ItemLayout.Stacked;
-    }
+    public boolean isStacked()  { return getItemsLayout() == ItemLayout.Stacked; }
 
     /**
      * Returns whether section items layout is layered.
      */
-    public boolean isLayered()
-    {
-        return getItemsLayout() == ItemLayout.Layered;
-    }
-
-    /**
-     * Overrides shape implementation to repaint parent too.
-     */
-    public void repaint()
-    {
-        //if(getParent()!=null) getParent().repaint();
-        super.repaint();
-    }
+    public boolean isLayered()  { return getItemsLayout() == ItemLayout.Layered; }
 
     /**
      * Overrides to relayout legend too.
@@ -329,49 +302,35 @@ public class RMGraph extends RMParentShape {
     public void relayout()
     {
         super.relayout();
-        RMGraphLegend leg = getLegend();
-        if (leg != null) leg.resetItems();
+        RMGraphLegend legend = getLegend();
+        if (legend != null)
+            legend.resetItems();
     }
 
     /**
      * Returns the value axis shape.
      */
-    public RMGraphPartValueAxis getValueAxis()
-    {
-        return _valueAxis;
-    }
+    public RMGraphPartValueAxis getValueAxis()  { return _valueAxis; }
 
     /**
      * Returns the label axis shape.
      */
-    public RMGraphPartLabelAxis getLabelAxis()
-    {
-        return _labelAxis;
-    }
+    public RMGraphPartLabelAxis getLabelAxis()  { return _labelAxis; }
 
     /**
      * Returns the bars shape.
      */
-    public RMGraphPartBars getBars()
-    {
-        return _bars;
-    }
+    public RMGraphPartBars getBars()  { return _bars; }
 
     /**
      * Returns the pie shape.
      */
-    public RMGraphPartPie getPie()
-    {
-        return _pie;
-    }
+    public RMGraphPartPie getPie()  { return _pie; }
 
     /**
      * Returns the number of series.
      */
-    public int getSeriesCount()
-    {
-        return getKeyCount();
-    }
+    public int getSeriesCount()  { return getKeyCount(); }
 
     /**
      * Returns the individual series object and the given index.
@@ -397,7 +356,7 @@ public class RMGraph extends RMParentShape {
     }
 
     /**
-     * Returns the 3d shape.
+     * Returns the RMScene3D used to hold 3D props.
      */
     public RMScene3D get3D()
     {
@@ -410,34 +369,28 @@ public class RMGraph extends RMParentShape {
         p3d.setYaw(8);
         p3d.setPitch(11);
         p3d.setFocalLength(8 * 72);
-        p3d.getCamera().addPropChangeListener(pc -> thr3DPropChange(pc));
+        p3d.getCamera().addPropChangeListener(pc -> props3dDidPropChange());
+        p3d.addPropChangeListener(pc -> props3dDidPropChange());
         return _3d = p3d;
     }
 
-    // Called when 3D changes to sync to graph.
-    void thr3DPropChange(PropChange anEvent)
+    /**
+     * Called when Graph RMScene3D changes (camera + depth props) to sync with visible RMScene3D.
+     */
+    private void props3dDidPropChange()
     {
-        repaint();
-        RMScene3D p3d = getChildCount() > 0 && getChild(0) instanceof RMScene3D ? (RMScene3D) getChild(0) : null;
-        if (p3d != null)
-            p3d.copy3D(get3D());
+        RMShape firstChild = getChildCount() > 0 ? getChild(0) : null;
+        RMScene3D props3D = firstChild instanceof RMScene3D ? (RMScene3D) firstChild : null;
+        if (props3D != null) {
+            RMScene3D threeD = get3D();
+            props3D.copy3D(threeD);
+        }
     }
 
     /**
      * Returns whether the graph draws in 3D.
      */
-    public boolean isDraw3D()
-    {
-        return _draw3D;
-    }
-
-    /**
-     * Returns whether the graph draws in 3D.
-     */
-    public boolean getDraw3D()
-    {
-        return _draw3D;
-    }
+    public boolean isDraw3D()  { return _draw3D; }
 
     /**
      * Sets whether the graph draws in 3D.
@@ -453,16 +406,14 @@ public class RMGraph extends RMParentShape {
      */
     public RMGraphLegend getLegend()
     {
-        return getParent() != null ? getParent().getChildWithClass(RMGraphLegend.class) : null;
+        RMParentShape parent = getParent();
+        return parent != null ? parent.getChildWithClass(RMGraphLegend.class) : null;
     }
 
     /**
      * Returns whether the graph shows a legend.
      */
-    public boolean isShowLegend()
-    {
-        return getLegend() != null;
-    }
+    public boolean isShowLegend()  { return getLegend() != null; }
 
     /**
      * Sets whether the graph shows a legend.
@@ -490,10 +441,7 @@ public class RMGraph extends RMParentShape {
     /**
      * Returns whether graph should color individual items.
      */
-    public boolean isColorItems()
-    {
-        return _colorItems;
-    }
+    public boolean isColorItems()  { return _colorItems; }
 
     /**
      * Sets whether graph should color individual items.
@@ -503,17 +451,12 @@ public class RMGraph extends RMParentShape {
         if (aValue == isColorItems()) return;
         firePropChange("ColorItems", _colorItems, _colorItems = aValue);
         relayout();
-        if (getLegend() != null)
-            getLegend().resetItems();
     }
 
     /**
      * Returns the key evaluated on graph data item to return color string.
      */
-    public String getColorKey()
-    {
-        return _colorKey;
-    }
+    public String getColorKey()  { return _colorKey; }
 
     /**
      * Sets the key evaluated on graph data item to return color string.
@@ -534,10 +477,7 @@ public class RMGraph extends RMParentShape {
     /**
      * Returns the number of colors set for this graph.
      */
-    public int getColorCount()
-    {
-        return getColors().size();
-    }
+    public int getColorCount()  { return getColors().size(); }
 
     /**
      * Returns the specific color at the given index. Automatically wraps if index exceeds color count.
@@ -552,13 +492,14 @@ public class RMGraph extends RMParentShape {
      */
     public List<RMColor> getColors()
     {
-        return _colors == null ? getDefaultColors() : _colors;
+        if (_colors != null) return _colors;
+        return _colors = getDefaultColors();
     }
 
     /**
      * Sets the list of colors to be used by this graph.
      */
-    public void setColors(List aColorList)
+    public void setColors(List<RMColor> aColorList)
     {
         _colors = aColorList;
         relayout();
@@ -567,31 +508,32 @@ public class RMGraph extends RMParentShape {
     /**
      * Returns the default list of colors to be used by any graph without an explicit list of colors.
      */
-    public static List getDefaultColors()
+    public static List<RMColor> getDefaultColors()
     {
-        // If default colors haven't been created, create them
-        if (_defaultColors == null) {
-            _defaultColors = Arrays.asList(
-                    new RMColor("#5064CD"),
-                    new RMColor("#50AF64"),
-                    new RMColor("#CD5050"), //new RMColor(200/255f, 0f, 0f), // Red
-                    //new RMColor(0f, 200/255f, 0f), // Green //new RMColor(0f, 0f, 200/255f), // Blue
-                    new RMColor(0f, 200 / 255f, 200 / 255f), // Cyan
-                    new RMColor(200 / 255f, 0f, 200 / 255f), // Magenta
-                    new RMColor(200 / 255f, 200 / 255f, 0f), // Yellow
-                    new RMColor(255 / 255f, 127 / 255f, 0f), // Orange
-                    new RMColor(127 / 255f, 0 / 255f, 127 / 255f), // Purple
-                    new RMColor(153 / 255f, 102 / 255f, 51 / 255f)); // Brown
-        }
+        // If already set, just return
+        if (_defaultColors != null) return _defaultColors;
 
-        // Return default colors list
-        return _defaultColors;
+        // Create DefaultColors list
+        List<RMColor> defaultColors = Arrays.asList(
+            new RMColor("#5064CD"),
+            new RMColor("#50AF64"),
+            new RMColor("#CD5050"), //new RMColor(200/255f, 0f, 0f), // Red
+            //new RMColor(0f, 200/255f, 0f), // Green //new RMColor(0f, 0f, 200/255f), // Blue
+            new RMColor(0f, 200 / 255f, 200 / 255f), // Cyan
+            new RMColor(200 / 255f, 0f, 200 / 255f), // Magenta
+            new RMColor(200 / 255f, 200 / 255f, 0f), // Yellow
+            new RMColor(255 / 255f, 127 / 255f, 0f), // Orange
+            new RMColor(127 / 255f, 0 / 255f, 127 / 255f), // Purple
+            new RMColor(153 / 255f, 102 / 255f, 51 / 255f)); // Brown
+
+        // Set/return
+        return _defaultColors = defaultColors;
     }
 
     /**
      * Sets the default list of colors to be used by any graph without an explicit list of colors.
      */
-    public static void setDefaultColors(List aList)
+    public static void setDefaultColors(List<RMColor> aList)
     {
         _defaultColors = aList;
     }
@@ -603,16 +545,14 @@ public class RMGraph extends RMParentShape {
     {
         // Recreate and add sample graph
         removeChildren();
-        addChild(createSampleGraph());
+        RMShape sampleGraph = createSampleGraph();
+        addChild(sampleGraph);
     }
 
     /**
      * Override to suppress selection of children.
      */
-    protected boolean isHittable(RMShape aChild)
-    {
-        return false;
-    }
+    protected boolean isHittable(RMShape aChild)  { return false; }
 
     /**
      * Returns a graph area configured like this one showing sample data.
@@ -640,13 +580,14 @@ public class RMGraph extends RMParentShape {
     /**
      * Returns a list of sample objects for this graph.
      */
-    private List getSampleObjects()
+    private List<Map<String,Float>> getSampleObjects()
     {
         // Get key count (make it at least 1) and create some sample values
         int keyCount = getKeyCount();
         if (keyCount == 0) keyCount = 1;
-        float values[] = {.9f, .7f, .6f, .45f, .35f, .2f};
-        if (getType().equals(Type.Pie) && keyCount > 1) values = new float[]{.9f};
+        float[] values = { .9f, .7f, .6f, .45f, .35f, .2f };
+        if (getType().equals(Type.Pie) && keyCount > 1)
+            values = new float[]{.9f};
 
         // If value axis has max value set, adjust sample values
         if (getValueAxis().getAxisMax() != Float.MIN_VALUE)
@@ -659,11 +600,12 @@ public class RMGraph extends RMParentShape {
             sampleCount = 1;
 
         // Create sample objects: start with hard coded values and diminish by fraction for each series
-        List objects = new ArrayList();
+        List<Map<String,Float>> objects = new ArrayList<>();
         for (int i = 0; i < sampleCount; i++) {
-            Map map = new HashMap();
+            Map<String,Float> map = new HashMap<>();
             objects.add(map); // Create object and add to list
-            for (int j = 0; j < keyCount; j++) map.put("test" + j, values[i] / (j + 1));
+            for (int j = 0; j < keyCount; j++)
+                map.put("test" + j, values[i] / (j + 1));
         }
 
         // Return objects
@@ -708,17 +650,12 @@ public class RMGraph extends RMParentShape {
     /**
      * Override to suppress background paint.
      */
-    public void paintShape(Painter aPntr)
-    {
-    }
+    public void paintShape(Painter aPntr)  { }
 
     /**
      * Return ProxyShape.
      */
-    public RMShape getProxyShape()
-    {
-        return _proxyShape;
-    }
+    public RMShape getProxyShape()  { return _proxyShape; }
 
     /**
      * Sets the ProxyShape.
@@ -880,18 +817,22 @@ public class RMGraph extends RMParentShape {
     {
         _proxyDisable = true;
         RMGraph clone = (RMGraph) super.clone();
-        clone._keys = new ArrayList(_keys);
+        clone._keys = new ArrayList<>(_keys);
         clone._grouping = _grouping.clone();
         clone._valueAxis = (RMGraphPartValueAxis) _valueAxis.clone();
         clone._labelAxis = (RMGraphPartLabelAxis) _labelAxis.clone();
         clone._bars = (RMGraphPartBars) _bars.clone();
         clone._pie = (RMGraphPartPie) _pie.clone();
         clone._3d = (RMScene3D) get3D().clone();
-        clone._series = new ArrayList();
-        for (RMGraphPartSeries s : _series) {
-            RMGraphPartSeries s2 = (RMGraphPartSeries) s.clone();
-            clone.addSeries(s2);
+
+        // Copy Series
+        clone._series = new ArrayList<>();
+        for (RMGraphPartSeries series : _series) {
+            RMGraphPartSeries seriesCopy = (RMGraphPartSeries) series.clone();
+            clone.addSeries(seriesCopy);
         }
+
+        // Return
         _proxyDisable = false;
         return clone;
     }
@@ -985,7 +926,7 @@ public class RMGraph extends RMParentShape {
         // Unarchive Keys (legacy)
         if (anElement.hasAttribute("keys")) {
             String kstring = anElement.getAttributeValue("keys");
-            String keys[] = kstring.split(",");
+            String[] keys = kstring.split(",");
             for (String key : keys) if (key.trim().length() > 0) addKey(key.trim());
         }
 
@@ -1034,9 +975,10 @@ public class RMGraph extends RMParentShape {
         // Unarchive colors: Get colors string, string array and create colors list and set
         if (anElement.hasAttribute("colors")) {
             String colorsString = anElement.getAttributeValue("colors");
-            String cols[] = colorsString.split("\\ ");
-            List colors = new ArrayList();
-            for (int i = 0; i < cols.length; i++) colors.add(new RMColor(cols[i]));
+            String[] colorStrings = colorsString.split("\\ ");
+            List<RMColor> colors = new ArrayList<>();
+            for (String colorString : colorStrings)
+                colors.add(new RMColor(colorString));
             _colors = colors;
         }
     }
@@ -1044,16 +986,12 @@ public class RMGraph extends RMParentShape {
     /**
      * XML archival - override shape implementation to suppress archival of children.
      */
-    protected void toXMLChildren(XMLArchiver anArchiver, XMLElement anElement)
-    {
-    }
+    protected void toXMLChildren(XMLArchiver anArchiver, XMLElement anElement)  { }
 
     /**
      * XML unarchival - override to suppress unarchival of children (don't really need this).
      */
-    protected void fromXMLChildren(XMLArchiver anArchiver, XMLElement anElement)
-    {
-    }
+    protected void fromXMLChildren(XMLArchiver anArchiver, XMLElement anElement)  { }
 
     /**
      * Legacy unarchival.
@@ -1069,5 +1007,4 @@ public class RMGraph extends RMParentShape {
         frameShape.addChild(this, 0);
         return frameShape;
     }
-
 }

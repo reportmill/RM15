@@ -3,7 +3,6 @@
  */
 package com.reportmill.shape;
 import snap.geom.Point;
-import snap.geom.Transform;
 import snap.gfx3d.*;
 import com.reportmill.graphics.*;
 import java.util.*;
@@ -32,13 +31,16 @@ public class RMScene3D extends RMParentShape {
     // List of real child shapes
     List<RMShape> _rmshapes = new ArrayList<>();
 
+    // Constants for properties
+    public static final String Depth_Prop = "Depth";
+
     /**
      * Creates an RMScene3D.
      */
     public RMScene3D()
     {
         _camera = _scene.getCamera();
-        _camera.addPropChangeListener(pce -> sceneChanged(pce));
+        _camera.addPropChangeListener(pc -> cameraDidPropChange(pc));
     }
 
     /**
@@ -61,10 +63,15 @@ public class RMScene3D extends RMParentShape {
      */
     public void setDepth(double aValue)
     {
+        // If already set, just return
         if (aValue == _depth) return;
-        double oldDepth = _depth;
-        _depth = aValue;
-        //_camera.fireDepthPropChange(oldDepth, _depth);
+
+        // Set, fire prop change
+        firePropChange(Depth_Prop, _depth, _depth = aValue);
+
+        // Relayout/repaint
+        relayout();
+        repaint();
     }
 
     /**
@@ -177,12 +184,11 @@ public class RMScene3D extends RMParentShape {
     }
 
     /**
-     * Called when scene changes.
+     * Called when camera changes to trigger repaint.
      */
-    protected void sceneChanged(PropChange aPC)
+    protected void cameraDidPropChange(PropChange aPC)
     {
         _pcs.fireDeepChange(this, aPC);
-        relayout();
         repaint();
     }
 
