@@ -9,7 +9,6 @@ import java.util.*;
 import snap.geom.Path;
 import snap.geom.Rect;
 import snap.gfx.*;
-import snap.gfx3d.Bounds3D;
 import snap.props.PropChange;
 import snap.util.*;
 import snap.view.ViewEvent;
@@ -125,10 +124,6 @@ public class RMScene3D extends RMParentShape {
             for (RMShape shp : _rmshapes)
                 addShapesForRMShape(shp, 0, getDepth(), false);
         }
-
-        // Set bounds
-        Bounds3D bounds3D = new Bounds3D(0, 0, 0, getWidth(), getHeight(), getDepth());
-        _scene.setBounds3D(bounds3D);
     }
 
     /**
