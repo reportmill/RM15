@@ -224,7 +224,7 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
 
 
         // Create back plane shape
-        Path3D back = new Path3D();
+        Path3D back = new Path3D(); back.setName("GraphBoxBack");
         back.setColor(boxColor);
         back.setStroke(boxStroke);
         back.setStrokeColor(boxStrokeColor);
@@ -238,7 +238,7 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         scene.addChild(back);
 
         // Create back plane shape
-        Path3D front = new Path3D();
+        Path3D front = new Path3D(); front.setName("GraphBoxFont");
         front.setColor(boxColor);
         front.setStroke(boxStroke);
         front.setStrokeColor(boxStrokeColor);
@@ -252,7 +252,7 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         scene.addChild(front);
 
         // Create left side path shape
-        Path3D leftSide = new Path3D();
+        Path3D leftSide = new Path3D(); leftSide.setName("GraphBoxLeft");
         leftSide.setColor(Color.LIGHTGRAY);
         leftSide.setStroke(Color.BLACK, 1);
         leftSide.setOpacity(.8f);
@@ -265,7 +265,7 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         scene.addChild(leftSide);
 
         // Create right side path shape
-        Path3D rightSide = new Path3D();
+        Path3D rightSide = new Path3D(); rightSide.setName("GraphBoxRight");
         rightSide.setColor(Color.LIGHTGRAY);
         rightSide.setStroke(Color.BLACK, 1);
         rightSide.setOpacity(.8f);
@@ -278,7 +278,7 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         scene.addChild(rightSide);
 
         // Create floor path shape
-        Path3D floor = new Path3D();
+        Path3D floor = new Path3D(); floor.setName("GraphBoxFloor");
         floor.setColor(Color.LIGHTGRAY);
         floor.setStroke(Color.BLACK, 1);
         floor.setOpacity(.8f);
