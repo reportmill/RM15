@@ -6,6 +6,7 @@ import snap.gfx3d.*;
 import com.reportmill.graphics.*;
 import java.util.*;
 import snap.gfx.*;
+import snap.props.PropChange;
 
 /**
  * This class renders a bar graph in 3D.
@@ -44,6 +45,9 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
 
     // The GraphRPG
     private RMGraphRPG _graphRPG;
+
+    // The axis box sides
+    private Poly3D _frontSide, _backSide, _leftSide, _rightSide;
 
     /**
      * Creates a RMGraphRPGBar3D.
@@ -222,60 +226,55 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         Stroke boxStroke = graphStroke != null ? graphStroke.snap() : null;
         Color boxStrokeColor = graphStroke != null ? graphStroke.getColor() : null;
 
+        // Create back plane shape
+        _backSide = new Poly3D(); _backSide.setName("GraphBoxBack");
+        _backSide.setColor(boxColor);
+        _backSide.setStroke(boxStroke);
+        _backSide.setStrokeColor(boxStrokeColor);
+        _backSide.setOpacity(.8f);
+        _backSide.setPainter(_backGridPainter);
+        _backSide.addPoint(0, 0, 0);
+        _backSide.addPoint(width, 0, 0);
+        _backSide.addPoint(width, height, 0);
+        _backSide.addPoint(0, height, 0);
+        scene.addChild(_backSide);
 
         // Create back plane shape
-        Path3D back = new Path3D(); back.setName("GraphBoxBack");
-        back.setColor(boxColor);
-        back.setStroke(boxStroke);
-        back.setStrokeColor(boxStrokeColor);
-        back.setOpacity(.8f);
-        back.setPainter(_backGridPainter);
-        back.moveTo(0, 0, 0);
-        back.lineTo(width, 0, 0);
-        back.lineTo(width, height, 0);
-        back.lineTo(0, height, 0);
-        back.close();
-        scene.addChild(back);
-
-        // Create back plane shape
-        Path3D front = new Path3D(); front.setName("GraphBoxFont");
-        front.setColor(boxColor);
-        front.setStroke(boxStroke);
-        front.setStrokeColor(boxStrokeColor);
-        front.setOpacity(.8f);
-        front.setPainter(_backGridPainter);
-        front.moveTo(0, 0, depth);
-        front.lineTo(0, height, depth);
-        front.lineTo(width, height, depth);
-        front.lineTo(width, 0, depth);
-        front.close();
-        scene.addChild(front);
+        _frontSide = new Poly3D(); _frontSide.setName("GraphBoxFont");
+        _frontSide.setColor(boxColor);
+        _frontSide.setStroke(boxStroke);
+        _frontSide.setStrokeColor(boxStrokeColor);
+        _frontSide.setOpacity(.8f);
+        _frontSide.setPainter(_backGridPainter);
+        _frontSide.addPoint(0, 0, depth);
+        _frontSide.addPoint(0, height, depth);
+        _frontSide.addPoint(width, height, depth);
+        _frontSide.addPoint(width, 0, depth);
+        scene.addChild(_frontSide);
 
         // Create left side path shape
-        Path3D leftSide = new Path3D(); leftSide.setName("GraphBoxLeft");
-        leftSide.setColor(Color.LIGHTGRAY);
-        leftSide.setStroke(Color.BLACK, 1);
-        leftSide.setOpacity(.8f);
-        leftSide.setPainter(_sideGridPainter);
-        leftSide.moveTo(0, 0, 0);
-        leftSide.lineTo(0, height, 0);
-        leftSide.lineTo(0, height, depth);
-        leftSide.lineTo(0, 0, depth);
-        leftSide.close();
-        scene.addChild(leftSide);
+        _leftSide = new Poly3D(); _leftSide.setName("GraphBoxLeft");
+        _leftSide.setColor(Color.LIGHTGRAY);
+        _leftSide.setStroke(Color.BLACK, 1);
+        _leftSide.setOpacity(.8f);
+        _leftSide.setPainter(_sideGridPainter);
+        _leftSide.addPoint(0, 0, 0);
+        _leftSide.addPoint(0, height, 0);
+        _leftSide.addPoint(0, height, depth);
+        _leftSide.addPoint(0, 0, depth);
+        scene.addChild(_leftSide);
 
         // Create right side path shape
-        Path3D rightSide = new Path3D(); rightSide.setName("GraphBoxRight");
-        rightSide.setColor(Color.LIGHTGRAY);
-        rightSide.setStroke(Color.BLACK, 1);
-        rightSide.setOpacity(.8f);
-        rightSide.setPainter(_sideGridPainter);
-        rightSide.moveTo(width, 0, 0);
-        rightSide.lineTo(width, 0, depth);
-        rightSide.lineTo(width, height, depth);
-        rightSide.lineTo(width, height, 0);
-        rightSide.close();
-        scene.addChild(rightSide);
+        _rightSide = new Poly3D(); _rightSide.setName("GraphBoxRight");
+        _rightSide.setColor(Color.LIGHTGRAY);
+        _rightSide.setStroke(Color.BLACK, 1);
+        _rightSide.setOpacity(.8f);
+        _rightSide.setPainter(_sideGridPainter);
+        _rightSide.addPoint(width, 0, 0);
+        _rightSide.addPoint(width, 0, depth);
+        _rightSide.addPoint(width, height, depth);
+        _rightSide.addPoint(width, height, 0);
+        scene.addChild(_rightSide);
 
         // Create floor path shape
         Path3D floor = new Path3D(); floor.setName("GraphBoxFloor");
@@ -311,5 +310,41 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
 
         // Do normal version
         super.layoutImpl();
+
+        // Reset LeftSide visible
+        resetSidesVisible();
+    }
+
+    /**
+     * Override to set sides visible.
+     */
+    @Override
+    protected void cameraDidPropChange(PropChange aPC)
+    {
+        super.cameraDidPropChange(aPC);
+        resetSidesVisible();
+    }
+
+    /**
+     * Override to set sides visible.
+     */
+    protected void resetSidesVisible()
+    {
+        if (_leftSide == null) return;
+
+        // Calculate whether left side is visible
+        Matrix3D sceneToCamera = _camera.getSceneToCamera();
+        Vector3D leftSideNormal = _leftSide.getNormal();
+        Vector3D leftSideNormalInCamera = sceneToCamera.transformVector(leftSideNormal);
+        boolean leftSideVisible = _camera.isFacing(leftSideNormalInCamera);
+        _leftSide.setVisible(leftSideVisible);
+        _rightSide.setVisible(!leftSideVisible);
+
+        // Calculate whether back side is visible
+        Vector3D backSideNormal = _backSide.getNormal();
+        Vector3D backSideNormalInCamera = sceneToCamera.transformVector(backSideNormal);
+        boolean backSideVisible = _camera.isFacing(backSideNormalInCamera);
+        _backSide.setVisible(backSideVisible);
+        _frontSide.setVisible(!backSideVisible);
     }
 }

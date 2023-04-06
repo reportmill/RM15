@@ -19,7 +19,7 @@ import snap.view.ViewEvent;
 public class RMScene3D extends RMParentShape {
 
     // A Scene3D to do real scene management
-    Scene3D _scene = new Scene3D();
+    Scene3D _scene;
 
     // A Camera to do camera work
     Camera _camera;
@@ -34,11 +34,14 @@ public class RMScene3D extends RMParentShape {
     public static final String Depth_Prop = "Depth";
 
     /**
-     * Creates an RMScene3D.
+     * Constructor.
      */
     public RMScene3D()
     {
+        super();
+        _scene = new Scene3D();
         _camera = _scene.getCamera();
+        _camera.setRenderer(new Renderer2D(_camera));
         _camera.addPropChangeListener(pc -> cameraDidPropChange(pc));
     }
 
