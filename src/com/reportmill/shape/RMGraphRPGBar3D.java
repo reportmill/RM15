@@ -19,6 +19,12 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
     // Whether graph is vertical or not
     private boolean _vertical;
 
+    // The graph fill
+    private Paint _graphFill;
+
+    // The graph border
+    private Border _graphBorder;
+
     // The grid painter for back
     private Painter3D _backGridPainter;
 
@@ -57,6 +63,12 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         // Set attributes
         _graph = aGraph;
         _vertical = _graph.isVertical();
+        RMFill graphFill = _graph.getFill();
+        if (graphFill != null)
+            _graphFill = graphFill.snap();
+        RMStroke graphStroke = _graph.getStroke();
+        if (graphStroke != null)
+            _graphBorder = new Borders.LineBorder(graphStroke.getColor(), graphStroke.snap());
         setBounds(_graph.getBounds());
         setOpacity(_graph.getOpacity());
         copy3D(_graph.get3D());
@@ -210,7 +222,7 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         // Constrain bar depth to bar width
         barDepth = Math.min(barDepth, _barWidth);
 
-        // Calcuate bar min/max
+        // Calculate bar min/max
         double barMin = (layerDepth - barDepth) / 2;
         double barMax = layerDepth - barMin;
 
@@ -220,11 +232,9 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         }
 
         // Get fill/stroke
-        RMFill graphFill = _graph.getFill();
-        RMStroke graphStroke = _graph.getStroke();
-        Color boxColor = graphFill != null ? graphFill.getColor() : null;
-        Stroke boxStroke = graphStroke != null ? graphStroke.snap() : null;
-        Color boxStrokeColor = graphStroke != null ? graphStroke.getColor() : null;
+        Color boxColor = _graphFill != null ? _graphFill.getColor() : null;
+        Stroke boxStroke = _graphBorder != null ? _graphBorder.getStroke() : null;
+        Color boxStrokeColor = _graphBorder != null ? _graphBorder.getColor() : null;
 
         // Create back plane shape
         _backSide = new Poly3D(); _backSide.setName("GraphBoxBack");
