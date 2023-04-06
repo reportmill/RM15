@@ -193,33 +193,24 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         _axisLabels.add(anAxisLabel);
     }
 
-    /** Returns the width of the bars. */
-    //public double getBarWidth()  { return _barWidth; }
-
     /**
      * Rebuilds 3D representation of shapes from shapes list (called by layout manager).
      */
     protected void layoutImpl()
     {
         // Remove all existing children
-        removeChildren();
-
-        // Remove all scene children
         Scene3D scene = getScene();
         scene.removeChildren();
 
-        // Get standard width, height, depth
-        double width = getWidth();
-        double height = getHeight();
-        double depth = getDepth();
+        // Builds the Axis box
+        buildAxisBox();
 
-        // Get depth of layers
+        // Get Depth and LayerDepth
+        double depth = getDepth();
         double layerDepth = depth / _layerCount;
 
-        // Calculate bar depth
+        // Calculate bar depth (constrain to barWidth)
         double barDepth = layerDepth / (1 + _graph.getBars().getBarGap());
-
-        // Constrain bar depth to bar width
         barDepth = Math.min(barDepth, _barWidth);
 
         // Calculate bar min/max
@@ -230,6 +221,39 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         for (Bar bar : _bars) {
             addShapesForRMShape(bar.barShape, barMin + bar.layer * layerDepth, barMax + bar.layer * layerDepth, false);
         }
+
+        // Create axis label shapes
+        for (RMShape axisLabel : _axisLabels)
+            addShapesForRMShape(axisLabel, depth + 1, depth + 1, false);
+
+        // Create bar label shapes
+        for (int i = 0, iMax = _barLabels.size(); i < iMax; i++) {
+
+            // Get current loop bar label and bar label type
+            RMShape barLabel = _barLabels.get(i);
+
+            // Handle outside labels
+            if (_barLabelPositions.get(i) == RMGraphPartSeries.LabelPos.Above ||
+                    _barLabelPositions.get(i) == RMGraphPartSeries.LabelPos.Below)
+                addShapesForRMShape(barLabel, depth / 2, depth / 2, false);
+
+                // Handle inside
+            else addShapesForRMShape(barLabel, (depth - _barWidth) / 2 - 5, (depth - _barWidth) / 2 - 5, false);
+        }
+    }
+
+    /**
+     * Builds the Axis box.
+     */
+    protected void buildAxisBox()
+    {
+        // Remove all scene children
+        Scene3D scene = getScene();
+
+        // Get standard width, height, depth
+        double width = getWidth();
+        double height = getHeight();
+        double depth = getDepth();
 
         // Get fill/stroke
         Color boxColor = _graphFill != null ? _graphFill.getColor() : null;
@@ -298,28 +322,6 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         floor.lineTo(0, -1, depth);
         floor.close();
         scene.addChild(floor);
-
-        // Create axis label shapes
-        for (RMShape axisLabel : _axisLabels)
-            addShapesForRMShape(axisLabel, depth + 1, depth + 1, false);
-
-        // Create bar label shapes
-        for (int i = 0, iMax = _barLabels.size(); i < iMax; i++) {
-
-            // Get current loop bar label and bar label type
-            RMShape barLabel = _barLabels.get(i);
-
-            // Handle outside labels
-            if (_barLabelPositions.get(i) == RMGraphPartSeries.LabelPos.Above ||
-                    _barLabelPositions.get(i) == RMGraphPartSeries.LabelPos.Below)
-                addShapesForRMShape(barLabel, depth / 2, depth / 2, false);
-
-                // Handle inside
-            else addShapesForRMShape(barLabel, (depth - _barWidth) / 2 - 5, (depth - _barWidth) / 2 - 5, false);
-        }
-
-        // Do normal version
-        super.layoutImpl();
 
         // Reset LeftSide visible
         resetSidesVisible();
