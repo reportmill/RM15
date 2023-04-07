@@ -9,12 +9,20 @@ import snap.geom.Shape;
 import snappdf.write.*;
 
 /**
- * This RMObjectPdfr subclass writes PDF for RMShape.
+ * This class writes PDF for RMShape.
  */
 public class RMShapePdfr<T extends RMShape> {
 
     // Shared RMShapePdfr
-    static RMShapePdfr _shapePdfr = new RMShapePdfr();
+    private static RMShapePdfr<RMShape> _shapePdfr = new RMShapePdfr<>();
+
+    /**
+     * Constructor.
+     */
+    public RMShapePdfr()
+    {
+        super();
+    }
 
     /**
      * Writes a given RMShape hierarchy to a PDF file (recursively).
@@ -97,8 +105,10 @@ public class RMShapePdfr<T extends RMShape> {
         // Write children
         for (int i = 0, iMax = aShape.getChildCount(); i < iMax; i++) {
             RMShape child = aShape.getChild(i);
-            if (child.isVisible())
-                getPdfr(child).writePDF(child, aWriter);
+            if (child.isVisible()) {
+                RMShapePdfr<RMShape> pdfr = getPdfr(child);
+                pdfr.writePDF(child, aWriter);
+            }
         }
     }
 
@@ -142,15 +152,20 @@ public class RMShapePdfr<T extends RMShape> {
     /**
      * Returns the shape pdfr for a shape.
      */
-    public static RMShapePdfr getPdfr(RMShape aShape)
+    public static RMShapePdfr<RMShape> getPdfr(RMShape aShape)
     {
-        if (aShape instanceof RMTextShape) return RMShapePdfrs._textShapePdfr;
-        if (aShape instanceof RMImageShape) return RMShapePdfrs._imgShapePdfr;
-        if (aShape instanceof RMPDFShape) return RMShapePdfrs.getPDFShapePdfr();
-        if (aShape instanceof RMPage) return RMShapePdfrs._pageShapePdfr;
-        if (aShape instanceof RMScene3D) return RMShapePdfrs._scene3DPdfr;
-        if (aShape instanceof ViewShape) return RMShapePdfrs.getViewShapePdfr();
+        if (aShape instanceof RMTextShape)
+            return (RMShapePdfr<RMShape>) RMShapePdfrs._textShapePdfr;
+        if (aShape instanceof RMImageShape)
+            return (RMShapePdfr<RMShape>) RMShapePdfrs._imgShapePdfr;
+        if (aShape instanceof RMPage)
+            return (RMShapePdfr<RMShape>) RMShapePdfrs._pageShapePdfr;
+        if (aShape instanceof RMPDFShape)
+            return (RMShapePdfr<RMShape>) (RMShapePdfr<?>) new RMShapePdfrs.RMPDFShapePdfr();
+        if (aShape instanceof RMScene3D)
+            return (RMShapePdfr<RMShape>) RMShapePdfrs._shapePainterPdfr;
+        if (aShape instanceof ViewShape)
+            return (RMShapePdfr<RMShape>) (RMShapePdfr<?>) new RMShapePdfrs.ViewShapePdfr();
         return _shapePdfr;
     }
-
 }

@@ -2,7 +2,6 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.out;
-import snap.gfx3d.*;
 import com.reportmill.graphics.*;
 import com.reportmill.shape.*;
 import java.util.*;
@@ -14,15 +13,31 @@ import snappdf.*;
 import snappdf.write.*;
 
 /**
- * A class to hold RMShapePdfr subclasses for RMPage, RMTextShape, RMImageShape, RMScene3D.
+ * A class to hold RMShapePdfr subclasses for RMPage, RMTextShape, RMImageShape.
  */
 public class RMShapePdfrs {
 
     // Shared instances of RMShapePdfr subclasses
-    static RMTextShapePdfr _textShapePdfr = new RMTextShapePdfr();
-    static RMImageShapePdfr _imgShapePdfr = new RMImageShapePdfr();
-    static RMPagePdfr _pageShapePdfr = new RMPagePdfr();
-    static RMScene3DPdfr _scene3DPdfr = new RMScene3DPdfr();
+    protected static RMShapePainterPdfr<?> _shapePainterPdfr = new RMShapePainterPdfr<>();
+    protected static RMTextShapePdfr<?> _textShapePdfr = new RMTextShapePdfr<>();
+    protected static RMImageShapePdfr<?> _imgShapePdfr = new RMImageShapePdfr<>();
+    protected static RMPagePdfr<?> _pageShapePdfr = new RMPagePdfr<>();
+
+    /**
+     * This class generates PDF for an RMShape using PDFPainter and shapes standard painting.
+     */
+    public static class RMShapePainterPdfr<T extends RMShape> extends RMShapePdfr<T> {
+
+        /**
+         * Writes given RMShape to PDFWriter using PDFPainter.
+         */
+        protected void writeShape(T aShape, RMPDFWriter aWriter)
+        {
+            PDPainter pdfPainter = new PDPainter(aWriter);
+            pdfPainter.translate(-aShape.getX(), -aShape.getY());
+            aShape.paint(pdfPainter);
+        }
+    }
 
     /**
      * This class generates PDF for an RMText.
@@ -68,7 +83,7 @@ public class RMShapePdfrs {
             pwriter.addAnnotation(widget);
 
             // Set Annotation Flags, Field-Type
-            Map map = widget.getAnnotationMap();
+            Map<String,Object> map = widget.getAnnotationMap();
             map.put("P", aWriter.getXRefTable().getRefString(pwriter));
             map.put("F", 4);
             map.put("FT", "/Tx"); // Makes widget printable textfield
@@ -83,8 +98,7 @@ public class RMShapePdfrs {
             map.put("DA", "(0 0 0 rg " + fontName + ' ' + fontSize + " Tf)");
 
             // Set Widget Name, alt name, value, default value and fonts dict
-            if (pdfName != null)
-                map.put("T", '(' + pdfName + ')'); // Name
+            map.put("T", '(' + pdfName + ')'); // Name
             if (tooTip != null)
                 map.put("TU", '(' + tooTip + ')'); // Alternate name (ToolTip)
             if (pdfText != null) {
@@ -95,7 +109,7 @@ public class RMShapePdfrs {
             // Set Widget Default Resources dict
             Object fonts = aWriter.getFonts();
             Object fontsXRef = aWriter.getXRefTable().getRefString(fonts);
-            Map drDict = Collections.singletonMap("Font", fontsXRef);
+            Map<String,Object> drDict = Collections.singletonMap("Font", fontsXRef);
             map.put("DR", drDict);
         }
     }
@@ -146,12 +160,12 @@ public class RMShapePdfrs {
     /**
      * PDF writer for RMPDFShape.
      */
-    public static class RMPDFShapePdfr<T extends RMPDFShape> extends RMShapePdfr<T> {
+    public static class RMPDFShapePdfr extends RMShapePdfr<RMPDFShape> {
 
         /**
          * Override to write PDF XObject form do.
          */
-        protected void writeShape(T aPDFShape, RMPDFWriter aWriter)
+        protected void writeShape(RMPDFShape aPDFShape, RMPDFWriter aWriter)
         {
             // Do normal version
             super.writeShape(aPDFShape, aWriter);
@@ -218,73 +232,18 @@ public class RMShapePdfrs {
         /**
          * Override to suppress grestore.
          */
-        protected void writeShapeAfter(T aShape, RMPDFWriter aWriter)
-        {
-        }
-    }
-
-    /**
-     * This class generates PDF for an RMScene3D.
-     */
-    public static class RMScene3DPdfr<T extends RMScene3D> extends RMShapePdfr<T> {
-
-        /**
-         * Writes a given RMShape hierarchy to a PDF file (recursively).
-         */
-        protected void writeShape(T aScene3D, RMPDFWriter aWriter)
-        {
-            // Do normal version
-            super.writeShape(aScene3D, aWriter);
-
-            // Write Path3Ds
-//            Camera camera = aScene3D.getCamera();
-//            List<Path3D> paths = camera.getPaths();
-//            for (Path3D path : paths) {
-//                writePath(aScene3D, path, aWriter);
-//                if (path.getLayers().size() > 0)
-//                    for (Path3D layer : path.getLayers())
-//                        writePath(aScene3D, layer, aWriter);
-//            }
-        }
-
-        /**
-         * Writes a path.
-         */
-        protected void writePath(RMScene3D aScene3D, Path3D aPath, PDFWriter aWriter)
-        {
-            // Get path, fill and stroke
-            Shape path = null;//aPath.getPath();
-            Color fillColor = aPath.getColor();
-            Color strokeColor = aPath.getStrokeColor();
-            PDFPageWriter pdfPage = aWriter.getPageWriter();
-
-            // Get opacity and set if needed
-            double op = aPath.getOpacity();
-            if (op < 1) {
-                pdfPage.gsave();
-                pdfPage.setOpacity(op * aScene3D.getOpacityDeep());
-            }
-
-            // Do fill and stroke
-            if (fillColor != null)
-                SnapPaintPdfr.writeShapeFill(path, fillColor, aWriter);
-            if (strokeColor != null)
-                SnapPaintPdfr.writeShapeStroke(path, aPath.getStroke(), strokeColor, aWriter);
-
-            // Reset opacity if needed
-            if (op < 1) pdfPage.grestore();
-        }
+        protected void writeShapeAfter(T aShape, RMPDFWriter aWriter)  { }
     }
 
     /**
      * This class generates PDF for an ViewShape.
      */
-    public static class ViewShapePdfr<T extends ViewShape> extends RMShapePdfr<T> {
+    public static class ViewShapePdfr extends RMShapePdfr<ViewShape> {
 
         /**
          * Writes a given RMShape hierarchy to a PDF file (recursively).
          */
-        protected void writeShape(T aViewShape, RMPDFWriter aWriter)
+        protected void writeShape(ViewShape aViewShape, RMPDFWriter aWriter)
         {
             // Do normal version
             super.writeShape(aViewShape, aWriter);
@@ -325,7 +284,7 @@ public class RMShapePdfrs {
             pwriter.addAnnotation(widget);
 
             // Set Annotation Flags, Field-Type
-            Map map = widget.getAnnotationMap(); //map.put("P", xrefs.getRefString(pwriter));
+            Map<String,Object> map = widget.getAnnotationMap(); //map.put("P", xrefs.getRefString(pwriter));
             map.put("F", 4);
             map.put("FT", fieldType); // Makes widget printable and field type
             if (flags != 0)
@@ -349,17 +308,17 @@ public class RMShapePdfrs {
             // Set Widget Default Resources dict
             Object fonts = aWriter.getFonts();
             Object fontsXRef = aWriter.getXRefTable().getRefString(fonts);
-            Map drDict = Collections.singletonMap("Font", fontsXRef);
+            Map<String,Object> drDict = Collections.singletonMap("Font", fontsXRef);
             map.put("DR", drDict);
 
             // Write Appearance Dictionary
-        /*Map apnDict = new HashMap(8); apnDict.put("Type", "/XObject"); apnDict.put("Subtype", "/Form");
-        apnDict.put("BBox", "[0 0 " + frame.width + " " + frame.height + "]");
-        apnDict.put("Resources", xrefs.addObject(pwriter.getResourcesDict()));
-        String str = fieldType + " BMC\nEMC"; byte strBytes[] = str.getBytes();
-        PDFStream formStream = new PDFStream(strBytes, apnDict); Object formStreamXRef = xrefs.addObject(formStream);
-        Map apDict = Collections.singletonMap("N", formStreamXRef); Object apDictXRef = xrefs.addObject(apDict);
-        map.put("AP", apDict);*/
+            /*Map apnDict = new HashMap(8); apnDict.put("Type", "/XObject"); apnDict.put("Subtype", "/Form");
+            apnDict.put("BBox", "[0 0 " + frame.width + " " + frame.height + "]");
+            apnDict.put("Resources", xrefs.addObject(pwriter.getResourcesDict()));
+            String str = fieldType + " BMC\nEMC"; byte strBytes[] = str.getBytes();
+            PDFStream formStream = new PDFStream(strBytes, apnDict); Object formStreamXRef = xrefs.addObject(formStream);
+            Map apDict = Collections.singletonMap("N", formStreamXRef); Object apDictXRef = xrefs.addObject(apDict);
+            map.put("AP", apDict);*/
         }
 
         /**
@@ -368,40 +327,14 @@ public class RMShapePdfrs {
         String getFieldType(String aViewType)
         {
             switch (aViewType) {
-                case ViewShape.TextField_Type:
-                    return "/Tx";
+                case ViewShape.TextField_Type: return "/Tx";
                 case ViewShape.Button_Type:
                 case ViewShape.RadioButton_Type:
-                case ViewShape.CheckBox_Type:
-                    return "/Btn";
+                case ViewShape.CheckBox_Type: return "/Btn";
                 case ViewShape.ListView_Type:
-                case ViewShape.ComboBox_Type:
-                    return "/Ch";
-                default:
-                    System.err.println("RMShapePdfrs.ViewShapePdfr: Unknown view type");
-                    return "/Tx";
+                case ViewShape.ComboBox_Type: return "/Ch";
+                default: System.err.println("RMShapePdfrs.ViewShapePdfr: Unknown view type"); return "/Tx";
             }
         }
     }
-
-    /**
-     * Returns a shared RMPDFShapePdfr.
-     */
-    public static RMPDFShapePdfr getPDFShapePdfr()
-    {
-        return _pspdfr != null ? _pspdfr : (_pspdfr = new RMPDFShapePdfr());
-    }
-
-    private static RMPDFShapePdfr _pspdfr;
-
-    /**
-     * Returns a shared ViewShapePdfr.
-     */
-    public static ViewShapePdfr getViewShapePdfr()
-    {
-        return _vspdfr != null ? _vspdfr : (_vspdfr = new ViewShapePdfr());
-    }
-
-    private static ViewShapePdfr _vspdfr;
-
 }

@@ -71,6 +71,7 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
             _graphBorder = new Borders.LineBorder(graphStroke.getColor(), graphStroke.snap());
         setBounds(_graph.getBounds());
         setOpacity(_graph.getOpacity());
+        setEffect(_graph.getEffect());
         copy3D(_graph.get3D());
 
         // Create Painter3Ds for back/side grid
