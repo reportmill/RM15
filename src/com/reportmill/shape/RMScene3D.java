@@ -2,12 +2,11 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.shape;
-import snap.geom.Point;
+import snap.geom.*;
 import snap.gfx3d.*;
 import com.reportmill.graphics.*;
 import java.util.*;
-import snap.geom.Path;
-import snap.geom.Rect;
+
 import snap.gfx.*;
 import snap.props.PropChange;
 import snap.util.*;
@@ -233,12 +232,7 @@ public class RMScene3D extends RMParentShape {
         }
 
         // Get shape path, flattened and in parent coords
-        Path shapePath = new Path(aShape.getPath());
-        shapePath = shapePath.getPathFlattened();
-        shapePath.transformBy(aShape.getTransform());
-
-        // Flip path
-        flipPath(shapePath, getHeight());
+        Shape shapePath = getShapePathFlatInScene(aShape);
 
         // Handle no depth: Create Path3D double-sided
         Shape3D shape3D;
@@ -265,13 +259,30 @@ public class RMScene3D extends RMParentShape {
         _scene.addChild(shape3D);
     }
 
-    void flipPath(Path aPath, double aHeight)
+    /**
+     * Returns the flattened shape path in Scene at depth = 0.
+     */
+    private Shape getShapePathFlatInScene(RMShape aShape)
     {
-        for (int i = 0, iMax = aPath.getPointCount(); i < iMax; i++) {
-            Point p = aPath.getPoint(i);
-            double newY = aHeight - p.y;
-            aPath.setPoint(i, p.x, newY);
+        // Get flat path
+        Shape shapePath = aShape.getPath();
+        Shape shapePathFlat = shapePath.getFlat();
+
+        // Transform to parent (scene)
+        Transform shapeToParent = aShape.getTransform();
+        Shape shapePathFlatInScene = shapePathFlat.copyFor(shapeToParent);
+
+        // Flip
+        double height = getHeight();
+        Path path = new Path(shapePathFlatInScene);
+        for (int i = 0, iMax = path.getPointCount(); i < iMax; i++) {
+            Point p = path.getPoint(i);
+            double newY = height - p.y;
+            path.setPoint(i, p.x, newY);
         }
+
+        // Return
+        return path;
     }
 
     /**
