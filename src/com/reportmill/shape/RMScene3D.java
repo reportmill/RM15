@@ -266,7 +266,7 @@ public class RMScene3D extends RMParentShape {
     {
         // Get flat path
         Shape shapePath = aShape.getPath();
-        Shape shapePathFlat = shapePath.getFlat();
+        Shape shapePathFlat = shapePath.getFlattenedShape();
 
         // Transform to parent (scene)
         Transform shapeToParent = aShape.getTransform();
