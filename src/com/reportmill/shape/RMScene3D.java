@@ -237,7 +237,7 @@ public class RMScene3D extends RMParentShape {
         // Handle no depth: Create Path3D double-sided
         Shape3D shape3D;
         if (MathUtils.equals(z1, z2)) {
-            shape3D = new Path3D(shapePath, z1);
+            shape3D = new Poly3D(shapePath, z1);
             shape3D.setDoubleSided(true);
         }
 

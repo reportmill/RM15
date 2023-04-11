@@ -3,6 +3,7 @@
  */
 package com.reportmill.shape;
 import com.reportmill.graphics.*;
+import snap.geom.Insets;
 import snap.geom.Path;
 import snap.geom.Rect;
 import snap.geom.Shape;
@@ -17,35 +18,13 @@ import snap.text.TextBoxRun;
 public class RMTextShapeUtils {
 
     /**
-     * Returns a path for all text chars.
-     */
-    public static Shape getTextPath(RMTextShape aText)
-    {
-        // Create path and establish bounds of text
-        Path path = new Path();
-        path.moveTo(0, 0);
-        path.moveTo(aText.getWidth(), aText.getHeight());
-
-        // Iterate over text runs
-        TextBox tbox = aText.getTextBox();
-        for (TextBoxLine line : tbox.getLines())
-            for (TextBoxRun run : line.getRuns()) { //if(run.length()==0 || run.isTab()) continue;
-                String str = run.getString();
-                double cspace = run.getStyle().getCharSpacing();
-                path.append(run.getFont().getOutline(str, run.getX(), line.getBaseline(), cspace));
-            }
-
-        // Return path
-        return path;
-    }
-
-    /**
      * Returns an RMPolygon shape with the glyph path for the chars in this text. Assumes all runs have same visual attrs.
      */
     public static RMPolygonShape getTextPathShape(RMTextShape aText)
     {
         // Create polygon for text path with attributes from text shape
-        RMPolygonShape polygon = new RMPolygonShape(getTextPath(aText));
+        Shape charsShape = getTextOutlineShape(aText);
+        RMPolygonShape polygon = new RMPolygonShape(charsShape);
         polygon.copyShape(aText);
 
         // Set polygon color to run or outline color and stroke and return
@@ -56,17 +35,43 @@ public class RMTextShapeUtils {
     }
 
     /**
+     * Returns a path for all text chars.
+     */
+    public static Shape getTextOutlineShape(RMTextShape aText)
+    {
+        // Create path and establish bounds of text
+        Path outlineShape = new Path();
+        outlineShape.moveTo(0, 0);
+        outlineShape.moveTo(aText.getWidth(), aText.getHeight());
+
+        // Iterate over text runs
+        TextBox textBox = aText.getTextBox();
+        for (TextBoxLine line : textBox.getLines()) {
+            for (TextBoxRun run : line.getRuns()) { //if(run.length()==0 || run.isTab()) continue;
+                String str = run.getString();
+                Font font = run.getFont();
+                double charSpacing = run.getStyle().getCharSpacing();
+                Shape runOutlineShape = font.getOutline(str, run.getX(), line.getBaseline(), charSpacing);
+                outlineShape.append(runOutlineShape);
+            }
+        }
+
+        // Return
+        return outlineShape;
+    }
+
+    /**
      * Returns a group shape with a text shape for each individual character in this text shape.
      */
     public static RMShape getTextCharsShape(RMTextShape aText)
     {
         // Get shape for chars
-        RMParentShape charsShape = new RMSpringShape();
-        charsShape.copyShape(aText);
+        RMParentShape textCharsShape = new RMSpringShape();
+        textCharsShape.copyShape(aText);
 
         // Iterate over runs
-        TextBox tbox = aText.getTextBox();
-        for (TextBoxLine line : tbox.getLines())
+        TextBox textBox = aText.getTextBox();
+        for (TextBoxLine line : textBox.getLines())
             for (TextBoxRun run : line.getRuns()) { //if(run.length()==0 || run.isTab()) continue;
 
                 // Get run font and run bounds
@@ -79,18 +84,20 @@ public class RMTextShapeUtils {
 
                     // Get char advance (just continue if zero)
                     double advance = font.charAdvance(c);
-                    if (advance <= 0) continue;
+                    if (advance <= 0)
+                        continue;
 
                     // If non-space character, create glyph shape
                     if (c != ' ') {
                         Rect glyphBounds = font.getCharBounds(c);
                         RMXString gstring = aText.getXString().substring(run.getStart() + i, run.getStart() + i + 1);
-                        RMTextShape glyph = new RMTextShape(gstring);
-                        glyph.setAutosizing("~-~,~-~");
+                        RMTextShape glyphShape = new RMTextShape(gstring);
+                        glyphShape.setAutosizing("~-~,~-~");
 
-                        charsShape.addChild(glyph);
+                        textCharsShape.addChild(glyphShape);
                         runBounds.width = Math.ceil(Math.max(advance, glyphBounds.getMaxX()));
-                        glyph.setFrame(getBoundsFromTextBounds(aText, runBounds));
+                        Rect glyphFrame = getBoundsFromTextBounds(aText, runBounds);
+                        glyphShape.setFrame(glyphFrame);
                     }
 
                     // Increase bounds by advance
@@ -98,8 +105,8 @@ public class RMTextShapeUtils {
                 }
             }
 
-        // Return chars shape
-        return charsShape;
+        // Return
+        return textCharsShape;
     }
 
     /**
@@ -107,12 +114,11 @@ public class RMTextShapeUtils {
      */
     private static Rect getBoundsFromTextBounds(RMTextShape aText, Rect aRect)
     {
-        double rx = aRect.getX(), ry = aRect.getY(), rw = aRect.getWidth(), rh = aRect.getHeight();
-        rx -= aText.getMarginLeft();
-        rw += (aText.getMarginLeft() + aText.getMarginRight());
-        ry -= aText.getMarginTop();
-        rh += (aText.getMarginTop() + aText.getMarginBottom());
-        return new Rect(rx, ry, rw, rh);
+        Insets textMargin = aText.getMargin();
+        double rectX = aRect.x - textMargin.left;
+        double rectY = aRect.y - textMargin.top;
+        double rectW = aRect.width - textMargin.getWidth();
+        double rectH = aRect.height - textMargin.getHeight();
+        return new Rect(rectX, rectY, rectW, rectH);
     }
-
 }
