@@ -53,7 +53,7 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
     private RMGraphRPG _graphRPG;
 
     // The axis box sides
-    private Poly3D _frontSide, _backSide, _leftSide, _rightSide;
+    private Polygon3D _frontSide, _backSide, _leftSide, _rightSide;
 
     /**
      * Creates a RMGraphRPGBar3D.
@@ -262,7 +262,7 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         Color boxStrokeColor = _graphBorder != null ? _graphBorder.getColor() : null;
 
         // Create back plane shape
-        _backSide = new Poly3D(); _backSide.setName("GraphBoxBack");
+        _backSide = new Polygon3D(); _backSide.setName("GraphBoxBack");
         _backSide.setColor(boxColor);
         _backSide.setStroke(boxStroke);
         _backSide.setStrokeColor(boxStrokeColor);
@@ -275,7 +275,7 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         scene.addChild(_backSide);
 
         // Create back plane shape
-        _frontSide = new Poly3D(); _frontSide.setName("GraphBoxFont");
+        _frontSide = new Polygon3D(); _frontSide.setName("GraphBoxFont");
         _frontSide.setColor(boxColor);
         _frontSide.setStroke(boxStroke);
         _frontSide.setStrokeColor(boxStrokeColor);
@@ -288,7 +288,7 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         scene.addChild(_frontSide);
 
         // Create left side path shape
-        _leftSide = new Poly3D(); _leftSide.setName("GraphBoxLeft");
+        _leftSide = new Polygon3D(); _leftSide.setName("GraphBoxLeft");
         _leftSide.setColor(Color.LIGHTGRAY);
         _leftSide.setStroke(Color.BLACK, 1);
         _leftSide.setOpacity(.8f);
@@ -300,7 +300,7 @@ class RMGraphRPGBar3D extends RMScene3D implements RMGraphRPGBar.BarGraphShape {
         scene.addChild(_leftSide);
 
         // Create right side path shape
-        _rightSide = new Poly3D(); _rightSide.setName("GraphBoxRight");
+        _rightSide = new Polygon3D(); _rightSide.setName("GraphBoxRight");
         _rightSide.setColor(Color.LIGHTGRAY);
         _rightSide.setStroke(Color.BLACK, 1);
         _rightSide.setOpacity(.8f);
