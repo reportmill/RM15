@@ -117,8 +117,8 @@ public class RMTextShapeUtils {
         Insets textMargin = aText.getMargin();
         double rectX = aRect.x - textMargin.left;
         double rectY = aRect.y - textMargin.top;
-        double rectW = aRect.width - textMargin.getWidth();
-        double rectH = aRect.height - textMargin.getHeight();
+        double rectW = aRect.width + textMargin.getWidth();
+        double rectH = aRect.height + textMargin.getHeight();
         return new Rect(rectX, rectY, rectW, rectH);
     }
 }
