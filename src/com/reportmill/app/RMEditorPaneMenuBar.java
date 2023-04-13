@@ -194,6 +194,7 @@ public class RMEditorPaneMenuBar extends RMEditorPane.SupportPane {
         if (name.equals("MoveToNewLayerMenuItem")) RMEditorUtils.moveToNewLayer(editor);
         if (name.equals("CombinePathsMenuItem")) RMEditorUtils.combinePaths(editor);
         if (name.equals("SubtractPathsMenuItem")) RMEditorUtils.subtractPaths(editor);
+        if (name.equals("MakeSimpleShapeMenuItem")) RMEditorUtils.makeSimpleShape(editor);
         if (name.equals("ConvertToImageMenuItem")) RMEditorUtils.convertToImage(editor);
 
         // Handle Tools menu items

@@ -8,6 +8,7 @@ import com.reportmill.graphics.*;
 import com.reportmill.shape.*;
 import java.util.*;
 import snap.geom.Point;
+import snap.geom.Shape;
 import snap.geom.Size;
 import snap.gfx.*;
 import snap.util.ListUtils;
@@ -518,6 +519,35 @@ public class RMEditorUtils {
 
         // Select SubtractedShape
         anEditor.setSelectedShape(subtractedShape);
+    }
+
+    /**
+     * Create new shape by coalescing the outer perimeters of the currently selected shapes.
+     */
+    public static void makeSimpleShape(RMEditor anEditor)
+    {
+        // If shapes less than 1, just beep and return
+        if (anEditor.getSelectedShapeCount() < 1) {
+            anEditor.beep();
+            return;
+        }
+
+        // Get selected shape and create SubtractedShape
+        RMShape selShape = anEditor.getSelectedShape();
+        Shape selShapePath = selShape.getPath();
+        Shape simpleShape = Shape.makeSimple(selShapePath);
+        RMPolygonShape simpleRMShape = new RMPolygonShape();
+        simpleRMShape.copyShape(selShape);
+        simpleRMShape.resetPath(new snap.geom.Path(simpleShape));
+
+        // Remove original children and replace with SubtractedShape
+        anEditor.undoerSetUndoTitle("Subtract Paths");
+        RMParentShape parent = anEditor.getSuperSelectedParentShape();
+        parent.removeChild(selShape);
+        parent.addChild(simpleRMShape);
+
+        // Select SubtractedShape
+        anEditor.setSelectedShape(simpleRMShape);
     }
 
     /**

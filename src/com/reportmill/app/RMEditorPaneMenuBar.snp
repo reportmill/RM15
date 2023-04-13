@@ -98,6 +98,7 @@
     <MenuItem Name="MoveToNewLayerMenuItem" text="Move to New Layer" />
     <MenuItem Name="CombinePathsMenuItem" text="Combine Paths" />
     <MenuItem Name="SubtractPathsMenuItem" text="Subtract Paths" />
+    <MenuItem Name="MakeSimpleShapeMenuItem" text="Make Simple Shape" />
     <MenuItem Name="ConvertToImageMenuItem" text="Convert to Image" />
   </Menu>
   <Menu Name="ToolsMenu" text="Tools">
