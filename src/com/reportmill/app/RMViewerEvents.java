@@ -477,7 +477,7 @@ public class RMViewerEvents {
             TextSel sel = new TextSel(tbox, p1.getX(), p1.getY(), p2.getX(), p2.getY(), false, false);
             Shape path = sel.getPath();
             path = getViewer().convertFromShape(path, text);
-            area = Shape.add(area, path);
+            area = Shape.addShapes(area, path);
         }
 
         // Return area
@@ -587,7 +587,7 @@ public class RMViewerEvents {
         Rect rect = getViewer().convertFromShape(_rect, getViewer().getSelPage()).getBounds();
 
         // Create area for bounds, subtract rect and fill
-        Shape shape = Shape.subtract(getViewer().getBounds(), rect);
+        Shape shape = Shape.subtractShapes(getViewer().getBounds(), rect);
         aPntr.setColor(new Color(0, 0, 0, .667f));
         aPntr.fill(shape);
 

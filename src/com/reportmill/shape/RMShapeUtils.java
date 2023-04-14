@@ -177,7 +177,7 @@ public class RMShapeUtils {
         Shape s1 = paths.get(0);
         for (int i = 1, iMax = paths.size(); i < iMax; i++) {
             Shape s2 = paths.get(i);
-            s1 = Shape.add(s1, s2);
+            s1 = Shape.addShapes(s1, s2);
         }
         return s1;
     }
@@ -221,7 +221,7 @@ public class RMShapeUtils {
         Shape s1 = paths.get(0);
         for (int i = 1, iMax = paths.size(); i < iMax; i++) {
             Shape s2 = paths.get(i);
-            s1 = Shape.subtract(s1, s2);
+            s1 = Shape.subtractShapes(s1, s2);
         }
         return s1;
     }

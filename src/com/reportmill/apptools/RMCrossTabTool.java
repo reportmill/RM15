@@ -442,7 +442,7 @@ public class RMCrossTabTool<T extends RMCrossTab> extends RMTool<T> {
             for (int i = 0, iMax = editor.getSelectedShapeCount(); i < iMax; i++) {
                 Rect bounds = editor.getSelectedShape(i).getBounds();
                 bounds.inset(-2.5f, -2.5f);
-                drawShape = drawShape != null ? Shape.add(drawShape, bounds) : bounds;
+                drawShape = drawShape != null ? Shape.addShapes(drawShape, bounds) : bounds;
             }
 
             // Get shape of bounds transformed to editor
