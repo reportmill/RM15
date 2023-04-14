@@ -14,17 +14,18 @@ import snap.util.*;
 public class RMPolygonShape extends RMParentShape {
 
     // The explicit path associated with this shape
-    Path _path;
+    protected Path _path;
 
     /**
-     * Creates a new empty polygon shape.
+     * Constructor.
      */
     public RMPolygonShape()
     {
+        super();
     }
 
     /**
-     * Creates a new polygon shape for the given path.
+     * Constructor for given path.
      */
     public RMPolygonShape(Shape aShape)
     {
@@ -37,56 +38,40 @@ public class RMPolygonShape extends RMParentShape {
      */
     public Path getPath()
     {
-        return _path.copyFor(getBoundsInside());
+        Rect boundsInside = getBoundsInside();
+        return _path.copyFor(boundsInside);
     }
 
     /**
      * Sets the path for this polygon shape.
      */
-    public void setPath(Path aPath)
+    public void setPath(Shape aPath)
     {
-        _path = aPath;
+        Path newPath = aPath instanceof Path || aPath == null ? (Path) aPath : new Path(aPath);
+        _path = newPath;
         repaint();
     }
 
     /**
      * Replace the polygon's current path with a new path, adjusting the shape's bounds to match the new path.
      */
-    public void resetPath(Path newPath)
+    public void setPathAndBounds(Shape newShape)
     {
+        // Get shape as path
+        Path newPath = new Path(newShape);
+
         // Get the transform to parent shape coords
-        Transform toParentXF = getTransform();
+        Transform localToParent = getTransform();
 
         // Set the new path and new size
         setPath(newPath);
-        Rect bounds = newPath.getBounds();
-        setSize(bounds.getWidth(), bounds.getHeight());
+        Rect newPathBounds = newPath.getBounds();
+        setSize(newPathBounds.width, newPathBounds.height);
 
         // Transform to parent for new x & y
-        Rect boundsInParent = bounds.clone();
-        toParentXF.transformRect(boundsInParent);
+        Rect boundsInParent = newPathBounds.clone();
+        localToParent.transformRect(boundsInParent);
         setFrameXY(boundsInParent.getXY());
-    }
-
-    /**
-     * XML archival.
-     */
-    protected XMLElement toXMLShape(XMLArchiver anArchiver)
-    {
-        XMLElement e = super.toXMLShape(anArchiver);
-        e.setName("polygon"); // Archive basic shape attributes and reset name
-        e.add(_path.toXML(anArchiver));                                    // Archive path
-        return e;                                                          // Return xml element
-    }
-
-    /**
-     * XML unarchival.
-     */
-    protected void fromXMLShape(XMLArchiver anArchiver, XMLElement anElement)
-    {
-        super.fromXMLShape(anArchiver, anElement);                         // Unarchive basic shape attributes
-        XMLElement pathXML = anElement.get("path");                        // Unarchive path
-        _path = anArchiver.fromXML(pathXML, Path.class, this);
     }
 
     /**
@@ -95,8 +80,36 @@ public class RMPolygonShape extends RMParentShape {
     public RMPolygonShape clone()
     {
         RMPolygonShape clone = (RMPolygonShape) super.clone();
-        if (_path != null) clone._path = _path.clone();
+        if (_path != null)
+            clone._path = _path.clone();
         return clone;
     }
 
+    /**
+     * XML archival.
+     */
+    protected XMLElement toXMLShape(XMLArchiver anArchiver)
+    {
+        // Archive basic shape attributes and reset name
+        XMLElement e = super.toXMLShape(anArchiver); e.setName("polygon");
+
+        // Archive path
+        e.add(_path.toXML(anArchiver));
+
+        // Return
+        return e;
+    }
+
+    /**
+     * XML unarchival.
+     */
+    protected void fromXMLShape(XMLArchiver anArchiver, XMLElement anElement)
+    {
+        // Unarchive basic shape attributes
+        super.fromXMLShape(anArchiver, anElement);
+
+        // Unarchive path
+        XMLElement pathXML = anElement.get("path");
+        _path = anArchiver.fromXML(pathXML, Path.class, this);
+    }
 }

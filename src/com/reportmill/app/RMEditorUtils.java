@@ -522,32 +522,30 @@ public class RMEditorUtils {
     }
 
     /**
-     * Create new shape by coalescing the outer perimeters of the currently selected shapes.
+     * Converts the new shape to polygon shape.
      */
-    public static void makeSimpleShape(RMEditor anEditor)
+    public static void makePolygonShape(RMEditor anEditor)
     {
-        // If shapes less than 1, just beep and return
-        if (anEditor.getSelectedShapeCount() < 1) {
+        // Get selected shape (just return if null or page)
+        RMShape selShape = anEditor.getSelectedShape();
+        if (selShape == null || selShape instanceof RMPage) {
             anEditor.beep();
             return;
         }
 
-        // Get selected shape and create SubtractedShape
-        RMShape selShape = anEditor.getSelectedShape();
+        // Create new polygon shape for SelShape and set path
         Shape selShapePath = selShape.getPath();
-        Shape simpleShape = Shape.makeSimple(selShapePath);
-        RMPolygonShape simpleRMShape = new RMPolygonShape();
-        simpleRMShape.copyShape(selShape);
-        simpleRMShape.resetPath(new snap.geom.Path(simpleShape));
+        RMPolygonShape polygonShape = new RMPolygonShape(selShapePath);
+        polygonShape.copyShape(selShape);
 
-        // Remove original children and replace with SubtractedShape
-        anEditor.undoerSetUndoTitle("Subtract Paths");
+        // Remove original children and replace with polygon shape
+        anEditor.undoerSetUndoTitle("Make Polygon Shape");
         RMParentShape parent = anEditor.getSuperSelectedParentShape();
         parent.removeChild(selShape);
-        parent.addChild(simpleRMShape);
+        parent.addChild(polygonShape);
 
-        // Select SubtractedShape
-        anEditor.setSelectedShape(simpleRMShape);
+        // Select polygon shape
+        anEditor.setSelectedShape(polygonShape);
     }
 
     /**

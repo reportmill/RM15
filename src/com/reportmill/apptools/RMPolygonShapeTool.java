@@ -15,19 +15,19 @@ import snap.view.*;
 public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
 
     // The current path being added
-    Path _path;
+    private Path _path;
 
     // Whether path should be smoothed on mouse up
-    boolean _smoothPathOnMouseUp;
+    private boolean _smoothPathOnMouseUp;
 
     // Used to determine which path element to start smoothing from
-    int _pointCountOnMouseDown;
+    private int _pointCountOnMouseDown;
 
     // The point (in path coords) for new control point additions
-    Point _newPoint;
+    private Point _newPoint;
 
     // The path point handle hit by current mouse down
-    static public int _selectedPointIndex = 0;
+    public static int _selectedPointIndex = 0;
 
     /**
      * Initialize UI.
@@ -56,14 +56,22 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
     public void respondUI(ViewEvent anEvent)
     {
         // Get current PathView and path
-        RMPolygonShape pshape = getSelectedShape();
+        RMPolygonShape polygonShape = getSelectedShape();
 
         // Handle PathText
         if (anEvent.equals("PathText")) {
             String str = anEvent.getStringValue();
             Path path = Path.getPathFromSVG(str);
-            if (path == null) return;
-            pshape.resetPath(new Path(path));
+            if (path == null)
+                return;
+            polygonShape.setPathAndBounds(path);
+        }
+
+        // Handle MakeSimpleButton
+        if (anEvent.equals("MakeSimpleButton")) {
+            Shape selShapePath = polygonShape.getPath();
+            Shape simpleShape = Shape.makeSimple(selShapePath);
+            polygonShape.setPathAndBounds(simpleShape);
         }
 
         // Handle DeletePointMenuItem
@@ -78,10 +86,7 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
     /**
      * Returns the class that this tool is responsible for.
      */
-    public Class getShapeClass()
-    {
-        return RMPolygonShape.class;
-    }
+    public Class<T> getShapeClass()  { return (Class<T>) RMPolygonShape.class; }
 
     /**
      * Returns a new instance of the shape class that this tool is responsible for.
@@ -96,18 +101,12 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
     /**
      * Returns whether a given shape is super-selectable.
      */
-    public boolean isSuperSelectable(RMShape aShape)
-    {
-        return true;
-    }
+    public boolean isSuperSelectable(RMShape aShape)  { return true; }
 
     /**
      * Returns whether tool should smooth path segments during creation.
      */
-    public boolean getSmoothPath()
-    {
-        return false;
-    }
+    public boolean getSmoothPath()  { return false; }
 
     /**
      * Handles mouse pressed for polygon creation.
@@ -115,17 +114,22 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
     public void mousePressed(ViewEvent anEvent)
     {
         boolean smoothPath = getSmoothPath();
-        if (anEvent.isAltDown()) smoothPath = !smoothPath;
+        if (anEvent.isAltDown())
+            smoothPath = !smoothPath;
         Point point = getEditorEvents().getEventPointInDoc(!smoothPath);
 
         // Register all selectedShapes dirty because their handles will probably need to be wiped out
-        for (RMShape shp : getEditor().getSelectedShapes()) shp.repaint(); // Was shapes.forEach(i -> i.repaint())
+        for (RMShape shp : getEditor().getSelectedShapes())
+            shp.repaint(); // Was shapes.forEach(i -> i.repaint())
 
-        // If this is the first mouseDown of a new path, create path and add moveTo. Otherwise add lineTo to current path
+        // If this is the first mouseDown of a new path, create path and add moveTo
         if (_path == null) {
             _path = new Path();
             _path.moveTo(point.x, point.y);
-        } else _path.lineTo(point.x, point.y);
+        }
+
+        // Otherwise add lineTo to current path
+        else _path.lineTo(point.x, point.y);
 
         // Get the value of _shouldSmoothPathOnMouseUp for the mouseDrag and store current pointCount
         _smoothPathOnMouseUp = smoothPath;
@@ -144,7 +148,8 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
         Point point = getEditorEvents().getEventPointInDoc(!_smoothPathOnMouseUp);
         Rect rect = _path.getBounds();
 
-        if (_smoothPathOnMouseUp || _path.getPointCount() == 1) _path.lineTo(point.x, point.y);
+        if (_smoothPathOnMouseUp || _path.getPointCount() == 1)
+            _path.lineTo(point.x, point.y);
         else _path.setPoint(_path.getPointCount() - 1, point.x, point.y);
 
         rect.union(_path.getBounds());
@@ -177,14 +182,16 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
 
             // If mouseUp is in startPoint, create poly and surrender to selectTool
             if (currentHandleRect.intersectsRect(firstHandleRect)) {
-                if (lastElmnt == Seg.LineTo) _path.removeLastSeg();
+                if (lastElmnt == Seg.LineTo)
+                    _path.removeLastSeg();
                 _path.close();
                 createPath = true;
             }
 
             // If mouseUp is in startPoint, create poly and surrender to selectTool
             if (currentHandleRect.intersectsRect(lastHandleRect)) {
-                if (_path.getSegLast() == Seg.LineTo) _path.removeLastSeg();
+                if (_path.getSegLast() == Seg.LineTo)
+                    _path.removeLastSeg();
                 createPath = true;
             }
 
@@ -233,9 +240,8 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
         if (aPolygon.getPath().getPointCount() < 2)
             _selectedPointIndex = -1;
 
-            // Otherwise, figure out the size of a handle in path coordinates and set index of path point hit by mouse down
+        // Otherwise, figure out the size of a handle in path coordinates and set index of path point hit by mouse down
         else {
-            Size handles = new Size(9, 9);
             int oldSelectedPt = _selectedPointIndex;
             int hp = handleAtPoint(aPolygon.getPath(), point, oldSelectedPt);
             _selectedPointIndex = hp;
@@ -261,9 +267,10 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
         // Repaint, create path with moved point and set new path
         aPolygon.repaint();
         Point point = getEditorEvents().getEventPointInShape(true);
-        Path path = aPolygon.getPath(), newPath = path.clone();
+        Path path = aPolygon.getPath();
+        Path newPath = path.clone();
         setPointStructured(newPath, _selectedPointIndex, point);
-        aPolygon.resetPath(newPath);
+        aPolygon.setPathAndBounds(newPath);
     }
 
     /**
@@ -272,18 +279,18 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
     private void createPoly()
     {
         if (_path != null && _path.getPointCount() > 2) {
-            RMPolygonShape poly = new RMPolygonShape();
+            RMPolygonShape polygonShape = new RMPolygonShape();
             Rect polyFrame = getEditor().getSuperSelectedShape().parentToLocal(_path.getBounds(), null).getBounds();
-            poly.setFrame(polyFrame);
-            poly.setStroke(new RMStroke());
-            poly.setPath(_path);
+            polygonShape.setFrame(polyFrame);
+            polygonShape.setStroke(new RMStroke());
+            polygonShape.setPath(_path);
 
             // Add shape to superSelectedShape (within an undo grouping).
             getEditor().undoerSetUndoTitle("Add Polygon");
-            getEditor().getSuperSelectedParentShape().addChild(poly);
+            getEditor().getSuperSelectedParentShape().addChild(polygonShape);
 
             // Select Shape
-            getEditor().setSelectedShape(poly);
+            getEditor().setSelectedShape(polygonShape);
         }
 
         // Reset path
@@ -343,17 +350,18 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
         // Declare some path iteration variables
         Seg lastElement = null;
         int currentPointIndex = 0;
-        Point pnts[] = new Point[3];
-        float HW = 6, HHW = HW / 2;
+        Point[] points = new Point[3];
+        float HANDLE_WIDTH = 6;
+        float HALF_HANDLE_WIDTH = HANDLE_WIDTH / 2;
 
         // Iterate over path segements
         for (int i = 0; i < path.getSegCount(); i++) {
             int pointIndex = path.getSegPointIndex(i);
 
             // Get points
-            pnts[0] = pointIndex < path.getPointCount() ? path.getPoint(pointIndex++) : null;
-            pnts[1] = pointIndex < path.getPointCount() ? path.getPoint(pointIndex++) : null;
-            pnts[2] = pointIndex < path.getPointCount() ? path.getPoint(pointIndex++) : null;
+            points[0] = pointIndex < path.getPointCount() ? path.getPoint(pointIndex++) : null;
+            points[1] = pointIndex < path.getPointCount() ? path.getPoint(pointIndex++) : null;
+            points[2] = pointIndex < path.getPointCount() ? path.getPoint(pointIndex++) : null;
 
             // Get segment type and next segment type
             Seg element = path.getSeg(i);
@@ -368,7 +376,7 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
                 // Handle MoveTo & LineTo: just draw button
                 case MoveTo:
                 case LineTo: {
-                    Rect hrect = new Rect(pnts[0].x - HHW, pnts[0].y - HHW, HW, HW);
+                    Rect hrect = new Rect(points[0].x - HALF_HANDLE_WIDTH, points[0].y - HALF_HANDLE_WIDTH, HANDLE_WIDTH, HANDLE_WIDTH);
                     aPntr.drawButton(hrect, false);
                     currentPointIndex++;
                     break;
@@ -384,9 +392,9 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
                             (lastElement == Seg.CubicTo && currentPointIndex - 2 == _selectedPointIndex)) {
                         Point lastPoint = path.getPoint(currentPointIndex - 1);
                         aPntr.setStroke(Stroke.Stroke1);
-                        aPntr.drawLine(pnts[0].getX(), pnts[0].getY(), lastPoint.getX(), lastPoint.getY());
-                        aPntr.drawButton(pnts[0].x - HHW, pnts[0].y - HHW, HW, HW, false); // control pnt handle rect
-                        aPntr.drawButton(lastPoint.x - HHW, lastPoint.y - HHW, HW, HW, false); // last pnt handle rect
+                        aPntr.drawLine(points[0].x, points[0].getY(), lastPoint.getX(), lastPoint.getY());
+                        aPntr.drawButton(points[0].x - HALF_HANDLE_WIDTH, points[0].y - HALF_HANDLE_WIDTH, HANDLE_WIDTH, HANDLE_WIDTH, false); // control pnt handle rect
+                        aPntr.drawButton(lastPoint.x - HALF_HANDLE_WIDTH, lastPoint.y - HALF_HANDLE_WIDTH, HANDLE_WIDTH, HANDLE_WIDTH, false); // last pnt handle rect
                     }
 
                     // If controlPoint2's point index is selectedPointIndex or if end point's index is
@@ -395,12 +403,12 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
                     else if (currentPointIndex + 1 == _selectedPointIndex || currentPointIndex + 2 == _selectedPointIndex ||
                             (nextElement == Seg.CubicTo && currentPointIndex + 3 == _selectedPointIndex)) {
                         aPntr.setStroke(Stroke.Stroke1);
-                        aPntr.drawLine(pnts[1].getX(), pnts[1].getY(), pnts[2].getX(), pnts[2].getY());
-                        aPntr.drawButton(pnts[1].x - HHW, pnts[1].y - HHW, HW, HW, false);
+                        aPntr.drawLine(points[1].x, points[1].y, points[2].x, points[2].y);
+                        aPntr.drawButton(points[1].x - HALF_HANDLE_WIDTH, points[1].y - HALF_HANDLE_WIDTH, HANDLE_WIDTH, HANDLE_WIDTH, false);
                     }
 
                     // Draw button
-                    Rect hrect = new Rect(pnts[2].x - HHW, pnts[2].y - HHW, HW, HW);
+                    Rect hrect = new Rect(points[2].x - HALF_HANDLE_WIDTH, points[2].y - HALF_HANDLE_WIDTH, HANDLE_WIDTH, HANDLE_WIDTH);
                     aPntr.drawButton(hrect, false);
                     currentPointIndex += 3;
                     break;
@@ -440,41 +448,43 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
         // Iterate over path elements
         Point p0 = aPath.getPointCount() > 0 ? new Point(aPath.getPoint(0)) : new Point();
         double p1x = p0.x, p1y = p0.y, p2x = p1x, p2y = p1y;
-        PathIter piter = aPath.getPathIter(null);
-        double pts[] = new double[6];
-        for (int i = 0; piter.hasNext(); i++)
-            switch (piter.getNext(pts)) {
+        PathIter pathIter = aPath.getPathIter(null);
+        double[] points = new double[6];
+
+
+        for (int i = 0; pathIter.hasNext(); i++)
+            switch (pathIter.getNext(points)) {
 
                 // Handle MoveTo
                 case MoveTo:
 
                     // Handle LineTo
                 case LineTo: {
-                    p1x = Math.min(p1x, pts[0]);
-                    p1y = Math.min(p1y, pts[1]);
-                    p2x = Math.max(p2x, pts[0]);
-                    p2y = Math.max(p2y, pts[1]);
+                    p1x = Math.min(p1x, points[0]);
+                    p1y = Math.min(p1y, points[1]);
+                    p2x = Math.max(p2x, points[0]);
+                    p2y = Math.max(p2y, points[1]);
                 }
                 break;
 
                 // Handle CubicTo
                 case CubicTo: {
                     if ((i - 1) == mouseDownIndex) {
-                        p1x = Math.min(p1x, pts[0]);
-                        p1y = Math.min(p1y, pts[1]);
-                        p2x = Math.max(p2x, pts[0]);
-                        p2y = Math.max(p2y, pts[1]);
+                        p1x = Math.min(p1x, points[0]);
+                        p1y = Math.min(p1y, points[1]);
+                        p2x = Math.max(p2x, points[0]);
+                        p2y = Math.max(p2y, points[1]);
                     }
                     if (i == mouseDownIndex) {
-                        p1x = Math.min(p1x, pts[2]);
-                        p1y = Math.min(p1y, pts[3]);
-                        p2x = Math.max(p2x, pts[2]);
-                        p2y = Math.max(p2y, pts[3]);
+                        p1x = Math.min(p1x, points[2]);
+                        p1y = Math.min(p1y, points[3]);
+                        p2x = Math.max(p2x, points[2]);
+                        p2y = Math.max(p2y, points[3]);
                     }
-                    p1x = Math.min(p1x, pts[4]);
-                    p1y = Math.min(p1y, pts[5]);
-                    p2x = Math.max(p2x, pts[4]);
-                    p2y = Math.max(p2y, pts[5]);
+                    p1x = Math.min(p1x, points[4]);
+                    p1y = Math.min(p1y, points[5]);
+                    p2x = Math.max(p2x, points[4]);
+                    p2y = Math.max(p2y, points[5]);
                 }
                 break;
 
@@ -538,30 +548,30 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
     public void deleteSelectedPoint()
     {
         // Make changes to a clone of the path so deletions can be undone
-        RMPolygonShape p = getSelectedShape();
-        Path path = new Path(p.getPath());
+        RMPolygonShape polygonShape = getSelectedShape();
+        Path path = new Path(polygonShape.getPath());
 
         // get the index of the path segment corresponding to the selected control point
-        int sindex = path.getSegIndexForPointIndex(_selectedPointIndex);
+        int selPointIndex = path.getSegIndexForPointIndex(_selectedPointIndex);
 
         // mark for repaint & undo
-        p.repaint();
+        polygonShape.repaint();
 
         // Delete the point from path in parent coords
-        path.removeSeg(sindex);
+        path.removeSeg(selPointIndex);
 
         // if all points have been removed, delete the shape itself
         if (path.getSegCount() == 0) {
             getEditor().undoerSetUndoTitle("Delete Shape");
-            p.getParent().repaint();
-            p.removeFromParent();
+            polygonShape.getParent().repaint();
+            polygonShape.removeFromParent();
             getEditor().setSelectedShape(null);
         }
 
         // otherwise update path and bounds and deselect the deleted point
         else {
             getEditor().undoerSetUndoTitle("Delete Control Point");
-            p.resetPath(path);
+            polygonShape.setPathAndBounds(path);
             _selectedPointIndex = -1;
         }
     }
@@ -581,63 +591,89 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
         Line vert = new Line(aPoint.x, aPoint.y - 3, aPoint.x, aPoint.y + 3);
 
         // Iterate over path and if segment is hit by mouse point, split segment
-        PathIter piter = path.getPathIter(null);
-        double pts[] = new double[6], mx = 0, my = 0, lx = 0, ly = 0;
-        while (piter.hasNext()) switch (piter.getNext(pts)) {
+        PathIter pathIter = path.getPathIter(null);
+        double[] points = new double[6];
+        double moveX = 0, moveY = 0;
+        double lineX = 0, lineY = 0;
 
-            // Handle MoveTo
-            case MoveTo:
-                path2.moveTo(mx = lx = pts[0], my = ly = pts[1]);
+        // Iterate over path
+        while (pathIter.hasNext()) {
+            switch (pathIter.getNext(points)) {
+
+                // Handle MoveTo
+                case MoveTo:
+                    path2.moveTo(moveX = lineX = points[0], moveY = lineY = points[1]);
+                    break;
+
+                // Handle LineTo
+                case LineTo: {
+                    Line seg = new Line(lineX, lineY, lineX = points[0], lineY = points[1]);
+                    Line seg2 = null;
+                    double ix = seg.getHitPoint(hor);
+                    double iy = seg.getHitPoint(vert);
+                    if (.1 < ix && ix < .9)
+                        seg2 = seg.split(ix);
+                    else if (.1 < iy && iy < .9)
+                        seg2 = seg.split(iy);
+                    path2.append(seg);
+                    if (seg2 != null)
+                        path2.append(seg2);
+                }
                 break;
 
-            // Handle LineTo
-            case LineTo: {
-                Line seg = new Line(lx, ly, lx = pts[0], ly = pts[1]), seg2 = null;
-                double ix = seg.getHitPoint(hor), iy = seg.getHitPoint(vert);
-                if (.1 < ix && ix < .9) seg2 = seg.split(ix);
-                else if (.1 < iy && iy < .9) seg2 = seg.split(iy);
-                path2.append(seg);
-                if (seg2 != null) path2.append(seg2);
-            }
-            break;
+                // Handle QuadTo
+                case QuadTo: {
+                    Quad seg = new Quad(lineX, lineY, points[0], points[1], lineX = points[2], lineY = points[3]);
+                    Quad seg2 = null;
+                    double ix = seg.getHitPoint(hor);
+                    double iy = seg.getHitPoint(vert);
+                    if (.1 < ix && ix < .9)
+                        seg2 = seg.split(ix);
+                    else if (.1 < iy && iy < .9)
+                        seg2 = seg.split(iy);
+                    path2.append(seg);
+                    if (seg2 != null)
+                        path2.append(seg2);
+                }
+                break;
 
-            // Handle QuadTo
-            case QuadTo: {
-                Quad seg = new Quad(lx, ly, pts[0], pts[1], lx = pts[2], ly = pts[3]), seg2 = null;
-                double ix = seg.getHitPoint(hor), iy = seg.getHitPoint(vert);
-                if (.1 < ix && ix < .9) seg2 = seg.split(ix);
-                else if (.1 < iy && iy < .9) seg2 = seg.split(iy);
-                path2.append(seg);
-                if (seg2 != null) path2.append(seg2);
-            }
-            break;
+                // Handle CubicTo
+                case CubicTo: {
+                    Cubic seg = new Cubic(lineX, lineY, points[0], points[1], points[2], points[3], lineX = points[4], lineY = points[5]);
+                    Cubic seg2 = null;
+                    double ix = seg.getHitPoint(hor);
+                    double iy = seg.getHitPoint(vert);
+                    if (.1 < ix && ix < .9)
+                        seg2 = seg.split(ix);
+                    else if (.1 < iy && iy < .9)
+                        seg2 = seg.split(iy);
+                    path2.append(seg);
+                    if (seg2 != null)
+                        path2.append(seg2);
+                }
+                break;
 
-            // Handle CubicTo
-            case CubicTo: {
-                Cubic seg = new Cubic(lx, ly, pts[0], pts[1], pts[2], pts[3], lx = pts[4], ly = pts[5]), seg2 = null;
-                double ix = seg.getHitPoint(hor), iy = seg.getHitPoint(vert);
-                if (.1 < ix && ix < .9) seg2 = seg.split(ix);
-                else if (.1 < iy && iy < .9) seg2 = seg.split(iy);
-                path2.append(seg);
-                if (seg2 != null) path2.append(seg2);
+                // Handle Close
+                case Close: {
+                    Line seg = new Line(lineX, lineY, lineX = moveX, lineY = moveY);
+                    Line seg2 = null;
+                    double ix = seg.getHitPoint(hor);
+                    double iy = seg.getHitPoint(vert);
+                    if (.1 < ix && ix < .9)
+                        seg2 = seg.split(ix);
+                    else if (.1 < iy && iy < .9)
+                        seg2 = seg.split(iy);
+                    if (seg2 != null)
+                        path2.append(seg);
+                    path2.close();
+                }
+                break;
             }
-            break;
-
-            // Handle Close
-            case Close: {
-                Line seg = new Line(lx, ly, lx = mx, ly = my), seg2 = null;
-                double ix = seg.getHitPoint(hor), iy = seg.getHitPoint(vert);
-                if (.1 < ix && ix < .9) seg2 = seg.split(ix);
-                else if (.1 < iy && iy < .9) seg2 = seg.split(iy);
-                if (seg2 != null) path2.append(seg);
-                path2.close();
-            }
-            break;
         }
 
         // If new path differs, set new path
         if (!path2.equals(path))
-            poly.resetPath(path2);
+            poly.setPathAndBounds(path2);
     }
 
     /**
@@ -664,9 +700,6 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
                         Size size2 = new Size(cntrlPnt2.x - endPoint.x, cntrlPnt2.y - endPoint.y);
                         double mag = size2.getMagnitude();
                         aPath.setPoint(index - 2, endPoint.x + size.getWidth() * mag, endPoint.y + size.getHeight() * mag);
-                    } else {
-                        // Illustrator pops the otherControlPoint here to what it was at the
-                        // start of the drag loop.  Not sure that's much better...
                     }
                 }
             }
@@ -683,7 +716,6 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
                         Size size2 = new Size(otherControlPoint.x - endPoint.x, otherControlPoint.y - endPoint.y);
                         double mag = size2.getMagnitude();
                         aPath.setPoint(index + 2, endPoint.x + size.width * mag, endPoint.y + size.height * mag);
-                    } else {
                     }
                 }
             }
@@ -726,7 +758,7 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
     {
         // Check against off-path control points of selected path first, otherwise you might never be able to select one
         if (selectedPoint != -1) {
-            int offPathPoints[] = new int[2];
+            int[] offPathPoints = new int[2];
             int noffPathPoints = 0;
             int ecount = aPath.getSegCount();
             int eindex = getSegIndexForPointIndex(aPath, selectedPoint);
@@ -791,21 +823,14 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
     {
         // Iterate over segments and increment element index
         int elementIndex = 0;
-        for (int pointIndex = 0; pointIndex <= index; elementIndex++)
+        for (int pointIndex = 0; pointIndex <= index; elementIndex++) {
             switch (aPath.getSeg(elementIndex)) {
-                case MoveTo:
-                case LineTo:
-                    pointIndex++;
-                    break;
-                case QuadTo:
-                    pointIndex += 2;
-                    break;
-                case CubicTo:
-                    pointIndex += 3;
-                    break;
-                default:
-                    break;
+                case MoveTo: case LineTo: pointIndex++; break;
+                case QuadTo: pointIndex += 2; break;
+                case CubicTo: pointIndex += 3; break;
+                default: break;
             }
+        }
 
         // Return calculated element index
         return elementIndex - 1;
@@ -828,10 +853,10 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
     /**
      * This inner class defines a polygon tool subclass for drawing freehand pencil sketches instead.
      */
-    public static class PencilTool extends RMPolygonShapeTool {
+    public static class PencilTool<T extends RMPolygonShape> extends RMPolygonShapeTool<T> {
 
         /**
-         * Creates a new PencilTool.
+         * Constructor.
          */
         public PencilTool(RMEditor anEd)
         {
@@ -841,10 +866,6 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
         /**
          * Overrides polygon tool method to flip default smoothing.
          */
-        public boolean getSmoothPath()
-        {
-            return true;
-        }
+        public boolean getSmoothPath()  { return true; }
     }
-
 }
