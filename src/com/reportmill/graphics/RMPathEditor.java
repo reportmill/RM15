@@ -26,19 +26,21 @@ public class RMPathEditor {
         Seg lastSeg = null;
         int currentPointIndex = 0;
         Point[] points = new Point[3];
+        int segCount = aPath.getSegCount();
+        int pointCount = aPath.getPointCount();
 
         // Iterate over path segments
-        for (int i = 0; i < aPath.getSegCount(); i++) {
+        for (int i = 0; i < segCount; i++) {
+
+            // Get seg and next seg
+            Seg seg = aPath.getSeg(i);
+            Seg nextSeg = i + 1 < segCount ? aPath.getSeg(i + 1) : null;
 
             // Get points
             int pointIndex = aPath.getSegPointIndex(i);
-            points[0] = pointIndex < aPath.getPointCount() ? aPath.getPoint(pointIndex) : ZERO_POINT;
-            points[1] = pointIndex < aPath.getPointCount() ? aPath.getPoint(pointIndex + 1) : ZERO_POINT;
-            points[2] = pointIndex < aPath.getPointCount() ? aPath.getPoint(pointIndex + 2) : ZERO_POINT;
-
-            // Get segment type and next segment type
-            Seg seg = aPath.getSeg(i);
-            Seg nextSeg = i + 1 < aPath.getSegCount() ? aPath.getSeg(i + 1) : null;
+            points[0] = pointIndex < pointCount ? aPath.getPoint(pointIndex) : ZERO_POINT;
+            points[1] = pointIndex + 1 < pointCount ? aPath.getPoint(pointIndex + 1) : ZERO_POINT;
+            points[2] = pointIndex + 2 < pointCount ? aPath.getPoint(pointIndex + 2) : ZERO_POINT;
 
             // Set color black for control lines and so alpha is correct for buttons
             aPntr.setColor(Color.BLACK);
