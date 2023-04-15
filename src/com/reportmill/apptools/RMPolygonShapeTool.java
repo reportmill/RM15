@@ -61,9 +61,8 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
         // Handle PathText
         if (anEvent.equals("PathText")) {
             String str = anEvent.getStringValue();
-            Path path = Path.getPathFromSVG(str);
-            if (path == null)
-                return;
+            Path path = new Path();
+            path.appendSvgString(str);
             polygonShape.setPathAndBounds(path);
         }
 
