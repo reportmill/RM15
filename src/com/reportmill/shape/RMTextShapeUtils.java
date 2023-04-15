@@ -52,7 +52,7 @@ public class RMTextShapeUtils {
                 Font font = run.getFont();
                 double charSpacing = run.getStyle().getCharSpacing();
                 Shape runOutlineShape = font.getOutline(str, run.getX(), line.getBaseline(), charSpacing);
-                outlineShape.append(runOutlineShape);
+                outlineShape.appendShape(runOutlineShape);
             }
         }
 

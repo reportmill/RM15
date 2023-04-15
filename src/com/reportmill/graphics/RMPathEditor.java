@@ -209,9 +209,9 @@ public class RMPathEditor {
                         seg2 = seg.split(ix);
                     else if (.1 < iy && iy < .9)
                         seg2 = seg.split(iy);
-                    newPath.append(seg);
+                    newPath.appendSegment(seg);
                     if (seg2 != null)
-                        newPath.append(seg2);
+                        newPath.appendSegment(seg2);
                 }
                 break;
 
@@ -225,9 +225,9 @@ public class RMPathEditor {
                         seg2 = seg.split(ix);
                     else if (.1 < iy && iy < .9)
                         seg2 = seg.split(iy);
-                    newPath.append(seg);
+                    newPath.appendSegment(seg);
                     if (seg2 != null)
-                        newPath.append(seg2);
+                        newPath.appendSegment(seg2);
                 }
                 break;
 
@@ -241,9 +241,9 @@ public class RMPathEditor {
                         seg2 = seg.split(ix);
                     else if (.1 < iy && iy < .9)
                         seg2 = seg.split(iy);
-                    newPath.append(seg);
+                    newPath.appendSegment(seg);
                     if (seg2 != null)
-                        newPath.append(seg2);
+                        newPath.appendSegment(seg2);
                 }
                 break;
 
@@ -258,7 +258,7 @@ public class RMPathEditor {
                     else if (.1 < iy && iy < .9)
                         seg2 = seg.split(iy);
                     if (seg2 != null)
-                        newPath.append(seg);
+                        newPath.appendSegment(seg);
                     newPath.close();
                 }
                 break;

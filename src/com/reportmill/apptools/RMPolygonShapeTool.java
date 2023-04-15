@@ -167,11 +167,11 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
 
         // Check to see if point landed in first point
         if (_path.getPointCount() > 2) {
-            Seg lastSeg = _path.getSegLast();
+            Seg lastSeg = _path.getLastSeg();
             int lastPointIndex = _path.getPointCount() - (lastSeg == Seg.LineTo ? 2 : 4);
             Point beginPoint = _path.getPoint(0);
             Point lastPoint = _path.getPoint(lastPointIndex);
-            Point thisPoint = _path.getPointLast();
+            Point thisPoint = _path.getLastPoint();
             Rect firstHandleRect = new Rect(beginPoint.x - 3, beginPoint.y - 3, 6f, 6f);
             Rect lastHandleRect = new Rect(lastPoint.x - 3, lastPoint.y - 3, 6f, 6f);
             Rect currentHandleRect = new Rect(thisPoint.x - 3, thisPoint.y - 3, 6f, 6f);
@@ -187,7 +187,7 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
 
             // If mouseUp is in startPoint, create poly and surrender to selectTool
             if (currentHandleRect.intersectsRect(lastHandleRect)) {
-                if (_path.getSegLast() == Seg.LineTo)
+                if (_path.getLastSeg() == Seg.LineTo)
                     _path.removeLastSeg();
                 createPath = true;
             }
