@@ -47,7 +47,7 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
         Path path = polygonShape.getPath();
 
         // Update PathText
-        setViewText("PathText", path.getString());
+        setViewText("PathText", path.getSvgString());
     }
 
     /**
@@ -161,7 +161,7 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
     {
         if (_smoothPathOnMouseUp && _pointCountOnMouseDown < _path.getPointCount()) {
             getEditor().repaint();
-            _path.fitToCurve(_pointCountOnMouseDown);
+            _path.fitToCurveFromPointIndex(_pointCountOnMouseDown);
         }
 
         // Check to see if point landed in first point
