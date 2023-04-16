@@ -4,7 +4,7 @@
 package com.reportmill.graphics;
 import com.reportmill.base.RMFormat;
 import com.reportmill.shape.RMArchiver;
-import snap.geom.Path;
+import snap.geom.Path2D;
 import snap.geom.Rect;
 import snap.geom.Shape;
 import snap.gfx.*;
@@ -904,7 +904,7 @@ public class RMTextEditor {
         // Get text box and text string and path object
         TextBox tbox = getTextBox();
         String string = tbox.getString();
-        Path path = new Path();
+        Path2D path = new Path2D();
 
         // Iterate over text
         for (SpellCheck.Word word = SpellCheck.getMisspelledWord(string, 0); word != null;

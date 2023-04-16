@@ -3,7 +3,7 @@
  */
 package com.reportmill.shape;
 import com.reportmill.graphics.RMColor;
-import snap.geom.Path;
+import snap.geom.Path2D;
 import snap.geom.Rect;
 
 /**
@@ -38,7 +38,7 @@ class RMGraphRPGLine extends RMGraphRPGBar {
             RMGraphSeries series = getSeries(i);
 
             // Create path and iterate over series items
-            Path path = new Path();
+            Path2D path = new Path2D();
             for (int j = 0, jMax = series.getItemCount(); j < jMax; j++) {
 
                 // Get bounds of bar chart bar and line graph point

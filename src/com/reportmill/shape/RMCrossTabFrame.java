@@ -2,7 +2,7 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.shape;
-import snap.geom.Path;
+import snap.geom.Path2D;
 import snap.geom.Rect;
 import snap.gfx.*;
 import snap.util.*;
@@ -30,7 +30,8 @@ public class RMCrossTabFrame extends RMParentShape {
      */
     public RMCrossTab getTable()
     {
-        if (getChildCount() == 0) createTable();
+        if (getChildCount() == 0)
+            return createTable();
         return (RMCrossTab) getChild(0);
     }
 
@@ -145,7 +146,7 @@ public class RMCrossTabFrame extends RMParentShape {
 
         // Get path for CrossTab: Iterate over columns to define horizontal corner piece
         RMCrossTab ctab = getTable();
-        Path path = new Path();
+        Path2D path = new Path2D();
         double x = 0;
         for (int i = 0, iMax = ctab.getColCount(); i < iMax; i++) {
 

@@ -5,7 +5,7 @@ package com.reportmill.shape;
 import com.reportmill.base.RMGrouper;
 import com.reportmill.base.RMGrouping;
 import java.util.*;
-import snap.geom.Path;
+import snap.geom.Path2D;
 import snap.geom.Point;
 import snap.geom.Rect;
 import snap.gfx.*;
@@ -529,7 +529,7 @@ public class RMTable extends RMParentShape {
                 aPntr.drawString(version, titleX, titleY);
 
                 // Draw drop-down arrow
-                Path p = new Path();
+                Path2D p = new Path2D();
                 p.moveTo(titleX + titleWidth + 2.5f, titleY - 6f);
                 p.lineTo(titleX + titleWidth + 5.5f, titleY - 1f);
                 p.lineTo(titleX + titleWidth + 8.5f, titleY - 6f);

@@ -404,7 +404,7 @@ public class RMViewer extends ParentView {
      */
     public Shape convertFromShape(Shape aShp, RMShape aShape)
     {
-        return aShape != null ? aShape.localToParent(aShp, null) : new Path(aShp);
+        return aShape != null ? aShape.localToParent(aShp, null) : new Path2D(aShp);
     }
 
     /**
@@ -412,7 +412,7 @@ public class RMViewer extends ParentView {
      */
     public Shape convertToShape(Shape aShp, RMShape aShape)
     {
-        return aShape != null ? aShape.parentToLocal(aShp, null) : new Path(aShp);
+        return aShape != null ? aShape.parentToLocal(aShp, null) : new Path2D(aShp);
     }
 
     /**

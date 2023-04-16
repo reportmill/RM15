@@ -6,10 +6,7 @@ import com.reportmill.base.RMFormat;
 import com.reportmill.base.RMGroup;
 import com.reportmill.graphics.*;
 import java.util.*;
-import snap.geom.Path;
-import snap.geom.Point;
-import snap.geom.Pos;
-import snap.geom.Rect;
+import snap.geom.*;
 import snap.util.MathUtils;
 
 /**
@@ -402,7 +399,7 @@ class RMGraphRPGBar extends RMGraphRPG {
         axis.setStroke(new RMStroke());
 
         // Create path for axis labels line: Iterate over graph intervals to add ticks to axis path
-        Path path = new Path();
+        Path2D path = new Path2D();
         for (int i = 0, iMax = getIntervalCount(); i < iMax; i++) {
             double intervalPosition = isVertical() ? height - height * i / (iMax - 1) : width * i / (iMax - 1);
             path.moveTo(isVertical() ? 0 : intervalPosition, isVertical() ? intervalPosition : 0);

@@ -2,7 +2,7 @@
  * Copyright (c) 2010, ReportMill Software. All rights reserved.
  */
 package com.reportmill.graphics;
-import snap.geom.Path;
+import snap.geom.Path2D;
 import snap.geom.Rect;
 import snap.geom.Shape;
 import snap.util.*;
@@ -87,7 +87,7 @@ public class RMBorderStroke extends RMStroke {
         double shapeH = rect.height;
 
         // Otherwise, build path based on sides showing and return
-        Path path = new Path();
+        Path2D path = new Path2D();
         if (showTop) {
             path.moveTo(0, 0);
             path.lineTo(shapeW, 0);

@@ -3,10 +3,7 @@
  */
 package com.reportmill.shape;
 import com.reportmill.graphics.*;
-import snap.geom.Insets;
-import snap.geom.Path;
-import snap.geom.Rect;
-import snap.geom.Shape;
+import snap.geom.*;
 import snap.gfx.*;
 import snap.text.TextBox;
 import snap.text.TextBoxLine;
@@ -40,7 +37,7 @@ public class RMTextShapeUtils {
     public static Shape getTextOutlineShape(RMTextShape aText)
     {
         // Create path and establish bounds of text
-        Path outlineShape = new Path();
+        Path2D outlineShape = new Path2D();
         outlineShape.moveTo(0, 0);
         outlineShape.moveTo(aText.getWidth(), aText.getHeight());
 

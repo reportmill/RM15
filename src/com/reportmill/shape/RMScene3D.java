@@ -6,7 +6,6 @@ import snap.geom.*;
 import snap.gfx3d.*;
 import com.reportmill.graphics.*;
 import java.util.*;
-
 import snap.gfx.*;
 import snap.props.PropChange;
 import snap.util.*;
@@ -274,7 +273,7 @@ public class RMScene3D extends RMParentShape {
 
         // Flip
         double height = getHeight();
-        Path path = new Path(shapePathFlatInScene);
+        Path2D path = new Path2D(shapePathFlatInScene);
         for (int i = 0, iMax = path.getPointCount(); i < iMax; i++) {
             Point p = path.getPoint(i);
             double newY = height - p.y;
