@@ -69,7 +69,7 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
         // Handle MakeSimpleButton
         if (anEvent.equals("MakeSimpleButton")) {
             Shape selShapePath = polygonShape.getPath();
-            Shape simpleShape = Shape.makeSimple(selShapePath);
+            Shape simpleShape = Shape.getNotSelfIntersectingShape(selShapePath);
             polygonShape.setPathAndBounds(simpleShape);
         }
 
