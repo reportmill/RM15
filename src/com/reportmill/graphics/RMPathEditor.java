@@ -20,7 +20,7 @@ public class RMPathEditor {
     /**
      * Handles painting a polygon shape.
      */
-    public static void paintHandles(Path aPath, Painter aPntr, int selectedPointIndex)
+    public static void paintHandles(Path2D aPath, Painter aPntr, int selectedPointIndex)
     {
         // Declare loop vars
         Seg lastSeg = null;
@@ -99,9 +99,9 @@ public class RMPathEditor {
     /**
      * Resets the point at the given index to the given point, while preserving something.
      */
-    public static Path setPointStructured(Shape aPath, int index, Point point)
+    public static Path2D setPointStructured(Shape aPath, int index, Point point)
     {
-        Path newPath = new Path(aPath);
+        Path2D newPath = new Path2D(aPath);
         int segIndex = newPath.getSegIndexForPointIndex(index);
         Seg seg = newPath.getSeg(segIndex);
 
@@ -177,10 +177,10 @@ public class RMPathEditor {
     /**
      * Add a point to the curve by subdividing the path segment at the hit point.
      */
-    public static Path addPathPointAtPoint(Shape aPath, Point aPoint)
+    public static Path2D addPathPointAtPoint(Shape aPath, Point aPoint)
     {
         // Get old path and new path
-        Path newPath = new Path();
+        Path2D newPath = new Path2D();
 
         // Create small horizontal and vertical lines around mouse point
         Line hor = new Line(aPoint.x - 3, aPoint.y, aPoint.x + 3, aPoint.y);
@@ -274,16 +274,16 @@ public class RMPathEditor {
     /**
      * Delete the selected control point and readjust shape bounds
      */
-    public static Path deletePathPointAtPointIndex(Shape aPath, int pointIndex)
+    public static Path2D deletePathPointAtPointIndex(Shape aPath, int pointIndex)
     {
         // Make changes to a clone of the path so deletions can be undone
-        Path newPath = new Path(aPath);
+        Path2D newPath = new Path2D(aPath);
 
         // get the index of the path segment corresponding to the selected control point
         int selPointIndex = newPath.getSegIndexForPointIndex(pointIndex);
 
         // Delete the point from path in parent coords
-        newPath.removeSeg(selPointIndex);
+        Path2DUtils.removeSegAtIndexSmoothly(newPath, selPointIndex);
 
         // Return
         return newPath;
@@ -292,7 +292,7 @@ public class RMPathEditor {
     /**
      * Returns the bounds for all the control points.
      */
-    public static Rect getControlPointBoundsWithSelectedPoint(Path aPath, int selectedPointIndex)
+    public static Rect getControlPointBoundsWithSelectedPoint(Path2D aPath, int selectedPointIndex)
     {
         // Get segment index for selected control point handle
         int mouseDownIndex = aPath.getSegIndexForPointIndex(selectedPointIndex);
@@ -361,7 +361,7 @@ public class RMPathEditor {
      * Returns the handle index for a given point for given path. Only returns points that are on the path,
      * except for the control points of selectedPoint (if not -1)
      */
-    public static int handleAtPoint(Path aPath, Point aPoint, int selectedPoint)
+    public static int handleAtPoint(Path2D aPath, Point aPoint, int selectedPoint)
     {
         // Check against off-path control points of selected path first, otherwise you might never be able to select one
         if (selectedPoint != -1) {
@@ -418,7 +418,7 @@ public class RMPathEditor {
     /**
      * Hit test the point (in path coords) against a given path point.
      */
-    private static boolean hitHandle(Path aPath, Point aPoint, int pointIndex)
+    private static boolean hitHandle(Path2D aPath, Point aPoint, int pointIndex)
     {
         Point p = aPath.getPoint(pointIndex);
         double handleSize = 9;
@@ -429,7 +429,7 @@ public class RMPathEditor {
     /**
      * Returns the element index for the given point index.
      */
-    private static int getSegIndexForPointIndex(Path aPath, int index)
+    private static int getSegIndexForPointIndex(Path2D aPath, int index)
     {
         // Iterate over segments and increment element index
         int elementIndex = 0;
@@ -449,7 +449,7 @@ public class RMPathEditor {
     /**
      * Returns true of the point at pointIndex is on the path, and false if it is on the convex hull.
      */
-    public static boolean pointOnPath(Path aPath, int pointIndex)
+    public static boolean pointOnPath(Path2D aPath, int pointIndex)
     {
         int segIndex = getSegIndexForPointIndex(aPath, pointIndex);
         int indexInSeg = pointIndex - aPath.getSegPointIndex(segIndex);

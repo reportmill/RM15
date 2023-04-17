@@ -11,7 +11,7 @@ import snap.util.*;
 public class RMPolygonShape extends RMParentShape {
 
     // The explicit path associated with this shape
-    protected Path _path;
+    protected Path2D _path;
 
     /**
      * Constructor.
@@ -27,13 +27,13 @@ public class RMPolygonShape extends RMParentShape {
     public RMPolygonShape(Shape aShape)
     {
         this();
-        _path = new Path(aShape);
+        _path = new Path2D(aShape);
     }
 
     /**
      * Returns the path for this polygon shape.
      */
-    public Path getPath()
+    public Path2D getPath()
     {
         Rect boundsInside = getBoundsInside();
         return _path.copyFor(boundsInside);
@@ -44,7 +44,7 @@ public class RMPolygonShape extends RMParentShape {
      */
     public void setPath(Shape aPath)
     {
-        Path newPath = aPath instanceof Path || aPath == null ? (Path) aPath : new Path(aPath);
+        Path2D newPath = aPath instanceof Path2D || aPath == null ? (Path2D) aPath : new Path2D(aPath);
         _path = newPath;
         repaint();
     }
@@ -55,7 +55,7 @@ public class RMPolygonShape extends RMParentShape {
     public void setPathAndBounds(Shape newShape)
     {
         // Get shape as path
-        Path newPath = new Path(newShape);
+        Path2D newPath = new Path2D(newShape);
 
         // Get the transform to parent shape coords
         Transform localToParent = getTransform();
@@ -175,9 +175,9 @@ public class RMPolygonShape extends RMParentShape {
     /**
      * XML unarchival for path.
      */
-    public Path getPathFromXML(XMLElement anElement)
+    public Path2D getPathFromXML(XMLElement anElement)
     {
-        Path path = new Path();
+        Path2D path = new Path2D();
 
         // Unarchive individual elements/points
         for (int i = 0, iMax = anElement.size(); i < iMax; i++) {
