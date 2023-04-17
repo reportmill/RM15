@@ -210,7 +210,7 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
         Point point = editor.convertToShape(anEvent.getX(), anEvent.getY(), aPolygon);
 
         // If control point is hit, change cursor to move
-        if (RMPathEditor.handleAtPoint(aPolygon.getPath(), point, _selectedPointIndex) >= 0) {
+        if (Path2DUtils.handleAtPoint(aPolygon.getPath(), point, _selectedPointIndex) >= 0) {
             editor.setCursor(Cursor.MOVE);
             anEvent.consume();
         }
@@ -240,7 +240,7 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
         // Otherwise, figure out the size of a handle in path coordinates and set index of path point hit by mouse down
         else {
             int oldSelectedPt = _selectedPointIndex;
-            int hp = RMPathEditor.handleAtPoint(aPolygon.getPath(), point, oldSelectedPt);
+            int hp = Path2DUtils.handleAtPoint(aPolygon.getPath(), point, oldSelectedPt);
             _selectedPointIndex = hp;
 
             if (anEvent.isPopupTrigger()) {
@@ -265,7 +265,7 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
         aPolygon.repaint();
         Point point = getEditorEvents().getEventPointInShape(true);
         Shape path = aPolygon.getPath();
-        Path2D newPath = RMPathEditor.setPointStructured(path, _selectedPointIndex, point);
+        Path2D newPath = Path2DUtils.setPointSmoothly(path, _selectedPointIndex, point);
         aPolygon.setPathAndBounds(newPath);
     }
 
@@ -344,7 +344,7 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
         Path2D pathInLocal = aPoly.getPath();
         Shape shapeInEditor = aPoly.localToParent(pathInLocal, null);
         Path2D path = shapeInEditor instanceof Path2D ? (Path2D) shapeInEditor : new Path2D(shapeInEditor);
-        RMPathEditor.paintHandles(path, aPntr, _selectedPointIndex);
+        Path2DUtils.paintHandles(path, aPntr, _selectedPointIndex);
     }
 
     /**
@@ -360,7 +360,7 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
 
         // If clicked on a valid handle, add 'delete point' to menu,
         if (pointIndex >= 0) {
-            if (RMPathEditor.pointOnPath(path, pointIndex)) { // Only on-path points can be deleted
+            if (Path2DUtils.isPointOnPath(path, pointIndex)) { // Only on-path points can be deleted
                 menuTitle = "Delete Anchor Point";
                 menuName = "DeletePointMenuItem";
             }
@@ -397,13 +397,13 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
     private void addPathPointAtPoint(Point aPoint)
     {
         // Get old path and new path
-        RMPolygonShape poly = getSelectedShape();
-        Path2D path = poly.getPath();
-        Path2D newPath = RMPathEditor.addPathPointAtPoint(path, aPoint);
+        RMPolygonShape polygonShape = getSelectedShape();
+        Path2D path = polygonShape.getPath();
+        Path2D newPath = Path2DUtils.addPathPointAtPoint(path, aPoint);
 
         // If new path differs, set new path
         if (!newPath.equals(path))
-            poly.setPathAndBounds(newPath);
+            polygonShape.setPathAndBounds(newPath);
     }
 
     /**
@@ -417,7 +417,7 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
 
         // Get path and remove point
         Shape path = polygonShape.getPath();
-        Path2D newPath = RMPathEditor.deletePathPointAtPointIndex(path, _selectedPointIndex);
+        Path2D newPath = Path2DUtils.removePointAtIndexSmoothly(path, _selectedPointIndex);
 
         // If new path is valid, set in polygon shape
         if (newPath.getSegCount() > 0)  {
@@ -437,7 +437,7 @@ public class RMPolygonShapeTool<T extends RMPolygonShape> extends RMTool<T> {
     public Rect getBoundsSuperSelected(T aShape)
     {
         Path2D path = aShape.getPath();
-        Rect pathBounds = RMPathEditor.getControlPointBoundsWithSelectedPoint(path, _selectedPointIndex);
+        Rect pathBounds = Path2DUtils.getControlPointBoundsWithSelPointIndex(path, _selectedPointIndex);
         pathBounds.inset(-3, -3);
         return pathBounds;
     }
