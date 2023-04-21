@@ -15,20 +15,22 @@ import snap.util.ASCIICodec;
  */
 public class RMRTFWriter {
 
-    // Font & Color table
-    List<FontFile> _fontTable;
-    List<RMColor> _colorTable;
+    // Font table
+    private List<FontFile> _fontTable;
+
+    // Color table
+    private List<RMColor> _colorTable;
 
     // settings that persist across shapes
-    RMParagraph _currentParagraph;
-    RMFont _currentFont;
-    RMColor _currentColor;
+    private RMParagraph _currentParagraph;
+    private RMFont _currentFont;
+    private RMColor _currentColor;
 
     // Current font style
-    boolean _isBold, _isItalic, _isUnderline;
+    private boolean _isBold, _isItalic, _isUnderline;
 
     // current table nesting level
-    int _tableLevel;
+    private int _tableLevel;
 
     /**
      * Returns RTF bytes for given document.
@@ -40,8 +42,8 @@ public class RMRTFWriter {
         aDoc.resolvePageReferences();
 
         // Allocate font & color tables
-        _fontTable = new ArrayList();
-        _colorTable = new ArrayList();
+        _fontTable = new ArrayList<>();
+        _colorTable = new ArrayList<>();
         _colorTable.add(RMColor.black); // Init with black
 
         // Set the current color & paragraph styles to the defaults
@@ -57,7 +59,7 @@ public class RMRTFWriter {
 
         // Generate the body of the rtf
         _tableLevel = 0;
-        byte body[] = getRTFForShapes(aDoc);
+        byte[] body = getRTFForShapes(aDoc);
 
         // Output the font & color tables
         writeFontTable(ps);
@@ -78,12 +80,14 @@ public class RMRTFWriter {
     public int getFontIndex(RMFont f)
     {
         FontFile fontfile = f.getFontFile();
-        int i = _fontTable.indexOf(fontfile);
-        if (i < 0) {
-            i = _fontTable.size();
+        int fontIndex = _fontTable.indexOf(fontfile);
+        if (fontIndex < 0) {
+            fontIndex = _fontTable.size();
             _fontTable.add(fontfile);
         }
-        return i;
+
+        // Return
+        return fontIndex;
     }
 
     /**
@@ -91,14 +95,14 @@ public class RMRTFWriter {
      */
     public void writeFontTable(PrintStream ps)
     {
-        int nfonts = _fontTable.size();
+        int fontCount = _fontTable.size();
 
-        if (nfonts > 0) {
+        if (fontCount > 0) {
             ps.print("{\\fonttbl");
-            for (int i = 0; i < nfonts; ++i) {
-                FontFile ff = _fontTable.get(i);
+            for (int i = 0; i < fontCount; ++i) {
+                FontFile fontFile = _fontTable.get(i);
                 ps.print("\\f" + i);
-                writeFont(ps, ff);
+                writeFont(ps, fontFile);
             }
             ps.println("}");
         }
@@ -129,22 +133,18 @@ public class RMRTFWriter {
     }
 
     // Really just a shot in the dark
-    public int getRTFFontCharset(FontFile f)
-    {
-        return 77;
-    } // Mac
+    public int getRTFFontCharset(FontFile f)  { return 77; } // Mac
 
     /**
      * Output all the fonts as an RTF fonttable. Fonts are all referenced by name, never embedded.
      */
     public void writeColorTable(PrintStream ps)
     {
-        int ncolors = _colorTable.size();
+        int colorCount = _colorTable.size();
 
-        if (ncolors > 0) {
+        if (colorCount > 0) {
             ps.print("{\\colortbl");
-            for (int i = 0; i < ncolors; ++i) {
-                RMColor c = _colorTable.get(i);
+            for (RMColor c : _colorTable) {
                 int r = c.getRedInt(), g = c.getGreenInt(), b = c.getBlueInt();
 
                 // black is special
@@ -158,20 +158,14 @@ public class RMRTFWriter {
 
     public int getColorIndex(RMColor c)
     {
-        int i = _colorTable.indexOf(c);
-        if (i < 0) {
-            i = _colorTable.size();
+        int colorIndex = _colorTable.indexOf(c);
+        if (colorIndex < 0) {
+            colorIndex = _colorTable.size();
             _colorTable.add(c);
         }
-        return i;
-    }
 
-    /**
-     * Convert an rm coord to rtf 'twips'.  A twip is a 20th of a point.
-     */
-    public int twip(double x)
-    {
-        return (int) (20 * x);
+        // Return
+        return colorIndex;
     }
 
     /**
@@ -193,8 +187,9 @@ public class RMRTFWriter {
         ps.println();
 
         // add a hard page break between pages
-        for (int i = 0, n = aDoc.getPageCount(); i < n; ++i) {
-            if (i > 0) ps.println("\\page");
+        for (int i = 0, pageCount = aDoc.getPageCount(); i < pageCount; ++i) {
+            if (i > 0)
+                ps.println("\\page");
             appendRTF(aDoc.getPage(i), ps);
         }
 
@@ -206,10 +201,10 @@ public class RMRTFWriter {
     /**
      * Returns a new list with all the shapes to be output.
      */
-    List getRTFShapes(RMShape parent)
+    private List<RMShape> getRTFShapes(RMShape parent)
     {
-        List shapes = new ArrayList();
-        getRTFShapes(parent, shapes);
+        List<RMShape> shapes = new ArrayList<>();
+        findRTFShapes(parent, shapes);
         return shapes;
     }
 
@@ -218,29 +213,38 @@ public class RMRTFWriter {
      * however, everything goes in a table.  Therefore this routine just pulls out anything that we know how
      * to put in an rtf file. Anything weird we can use the jpg stuff to turn into an image.
      */
-    void getRTFShapes(RMShape aShape, List aList)
+    private void findRTFShapes(RMShape aShape, List<RMShape> aList)
     {
-        if (!aShape.isVisible()) return; // If shape not visible, just return
-        if (isRTFShape(aShape)) aList.add(aShape); // Add rtf for shape
-        else for (int i = 0, iMax = aShape.getChildCount(); i < iMax; i++) // recurse for every child
-            getRTFShapes(aShape.getChild(i), aList);
+        // If shape not visible, just return
+        if (!aShape.isVisible()) return;
+
+        // If RTF shape, add
+        if (isRTFShape(aShape))
+            aList.add(aShape);
+
+        // Recurse for children
+        else for (int i = 0, iMax = aShape.getChildCount(); i < iMax; i++)
+            findRTFShapes(aShape.getChild(i), aList);
     }
 
     /**
      * Returns true if this shape should can be represented in the rtf.
      */
-    boolean isRTFShape(RMShape aShape)
+    private boolean isRTFShape(RMShape aShape)
     {
-        return aShape instanceof RMRectShape || aShape instanceof RMImageShape || aShape instanceof RMOvalShape ||
+        return aShape instanceof RMRectShape || aShape instanceof RMOvalShape ||
                 aShape instanceof RMPolygonShape || aShape instanceof RMScene3D;
     }
 
-    public void appendRTF(RMShape aShape, PrintStream ps)
+    /**
+     * Append RTF for basic shape to given PrintStream.
+     */
+    protected void appendRTF(RMShape aShape, PrintStream ps)
     {
         // Table representing the page is placed relative to margins of the page, whereas nested tables are relative to ...
         if (aShape instanceof RMPage) {
-            Rect bounds = null; //((RMPage)aShape).getDocument().getMarginRect();
-            RMShapeTable cells = RMShapeTable.createTable(getRTFShapes(aShape), aShape, bounds);
+            List<RMShape> rtfShapes = getRTFShapes(aShape);
+            RMShapeTable cells = RMShapeTable.createTable(rtfShapes, aShape, null);
             appendTable(cells, ps);
         }
 
@@ -253,7 +257,8 @@ public class RMRTFWriter {
                 aShape = ((RMShapeTable.Cell) aShape).getCellShape();
 
             // Append text or image for shape
-            if (aShape instanceof RMTextShape) appendText(((RMTextShape) aShape).getXString(), ps);
+            if (aShape instanceof RMTextShape)
+                appendText(((RMTextShape) aShape).getXString(), ps);
             else appendImageBytesForShape(aShape, ps);
         }
     }
@@ -274,52 +279,46 @@ public class RMRTFWriter {
         int columnCount = table.getColCount();
 
         // TextEdit just sets the cellx values as if all cells were the same and the row always total to 6".  Bizarre.
-        int cellx = twip(72 * 6) / columnCount;
-        int cellws[] = new int[columnCount];
-        for (int c = 0; c < columnCount; c++) cellws[c] = twip(table.getColWidth(c));
+        int cellX = twip(72 * 6) / columnCount;
         int pads = 0, border = 0; // cell padding and border weight
 
         // Iterate over table rows
-        for (int r = 0, nrows = table.getRowCount(); r < nrows; ++r) {
+        for (int row = 0, rowCount = table.getRowCount(); row < rowCount; ++row) {
 
             // Basic setup
             ps.print("\\itap" + _tableLevel + "\\trowd "); // nest level - and table row defaults
             ps.println("\\trbrdrt\\brdrnil\\trbrdrl\\brdrnil\\trbrdrr\\brdrnil"); // no borders anywhere
             ps.println("\\trgaph0\\trleft0"); // table shouldn't add any spaces itself, so set all the coords to 0
-            ps.println("\\trrh" + twip(table.getRowHeight(r))); // set the (minimum) height of the row
+            ps.println("\\trrh" + twip(table.getRowHeight(row))); // set the (minimum) height of the row
 
             // Iterate over columns and add the cells definitions for the row
-            for (int c = 0; c < columnCount; ++c) {
-                RMShapeTable.Cell rmcell = table.getCell(r, c);
+            for (int col = 0; col < columnCount; ++col) {
+                RMShapeTable.Cell rmcell = table.getCell(row, col);
                 int rowspan = rmcell.getRowSpan();
                 int colspan = rmcell.getColumnSpan();
 
                 // For merged cells, output a 'cl[v]mgf' for the first occurance, and a 'cl[v]mrg' thereafter
                 if (colspan > 1) {
-                    if (rmcell.getColumn() == c) ps.print("\\clmgf");
+                    if (rmcell.getColumn() == col) ps.print("\\clmgf");
                     else ps.print("\\clmrg");
                 }
                 if (rowspan > 1) {
-                    if (rmcell.getRow() == r) ps.print("\\clvmgf");
+                    if (rmcell.getRow() == row) ps.print("\\clvmgf");
                     else ps.print("\\clvmrg");
                 }
 
                 // Cell shading
                 RMFill fill = rmcell.getFill();
-                if (fill != null) ps.print("\\clcbpat" + getColorIndex(fill.getColor()));
+                if (fill != null)
+                    ps.print("\\clcbpat" + getColorIndex(fill.getColor()));
                 else ps.print("\\clshdrawnil");
 
                 // Vertical alignment
                 ps.print("\\clvertal");
                 switch (rmcell.getAlignmentY()) {
-                    case Top:
-                        ps.print("t");
-                        break;
-                    case Middle:
-                        ps.print("c");
-                        break;
-                    default:
-                        ps.print("b");
+                    case Top: ps.print("t"); break;
+                    case Middle: ps.print("c"); break;
+                    default: ps.print("b");
                 }
 
                 // Cell height - this doesn't seem to be a real rtf control word, but TextEdit needs it.  The ignore row
@@ -327,35 +326,36 @@ public class RMRTFWriter {
                 ps.print("\\clheight" + twip(rmcell.getHeight()));
 
                 // Cell borders
-                RMShape cshape = rmcell.getCellShape();
-                RMCrossTabCell ctcell = cshape instanceof RMCrossTabCell ? (RMCrossTabCell) cshape : null;
-                ps.print("\\clbrdrt" + RTFBorderStyle(ctcell != null && ctcell.isShowTopBorder(), 20));
-                ps.print("\\clbrdrb" + RTFBorderStyle(ctcell != null && ctcell.isShowBottomBorder(), 20));
-                ps.print("\\clbrdrl" + RTFBorderStyle(ctcell != null && ctcell.isShowLeftBorder(), 20));
-                ps.print("\\clbrdrr" + RTFBorderStyle(ctcell != null && ctcell.isShowRightBorder(), 20));
+                RMShape cellShape = rmcell.getCellShape();
+                RMCrossTabCell ctcell = cellShape instanceof RMCrossTabCell ? (RMCrossTabCell) cellShape : null;
+                ps.print("\\clbrdrt" + getRTFBorderStyle(ctcell != null && ctcell.isShowTopBorder(), 20));
+                ps.print("\\clbrdrb" + getRTFBorderStyle(ctcell != null && ctcell.isShowBottomBorder(), 20));
+                ps.print("\\clbrdrl" + getRTFBorderStyle(ctcell != null && ctcell.isShowLeftBorder(), 20));
+                ps.print("\\clbrdrr" + getRTFBorderStyle(ctcell != null && ctcell.isShowRightBorder(), 20));
 
                 // CellX defines the right margin of the cell but clwWidth seems to be more important
                 int cw = twip(rmcell.getWidth()) - pads - border;
                 ps.print("\\clwWidth" + cw + "\\clftsWidth3");
                 ps.print("\\clpadl" + pads + "\\clpadr" + pads);
-                ps.println("\\cellx" + cellx * (c + 1));
+                ps.println("\\cellx" + cellX * (col + 1));
             }
 
             // Iterate over cells in row again and output the actual cell data, possibly recursing for nested tables
-            for (int c = 0; c < columnCount; ++c) {
-                RMShapeTable.Cell rmcell = table.getCell(r, c);
+            for (int col = 0; col < columnCount; ++col) {
+                RMShapeTable.Cell rmcell = table.getCell(row, col);
 
                 // Add the rtf for the text (or shapes) inside the cell, otherwise empty paragraph for merged cell
-                if ((rmcell.getRow() == r) && (rmcell.getColumn() == c))
+                if ((rmcell.getRow() == row) && (rmcell.getColumn() == col))
                     appendRTF(rmcell, ps);
                 else ps.print("\\pard\\intbl\\itap" + _tableLevel);
 
                 // End the cell
                 ps.println(_tableLevel > 1 ? "\\nestcell" : "\\cell");
-
             }
+
             // End the row
-            if (r == nrows - 1) ps.print("\\lastrow");
+            if (row == rowCount - 1)
+                ps.print("\\lastrow");
             ps.println(_tableLevel > 1 ? "\\nestrow" : "\\row");
         }
 
@@ -374,48 +374,37 @@ public class RMRTFWriter {
 
             // new paragraph at the start and then at each carriage return (when is \par used?)
             if (newParagraph || !run.getParagraph().equals(_currentParagraph)) {
+
+                // Reset paragraph defaults and currentParagraph
                 ps.print("\\pard");
-                // we just reset the paragraph defaults above, so reset the currentParagraph
                 _currentParagraph = getRTFParagraphDefaults();
 
                 // we're always somewhere inside a table
                 ps.print("\\intbl\\itap" + _tableLevel);
                 RMParagraph par = run.getParagraph();
+
                 //if any of the paragraph settings have changed, set them
                 if (!par.equals(_currentParagraph)) {
+
                     // paragraph alignment
                     if (par.getAlignmentX() != _currentParagraph.getAlignmentX()) {
                         switch (par.getAlignmentX()) {
-                            case Center:
-                                ps.print("\\qc");
-                                break;
-                            case Full:
-                                ps.print("\\qj");
-                                break;
-                            case Left:
-                                ps.print("\\ql");
-                                break;
-                            case Right:
-                                ps.print("\\qr");
-                                break;
+                            case Center: ps.print("\\qc"); break;
+                            case Full: ps.print("\\qj"); break;
+                            case Left: ps.print("\\ql"); break;
+                            case Right: ps.print("\\qr"); break;
                         }
                     }
+
                     // tabs
                     if (!Arrays.equals(par.getTabs(), _currentParagraph.getTabs()) ||
                             !Arrays.equals(par.getTabTypes(), _currentParagraph.getTabTypes())) {
                         for (int j = 0, ntabs = par.getTabCount(); j < ntabs; ++j) {
                             switch (par.getTabType(j)) {
-                                case RMParagraph.TAB_LEFT:
-                                    break; // the default
-                                case RMParagraph.TAB_RIGHT:
-                                    ps.print("\\tqr");
-                                    break;
-                                case RMParagraph.TAB_CENTER:
-                                    ps.print("\\tqc");
-                                    break;
-                                case RMParagraph.TAB_DECIMAL:
-                                    ps.print("\\tqdec");
-                                    break;
+                                case RMParagraph.TAB_LEFT: break; // the default
+                                case RMParagraph.TAB_RIGHT: ps.print("\\tqr"); break;
+                                case RMParagraph.TAB_CENTER: ps.print("\\tqc"); break;
+                                case RMParagraph.TAB_DECIMAL: ps.print("\\tqdec"); break;
                             }
                             ps.print("\\tx" + twip(par.getTab(j)));
                         }
@@ -464,8 +453,8 @@ public class RMRTFWriter {
             ps.println();
 
             // Iterate over run characters and write them
-            for (int cp = run.start(), cend = run.end(); cp < cend; ++cp) {
-                char c = text.charAt(cp);
+            for (int runCharIndex = run.start(), runCharEnd = run.end(); runCharIndex < runCharEnd; ++runCharIndex) {
+                char runChar = text.charAt(runCharIndex);
 
                 // A note about unicode escapes: The spec says that if you are emitting "\ u" unicode chars,
                 // you should emit characters after it from the non-unicode codepage of the document which could be
@@ -474,37 +463,29 @@ public class RMRTFWriter {
                 // compatibility, and so should be skipped over. "uc0", therefore, means no compatibility chars have been
                 // generated. Some generators seems to constantly generate "uc0" controls.
                 // We do it once in the header, and never generate compatibility characters.
-                if (c > 127)  // output anything beyond 7 bit ascii as 16-bit unicode
-                    ps.print("\\u" + (int) c + " ");
+                if (runChar > 127)  // output anything beyond 7 bit ascii as 16-bit unicode
+                    ps.print("\\u" + (int) runChar + " ");
 
                     // escape meaningful characters
-                else if (c == '\n' || c == '\\' || c == '{' || c == '}')
-                    ps.print("\\" + c);
+                else if (runChar == '\n' || runChar == '\\' || runChar == '{' || runChar == '}')
+                    ps.print("\\" + runChar);
 
                     // tabs and all other plain ascii chars get emitted as-is.
-                else if (c >= 32 || c == '\t')
-                    ps.print(c);
+                else if (runChar >= 32 || runChar == '\t')
+                    ps.print(runChar);
             }
-
         }
-    }
-
-    /**
-     * Returns the rtf control string for borders. Currently only does on or off.  RTF has a zillion other possibilities.
-     */
-    public String RTFBorderStyle(boolean show, int width)
-    {
-        return show ? ("\\brdrs\\brdrw" + width) : "\\brdrnil";
     }
 
     /**
      * Convert the shape into an image stream and embedd that into the rtf.
      */
-    public void appendImageBytesForShape(RMShape s, PrintStream ps)
+    private void appendImageBytesForShape(RMShape s, PrintStream ps)
     {
-        Image img = RMShapeUtils.createImage(s, Color.WHITE);
-        byte[] pngBytes = img.getBytesPNG();
-        if (pngBytes == null) return;
+        Image image = RMShapeUtils.createImage(s, Color.WHITE);
+        byte[] pngBytes = image.getBytesPNG();
+        if (pngBytes == null)
+            return;
 
         // The image code above uses getBoundsMarked(), so a rectangle of 100x100 might wind up returning an image of
         // 102x102 to account for the stroke width. The table building code, however doesn't use getBoundsMarked, so this
@@ -520,13 +501,22 @@ public class RMRTFWriter {
     }
 
     /**
+     * Returns the rtf control string for borders. Currently only does on or off.  RTF has a zillion other possibilities.
+     */
+    private String getRTFBorderStyle(boolean show, int width)
+    {
+        return show ? ("\\brdrs\\brdrw" + width) : "\\brdrnil";
+    }
+
+    /**
      * Creates and RMParagraph object whose values are set to the defaults assigned by the RTF spec.
      * The RMParagraph defaultParagraph is very similar to the rtf defaults:
      * tabs every 36 points (720 twips) align = left, leftIndent = rightIndent=0, lineSpacing=1
      */
-    RMParagraph getRTFParagraphDefaults()
-    {
-        return new RMParagraph();
-    }
+    private RMParagraph getRTFParagraphDefaults()  { return new RMParagraph(); }
 
+    /**
+     * Convert an rm coord to rtf 'twips'.  A twip is a 20th of a point.
+     */
+    private static int twip(double x)  { return (int) (20 * x); }
 }
