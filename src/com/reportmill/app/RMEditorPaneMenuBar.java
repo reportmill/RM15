@@ -73,13 +73,13 @@ public class RMEditorPaneMenuBar extends RMEditorPane.SupportPane {
 
         // Handle NewMenuItem, NewButton: Get new editor pane and make visible
         if (anEvent.equals("NewMenuItem") || anEvent.equals("NewButton")) {
-            RMEditorPane editorPane = ClassUtils.newInstance(epane).newDocument();
+            RMEditorPane editorPane = new RMEditorPane().newDocument();
             editorPane.setWindowVisible(true);
         }
 
         // Handle OpenMenuItem, OpenButton: Get new editor pane from open panel and make visible (if created)
         if (anEvent.equals("OpenMenuItem") || anEvent.equals("OpenButton")) {
-            RMEditorPane editorPane = ClassUtils.newInstance(epane).open(epane.getUI());
+            RMEditorPane editorPane = new RMEditorPane().open(epane.getUI());
             if (editorPane != null)
                 editorPane.setWindowVisible(true);
         }
