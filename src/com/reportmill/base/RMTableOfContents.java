@@ -174,7 +174,7 @@ public class RMTableOfContents extends HashMap {
             if (anObj == this) return true;
             RowGroup other = anObj instanceof RowGroup ? (RowGroup) anObj : null;
             if (other == null) return false;
-            return SnapUtils.equals(other._group, _group);
+            return Objects.equals(other._group, _group);
         }
     }
 

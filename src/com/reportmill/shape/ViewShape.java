@@ -5,6 +5,8 @@ import snap.gfx.*;
 import snap.util.*;
 import snap.view.*;
 
+import java.util.Objects;
+
 /**
  * A shape subclass that represents an app control (or Snap View).
  */
@@ -141,7 +143,7 @@ public class ViewShape extends RMShape {
      */
     public void setText(String aString)
     {
-        if (SnapUtils.equals(aString, _text)) return;
+        if (Objects.equals(aString, _text)) return;
         firePropChange(Text_Prop, _text, _text = aString);
         _view.setText(aString);
         repaint();

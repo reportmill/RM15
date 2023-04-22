@@ -9,6 +9,8 @@ import snap.geom.Shape;
 import snap.gfx.*;
 import snap.util.*;
 
+import java.util.Objects;
+
 /**
  * A shape to reference another template.
  */
@@ -39,7 +41,7 @@ public class RMSubreport extends RMRectShape {
      */
     public void setSubreportName(String aName)
     {
-        if (SnapUtils.equals(aName, getSubreportName())) return;
+        if (Objects.equals(aName, getSubreportName())) return;
         firePropChange("SubreportName", _subreportName, _subreportName = aName);
         repaint();
         _subreportShape = null;

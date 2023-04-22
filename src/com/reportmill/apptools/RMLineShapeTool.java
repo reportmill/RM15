@@ -6,7 +6,7 @@ import com.reportmill.shape.*;
 import java.util.*;
 import snap.geom.Point;
 import snap.gfx.*;
-import snap.util.SnapUtils;
+import snap.util.Convert;
 import snap.view.*;
 import snap.web.WebURL;
 
@@ -188,7 +188,7 @@ public class RMLineShapeTool<T extends RMLineShape> extends RMTool<T> {
 
         // Handle ArrowsMenuButtonMenuItem
         if (anEvent.getName().startsWith("ArrowsMenuButtonMenuItem")) {
-            int ind = SnapUtils.intValue(anEvent.getName());
+            int ind = Convert.intValue(anEvent.getName());
             RMShape ahead = ind < getArrowHeads().length ? getArrowHeads()[ind] : null;
             line.setArrowHead(ahead != null ? (RMLineShape.ArrowHead) ahead.clone() : null);
         }

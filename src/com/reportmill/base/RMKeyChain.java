@@ -386,7 +386,7 @@ public class RMKeyChain {
     private static boolean getBoolValue(Object aRoot, Object anObj, RMKeyChain aKeyChain)
     {
         Object value = getValue(aRoot, anObj, aKeyChain);
-        return SnapUtils.boolValue(value);
+        return Convert.boolValue(value);
     }
 
     /**
@@ -412,7 +412,7 @@ public class RMKeyChain {
             case Divide:
                 return MathUtils.divide((Number) o1, (Number) o2);
             case Mod:
-                return MathUtils.mod(SnapUtils.doubleValue(o1), SnapUtils.doubleValue(o2));
+                return MathUtils.mod(Convert.doubleValue(o1), Convert.doubleValue(o2));
             default:
                 throw new RuntimeException("RMKeyChain.getValueBinaryMathOp: Not a math op.");
         }
@@ -433,7 +433,7 @@ public class RMKeyChain {
 
         // If numbers, do Math.add()
         if (obj1 instanceof Number || obj2 instanceof Number)
-            return MathUtils.add(SnapUtils.numberValue(obj1), SnapUtils.numberValue(obj2));
+            return MathUtils.add(Convert.numberValue(obj1), Convert.numberValue(obj2));
 
         // If nulls, just return null
         if (obj1 == null && obj2 == null) return null;
@@ -524,7 +524,7 @@ public class RMKeyChain {
      */
     public static String getStringValue(Object anObj, Object aKeyChain)
     {
-        return SnapUtils.stringValue(getValue(anObj, aKeyChain));
+        return Convert.stringValue(getValue(anObj, aKeyChain));
     }
 
     /**
@@ -532,7 +532,7 @@ public class RMKeyChain {
      */
     public static Number getNumberValue(Object anObj, Object aKeyChain)
     {
-        return SnapUtils.numberValue(getValue(anObj, aKeyChain));
+        return Convert.numberValue(getValue(anObj, aKeyChain));
     }
 
     /**
@@ -540,7 +540,7 @@ public class RMKeyChain {
      */
     public static int getIntValue(Object anObj, Object aKeyChain)
     {
-        return SnapUtils.intValue(getValue(anObj, aKeyChain));
+        return Convert.intValue(getValue(anObj, aKeyChain));
     }
 
     /**
@@ -548,7 +548,7 @@ public class RMKeyChain {
      */
     public static double getDoubleValue(Object anObj, Object aKeyChain)
     {
-        return SnapUtils.doubleValue(getValue(anObj, aKeyChain));
+        return Convert.doubleValue(getValue(anObj, aKeyChain));
     }
 
     /**
@@ -556,7 +556,7 @@ public class RMKeyChain {
      */
     public static boolean getBoolValue(Object anObj, Object aKeyChain)
     {
-        return SnapUtils.boolValue(getValue(anObj, aKeyChain));
+        return Convert.boolValue(getValue(anObj, aKeyChain));
     }
 
     /**
@@ -726,7 +726,7 @@ public class RMKeyChain {
         // If there is an arg, evaluate it, otherwise if no args, read from standard in until control-d
         if (args.length > 0 && args[0].length() > 0) {
             Object value = RMKeyChain.getValue(new Object(), args[0]);
-            System.out.println(value instanceof Number ? SnapUtils.getBigDecimal(value) : value);
+            System.out.println(value instanceof Number ? Convert.getBigDecimal(value) : value);
         } else {
             BufferedReader rdr = new BufferedReader(new InputStreamReader(System.in));
             for (String ln = rdr.readLine(); ln != null; ln = rdr.readLine()) main(new String[]{ln});

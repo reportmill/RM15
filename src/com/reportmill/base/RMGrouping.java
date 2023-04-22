@@ -77,7 +77,7 @@ public class RMGrouping implements Cloneable, XMLArchiver.Archivable {
      */
     public void setKey(String aValue)
     {
-        if (SnapUtils.equals(aValue, _key)) return;
+        if (Objects.equals(aValue, _key)) return;
         firePropChange("Key", _key, _key = aValue);
     }
 
@@ -185,7 +185,7 @@ public class RMGrouping implements Cloneable, XMLArchiver.Archivable {
      */
     public void setTopNSort(RMTopNSort aSort)
     {
-        if (SnapUtils.equals(aSort, _topNSort)) return;
+        if (Objects.equals(aSort, _topNSort)) return;
         firePropChange("TopNSort", _topNSort, _topNSort = aSort);
     }
 
@@ -219,7 +219,7 @@ public class RMGrouping implements Cloneable, XMLArchiver.Archivable {
      */
     public void setValuesString(String aString)
     {
-        if (SnapUtils.equals(aString, _values)) return;
+        if (Objects.equals(aString, _values)) return;
         firePropChange("ValuesString", _values, _values = aString);
     }
 
@@ -461,13 +461,13 @@ public class RMGrouping implements Cloneable, XMLArchiver.Archivable {
         if (other == null) return false;
 
         // Check key, sorts, TopNSort
-        if (!SnapUtils.equals(other._key, _key)) return false;
-        if (!SnapUtils.equals(other._sorts, _sorts)) return false;
-        if (!SnapUtils.equals(other._topNSort, _topNSort)) return false;
+        if (!Objects.equals(other._key, _key)) return false;
+        if (!Objects.equals(other._sorts, _sorts)) return false;
+        if (!Objects.equals(other._topNSort, _topNSort)) return false;
 
         // Check IncludeAllValues, Values, SortOnValues, IncludeValues
         if (other._includeAllValues != _includeAllValues) return false;
-        if (!SnapUtils.equals(other._values, _values)) return false;
+        if (!Objects.equals(other._values, _values)) return false;
         if (other._sortOnValues != _sortOnValues) return false;
         if (other._includeValues != _includeValues) return false;
 

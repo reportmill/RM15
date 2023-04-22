@@ -4,7 +4,7 @@
 package com.reportmill.app;
 import snap.geom.*;
 import snap.gfx.*;
-import snap.util.SnapUtils;
+import snap.util.Convert;
 import snap.view.*;
 
 /**
@@ -108,7 +108,7 @@ public class RMViewerBottomToolBar extends ViewOwner {
 
         // Handle ZoomMenuButton
         if (anEvent.equals("ZoomMenuItem"))
-            viewer.setZoomFactor(SnapUtils.floatValue(anEvent.getText()) / 100);
+            viewer.setZoomFactor(Convert.floatValue(anEvent.getText()) / 100);
 
         // Handle ZoomToActualSizeMenuItem - use screen resolution to figure out zooming for actual size
         if (anEvent.equals("ZoomToActualSizeMenuItem"))

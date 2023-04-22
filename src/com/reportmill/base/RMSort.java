@@ -255,7 +255,7 @@ public class RMSort implements Comparator, Cloneable, XMLArchiver.Archivable {
         if (other == null) return false;
 
         // Check Key, Order
-        if (!SnapUtils.equals(other._key, _key)) return false;
+        if (!Objects.equals(other._key, _key)) return false;
         if (other._order != _order) return false;
         return true; // Return true since all checks passed
     }

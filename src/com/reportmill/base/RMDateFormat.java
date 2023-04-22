@@ -144,7 +144,7 @@ public class RMDateFormat implements RMFormat, Cloneable {
         RMDateFormat other = (RMDateFormat) anObj;
 
         // Return false if other format null string isn't equal to this null string
-        if (!SnapUtils.equals(other._nullString, _nullString)) return false;
+        if (!Objects.equals(other._nullString, _nullString)) return false;
 
         // Return result of super equals
         return super.equals(anObj);

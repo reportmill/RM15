@@ -143,7 +143,7 @@ public class RMKeyChainFuncs {
      */
     public static long ceil(Object val)
     {
-        return (long) Math.ceil(SnapUtils.doubleValue(val));
+        return (long) Math.ceil(Convert.doubleValue(val));
     }
 
     /**
@@ -151,7 +151,7 @@ public class RMKeyChainFuncs {
      */
     public static long floor(Object val)
     {
-        return (long) Math.floor(SnapUtils.doubleValue(val));
+        return (long) Math.floor(Convert.doubleValue(val));
     }
 
     /**
@@ -159,7 +159,7 @@ public class RMKeyChainFuncs {
      */
     public static long round(Object val)
     {
-        return Math.round(SnapUtils.doubleValue(val));
+        return Math.round(Convert.doubleValue(val));
     }
 
     /**
@@ -167,8 +167,8 @@ public class RMKeyChainFuncs {
      */
     public static double round(Object aVal, Object places)
     {
-        double val = SnapUtils.doubleValue(aVal);
-        double pwr = Math.pow(10, SnapUtils.intValue(places));
+        double val = Convert.doubleValue(aVal);
+        double pwr = Math.pow(10, Convert.intValue(places));
         return Math.round(val * pwr) / pwr;
     }
 
@@ -177,7 +177,7 @@ public class RMKeyChainFuncs {
      */
     public static double abs(Object val)
     {
-        return Math.abs(SnapUtils.doubleValue(val));
+        return Math.abs(Convert.doubleValue(val));
     }
 
     /**
@@ -201,7 +201,7 @@ public class RMKeyChainFuncs {
      */
     public static Double pow(Object arg1, Object arg2)
     {
-        double f1 = SnapUtils.doubleValue(arg1), f2 = SnapUtils.doubleValue(arg2);
+        double f1 = Convert.doubleValue(arg1), f2 = Convert.doubleValue(arg2);
         return Math.pow(f1, f2);
     }
 
@@ -255,12 +255,12 @@ public class RMKeyChainFuncs {
      */
     public static Object RMConditional(Object v, Object t)
     {
-        return SnapUtils.boolValue(v) ? t : null;
+        return Convert.boolValue(v) ? t : null;
     }
 
     public static Object RMConditional(Object v, Object t, Object f)
     {
-        return SnapUtils.boolValue(v) ? t : f;
+        return Convert.boolValue(v) ? t : f;
     }
 
     /**
@@ -268,7 +268,7 @@ public class RMKeyChainFuncs {
      */
     public static boolean startsWith(Object anObj, Object aStr)
     {
-        String str = SnapUtils.stringValue(anObj);
+        String str = Convert.stringValue(anObj);
         if (str == null) return false;
         return aStr instanceof String && anObj.toString().startsWith(aStr.toString());
     }
@@ -278,7 +278,7 @@ public class RMKeyChainFuncs {
      */
     public static boolean endsWith(Object anObj, Object aStr)
     {
-        String str = SnapUtils.stringValue(anObj);
+        String str = Convert.stringValue(anObj);
         if (str == null) return false;
         return aStr instanceof String && anObj.toString().endsWith(aStr.toString());
     }
@@ -296,11 +296,11 @@ public class RMKeyChainFuncs {
      */
     public static int indexOf(Object aStr, Object aPtrn, Object aStart)
     {
-        String str = SnapUtils.stringValue(aStr);
+        String str = Convert.stringValue(aStr);
         if (str == null) return -1;
         String ptrn = aPtrn instanceof String ? (String) aPtrn : null;
         if (ptrn == null) return -1;
-        int start = SnapUtils.intValue(aStart);
+        int start = Convert.intValue(aStart);
         return str.indexOf(ptrn, start);
     }
 
@@ -309,7 +309,7 @@ public class RMKeyChainFuncs {
      */
     public static int lastIndexOf(Object aStr, Object aPtrn)
     {
-        String str = SnapUtils.stringValue(aStr);
+        String str = Convert.stringValue(aStr);
         if (str == null) return -1;
         return aPtrn instanceof String ? str.lastIndexOf((String) aPtrn) : -1;
     }
@@ -319,9 +319,9 @@ public class RMKeyChainFuncs {
      */
     public static String substring(Object aStr, Object start)
     {
-        String str = SnapUtils.stringValue(aStr);
+        String str = Convert.stringValue(aStr);
         if (str == null) return null;
-        return str.substring(SnapUtils.intValue(start));
+        return str.substring(Convert.intValue(start));
     }
 
     /**
@@ -329,10 +329,10 @@ public class RMKeyChainFuncs {
      */
     public static String substring(Object aStr, Object start, Object end)
     {
-        String str = SnapUtils.stringValue(aStr);
+        String str = Convert.stringValue(aStr);
         if (str == null) return null;
-        int s = SnapUtils.intValue(start);
-        int e = Math.min(SnapUtils.intValue(end), str.length());
+        int s = Convert.intValue(start);
+        int e = Math.min(Convert.intValue(end), str.length());
         return str.substring(s, e);
     }
 
@@ -367,7 +367,7 @@ public class RMKeyChainFuncs {
      */
     public static Object RMUnicode(Object num)
     {
-        char c[] = {(char) SnapUtils.intValue(num)};
+        char c[] = {(char) Convert.intValue(num)};
         return new String(c);
     }
 
@@ -376,7 +376,7 @@ public class RMKeyChainFuncs {
      */
     public static Object RMUnicodeRange(Object c1, Object c2)
     {
-        int i1 = SnapUtils.intValue(c1), i2 = SnapUtils.intValue(c2), charCount = Math.max(i2 - i1 + 1, 0);
+        int i1 = Convert.intValue(c1), i2 = Convert.intValue(c2), charCount = Math.max(i2 - i1 + 1, 0);
         char chars[] = new char[charCount];
         for (int i = 0; i < charCount; i++) chars[i] = (char) (i1 + i);
         return new String(chars);
@@ -408,7 +408,7 @@ public class RMKeyChainFuncs {
      */
     public static Object RMAllFonts(Object aSize)
     {
-        int size = MathUtils.clamp(SnapUtils.intValue(aSize), 8, 80);
+        int size = MathUtils.clamp(Convert.intValue(aSize), 8, 80);
         RMXString string = new RMXString();
         for (String fontName : RMFont.getFontNames()) {
             RMFont font = RMFont.getFont(fontName, size);
@@ -447,7 +447,7 @@ public class RMKeyChainFuncs {
      */
     public static Number number(Object aStr)
     {
-        return SnapUtils.numberValue(aStr);
+        return Convert.numberValue(aStr);
     }
 
     /**
@@ -464,9 +464,9 @@ public class RMKeyChainFuncs {
     public static String pad(Object aStr, Object aPad, Object aLength)
     {
         // Get length as int (just return if string already given length)
-        String str = SnapUtils.stringValue(aStr);
+        String str = Convert.stringValue(aStr);
         if (str == null) return null;
-        int len = SnapUtils.intValue(aLength);
+        int len = Convert.intValue(aLength);
         if (str.length() >= len)
             return str;
 
@@ -482,9 +482,9 @@ public class RMKeyChainFuncs {
     public static String padLeft(Object aStr, Object aPad, Object aLength)
     {
         // Get length as int (if string is already given length or greater, just return it)
-        String str = SnapUtils.stringValue(aStr);
+        String str = Convert.stringValue(aStr);
         if (str == null) return null;
-        int length = SnapUtils.intValue(aLength);
+        int length = Convert.intValue(aLength);
         if (str.length() >= length)
             return str;
 
@@ -515,9 +515,9 @@ public class RMKeyChainFuncs {
      */
     public static String wrap(Object aStr, Object aLength)
     {
-        String str = SnapUtils.stringValue(aStr);
+        String str = Convert.stringValue(aStr);
         if (str == null) return null;
-        return StringUtils.wrap(str, SnapUtils.intValue(aLength));
+        return StringUtils.wrap(str, Convert.intValue(aLength));
     }
 
     /**

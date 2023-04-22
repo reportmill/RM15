@@ -80,7 +80,7 @@ public class RMTable extends RMParentShape {
         String keyPath = aKeyPath != null ? aKeyPath.replace("@", "") : null;
 
         // If value already set, just return
-        if (SnapUtils.equals(keyPath, _datasetKey)) return;
+        if (Objects.equals(keyPath, _datasetKey)) return;
 
         // Set value and fire property change
         firePropChange("DatasetKey", keyPath, _datasetKey = keyPath);
@@ -116,7 +116,7 @@ public class RMTable extends RMParentShape {
      */
     public void setFilterKey(String aKeyExpr)
     {
-        if (SnapUtils.equals(aKeyExpr, _filterKey)) return;
+        if (Objects.equals(aKeyExpr, _filterKey)) return;
         firePropChange("FilterKey", _filterKey, _filterKey = aKeyExpr);
     }
 

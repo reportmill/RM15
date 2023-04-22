@@ -560,7 +560,7 @@ public class RMTextShape extends RMRectShape {
         String p4 = parts[Math.min(3, parts.length - 1)];
 
         // Set margin from parts
-        setMargin(new Insets(SnapUtils.intValue(p1), SnapUtils.intValue(p4), SnapUtils.intValue(p3), SnapUtils.intValue(p2)));
+        setMargin(new Insets(Convert.intValue(p1), Convert.intValue(p4), Convert.intValue(p3), Convert.intValue(p2)));
     }
 
     /**
@@ -686,7 +686,7 @@ public class RMTextShape extends RMRectShape {
      */
     public void setPathShape(RMShape aShape)
     {
-        if (SnapUtils.equals(aShape, _pathShape)) return;
+        if (Objects.equals(aShape, _pathShape)) return;
         firePropChange("PathShape", _pathShape, _pathShape = aShape);
         revalidate();
         repaint();

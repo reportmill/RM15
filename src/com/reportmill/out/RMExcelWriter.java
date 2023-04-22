@@ -558,13 +558,13 @@ public class RMExcelWriter {
          */
         public boolean isMatch(RMTextShape aText, String aFormat)
         {
-            if (!SnapUtils.equals(aText.getFont(), _text.getFont())) return false;
+            if (!Objects.equals(aText.getFont(), _text.getFont())) return false;
             if (aText.getAlignmentX() != _text.getAlignmentX()) return false;
             if (aText.getAlignmentY() != _text.getAlignmentY()) return false;
-            if (!SnapUtils.equals(aText.getFill(), _text.getFill())) return false;
-            if (!SnapUtils.equals(aText.getStroke(), _text.getStroke())) return false;
-            if (!SnapUtils.equals(aText.getTextColor(), _text.getTextColor())) return false;
-            if (!SnapUtils.equals(aFormat, _format)) return false;
+            if (!Objects.equals(aText.getFill(), _text.getFill())) return false;
+            if (!Objects.equals(aText.getStroke(), _text.getStroke())) return false;
+            if (!Objects.equals(aText.getTextColor(), _text.getTextColor())) return false;
+            if (!Objects.equals(aFormat, _format)) return false;
             return true;
         }
 
@@ -671,7 +671,7 @@ public class RMExcelWriter {
          */
         public boolean isMatch(RMFont aFont, RMColor aColor)
         {
-            return SnapUtils.equals(aFont, _font) && SnapUtils.equals(aColor, _color);
+            return Objects.equals(aFont, _font) && Objects.equals(aColor, _color);
         }
 
         /**

@@ -82,7 +82,7 @@ public class Entity implements XMLArchiver.Archivable {
     public void setName(String aName)
     {
         String name = aName != null ? aName.trim().replace(" ", "") : null;
-        if (SnapUtils.equals(name, _name)) return;
+        if (Objects.equals(name, _name)) return;
         _name = name;
     }
 
@@ -375,8 +375,8 @@ public class Entity implements XMLArchiver.Archivable {
         if (other == null) return false;
 
         // Check Name, Properties
-        if (!SnapUtils.equals(other._name, _name)) return false;
-        if (!SnapUtils.equals(other._props, _props)) return false;
+        if (!Objects.equals(other._name, _name)) return false;
+        if (!Objects.equals(other._props, _props)) return false;
         return true;  // Return true since all checks passed
     }
 

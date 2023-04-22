@@ -12,6 +12,8 @@ import snap.viewx.*;
 import snap.web.*;
 import snap.util.*;
 
+import java.util.Objects;
+
 /**
  * This class is a container for an RMEditor in an enclosing ScrollView with tool bars for editing.
  */
@@ -263,7 +265,7 @@ public class RMEditorPane extends RMViewerPane {
         if (isWindowVisible()) {
             String title = getWindowTitle();
             WindowView win = getWindow();
-            if (!SnapUtils.equals(title, win.getTitle())) {
+            if (!Objects.equals(title, win.getTitle())) {
                 win.setTitle(title);
                 win.setDocURL(getSourceURL());
             }
@@ -436,10 +438,10 @@ public class RMEditorPane extends RMViewerPane {
         WebURL sourceURL = WebURL.getURL(aSource);
 
         // If source is already opened, return editor pane
-        if (!SnapUtils.equals(sourceURL, getSourceURL())) {
+        if (!Objects.equals(sourceURL, getSourceURL())) {
             RMEditorPane[] editorPanes = WindowView.getOpenWindowOwners(RMEditorPane.class);
             for (RMEditorPane editorPane : editorPanes)
-                if (SnapUtils.equals(sourceURL, editorPane.getSourceURL()))
+                if (Objects.equals(sourceURL, editorPane.getSourceURL()))
                     return editorPane;
         }
 

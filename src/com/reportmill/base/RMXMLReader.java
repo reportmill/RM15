@@ -231,7 +231,7 @@ public class RMXMLReader {
                     // Get primary property values and if they differ, break
                     Object map1PrimaryValue = map1.get(property.getName());
                     Object map2PrimaryValue = map2.get(property.getName());
-                    if (!SnapUtils.equals(map1PrimaryValue, map2PrimaryValue))
+                    if (!Objects.equals(map1PrimaryValue, map2PrimaryValue))
                         map2 = null;
                 }
 

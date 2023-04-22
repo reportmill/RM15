@@ -7,7 +7,7 @@ import com.reportmill.shape.*;
 import snap.geom.Polygon;
 import snap.gfx.*;
 import snap.styler.StylerPane;
-import snap.util.SnapUtils;
+import snap.util.Convert;
 import snap.view.*;
 
 /**
@@ -166,7 +166,7 @@ public class InspectorPanel extends RMEditorPane.SupportPane {
 
         // Handle SelPath
         if (anEvent.getName().startsWith("SelPath"))
-            popSelection(SnapUtils.intValue(anEvent.getName()));
+            popSelection(Convert.intValue(anEvent.getName()));
 
         // Handle SelPathView
         if (anEvent.equals("SelPathView") && anEvent.isMouseRelease())

@@ -177,7 +177,7 @@ public class Schema implements XMLArchiver.Archivable {
         if (other == null) return false;
 
         // Check Name, Entities
-        if (!SnapUtils.equals(other._name, _name)) return false;
+        if (!Objects.equals(other._name, _name)) return false;
         if (!other._entities.equals(_entities)) return false;
         return true;  // Return true since all checks passed
     }

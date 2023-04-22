@@ -240,7 +240,7 @@ public class RMKeyChainAggr {
 
             // If list is simple list, increment count for every true value
         else for (int i = 0, iMax = aList.size(); i < iMax; i++)
-            if (SnapUtils.boolValue(RMKeyChain.getValue(aList.get(i), aKeyChain)))
+            if (Convert.boolValue(RMKeyChain.getValue(aList.get(i), aKeyChain)))
                 count++;
 
         return count;

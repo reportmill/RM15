@@ -55,7 +55,7 @@ public class RMEditorPaneToolBar extends RMEditorPane.SupportPane {
         _fontSizeComboBox = getView("FontSizeComboBox", ComboBox.class);
         Object sizes[] = {6, 8, 9, 10, 11, 12, 14, 16, 18, 22, 24, 36, 48, 64, 72, 96, 128, 144};
         _fontSizeComboBox.setItems(sizes);
-        _fontSizeComboBox.setItemTextFunction(i -> SnapUtils.stringValue(i) + " pt");
+        _fontSizeComboBox.setItemTextFunction(i -> Convert.stringValue(i) + " pt");
 
         // Create/configure hidden ColorWell
         _colorWell = new ColorWell();

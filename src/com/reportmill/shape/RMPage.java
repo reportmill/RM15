@@ -63,7 +63,7 @@ public class RMPage extends RMParentShape {
      */
     public void setDatasetKey(String aKeyPath)
     {
-        if (SnapUtils.equals(aKeyPath, _datasetKey)) return;
+        if (Objects.equals(aKeyPath, _datasetKey)) return;
         firePropChange("DatasetKey", aKeyPath, _datasetKey = StringUtils.delete(aKeyPath, "@"));
     }
 

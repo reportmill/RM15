@@ -365,7 +365,7 @@ public class RMTool<T extends RMShape> extends ViewOwner {
             case FontSize_Key: {
 
                 // Get new font for current shape font at new size and set
-                double aSize = SnapUtils.doubleValue(aVal);
+                double aSize = Convert.doubleValue(aVal);
                 if (font == null) return;
                 RMFont font2 = font.deriveFont(aSize);
                 setFont(anEditor, aShape, font2);
@@ -376,7 +376,7 @@ public class RMTool<T extends RMShape> extends ViewOwner {
             case FontSizeDelta_Key: {
 
                 // Get new font for current shape font at new size and set
-                double aSize = SnapUtils.doubleValue(aVal);
+                double aSize = Convert.doubleValue(aVal);
                 if (font == null) return;
                 RMFont font2 = font.deriveFont(font.getSize() + aSize);
                 setFont(anEditor, aShape, font2);
@@ -387,7 +387,7 @@ public class RMTool<T extends RMShape> extends ViewOwner {
             case FontBold_Key: {
 
                 // Get new font
-                boolean aFlag = SnapUtils.boolValue(aVal);
+                boolean aFlag = Convert.boolValue(aVal);
                 if (font == null || font.isBold() == aFlag) return;
                 RMFont font2 = font.getBold();
                 if (font2 == null) return;
@@ -399,7 +399,7 @@ public class RMTool<T extends RMShape> extends ViewOwner {
             case FontItalic_Key: {
 
                 // Get new font
-                boolean aFlag = SnapUtils.boolValue(aVal);
+                boolean aFlag = Convert.boolValue(aVal);
                 if (font == null || font.isItalic() == aFlag) return;
                 RMFont font2 = font.getItalic();
                 if (font2 == null) return;

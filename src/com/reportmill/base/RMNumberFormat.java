@@ -5,6 +5,8 @@ package com.reportmill.base;
 import com.reportmill.graphics.*;
 import java.text.*;
 import java.util.Locale;
+import java.util.Objects;
+
 import snap.text.TextStyle;
 import snap.util.*;
 
@@ -483,7 +485,7 @@ public class RMNumberFormat implements RMFormat, Cloneable {
         RMNumberFormat other = (RMNumberFormat) anObj;
 
         // Check NullString and NegativeInRed
-        if (!SnapUtils.equals(other._nullString, _nullString)) return false;
+        if (!Objects.equals(other._nullString, _nullString)) return false;
         if (other._negativeInRed != _negativeInRed) return false;
 
         // Return true since all other checks passed

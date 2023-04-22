@@ -465,7 +465,7 @@ public class RMGraph extends RMParentShape {
     {
         // If value already set, just return
         String key = aKey != null && aKey.length() > 0 ? aKey : null;
-        if (SnapUtils.equals(key, getColorKey())) return;
+        if (Objects.equals(key, getColorKey())) return;
 
         // Set value and update graph/legend
         firePropChange("ColorKey", _colorKey, _colorKey = key);

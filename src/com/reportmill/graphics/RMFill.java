@@ -5,6 +5,8 @@ package com.reportmill.graphics;
 import snap.gfx.*;
 import snap.util.*;
 
+import java.util.Objects;
+
 /**
  * This class represents a simple shape fill, drawing a given color in a provided path. Subclasses support things
  * like gradients, textures, etc.
@@ -98,7 +100,7 @@ public class RMFill implements Cloneable, XMLArchiver.Archivable {
         RMFill other = (RMFill) anObj;
 
         // Check Color
-        if (!SnapUtils.equals(other._color, _color)) return false;
+        if (!Objects.equals(other._color, _color)) return false;
         return true; // Return true since all checks passed
     }
 
