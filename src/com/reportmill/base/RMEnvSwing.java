@@ -2,7 +2,7 @@ package com.reportmill.base;
 import com.reportmill.graphics.*;
 import com.reportmill.out.RMExcelWriter;
 import com.reportmill.shape.RMDocument;
-import snap.util.MethodUtils;
+import snap.util.GetBestMethod;
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.util.List;
@@ -51,6 +51,6 @@ public class RMEnvSwing extends RMEnv {
      */
     public Method getMethodBest(Class aClass, String aName, Class... theClasses)
     {
-        return MethodUtils.getMethodBest(aClass, aName, theClasses);
+        return GetBestMethod.getBestMethod(aClass, aName, theClasses);
     }
 }
