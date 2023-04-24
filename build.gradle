@@ -103,12 +103,15 @@ publishing {
  */
 tasks.register('buildInfo') {
     doLast {
-        exec {
-            workingDir '.'
-            executable "date"
-            args "+%b-%d-%y %H:%M"
-            standardOutput new FileOutputStream(buildDir.getAbsolutePath() + '/resources/main/com/reportmill/BuildInfo.txt')
-        }
+
+        // Create BuildInfo text (date string) and write to file
+        String buildInfoText = new SimpleDateFormat("MMM-dd-yy HH:MM").format(new Date());
+        String buildInfoFilePathStr = buildDir.getAbsolutePath() + '/resources/main/com/reportmill/BuildInfo.txt';
+        java.nio.file.Path buildInfoFilePath = java.nio.file.Paths.get(buildInfoFilePathStr);
+        java.nio.file.Files.write(buildInfoFilePath, buildInfoText.getBytes());
+
+//        exec { workingDir '.', executable "date", args "+%b-%d-%y %H:%M"
+//            standardOutput new FileOutputStream(buildInfoFilePathStr) }
     }
 }
 
