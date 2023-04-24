@@ -901,14 +901,17 @@ public class RMTextEditor {
      */
     public Shape getSpellingPath()
     {
+        // Set RM SpellCheck
+        snap.text.SpellCheck.setSharedClass(RMSpellCheck.class);
+
         // Get text box and text string and path object
         TextBox tbox = getTextBox();
         String string = tbox.getString();
         Path2D path = new Path2D();
 
         // Iterate over text
-        for (SpellCheck.Word word = SpellCheck.getMisspelledWord(string, 0); word != null;
-             word = SpellCheck.getMisspelledWord(string, word.getEnd())) {
+        for (RMSpellCheck.Word word = RMSpellCheck.getMisspelledWord(string, 0); word != null;
+             word = RMSpellCheck.getMisspelledWord(string, word.getEnd())) {
 
             // Get word bounds
             int start = word.getStart();

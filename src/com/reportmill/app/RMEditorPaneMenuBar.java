@@ -123,7 +123,7 @@ public class RMEditorPaneMenuBar extends RMEditorPane.SupportPane {
         if (anEvent.equals("CopyMenuItem") || anEvent.equals("CopyButton")) editor.copy();
         if (anEvent.equals("PasteMenuItem") || anEvent.equals("PasteButton")) editor.paste();
         if (anEvent.equals("SelectAllMenuItem")) editor.selectAll();
-        if (anEvent.equals("CheckSpellingMenuItem")) SpellCheckPanel.getShared().show(editor);
+        if (anEvent.equals("CheckSpellingMenuItem")) new RMSpellCheckPanel().show(editor);
 
         // Edit -> CheckSpellingAsYouTypeMenuItem
         if (anEvent.equals("CheckSpellingAsYouTypeMenuItem")) {
