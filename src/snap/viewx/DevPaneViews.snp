@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RowView PrefHeight="300" Padding="5" FillHeight="true">
+  <ColView Padding="5" FillWidth="true">
+    <font name="Arial" size="13" />
+    <RowView Padding="2,4,3,4">
+      <Label text="View Hierarchy" />
+      <ToggleButton Name="TargetingButton" Padding="2,6,2,6" LeanX="RIGHT" text="Mouse Over Select...">
+        <font name="Arial" size="11" />
+      </ToggleButton>
+    </RowView>
+    <BrowserView Name="BrowserView" PrefWidth="420" GrowHeight="true" PrefColCount="3" PrefColWidth="120" />
+  </ColView>
+  <ColView Padding="5" GrowHeight="true">
+    <RowView PrefHeight="26" Padding="2,4,3,4" GrowWidth="true" Spacing="4">
+      <Label text="View Properties">
+        <font name="Arial" size="13" />
+      </Label>
+    </RowView>
+    <TableView Name="PropTableView" PrefWidth="200" GrowHeight="true" >
+      <TableCol PrefWidth="80" Header="Property" />
+      <TableCol GrowWidth="true" Header="Value" />
+    </TableView>
+  </ColView>
+  <ColView Padding="5" GrowWidth="true" FillWidth="true">
+    <RowView Padding="2,4,3,4" Spacing="8">
+      <Label text="View XML">
+        <font name="Arial" size="13" />
+      </Label>
+      <Button Name="ShowSourceButton" PrefWidth="90" Padding="2,6,2,6" LeanX="RIGHT" text="Open Source" />
+      <Button Name="ShowJavaDocButton" PrefWidth="90" Padding="2,6,2,6" text="Open JavaDoc" />
+    </RowView>
+    <TextView Name="TextView" GrowHeight="true" />
+  </ColView>
+</RowView>

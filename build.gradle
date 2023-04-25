@@ -16,25 +16,7 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
-repositories {
-
-    // Jitpack makes builds from GitHub repos
-    maven { url 'https://jitpack.io' }
-}
-
 dependencies {
-
-    // If Local SnapKit project, use that, otherwise use latest GitHub repo
-    if (findProject(':SnapKit') != null) { println 'Using local SnapKit project'
-        implementation project(':SnapKit') }
-    else { println 'Using latest SnapKit GitHub repo'
-        implementation 'com.github.reportmill:SnapKit:master-SNAPSHOT'  }
-
-    // If Local SnapPDF project, use that, otherwise use latest GitHub repo
-    if (findProject(':SnapPDF') != null) { println 'Using local SnapPDF project'
-        implementation project(':SnapPDF') }
-    else { println 'Using latest SnapPDF GitHub repo'
-        implementation 'com.github.reportmill:SnapPDF:master-SNAPSHOT'  }
 
     // For Excel generation
     implementation files('lib/poi-3.7.jar')

@@ -1,0 +1,26 @@
+
+Document { Prolog? DocType? Element }
+
+Prolog { "<?xml" Attribute* "?>" }
+
+DocType { "<!DOCTYPE" (Name | String)* ">" }
+
+Element { "<" Name Attribute* ("/>" | (">" Content "</" Name ">")) }
+
+Attribute { Name "=" String }
+
+Content { Element* }
+
+Name { "[a-zA-Z0-9_-]*" }
+
+String { "\"[^\"]*\"" }
+
+
+
+//Document { Prolog? Misc* Element Misc* }
+//Content { Chardata? ((Element | Reference | CDATA) Chardata?)* }
+//CDATA { "<![CDATA[" Text "]]>" }
+//Chardata { Text }
+//Text { "[^<]*" }
+//Misc { Comment }
+//Comment { "<!--" Text "-->" }
