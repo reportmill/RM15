@@ -3,7 +3,8 @@
 /build/
 /out/
 /target/
+/.idea/
+/.settings/
 .gradle
 
 .DS_Store
-Project.settings
