@@ -25,13 +25,13 @@ public class App {
      */
     public static void main(String[] args)
     {
-        ViewUtils.runLater(() -> startApp());
+        ViewUtils.runLater(() -> startApp(args));
     }
 
     /**
      * Starts the app.
      */
-    public static void startApp()
+    public static void startApp(String[] args)
     {
         // Set app is true
         ReportMill.isApp = true;
