@@ -5,6 +5,7 @@ package com.reportmill.app;
 import com.reportmill.base.ReportMill;
 import snap.gfx.GFXEnv;
 import snap.util.*;
+import snap.view.ViewUtils;
 import snap.view.WindowView;
 import snap.viewx.DialogBox;
 import snap.viewx.ExceptionReporter;
@@ -17,20 +18,20 @@ import snap.viewx.ExceptionReporter;
 public class App {
 
     // Whether app is in process of quiting
-    static boolean _quiting;
+    private static boolean _quiting;
 
     /**
-     * This is the static main method, called by Java when launching with com.reportmill.App.
+     * Standard main method.
      */
     public static void main(String[] args)
     {
-        new App(args);
+        ViewUtils.runLater(() -> startApp());
     }
 
     /**
-     * Creates a new app instance.
+     * Starts the app.
      */
-    public App(String[] args)
+    public static void startApp()
     {
         // Set app is true
         ReportMill.isApp = true;
@@ -38,9 +39,6 @@ public class App {
         // Set default preferences
         Prefs prefs = Prefs.getPrefsForName("/com/reportmill");
         Prefs.setDefaultPrefs(prefs);
-
-        // Mac specific stuff
-        //if (SnapUtils.isMac) new AppleAppHandler().init();
 
         // Install Exception reporter
         ExceptionReporter er = new ExceptionReporter("ReportMill");
@@ -105,31 +103,4 @@ public class App {
         catch (Exception e) { e.printStackTrace(); }
         GFXEnv.getEnv().exit(0);
     }
-
-//    /**
-//     * A class to handle apple events.
-//     */
-//    private static class AppleAppHandler implements PreferencesHandler, QuitHandler, OpenFilesHandler {
-//
-//        public void init()
-//        {
-//            System.setProperty("apple.laf.useScreenMenuBar", "true"); // 1.4
-//            System.setProperty("com.apple.mrj.application.apple.menu.about.name", "RMStudio 14");
-//            Application app = Application.getApplication();
-//            app.setPreferencesHandler(this);
-//            app.setQuitHandler(this);
-//            app.setOpenFileHandler(this);
-//        }
-//
-//        public void handlePreferences(PreferencesEvent arg0) { new PreferencesPanel().showPanel(null); }
-//        public void openFiles(OpenFilesEvent anEvent)
-//        {
-//            java.io.File file = anEvent.getFiles().size() > 0 ? anEvent.getFiles().get(0) : null;
-//            if (file != null) SwingUtilities.invokeLater(() -> Welcome.getShared().open(file.getPath()));
-//        }
-//        public void handleQuitRequestWith(QuitEvent arg0, QuitResponse arg1)
-//        {
-//            App.quitApp(); if (_quiting) arg1.cancelQuit();
-//        }
-//    }
 }
