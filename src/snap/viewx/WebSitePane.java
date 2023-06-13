@@ -1,5 +1,6 @@
 package snap.viewx;
 import snap.util.ArrayUtils;
+import snap.view.EventListener;
 import snap.view.ViewEvent;
 import snap.view.ViewOwner;
 import snap.web.RecentFiles;
@@ -7,10 +8,12 @@ import snap.web.WebFile;
 import snap.web.WebSite;
 import snap.web.WebURL;
 
+import java.util.function.Predicate;
+
 /**
  * This class is the base class for WebSite open/save browsers.
  */
-public class FilesPane extends ViewOwner {
+public class WebSitePane extends ViewOwner {
 
     // The site used to reference files
     protected WebSite  _site;
@@ -18,30 +21,29 @@ public class FilesPane extends ViewOwner {
     // The currently selected file
     protected WebFile  _selFile;
 
-    // The current selected directory
-    protected WebFile  _selDir;
-
     // A file targeted by input text
     protected WebFile  _targFile;
 
     // Whether choosing file for save
     protected boolean  _saving;
 
+    // A function to determine if a given file is valid
+    private Predicate<WebFile> _fileValidator;
+
     // The file types
     protected String[]  _types;
 
-    // The FilePanel
-    protected FilePanel  _filePanel;
+    // An EventListener to be called when action is fired
+    protected EventListener _actionHandler;
 
     // Constants for properties
     public static final String SelFile_Prop = "SelFile";
-    public static final String SelDir_Prop = "SelDir";
     public static final String TargFile_Prop = "TargFile";
 
     /**
      * Constructor.
      */
-    public FilesPane()
+    public WebSitePane()
     {
         super();
     }
@@ -77,27 +79,8 @@ public class FilesPane extends ViewOwner {
         // If already set, just return
         if (aFile == _selFile) return;
 
-        // Cache old file/dir
-        WebFile oldSelFile = _selFile;
-        WebFile oldSelDir = _selDir;
-
-        // If given file is dir, set SelDir
-        if (aFile != null && aFile.isDir()) {
-            _selFile = null;
-            _selDir = aFile;
-        }
-
-        // Set file and dir
-        else {
-            _selFile = aFile;
-            _selDir = aFile != null ? aFile.getParent() : null;
-        }
-
         // Fire prop changes
-        if (_selFile != oldSelFile)
-            firePropChange(SelFile_Prop, oldSelFile, _selFile);
-        if (_selDir != oldSelDir)
-            firePropChange(SelDir_Prop, oldSelDir, _selDir);
+        firePropChange(SelFile_Prop, _selFile, _selFile = aFile);
 
         // Clear TargFile
         setTargFile(null);
@@ -109,7 +92,15 @@ public class FilesPane extends ViewOwner {
     /**
      * Returns the selected directory.
      */
-    public WebFile getSelDir()  { return _selDir; }
+    public WebFile getSelDir()
+    {
+        WebFile selFile = getSelFile();
+        if (selFile == null)
+            return null;
+        if (selFile.isDir())
+            return selFile;
+        return selFile.getParent();
+    }
 
     /**
      * Returns the file targeted by the input text.
@@ -126,13 +117,13 @@ public class FilesPane extends ViewOwner {
     }
 
     /**
-     * Returns the selected or targeted file.
+     * Returns the selected or targeted file if valid.
      */
-    public WebFile getSelOrTargFile()
+    public WebFile getValidSelOrTargFile()
     {
-        if (isValidFile(_targFile))
+        if (_targFile != null && isValidFile(_targFile))
             return _targFile;
-        if (isValidFile(_selFile))
+        if (_selFile != null && isValidFile(_selFile))
             return _selFile;
         return null;
     }
@@ -156,11 +147,16 @@ public class FilesPane extends ViewOwner {
     }
 
     /**
-     * Returns the first file types.
+     * Returns the function that determines whether file can be selected.
      */
-    public String getType()
+    public Predicate<WebFile> getFileValidator()  { return _fileValidator; }
+
+    /**
+     * Sets the function that determines whether file can be selected.
+     */
+    public void setFileValidator(Predicate<WebFile> fileValidator)
     {
-        return _types != null && _types.length > 0 ? _types[0] : null;
+        _fileValidator = fileValidator;
     }
 
     /**
@@ -173,22 +169,31 @@ public class FilesPane extends ViewOwner {
      */
     public void setTypes(String ... theExts)
     {
-        _types = ArrayUtils.map(theExts, type -> FilesBrowserUtils.normalizeType(type), String.class);
+        // Normalize extensions (lowercase, no spaces or dot)
+        if (theExts != null)
+            theExts = ArrayUtils.map(theExts, type -> WebSitePaneUtils.normalizeType(type), String.class);
+
+        // Set types/validator
+        _types = theExts;
+        setFileValidator(theExts != null ? file -> WebSitePaneUtils.isValidFileForTypes(file, _types) : null);
     }
+
+    /**
+     * Returns the listener triggered when action event is fired.
+     */
+    public EventListener getActionHandler()  { return _actionHandler; }
+
+    /**
+     * Sets the listener triggered when action event is fired.
+     */
+    public void setActionHandler(EventListener actionListener)  { _actionHandler = actionListener; }
 
     /**
      * Returns whether given file is valid.
      */
     public boolean isValidFile(WebFile aFile)
     {
-        if (aFile == null)
-            return false;
-        String[] types = getTypes();
-        if (types == null || types.length == 0)
-            return true;
-
-        boolean isValid = aFile.isFile() && ArrayUtils.contains(types, aFile.getType());
-        return isValid;
+        return _fileValidator == null || _fileValidator.test(aFile);
     }
 
     /**
@@ -196,8 +201,8 @@ public class FilesPane extends ViewOwner {
      */
     protected void fireActionEvent(ViewEvent anEvent)
     {
-        if (_filePanel != null)
-            _filePanel.fireActionEvent(anEvent);
+        if (_actionHandler != null)
+            _actionHandler.listenEvent(anEvent);
     }
 
     /**
@@ -236,15 +241,9 @@ public class FilesPane extends ViewOwner {
      */
     protected WebFile getDefaultSelFile()
     {
-        // Get recent URLs for types and this site
-        String[] types = getTypes();
-        WebURL[] recentURLs = RecentFiles.getRecentUrlsForTypes(types);
-        WebURL[] recentURLsForSite = ArrayUtils.filter(recentURLs, url -> url.getSite() == getSite());
-        if (recentURLsForSite.length == 0)
-            return null;
-
         // Get recent file
-        WebURL recentURL = recentURLsForSite[0];
+        WebURL[] recentUrls = getRecentUrlsForSiteAndFileValidator();
+        WebURL recentURL = recentUrls.length > 0 ? recentUrls[0] : null;
         WebFile defaultSelFile = recentURL != null ? recentURL.getFile() : null;
 
         // If null, just root dir
@@ -256,7 +255,36 @@ public class FilesPane extends ViewOwner {
     }
 
     /**
-     * Called to set the FilesPane WebFiles.
+     * Returns valid recent URLs.
+     */
+    private WebURL[] getRecentUrlsForSiteAndFileValidator()
+    {
+        // Get recent URLs for site
+        WebURL[] recentURLs = RecentFiles.getURLs();
+        WebSite site = getSite();
+        WebURL[] recentUrlsForSite = ArrayUtils.filter(recentURLs, url -> url.getSite() == site);
+
+        // If Types set, do simple version on URLs to avoid resolving files
+        String[] types = getTypes();
+        if (types != null) {
+            WebURL[] validUrlsForSite = ArrayUtils.filter(recentUrlsForSite, url -> ArrayUtils.contains(types, url.getType()));
+            return validUrlsForSite;
+        }
+
+        // Get RecentURLs for site
+        Predicate<WebFile> fileValidator = getFileValidator();
+        if (fileValidator == null)
+            return recentURLs;
+
+        // Get valid URLs
+        WebFile[] recentFilesForSite = ArrayUtils.mapNonNull(recentUrlsForSite, url -> url.getFile(), WebFile.class);
+        WebFile[] validRecentFiles = ArrayUtils.filter(recentFilesForSite, fileValidator);
+        WebURL[] validRecentURLs = ArrayUtils.map(validRecentFiles, file -> file.getURL(), WebURL.class);
+        return validRecentURLs;
+    }
+
+    /**
+     * Called to set the WebFiles in UI.
      */
     protected void setSiteFilesInUI()  { }
 }

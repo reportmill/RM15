@@ -27,6 +27,15 @@ dependencies {
 
 mainClassName = 'com.reportmill.app.App'
 
+jar {
+    manifest {
+        attributes(
+            'Main-Class': 'com.reportmill.app.App',
+            'Application-Name': 'RMStudio15'
+        )
+    }
+}
+
 /**
  * Custom task to build jar that includes all dependencies.
  */

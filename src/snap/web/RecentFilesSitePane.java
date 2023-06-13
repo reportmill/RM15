@@ -7,12 +7,12 @@ import snap.gfx.Color;
 import snap.util.ArrayUtils;
 import snap.view.*;
 import snap.viewx.DialogBox;
-import snap.viewx.FilesPane;
+import snap.viewx.WebSitePane;
 
 /**
- * A class to manage UI for recent files (can show a panel or a menu).
+ * This WebSitePane subclass displays files for RecentFilesSite.
  */
-public class RecentFilesPane extends FilesPane {
+public class RecentFilesSitePane extends WebSitePane {
 
     // The FilesTable
     private TableView<WebFile>  _filesTable;
@@ -20,7 +20,7 @@ public class RecentFilesPane extends FilesPane {
     /**
      * Constructor for given name.
      */
-    public RecentFilesPane()
+    public RecentFilesSitePane()
     {
         super();
         _site = RecentFilesSite.getShared();
@@ -80,7 +80,7 @@ public class RecentFilesPane extends FilesPane {
     }
 
     /**
-     * Called to set the FilesPane WebFiles.
+     * Called to set the site WebFiles in UI.
      */
     @Override
     protected void setSiteFilesInUI()
@@ -114,7 +114,7 @@ public class RecentFilesPane extends FilesPane {
             return null;
 
         // Return selected file
-        WebFile selFile =  getSelOrTargFile();
+        WebFile selFile = getValidSelOrTargFile();
         WebFile realFile = selFile != null ? selFile.getRealFile() : null;
         return realFile;
     }
@@ -127,7 +127,10 @@ public class RecentFilesPane extends FilesPane {
         WebFile file = aCell.getItem();
         if (file == null)
             return;
-        String filename = file.getName();
+
+        // Get filename from RecentFile.RealFile and set
+        WebFile recentFile = file.getRealFile();
+        String filename = recentFile.getName();
         aCell.setText(filename);
     }
 
@@ -217,6 +220,16 @@ public class RecentFilesPane extends FilesPane {
 
         // Do normal version
         super.setSelFile(localFile);
+    }
+
+    /**
+     * Override to use real file.
+     */
+    @Override
+    public boolean isValidFile(WebFile aFile)
+    {
+        WebFile realFile = aFile.getRealFile();
+        return super.isValidFile(realFile);
     }
 
     /**
