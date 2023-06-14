@@ -3,6 +3,7 @@
  */
 package com.reportmill.app;
 import com.reportmill.base.ReportMill;
+import snap.props.PropChange;
 import snap.util.Prefs;
 import snap.util.SnapUtils;
 import snap.view.*;
@@ -84,8 +85,8 @@ public class WelcomePanel extends ViewOwner {
         getUI(ChildView.class).addChild(anim, 0);
         anim.playAnimDeep();
 
-        // Create OpenPanel
-        _filePanel = createOpenPanel();
+        // Create FilePanel
+        _filePanel = createFilePanel();
         View filePanelUI = _filePanel.getUI();
         filePanelUI.setGrowHeight(true);
 
@@ -117,12 +118,9 @@ public class WelcomePanel extends ViewOwner {
         if (anEvent.equals("NewButton"))
             newFile(false);
 
-        // Handle OpenPanelButton
-        //if (anEvent.equals("OpenPanelButton")) showOpenPanel();
-
         // Handle OpenButton
         if (anEvent.equals("OpenButton")) {
-            WebFile selFile = _filePanel.getSelFile();
+            WebFile selFile = _filePanel.getSelFileAndAddToRecentFiles();
             openFile(selFile);
         }
 
@@ -161,11 +159,9 @@ public class WelcomePanel extends ViewOwner {
     public void openFile(WebFile aFile)
     {
         // Get the new editor pane that will open the document
-        RMEditorPane editorPane = new RMEditorPane();
-        editorPane = editorPane.openSource(aFile);
-
-        // If no document opened, just return
-        if (editorPane == null) return;
+        RMEditorPane editorPane = new RMEditorPane().openSource(aFile);
+        if (editorPane == null)
+            return;
 
         // Make editor window visible
         editorPane.setWindowVisible(true);
@@ -175,9 +171,9 @@ public class WelcomePanel extends ViewOwner {
     }
 
     /**
-     * Creates the OpenPanel to be added to WelcomePanel.
+     * Creates the FilePanel to be added to WelcomePanel.
      */
-    private FilePanel createOpenPanel()
+    private FilePanel createFilePanel()
     {
         // Add recent files
         WebSite recentFilesSite = RecentFilesSite.getShared();
@@ -190,8 +186,32 @@ public class WelcomePanel extends ViewOwner {
         filePanel.setSelSite(recentFilesSite);
         filePanel.setActionHandler(e -> WelcomePanel.this.fireActionEventForObject("OpenButton", e));
 
+        // Add PropChangeListener
+        filePanel.addPropChangeListener(pc -> filePanelDidPropChange(pc));
+
         // Return
         return filePanel;
+    }
+
+    /**
+     * Called when FilePanel does prop change.
+     */
+    private void filePanelDidPropChange(PropChange aPC)
+    {
+        String propName = aPC.getPropName();
+
+        // Handle SelSite change:
+        if (propName.equals(FilePanel.SelSite_Prop)) {
+            WebSite selSite = _filePanel.getSelSite();;
+            boolean minimize = !(selSite instanceof RecentFilesSite);
+            setTopGraphicMinimized(minimize);
+        }
+
+        // Handle SelFile change: Update OpenButton.Enabled
+        else if (propName.equals(FilePanel.SelFile_Prop)) {
+            boolean isOpenFileSet = _filePanel.getSelFile() != null;
+            getView("OpenButton").setEnabled(isOpenFileSet);
+        }
     }
 
     /**
@@ -201,23 +221,68 @@ public class WelcomePanel extends ViewOwner {
     {
         // Unarchive WelcomePaneAnim.snp as DocView
         WebURL url = WebURL.getURL(WelcomePanel.class, "WelcomePanelAnim.snp");
-        ChildView doc = (ChildView) new ViewArchiver().getViewForSource(url);
+        ChildView topGraphic = (ChildView) new ViewArchiver().getViewForSource(url);
 
         // Get page and clear border/shadow
-        ParentView page = (ParentView) doc.getChild(2);
+        ParentView page = (ParentView) topGraphic.getChild(2);
         page.setBorder(null);
         page.setFill(null);
         page.setEffect(null);
 
         // Set BuildText, JavaText, LicenseText
-        View buildText = doc.getChildForName("BuildText");
-        View jvmText = doc.getChildForName("JVMText");
-        View licText = doc.getChildForName("LicenseText");
+        View buildText = topGraphic.getChildForName("BuildText");
+        View jvmText = topGraphic.getChildForName("JVMText");
+        View licText = topGraphic.getChildForName("LicenseText");
         buildText.setText("Build: " + SnapUtils.getBuildInfo().trim());
-        jvmText.setText("JVM: " + System.getProperty("java.runtime.version"));
+        jvmText.setText("JVM: " + (SnapUtils.isTeaVM ? "TeaVM" : System.getProperty("java.runtime.version")));
         licText.setText(ReportMill.getLicense() == null ? "Unlicensed Copy" : "License: " + ReportMill.getLicense());
 
+        // Configure TopGraphic to call setTopGraphicMinimized() on click
+        topGraphic.addEventHandler(e -> setTopGraphicMinimized(!isTopGraphicMinimized()), View.MouseRelease);
+
         // Return
-        return doc;
+        return topGraphic;
+    }
+
+    /**
+     * Returns whether top graphic is minimized.
+     */
+    private boolean isTopGraphicMinimized()
+    {
+        ChildView mainView = getUI(ChildView.class);
+        View topGraphic = mainView.getChild(0);
+        return topGraphic.getHeight() < 200;
+    }
+
+    /**
+     * Toggles the top graphic.
+     */
+    private void setTopGraphicMinimized(boolean aValue)
+    {
+        // Just return if already set
+        if (aValue == isTopGraphicMinimized()) return;
+
+        // Get TopGraphic
+        ChildView mainView = getUI(ChildView.class);
+        ChildView topGraphic = (ChildView) mainView.getChild(0);
+
+        // Show/hide views below the minimize size
+        topGraphic.getChild(2).setVisible(!aValue);
+        ColView topGraphicColView = (ColView) topGraphic.getChild(1);
+        for (int i = 2; i < topGraphicColView.getChildCount(); i++)
+            topGraphicColView.getChild(i).setVisible(!aValue);
+
+        // Handle Minimize: Size PrefHeight down
+        if (aValue)
+            topGraphic.getAnimCleared(600).setPrefHeight(140);
+
+        // Handle normal: Size PrefHeight up
+        else {
+            topGraphic.setClipToBounds(true);
+            topGraphic.getAnimCleared(600).setPrefHeight(240);
+        }
+
+        // Start anim
+        topGraphic.playAnimDeep();
     }
 }
