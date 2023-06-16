@@ -5,6 +5,7 @@ package com.reportmill.app;
 import com.reportmill.base.ReportMill;
 import snap.gfx.GFXEnv;
 import snap.util.*;
+import snap.view.ViewTheme;
 import snap.view.ViewUtils;
 import snap.view.WindowView;
 import snap.viewx.DialogBox;
@@ -45,6 +46,9 @@ public class App {
         er.setToAddress("support@reportmill.com");
         er.setInfo("ReportMill Version " + ReportMill.getVersion() + ", Build Date: " + ReportMill.getBuildInfo());
         Thread.setDefaultUncaughtExceptionHandler(er);
+
+        // Set Theme
+        ViewTheme.setThemeForName("Light");
 
         // Run welcome panel
         WelcomePanel.getShared().showPanel();
