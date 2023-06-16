@@ -130,13 +130,13 @@ class WebSitePaneUtils {
     private static WebFile getFileCompletionForPath(WebSitePaneX sitePane, String aPath)
     {
         // Get parent directory for path
-        String parentPath = FilePathUtils.getParent(aPath);
+        String parentPath = FilePathUtils.getParentPath(aPath);
         WebFile parentDir = sitePane.getFileForPath(parentPath);
         if (parentDir == null)
             return null;
 
         // Get directory files and valid file types
-        String fileName = FilePathUtils.getFileName(aPath);
+        String fileName = FilePathUtils.getFilename(aPath);
         WebFile[] dirFiles = parentDir.getFiles();
 
         // Look for valid completion file

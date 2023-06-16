@@ -30,7 +30,7 @@ public class RMEditorPaneUtils {
     {
         // If file is xml resource, get temp file, get XML bytes, write to file, open file and return null
         if (aTitle.endsWith(".xml")) {
-            File file = FileUtils.getTempFile(FilePathUtils.getFileName(aTitle));
+            File file = FileUtils.getTempFile(FilePathUtils.getFilename(aTitle));
             byte[] bytes = SnapUtils.getBytes(aTitle);
             SnapUtils.writeBytes(bytes, file);
             FileUtils.openFile(file);
@@ -55,7 +55,7 @@ public class RMEditorPaneUtils {
         // Get filename (if alt key is pressed, change to current doc plus .pdf)
         String filename = SnapUtils.getTempDir() + "RMPDFFile.pdf";
         if (ViewUtils.isAltDown() && anEP.getDoc().getFilename() != null)
-            filename = FilePathUtils.getSimple(anEP.getDoc().getFilename()) + ".pdf";
+            filename = FilePathUtils.getPathWithoutExtension(anEP.getDoc().getFilename()) + ".pdf";
 
         // Get report, write report and open file
         RMDocument report = generateReport(anEP, true);

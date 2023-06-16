@@ -898,7 +898,7 @@ public class RMDocument extends RMParentShape {
         if (!StringUtils.endsWithIC(aName, ".rpt")) aName += ".rpt";
 
         // Get directory, subreport filename and subreport document
-        String dir = FilePathUtils.getParent(getFilename());
+        String dir = FilePathUtils.getParentPath(getFilename());
         String subreportFilename = FilePathUtils.getChild(dir, aName);
         try {
             return RMDocument.getDoc(subreportFilename);
